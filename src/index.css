@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--primary-color);
+  --color-primary-dark: var(--primary-dark-color);
+
+  --color-background-light: #f3f4f6;
+  --color-background-dark: #111827;
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #1f2937;
+  --color-text-light: #1f2937;
+  --color-text-dark: #f9fafb;
+  --color-text-muted-light: #6b7280;
+  --color-text-muted-dark: #9ca3af;
+  --color-border-light: #e5e7eb;
+  --color-border-dark: #374151;
+  --color-success: #16a34a;
+
+  --font-sans: "Lexend", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Lexend", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --primary-color: #22c55e;
+  --primary-dark-color: #16a34a;
+}
+
+[data-theme="team"] {
+  --primary-color: #f2a20d;
+  --primary-dark-color: #d98a00;
+}
+
+body {
+  @apply bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-display antialiased;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.material-symbols-outlined.filled {
+  font-variation-settings: 'FILL' 1;
+}
