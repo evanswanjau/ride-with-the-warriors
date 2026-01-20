@@ -13,7 +13,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: Fami
     const categories = [
         { id: 'cubs', title: 'Cubs (Ages 3-5)', icon: 'pedal_bike' },
         { id: 'champs', title: 'Champs (Ages 6-10)', icon: 'directions_bike' },
-        { id: 'tigers', title: 'Tigers (Ages 11-14)', icon: 'sports_score' }
+        { id: 'tigers', title: 'Tigers (Ladies 18+)', icon: 'sports_score' }
     ];
 
 
@@ -27,7 +27,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: Fami
                 ...data.riders,
                 [category]: [
                     ...data.riders[category],
-                    { id: Math.random().toString(36).substr(2, 9), firstName: '', lastName: '', dob: '', gender: '' }
+                    { id: Math.random().toString(36).substr(2, 9), firstName: '', lastName: '', dob: '', gender: category === 'tigers' ? 'female' : '' }
                 ]
             }
         });
@@ -157,14 +157,14 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: Fami
                                     />
                                 </div>
                                 <p className="text-xs text-text-muted-light dark:text-gray-400">
-                                    {activeCategory === 'cubs' ? 'Must be between 3 and 5 years old.' : activeCategory === 'champs' ? 'Must be between 6 and 10 years old.' : 'Must be between 11 and 14 years old.'}
+                                    {activeCategory === 'cubs' ? 'Must be between 3 and 5 years old.' : activeCategory === 'champs' ? 'Must be between 6 and 10 years old.' : 'Must be 18 years or older.'}
                                 </p>
                                 {errors[`${rider.id}.dob`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.dob`]}</span>}
                             </div>
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-semibold text-text-light dark:text-gray-200">Gender</label>
                                 <div className="flex items-center gap-6 h-11 px-1">
-                                    <label className="flex items-center gap-2 cursor-pointer group">
+                                    <label className={`flex items-center gap-2 cursor-pointer group ${activeCategory === 'tigers' ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                         <input
                                             className="w-5 h-5 text-primary border-border-light focus:ring-primary bg-white dark:bg-gray-900 dark:border-gray-600 transition-all form-radio"
                                             name={`gender_${rider.id}`}
@@ -172,6 +172,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: Fami
                                             value="male"
                                             checked={rider.gender === 'male'}
                                             onChange={() => updateRider(activeCategory, rider.id, 'gender', 'male')}
+                                            disabled={activeCategory === 'tigers'}
                                         />
                                         <span className="text-text-light dark:text-white text-sm font-medium group-hover:text-primary transition-colors">Male</span>
                                     </label>
@@ -218,8 +219,8 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: Fami
                                 </label>
                                 <input
                                     className={`h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 focus:ring-1 outline-none transition-all placeholder:text-text-muted-light ${errors['guardian.fullName']
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                        : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
                                         }`}
                                     placeholder="Parent or Legal Guardian Name"
                                     type="text"
@@ -236,8 +237,8 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: Fami
                                     <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted-light text-[20px]">phone</span>
                                     <input
                                         className={`w-full h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white pl-10 pr-4 focus:ring-1 outline-none transition-all placeholder:text-text-muted-light ${errors['guardian.emergencyPhone']
-                                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                                : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
+                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                            : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
                                             }`}
                                         placeholder="+254 7XX XXX XXX"
                                         type="tel"
@@ -255,8 +256,8 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: Fami
                                     <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted-light text-[20px]">email</span>
                                     <input
                                         className={`w-full h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white pl-10 pr-4 focus:ring-1 outline-none transition-all placeholder:text-text-muted-light ${errors['guardian.email']
-                                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                                : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
+                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                            : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
                                             }`}
                                         placeholder="guardian@example.com"
                                         type="email"
@@ -273,8 +274,8 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: Fami
                                 <div className="relative">
                                     <select
                                         className={`w-full h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 appearance-none focus:ring-1 outline-none transition-all cursor-pointer ${errors['guardian.relationship']
-                                                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                                : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
+                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                            : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
                                             }`}
                                         value={data.guardian.relationship}
                                         onChange={(e) => updateGuardian('relationship', e.target.value)}

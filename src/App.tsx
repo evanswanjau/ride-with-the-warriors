@@ -125,15 +125,32 @@ const App = () => {
   };
 
   const handleNext = () => {
-    // Special case: Family 5KM shortcut from Step 1
-    if (step === 1 && selectedCircuit === 'family') {
-      setRegistrationType('family');
-      setStep(3); // Jump straight to family details
+    // Step 1: Always go to next step (Circuit Selection)
+    if (step === 1) {
+      setStep(step + 1);
       return;
     }
 
+    // Step 2: Circuit Selection
+    if (step === 2) {
+      if (selectedCircuit === 'family') {
+        setRegistrationType('family');
+        setStep(4); // Jump straight to family details (skipping Reg Type)
+        return;
+      }
+      // For other circuits, go to Registration Type step
+      setStep(step + 1);
+      return;
+    }
+
+    // Step 3: Registration Type (for non-family circuits)
     if (step === 3) {
-      if (!validateStep()) return;
+      if (!validateStep()) return; // Though Step 3 usually just selects type, if validation is needed it goes here
+
+      // If user chose Team, go to Team Details. Individual goes to Rider Details.
+      // Actually step increment handles this as Step 4 renders based on type.
+      setStep(step + 1);
+      return;
     }
 
     if (step < totalSteps) {
@@ -142,9 +159,9 @@ const App = () => {
   };
 
   const handleBack = () => {
-    // Special case: Back from Step 3 Family Details goes to Step 1
-    if (step === 3 && registrationType === 'family' && selectedCircuit === 'family') {
-      setStep(1);
+    // Special case: Back from Step 4 (Family Details) goes to Step 2 (Circuit Selection)
+    if (step === 4 && registrationType === 'family') {
+      setStep(2);
       return;
     }
 
@@ -180,6 +197,7 @@ const App = () => {
       case 3:
         return (
           <Step3RegistrationType
+            selectedCircuit={selectedCircuit}
             selectedType={registrationType}
             onSelect={setRegistrationType}
             onNext={handleNext}

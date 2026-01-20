@@ -1,8 +1,10 @@
 import RegistrationTypeCard from './RegistrationTypeCard';
 import individualImage from '../assets/civilian.jpg';
 import teamImage from '../assets/corporate.jpg';
+import familyImage from '../assets/family.jpg';
 
 interface Step3RegistrationTypeProps {
+    selectedCircuit: string;
     selectedType: string;
     onSelect: (id: string) => void;
     onNext: () => void;
@@ -10,6 +12,7 @@ interface Step3RegistrationTypeProps {
 }
 
 const Step3RegistrationType = ({
+    selectedCircuit,
     selectedType,
     onSelect,
     onNext,
@@ -19,7 +22,9 @@ const Step3RegistrationType = ({
         {
             id: 'individual',
             title: 'Individual Rider',
-            description: 'Solo entry. Push your limits and compete for individual placement and time trials for a chance to win.',
+            description: selectedCircuit === 'family'
+                ? 'Adult Women (Tigers). Compete as an individual in the 5KM circuit.'
+                : 'Solo entry. Push your limits and compete for individual placement and time trials for a chance to win.',
             imageUrl: individualImage,
         },
         {
@@ -34,19 +39,34 @@ const Step3RegistrationType = ({
                 '60 minutes deducted for each missing rider.',
             ],
         },
+        {
+            id: 'family',
+            title: 'Family Group',
+            description: 'Register multiple children (Cubs & Champs) under one guardian. A fun ride for the little ones.',
+            imageUrl: familyImage, // Reusing family image or import another one if available, using familyImage from imports (need to import it)
+        }
     ];
+
+    // Filter types based on circuit
+    const visibleTypes = types.filter(type => {
+        if (selectedCircuit === 'family') {
+            return type.id === 'individual' || type.id === 'family';
+        }
+        return type.id === 'individual' || type.id === 'team';
+    });
 
     return (
         <div className="flex flex-col gap-8 md:px-0">
+            {/* Header section code... using same layout */}
             <div className="flex flex-col gap-2">
                 <h1 className="text-text-light dark:text-white tracking-tight text-[32px] md:text-4xl font-bold leading-tight">Registration Type</h1>
                 <p className="text-text-muted-light dark:text-gray-400 text-base font-normal leading-normal max-w-2xl">
-                    Choose how you want to compete: as an individual or with a team.
+                    Choose how you want to participate.
                 </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {types.map((type) => (
+                {visibleTypes.map((type) => (
                     <RegistrationTypeCard
                         key={type.id}
                         {...type}
