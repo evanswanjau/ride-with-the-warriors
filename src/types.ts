@@ -48,6 +48,7 @@ export interface Circuit {
     description: string;
     icon: string;
     imageUrl: string;
+    distance: string;
     price: number;
     date: string;
     time: string;

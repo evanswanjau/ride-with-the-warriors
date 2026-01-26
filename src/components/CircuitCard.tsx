@@ -24,7 +24,7 @@ const CircuitCard = ({
     return (
         <div
             onClick={() => onSelect(id)}
-            className={`group relative flex flex-col bg-white dark:bg-[#232623] rounded-3xl overflow-hidden shadow-none hover:shadow-xl transition-all cursor-pointer transform ${isSelected
+            className={`group relative flex flex-col h-full bg-white dark:bg-[#232623] rounded-3xl overflow-hidden shadow-none hover:shadow-xl transition-all cursor-pointer transform ${isSelected
                 ? 'ring-4 ring-primary -translate-y-1 shadow-xl'
                 : 'ring-2 ring-transparent hover:ring-primary/50'
                 }`}

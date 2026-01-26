@@ -21,7 +21,7 @@ const Step3RegistrationType = ({
     const types = [
         {
             id: 'individual',
-            title: 'Individual Rider',
+            title: 'INDIVIDUAL',
             description: selectedCircuit === 'family'
                 ? 'Adult Women (Tigers). Compete as an individual in the 5KM circuit.'
                 : 'Solo entry. Push your limits and compete for individual placement and time trials for a chance to win.',
@@ -29,7 +29,7 @@ const Step3RegistrationType = ({
         },
         {
             id: 'team',
-            title: 'Team / Squad',
+            title: 'Team',
             description: 'Create or join a team (5 riders). Compete for the group trophy and collective timing.',
             imageUrl: teamImage,
             rules: [

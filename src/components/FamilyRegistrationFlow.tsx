@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import type { FamilyDetails, JuniorRider } from '../types';
+import ErrorBanner from './ErrorBanner';
+import { calculateAge } from '../utils';
+
 
 interface FamilyRegistrationFlowProps {
     data: FamilyDetails;
@@ -7,9 +10,10 @@ interface FamilyRegistrationFlowProps {
     onNext: () => void;
     onBack: () => void;
     errors: Record<string, string>;
+    formErrors: string[];
 }
 
-const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: FamilyRegistrationFlowProps) => {
+const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formErrors }: FamilyRegistrationFlowProps) => {
     const categories = [
         { id: 'cubs', title: 'Cubs (Ages 3-5)', icon: 'pedal_bike' },
         { id: 'champs', title: 'Champs (Ages 6-10)', icon: 'directions_bike' },
@@ -72,6 +76,10 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: Fami
                         Register your little warriors for their specific age groups. You can add multiple riders across different categories.
                     </p>
                 </div>
+            </div>
+
+            <div className="px-4">
+                <ErrorBanner errors={formErrors} />
             </div>
 
             {/* Category Tabs */}
@@ -143,7 +151,14 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors }: Fami
                                 {errors[`${rider.id}.lastName`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.lastName`]}</span>}
                             </div>
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-text-light dark:text-gray-200">Date of Birth</label>
+                                <label className="text-sm font-semibold text-text-light dark:text-gray-200 flex items-center justify-between">
+                                    <span>Date of Birth</span>
+                                    {rider.dob && (
+                                        <span className="text-primary text-[10px] font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
+                                            {calculateAge(rider.dob)} years
+                                        </span>
+                                    )}
+                                </label>
                                 <div className="relative">
                                     <input
                                         className={`w-full h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 focus:ring-1 outline-none transition-all ${errors[`${rider.id}.dob`]

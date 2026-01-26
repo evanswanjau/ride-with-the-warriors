@@ -1,6 +1,9 @@
 
 
 import type { RiderDetails } from '../types';
+import ErrorBanner from './ErrorBanner';
+import { calculateAge } from '../utils';
+
 
 interface Step4RiderDetailsProps {
     data: RiderDetails;
@@ -8,9 +11,10 @@ interface Step4RiderDetailsProps {
     onNext: () => void;
     onBack: () => void;
     errors: Record<string, string>;
+    formErrors: string[];
 }
 
-const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors }: Step4RiderDetailsProps) => {
+const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors }: Step4RiderDetailsProps) => {
     const handleInputChange = (field: keyof RiderDetails, value: string) => {
         onChange({ ...data, [field]: value });
     };
@@ -23,6 +27,8 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors }: Step4Ride
                     Please provide your personal information to complete the registration.
                 </p>
             </div>
+
+            <ErrorBanner errors={formErrors} />
 
             <form className="flex flex-col gap-8" onSubmit={(e) => e.preventDefault()}>
                 <div className="bg-white dark:bg-[#2a2418] rounded-3xl border border-neutral-100 dark:border-neutral-800 p-6 md:p-8">
@@ -118,8 +124,13 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors }: Step4Ride
                             {errors.idNumber && <span className="text-red-500 text-xs font-medium">{errors.idNumber}</span>}
                         </label>
                         <label className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                Date of Birth <span className="text-red-500">*</span>
+                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
+                                <span>Date of Birth <span className="text-red-500">*</span></span>
+                                {data.dob && (
+                                    <span className="text-primary normal-case font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
+                                        {calculateAge(data.dob)} years old
+                                    </span>
+                                )}
                             </span>
                             <div className="relative">
                                 <input

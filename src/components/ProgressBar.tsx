@@ -8,7 +8,7 @@ interface ProgressBarProps {
 
 const ProgressBar = ({ currentStep, totalSteps, stepTitle, onStepClick }: ProgressBarProps) => {
     const progressPercent = ((currentStep - 1) / (totalSteps - 1)) * 100;
-    const labels = ["Category", "Circuit", "Type", "Details", "Review"];
+    const labels = ["Circuit", "Type", "Details", "Review"];
 
     return (
         <div className="flex flex-col gap-3 pb-8 w-full">

@@ -1,4 +1,7 @@
 import type { TeamDetails, TeamMember } from '../types';
+import ErrorBanner from './ErrorBanner';
+import { calculateAge } from '../utils';
+
 
 interface Step4TeamDetailsProps {
     data: TeamDetails;
@@ -6,9 +9,10 @@ interface Step4TeamDetailsProps {
     onNext: () => void;
     onBack: () => void;
     errors: Record<string, string>;
+    formErrors: string[];
 }
 
-const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors }: Step4TeamDetailsProps) => {
+const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors }: Step4TeamDetailsProps) => {
     const updateMember = (id: string, field: keyof TeamMember, value: any) => {
         const newMembers = data.members.map(m =>
             m.id === id ? { ...m, [field]: value } : m
@@ -45,6 +49,8 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors }: Step4TeamD
                     Enter your team details and add your fellow warriors. Minimum 2 members required.
                 </p>
             </div>
+
+            <ErrorBanner errors={formErrors} />
 
 
             <form className="flex flex-col gap-8" onSubmit={(e) => e.preventDefault()}>
@@ -187,8 +193,13 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors }: Step4TeamD
                                     {errors[`${member.id}.idNumber`] && <span className="text-red-500 text-xs font-medium">{errors[`${member.id}.idNumber`]}</span>}
                                 </label>
                                 <label className="flex flex-col gap-2">
-                                    <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                        Date of Birth <span className="text-red-500">*</span>
+                                    <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
+                                        <span>Date of Birth <span className="text-red-500">*</span></span>
+                                        {member.dob && (
+                                            <span className="text-primary normal-case font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
+                                                {calculateAge(member.dob)} years old
+                                            </span>
+                                        )}
                                     </span>
                                     <input
                                         className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors[`${member.id}.dob`]
