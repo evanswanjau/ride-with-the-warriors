@@ -1,15 +1,47 @@
-import { useNavigate } from 'react-router-dom';
+// Import all local images from assets/images
+import img1 from '../assets/images/0J6A9936-17-min.jpeg';
+import img2 from '../assets/images/0J6A9951-18-min.jpeg';
+import img3 from '../assets/images/0J6A9965-19-min.jpeg';
+import img4 from '../assets/images/0J6A9984-21-min.jpeg';
+import img5 from '../assets/images/0J6A9994-22-min.jpeg';
+import img6 from '../assets/images/296A0066-27-min.jpeg';
+import img7 from '../assets/images/296A0069-28-min.jpeg';
+import img8 from '../assets/images/296A0071-29-min.jpeg';
+import img9 from '../assets/images/296A0075-30-min.jpeg';
+import img10 from '../assets/images/296A0113-31-min.jpeg';
+import img11 from '../assets/images/296A0118-32-min.jpeg';
+import img12 from '../assets/images/296A0184-33-min.jpeg';
+import img13 from '../assets/images/296A0186-34-min.jpeg';
+import img14 from '../assets/images/296A0190-35-min.jpeg';
+import img15 from '../assets/images/296A0192-36-min.jpeg';
+import img16 from '../assets/images/296A0202-37-min.jpeg';
+import img17 from '../assets/images/296A0205-38-min.jpeg';
+import img18 from '../assets/images/296A0209-39-min.jpeg';
+import img19 from '../assets/images/296A0219-40-min.jpeg';
+import img20 from '../assets/images/296A0224-41-min.jpeg';
 
 const Gallery = () => {
-    const navigate = useNavigate();
-
     const images = [
-        { url: 'https://images.unsplash.com/photo-1541625602330-2277a1cd13a1?q=80&w=1000', title: 'Mountain Trail Rush' },
-        { url: 'https://images.unsplash.com/photo-1444491741275-3747c53c99b4?q=80&w=1000', title: 'Sunset Peak Ride' },
-        { url: 'https://images.unsplash.com/photo-1532298229144-0ee0c33a1032?q=80&w=1000', title: 'Valley Sprint' },
-        { url: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=1000', title: 'Team Formation' },
-        { url: 'https://images.unsplash.com/photo-1471506480208-91b3a4cc78be?q=80&w=1000', title: 'The Great Ascent' },
-        { url: 'https://images.unsplash.com/photo-1596464716127-f2a82984de30?q=80&w=1000', title: 'Coastal Breeze' }
+        { url: img1, title: 'Mountain Trail Rush' },
+        { url: img2, title: 'Sunset Peak Ride' },
+        { url: img3, title: 'Valley Sprint' },
+        { url: img4, title: 'Team Formation' },
+        { url: img5, title: 'The Great Ascent' },
+        { url: img6, title: 'Coastal Breeze' },
+        { url: img7, title: 'Morning Mist Ride' },
+        { url: img8, title: 'Peak Performance' },
+        { url: img9, title: 'Trail Blazers' },
+        { url: img10, title: 'Endurance Test' },
+        { url: img11, title: 'Nature Sprint' },
+        { url: img12, title: 'Group Harmony' },
+        { url: img13, title: 'Summit Reach' },
+        { url: img14, title: 'Wild Ride' },
+        { url: img15, title: 'Speed of Light' },
+        { url: img16, title: 'Rhythm of the Ride' },
+        { url: img17, title: 'Horizon Call' },
+        { url: img18, title: 'Spirit of Warrior' },
+        { url: img19, title: 'Boundless Energy' },
+        { url: img20, title: 'Final Push' }
     ];
 
     return (
@@ -21,29 +53,16 @@ const Gallery = () => {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 max-w-full h-full">
                 {images.map((img, idx) => (
-                    <div key={idx} className="group relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-neutral-100 dark:bg-neutral-800 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                    <div key={idx} className="group relative aspect-[16/10] overflow-hidden rounded-2xl bg-neutral-100 dark:bg-neutral-800 transition-all duration-700">
                         <img
                             src={img.url}
                             alt={img.title}
-                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                            className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
-                            <h3 className="text-white text-2xl font-bold translate-y-4 group-hover:translate-y-0 transition-transform duration-500">{img.title}</h3>
-                            <p className="text-white/60 text-sm font-medium translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">Ride With The Warriors 2024</p>
-                        </div>
                     </div>
                 ))}
-            </div>
-
-            <div className="mt-20 text-center">
-                <button
-                    onClick={() => navigate('/register/step/1')}
-                    className="px-10 py-5 bg-primary text-white text-lg font-black rounded-2xl shadow-xl shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-1 transition-all active:scale-95"
-                >
-                    Register for Next Event
-                </button>
             </div>
         </div>
     );

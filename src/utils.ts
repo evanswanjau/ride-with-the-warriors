@@ -32,15 +32,14 @@ export interface Classification {
 export const getClassification = (circuitId: string, type: string, age: number | null = null, familyCategory: string = ''): Classification => {
     // Family Circuit / 5 KM
     if (circuitId === 'family' || type === 'family' || (circuitId === 'family' && type === 'individual')) {
-        // Mums on 5KM are in Tigers category
         if (familyCategory === 'tigers' || (type === 'individual' && circuitId === 'family')) {
-            return { category: 'Tigers', regRange: 'T101–T199', price: 2000, colorCode: 'Pink', hexColor: '#ec4899', remarks: 'Mums' };
+            return { category: 'Moms', regRange: 'T101–T200', price: 2000, colorCode: 'Pink', hexColor: '#ec4899', remarks: 'Moms only' };
         }
         if (familyCategory === 'cubs') {
-            return { category: 'Cubs', regRange: '8000–8999', price: 1000, colorCode: 'Red', hexColor: '#ef4444', remarks: 'Kids 4–8' };
+            return { category: 'Cubs', regRange: '8001–9000', price: 1000, colorCode: 'Red', hexColor: '#ef4444', remarks: 'Kids 4–8' };
         }
         if (familyCategory === 'champs') {
-            return { category: 'Champs', regRange: '9000–9999', price: 1000, colorCode: 'Brown', hexColor: '#78350f', remarks: 'Kids 9–13' };
+            return { category: 'Champs', regRange: '9001–10000', price: 1000, colorCode: 'Brown', hexColor: '#78350f', remarks: 'Kids 9–13' };
         }
     }
 
@@ -79,4 +78,44 @@ export const getClassification = (circuitId: string, type: string, age: number |
 
     // Fallback
     return { category: 'Rider', regRange: 'TBD', price: 2000, colorCode: 'Black', hexColor: '#000000', remarks: '' };
+};
+
+export const getCategoryColor = (id: string | null | undefined): string => {
+    if (!id) return '#9ca3af'; // Gray-400 for unknown
+
+    // Parse numeric ID if possible (for pure numeric IDs)
+    const numId = parseInt(id.replace(/\D/g, ''), 10);
+
+    // Tigers (T101...) or Family special cases might be non-numeric or specific ranges
+    if (id.toUpperCase().startsWith('T') || (id.startsWith('8') && id.length === 4) || (id.startsWith('9') && id.length === 4)) {
+        if (id.toUpperCase().startsWith('T')) return '#ec4899'; // Pink (Moms)
+        if (numId >= 8001 && numId <= 9000) return '#ef4444'; // Red (Cubs)
+        if (numId >= 9001 && numId <= 10000) return '#78350f'; // Brown (Champs)
+    }
+
+    // Teams (Blitz) 7000-7999 -> Sky Blue
+    if (numId >= 7000 && numId <= 7999) return '#87CEEB';
+
+    // Veterans 6000-6999 -> Navy Blue
+    if (numId >= 6000 && numId <= 6999) return '#000080';
+
+    // Vanguard 5000-5999 -> Green
+    if (numId >= 5000 && numId <= 5999) return '#22c55e';
+
+    // Airborne 4000-4999 -> Purple
+    if (numId >= 4000 && numId <= 4999) return '#a855f7';
+
+    // Commanders 3000-3999 -> White
+    if (numId >= 3000 && numId <= 3999) return '#ffffff';
+
+    // Recon Individual 2000-2999 -> Yellow
+    if (numId >= 2000 && numId <= 2999) return '#eab308';
+
+    // Corporate Teams 1000-1999 -> Orange
+    if (numId >= 1000 && numId <= 1999) return '#f97316';
+
+    // Recon Teams 0001-1000 -> Grey
+    if (numId >= 1 && numId <= 1000) return '#6b7280';
+
+    return '#9ca3af'; // Default
 };

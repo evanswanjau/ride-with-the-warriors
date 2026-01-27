@@ -31,10 +31,14 @@ export interface JuniorRider {
 
 export interface FamilyDetails {
     guardian: {
-        fullName: string;
+        firstName: string;
+        lastName: string;
+        fullName: string; // Redundant but kept for compatibility, we will sync it
+        dob: string;      // Required if participation is 'mom'
         emergencyPhone: string;
         email: string;
         relationship: string;
+        participation: 'none' | 'mom' | 'other';
     };
     riders: {
         [category: string]: JuniorRider[];
@@ -47,7 +51,7 @@ export interface Circuit {
     subtitle: string;
     description: string;
     icon: string;
-    imageUrl: string;
+    imageUrl?: string;
     distance: string;
     price: number;
     date: string;

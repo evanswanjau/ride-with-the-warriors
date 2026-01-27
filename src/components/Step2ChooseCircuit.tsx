@@ -1,9 +1,9 @@
 import CircuitCard from './CircuitCard';
 import { CIRCUITS } from '../constants';
-import blitzImage from '../assets/blitz.jpg';
-import intermediateImage from '../assets/intermediate.jpg';
-import corporateImage from '../assets/corporate.jpg';
-import familyImage from '../assets/family.jpg';
+import blitzImage from '../assets/images/0J6A9936-17-min.jpeg';
+import intermediateImage from '../assets/images/0J6A9951-18-min.jpeg';
+import corporateImage from '../assets/images/0J6A9984-21-min.jpeg';
+import familyImage from '../assets/images/296A0219-40-min.jpeg';
 
 const CIRCUIT_IMAGES: Record<string, string> = {
     blitz: blitzImage,
@@ -41,7 +41,7 @@ const Step2ChooseCircuit = ({
                                 distance={circuit.distance}
                                 subtitle={circuit.subtitle}
                                 description={circuit.description}
-                                imageUrl={CIRCUIT_IMAGES[circuit.id] || circuit.imageUrl}
+                                imageUrl={CIRCUIT_IMAGES[circuit.id] || circuit.imageUrl || ''}
                                 isSelected={selectedCircuit === circuit.id}
                                 onSelect={onSelect}
                             />

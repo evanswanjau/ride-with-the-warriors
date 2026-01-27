@@ -150,13 +150,21 @@ const Step5Review = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Guardian Name</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{familyData.guardian.fullName}</p>
+                            <p className="text-text-light dark:text-white text-base font-medium">{familyData.guardian.firstName} {familyData.guardian.lastName}</p>
+                        </div>
+                        <div>
+                            <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Participation</p>
+                            <p className="text-text-light dark:text-white text-base font-medium capitalize">
+                                {familyData.guardian.participation === 'none' ? 'Not riding' :
+                                    familyData.guardian.participation === 'mom' ? 'Riding as a Mom (5km)' :
+                                        'Riding in another circuit'}
+                            </p>
                         </div>
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Emergency Contact</p>
                             <p className="text-text-light dark:text-white text-base font-medium">{familyData.guardian.emergencyPhone}</p>
                         </div>
-                        <div className="md:col-span-2">
+                        <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Email</p>
                             <p className="text-text-light dark:text-white text-base font-medium">{familyData.guardian.email}</p>
                         </div>

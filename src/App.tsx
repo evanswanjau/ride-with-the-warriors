@@ -17,7 +17,7 @@ import SuccessPage from './components/SuccessPage';
 import Gallery from './components/Gallery';
 import Rules from './components/Rules';
 import type { RiderDetails, TeamDetails, FamilyDetails } from './types';
-import { isValidKenyanPhone, isValidID } from './utils';
+import { isValidKenyanPhone, isValidID, calculateAge } from './utils';
 import { TEST_SCENARIOS, type TestScenario } from './testData';
 import { API_BASE_URL } from './config';
 
@@ -74,7 +74,7 @@ const App = () => {
   });
 
   const [familyDetails, setFamilyDetails] = useState<FamilyDetails>({
-    guardian: { fullName: '', emergencyPhone: '', email: '', relationship: '' },
+    guardian: { firstName: '', lastName: '', fullName: '', emergencyPhone: '', email: '', relationship: '', participation: 'none', dob: '' },
     riders: { cubs: [], champs: [], tigers: [] }
   });
 
@@ -110,7 +110,13 @@ const App = () => {
         if (!riderDetails.idNumber.trim()) newErrors.idNumber = 'ID/Passport is required';
         else if (!isValidID(riderDetails.idNumber)) newErrors.idNumber = 'ID must be 8-10 digits only';
         if (!riderDetails.dob) newErrors.dob = 'Date of birth is required';
-        else if (new Date(riderDetails.dob) > new Date()) newErrors.dob = 'Date of birth cannot be in the future';
+        else {
+          const age = calculateAge(riderDetails.dob);
+          if (new Date(riderDetails.dob) > new Date()) newErrors.dob = 'Date of birth cannot be in the future';
+          else if (selectedCircuit !== 'family' && age !== null && age < 13) {
+            newErrors.dob = 'Must be at least 13 years old for this circuit';
+          }
+        }
         if (!riderDetails.gender) newErrors.gender = 'Gender is required';
       }
       else if (registrationType === 'team') {
@@ -126,7 +132,13 @@ const App = () => {
           if (!member.idNumber.trim()) newErrors[`${member.id}.idNumber`] = 'Required';
           else if (!isValidID(member.idNumber)) newErrors[`${member.id}.idNumber`] = '8-10 digits only';
           if (!member.dob) newErrors[`${member.id}.dob`] = 'Required';
-          else if (new Date(member.dob) > new Date()) newErrors[`${member.id}.dob`] = 'Invalid';
+          else {
+            const age = calculateAge(member.dob);
+            if (new Date(member.dob) > new Date()) newErrors[`${member.id}.dob`] = 'Invalid';
+            else if (selectedCircuit !== 'family' && age !== null && age < 13) {
+              newErrors[`${member.id}.dob`] = 'Must be 13+';
+            }
+          }
           if (!member.gender) newErrors[`${member.id}.gender`] = 'Required';
         });
 
@@ -146,19 +158,41 @@ const App = () => {
         }
       }
       else if (registrationType === 'family') {
-        if (!familyDetails.guardian.fullName.trim()) newErrors['guardian.fullName'] = 'Guardian name is required';
+        if (!familyDetails.guardian.firstName.trim()) newErrors['guardian.firstName'] = 'First name is required';
+        if (!familyDetails.guardian.lastName.trim()) newErrors['guardian.lastName'] = 'Last name is required';
         if (!familyDetails.guardian.email.trim()) newErrors['guardian.email'] = 'Guardian email is required';
         else if (!/\S+@\S+\.\S+/.test(familyDetails.guardian.email)) newErrors['guardian.email'] = 'Invalid email';
         if (!familyDetails.guardian.emergencyPhone.trim()) newErrors['guardian.emergencyPhone'] = 'Emergency phone is required';
         else if (!isValidKenyanPhone(familyDetails.guardian.emergencyPhone)) newErrors['guardian.emergencyPhone'] = 'Invalid Kenyan number';
         if (!familyDetails.guardian.relationship) newErrors['guardian.relationship'] = 'Relationship is required';
+        if (!familyDetails.guardian.participation) newErrors['guardian.participation'] = 'Required';
 
-        Object.values(familyDetails.riders).forEach((riders) => {
+        if (familyDetails.guardian.participation === 'mom') {
+          if (!familyDetails.guardian.dob) newErrors['guardian.dob'] = 'Required';
+          else {
+            const age = calculateAge(familyDetails.guardian.dob);
+            if (new Date(familyDetails.guardian.dob) > new Date()) newErrors['guardian.dob'] = 'Invalid';
+            else if (age !== null && age < 18) {
+              newErrors['guardian.dob'] = 'Moms must be 18+';
+            }
+          }
+        }
+
+        Object.entries(familyDetails.riders).forEach(([category, riders]) => {
           riders.forEach(rider => {
             if (!rider.firstName.trim()) newErrors[`${rider.id}.firstName`] = 'Required';
             if (!rider.lastName.trim()) newErrors[`${rider.id}.lastName`] = 'Required';
             if (!rider.dob) newErrors[`${rider.id}.dob`] = 'Required';
-            else if (new Date(rider.dob) > new Date()) newErrors[`${rider.id}.dob`] = 'Invalid';
+            else {
+              const age = calculateAge(rider.dob);
+              if (new Date(rider.dob) > new Date()) newErrors[`${rider.id}.dob`] = 'Invalid';
+              else if (age === null) newErrors[`${rider.id}.dob`] = 'Invalid';
+              else if (category === 'cubs' && (age < 4 || age > 8)) {
+                newErrors[`${rider.id}.dob`] = 'Cubs must be 4-8 years old';
+              } else if (category === 'champs' && (age < 9 || age > 13)) {
+                newErrors[`${rider.id}.dob`] = 'Champs must be 9-13 years old';
+              }
+            }
             if (!rider.gender) newErrors[`${rider.id}.gender`] = 'Required';
           });
         });
@@ -230,7 +264,9 @@ const App = () => {
                 if (duplicateEmails.includes(m.email)) newErrors[`${m.id}.email`] = 'Already registered';
               });
             } else if (registrationType === 'family') {
-              if (duplicateEmails.includes(familyDetails.guardian.email)) newErrors['guardian.email'] = 'Guardian already registered';
+              if (duplicateEmails.includes(familyDetails.guardian.email) && familyDetails.guardian.participation === 'mom') {
+                newErrors['guardian.email'] = 'Guardian already registered';
+              }
             }
 
             setErrors(newErrors);
@@ -344,8 +380,8 @@ const App = () => {
       <Route path="/success/:regId" element={<SuccessRoute setFoundRegistration={setFoundRegistration} />} />
 
       {/* Profile & Search */}
-      <Route path="/search" element={<ProfileLookup onFound={(reg) => setFoundRegistration(reg)} />} />
-      <Route path="/profile/:id" element={<ProfileRoute foundRegistration={foundRegistration} setFoundRegistration={setFoundRegistration} />} />
+      <Route path="/search" element={<Layout><ProfileLookup onFound={(reg) => setFoundRegistration(reg)} /></Layout>} />
+      <Route path="/profile/:id" element={<Layout><ProfileRoute foundRegistration={foundRegistration} setFoundRegistration={setFoundRegistration} /></Layout>} />
 
       {/* Info Pages */}
       <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
@@ -398,12 +434,15 @@ const RegistrationFlow = ({
       case 1:
         return <Step2ChooseCircuit selectedCircuit={selectedCircuit} onSelect={setSelectedCircuit} onNext={() => handleNext(1)} onBack={() => { }} />;
       case 2:
+        if (!selectedCircuit) return <Navigate to="/register/step/1" replace />;
         return <Step3RegistrationType selectedCircuit={selectedCircuit} selectedType={registrationType} onSelect={setRegistrationType} onNext={() => handleNext(2)} onBack={() => handleBack(2)} />;
       case 3:
+        if (!selectedCircuit) return <Navigate to="/register/step/1" replace />;
         if (registrationType === 'individual') return <Step4RiderDetails data={riderDetails} onChange={setRiderDetails} onNext={() => handleNext(3)} onBack={() => handleBack(3)} errors={errors} formErrors={formErrors} isSubmitting={isSubmitting} />;
         if (registrationType === 'family') return <FamilyRegistrationFlow data={familyDetails} onChange={setFamilyDetails} onNext={() => handleNext(3)} onBack={() => handleBack(3)} errors={errors} formErrors={formErrors} isSubmitting={isSubmitting} />;
         return <Step4TeamDetails data={teamDetails} onChange={setTeamDetails} onNext={() => handleNext(3)} onBack={() => handleBack(3)} errors={errors} formErrors={formErrors} isSubmitting={isSubmitting} />;
       case 4:
+        if (!selectedCircuit) return <Navigate to="/register/step/1" replace />;
         return <Step5Review selectedCircuitId={selectedCircuit} registrationType={registrationType} riderData={riderDetails} teamData={teamDetails} familyData={familyDetails} onBack={() => handleBack(4)} onSubmit={handleSubmit} isSubmitting={isSubmitting} registrationId={registrationId} />;
       default:
         return <Navigate to="/register/step/1" replace />;

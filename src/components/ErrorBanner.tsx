@@ -14,7 +14,7 @@ const ErrorBanner = ({ errors }: ErrorBannerProps) => {
             <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm">
                 <div className="flex items-start">
                     <div className="flex-shrink-0">
-                        <span className="material-icons text-red-500 text-2xl">error_outline</span>
+                        <span className="material-symbols-outlined text-red-500 text-2xl">error</span>
                     </div>
                     <div className="ml-3">
                         <h3 className="text-sm font-bold text-red-800 dark:text-red-400 uppercase tracking-wider">

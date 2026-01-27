@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import * as XLSX from 'xlsx';
+import { getCategoryColor } from '../utils';
 import { CIRCUITS } from '../constants';
 import { API_BASE_URL } from '../config';
 
@@ -17,16 +19,18 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         circuitId: '',
         type: '',
         status: '',
+        category: '',
         search: ''
     });
     const [pagination, setPagination] = useState({
         page: 1,
+        limit: 10,
         total: 0,
         pages: 1
     });
     const [isDarkMode, setIsDarkMode] = useState(() => {
         const saved = localStorage.getItem('adminTheme');
-        return saved ? saved === 'dark' : true;
+        return saved ? saved === 'dark' : false;
     });
 
     useEffect(() => {
@@ -42,6 +46,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             setLoading(true);
             const queryParams = new URLSearchParams({
                 page: String(pagination.page),
+                limit: String(pagination.limit),
                 ...filter
             });
 
@@ -108,10 +113,46 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         }
     };
 
+    const handleExport = async () => {
+        try {
+            const queryParams = new URLSearchParams({
+                limit: '10000',
+                ...filter
+            });
+            const response = await fetch(`${API_BASE_URL}/admin/registrations?${queryParams}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+
+            if (!data.registrations) return;
+
+            const ws = XLSX.utils.json_to_sheet(data.registrations.map((r: any) => ({
+                ID: r.id,
+                Name: `${r.firstName} ${r.lastName}`,
+                Email: r.email,
+                Phone: r.phoneNumber,
+                Team: r.teamName || '',
+                Type: r.type,
+                Circuit: r.circuitId,
+                Category: r.category,
+                Amount: r.totalAmount,
+                Status: r.status,
+                Date: new Date(r.createdAt).toLocaleString()
+            })));
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Registrations");
+            XLSX.writeFile(wb, "Registrations.xlsx");
+        } catch (err) {
+            console.error('Export failed:', err);
+            alert('Export failed');
+        }
+    };
+
     return (
         <div className={`min-h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-neutral-900 text-white' : 'bg-neutral-50 text-neutral-900'}`}>
             {/* Header */}
-            <header className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} border-b py-4 px-8 flex items-center justify-between sticky top-0 z-50 shadow-sm`}>
+            <header className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} border-b py-4 px-8 flex items-center justify-between sticky top-0 z-50`}>
                 <div className="flex items-center gap-4">
                     <div className="size-10 bg-primary/20 rounded-xl flex items-center justify-center">
                         <span className="material-symbols-outlined text-primary">shield_person</span>
@@ -122,6 +163,13 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
+                    <button
+                        onClick={handleExport}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 ${isDarkMode ? 'bg-green-600 hover:bg-green-500 text-white' : 'bg-green-500 hover:bg-green-600 text-white'}`}
+                    >
+                        <span className="material-symbols-outlined">table_view</span>
+                        Export Excel
+                    </button>
                     <button
                         onClick={() => setIsDarkMode(!isDarkMode)}
                         className={`size-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-neutral-700 hover:bg-neutral-600 text-yellow-400' : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-600'}`}
@@ -159,7 +207,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 )}
 
                 {/* Filters */}
-                <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} p-6 rounded-3xl border flex flex-wrap gap-4 items-end shadow-sm`}>
+                <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} p-6 rounded-3xl border flex flex-wrap gap-4 items-end`}>
                     <div className="flex-1 min-w-[300px]">
                         <label className={`block text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-widest mb-2 ml-1`}>Search</label>
                         <div className="relative">
@@ -185,6 +233,19 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         </select>
                     </div>
                     <div>
+                        <label className={`block text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-widest mb-2 ml-1`}>Category</label>
+                        <select
+                            value={filter.category}
+                            onChange={(e) => setFilter({ ...filter, category: e.target.value })}
+                            className={`border rounded-xl py-2.5 px-4 text-sm outline-none transition-all ${isDarkMode ? 'bg-neutral-900 border-neutral-700 text-white focus:border-primary' : 'bg-neutral-50 border-neutral-200 text-neutral-900 focus:border-primary focus:bg-white'}`}
+                        >
+                            <option value="">All Categories</option>
+                            <option value="cubs">Cubs</option>
+                            <option value="champs">Champs</option>
+                            <option value="tigers">Tigers</option>
+                        </select>
+                    </div>
+                    <div>
                         <label className={`block text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-widest mb-2 ml-1`}>Status</label>
                         <select
                             value={filter.status}
@@ -201,10 +262,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 </div>
 
                 {/* Table Section */}
-                <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} rounded-3xl border overflow-hidden shadow-xl`}>
+                <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} rounded-3xl border overflow-hidden`}>
                     <table className="w-full text-left text-sm">
                         <thead>
                             <tr className={`${isDarkMode ? 'bg-neutral-700/50 text-neutral-400' : 'bg-neutral-50 text-neutral-500'} text-[10px] font-bold uppercase tracking-widest border-b ${isDarkMode ? 'border-neutral-700' : 'border-neutral-100'}`}>
+                                <th className="px-6 py-5 w-16 text-center">#</th>
                                 <th className="px-6 py-5">Participant</th>
                                 <th className="px-6 py-5">Category / Circuit</th>
                                 <th className="px-6 py-5">Contact Info</th>
@@ -219,10 +281,19 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 <tr><td colSpan={7} className="py-20 text-center text-neutral-500">Loading registrations...</td></tr>
                             ) : registrations.length === 0 ? (
                                 <tr><td colSpan={7} className="py-20 text-center text-neutral-500">No registrations found matching your criteria.</td></tr>
-                            ) : registrations.map(reg => (
+                            ) : registrations.map((reg, index) => (
                                 <tr key={reg.id} className={`transition-colors group ${isDarkMode ? 'hover:bg-neutral-700/30' : 'hover:bg-neutral-50'}`}>
+                                    <td className={`px-6 py-5 text-center font-mono text-xs ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'}`}>
+                                        {(pagination.page - 1) * pagination.limit + index + 1}
+                                    </td>
                                     <td className="px-6 py-5">
-                                        <div className={`font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>{reg.firstName || 'Unknown'} {reg.lastName || ''}</div>
+                                        <div className={`font-bold flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>
+                                            <span
+                                                className={`size-2 rounded-full shrink-0 ${getCategoryColor(reg.id) === '#ffffff' ? 'border border-neutral-300' : ''}`}
+                                                style={{ backgroundColor: getCategoryColor(reg.id) }}
+                                            ></span>
+                                            <span className="capitalize">{reg.firstName || 'Unknown'} {reg.lastName || ''}</span>
+                                        </div>
                                         <div className="text-[10px] text-neutral-500 font-mono tracking-tighter uppercase">{reg.id}</div>
                                     </td>
                                     <td className="px-6 py-5">
@@ -280,22 +351,38 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     </table>
 
                     {/* Pagination */}
-                    {pagination.pages > 1 && (
-                        <div className={`p-6 border-t flex justify-center gap-2 ${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-neutral-50 border-neutral-100'}`}>
-                            {[...Array(pagination.pages)].map((_, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() => setPagination({ ...pagination, page: i + 1 })}
-                                    className={`size-8 rounded-lg text-xs font-bold transition-all ${pagination.page === i + 1
-                                        ? 'bg-primary text-white'
-                                        : isDarkMode ? 'bg-neutral-900 text-neutral-400 hover:text-white' : 'bg-white text-neutral-600 hover:text-primary border'
-                                        }`}
-                                >
-                                    {i + 1}
-                                </button>
-                            ))}
+                    <div className={`p-6 border-t flex items-center justify-between ${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-neutral-50 border-neutral-100'}`}>
+                        <div className={`text-xs font-medium ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                            Showing <span className={isDarkMode ? 'text-white' : 'text-neutral-900'}>{(pagination.page - 1) * pagination.limit + 1}</span> to <span className={isDarkMode ? 'text-white' : 'text-neutral-900'}>{Math.min(pagination.page * pagination.limit, pagination.total)}</span> of <span className={isDarkMode ? 'text-white' : 'text-neutral-900'}>{pagination.total}</span> results
                         </div>
-                    )}
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setPagination({ ...pagination, page: Math.max(1, pagination.page - 1) })}
+                                disabled={pagination.page === 1}
+                                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${pagination.page === 1
+                                    ? 'opacity-50 cursor-not-allowed ' + (isDarkMode ? 'bg-neutral-900 text-neutral-600' : 'bg-neutral-100 text-neutral-400')
+                                    : isDarkMode ? 'bg-neutral-700 hover:bg-neutral-600 text-white' : 'bg-white hover:bg-neutral-50 text-neutral-600 border border-neutral-200'
+                                    }`}
+                            >
+                                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                                Previous
+                            </button>
+                            <div className={`px-4 py-2 rounded-lg text-xs font-bold ${isDarkMode ? 'bg-neutral-900 text-neutral-400' : 'bg-neutral-100 text-neutral-600'}`}>
+                                Page {pagination.page} of {pagination.pages}
+                            </div>
+                            <button
+                                onClick={() => setPagination({ ...pagination, page: Math.min(pagination.pages, pagination.page + 1) })}
+                                disabled={pagination.page === pagination.pages}
+                                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${pagination.page === pagination.pages
+                                    ? 'opacity-50 cursor-not-allowed ' + (isDarkMode ? 'bg-neutral-900 text-neutral-600' : 'bg-neutral-100 text-neutral-400')
+                                    : isDarkMode ? 'bg-neutral-700 hover:bg-neutral-600 text-white' : 'bg-white hover:bg-neutral-50 text-neutral-600 border border-neutral-200'
+                                    }`}
+                            >
+                                Next
+                                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
@@ -303,7 +390,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
 };
 
 const StatCard = ({ label, value, icon, color, isDarkMode }: any) => (
-    <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} p-6 rounded-3xl border shadow-sm`}>
+    <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} p-6 rounded-3xl border`}>
         <div className="flex justify-between items-start mb-4">
             <div className={`size-10 rounded-xl bg-${color}/10 flex items-center justify-center`}>
                 <span className={`material-symbols-outlined text-${color}`}>{icon}</span>
@@ -322,6 +409,8 @@ const getStatusColor = (status: string) => {
         default: return 'bg-yellow-500/10 text-yellow-500';
     }
 };
+
+
 
 
 export default AdminDashboard;

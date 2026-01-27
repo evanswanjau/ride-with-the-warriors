@@ -67,7 +67,7 @@ const ProfileLookup = ({ onFound }: ProfileLookupProps) => {
     };
 
     return (
-        <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center p-4">
+        <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
             <div className="w-full max-w-2xl">
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-neutral-900 dark:text-white mb-3">

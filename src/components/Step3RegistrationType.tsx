@@ -1,7 +1,7 @@
 import RegistrationTypeCard from './RegistrationTypeCard';
-import individualImage from '../assets/civilian.jpg';
-import teamImage from '../assets/corporate.jpg';
-import familyImage from '../assets/family.jpg';
+import individualImage from '../assets/images/296A0066-27-min.jpeg';
+import teamImage from '../assets/images/296A0184-33-min.jpeg';
+import familyImage from '../assets/images/296A0224-41-min.jpeg';
 
 interface Step3RegistrationTypeProps {
     selectedCircuit: string;

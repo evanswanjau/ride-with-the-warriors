@@ -61,20 +61,7 @@ const Rules = () => {
                     ))}
                 </div>
 
-                <div className="mt-20 p-10 rounded-[3rem] bg-neutral-900 text-white relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
-                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
-                        <div className="size-20 rounded-full bg-red-500 flex items-center justify-center animate-pulse">
-                            <span className="material-symbols-outlined text-4xl font-black text-white">warning</span>
-                        </div>
-                        <div>
-                            <h3 className="text-2xl font-black mb-2">Safety Notice</h3>
-                            <p className="text-neutral-400 text-lg leading-relaxed">
-                                Failure to comply with any of the above rules may lead to immediate disqualification without refund. We prioritize the safety of all warriors.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     );

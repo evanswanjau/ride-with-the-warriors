@@ -16,9 +16,8 @@ interface FamilyRegistrationFlowProps {
 
 const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: FamilyRegistrationFlowProps) => {
     const categories = [
-        { id: 'cubs', title: 'Cubs (Ages 3-5)', icon: 'pedal_bike' },
-        { id: 'champs', title: 'Champs (Ages 6-10)', icon: 'directions_bike' },
-        { id: 'tigers', title: 'Tigers (Ladies 18+)', icon: 'sports_score' }
+        { id: 'cubs', title: 'Cubs (Ages 4-8)', icon: 'pedal_bike' },
+        { id: 'champs', title: 'Champs (Ages 9-13)', icon: 'directions_bike' }
     ];
 
     const [activeCategory, setActiveCategory] = useState('cubs');
@@ -57,9 +56,33 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
     };
 
     const updateGuardian = (field: string, value: string) => {
+        const updatedGuardian = { ...data.guardian, [field]: value };
+
+        // Sync fullName
+        if (field === 'firstName' || field === 'lastName') {
+            updatedGuardian.fullName = `${field === 'firstName' ? value : updatedGuardian.firstName} ${field === 'lastName' ? value : updatedGuardian.lastName}`.trim();
+        }
+
+        let updatedRiders = { ...data.riders };
+
+        // Handle Mom syncing
+        if (updatedGuardian.participation === 'mom') {
+            const momRider: JuniorRider = {
+                id: 'mom-rider-id', // Fixed ID for the synced mom
+                firstName: updatedGuardian.firstName,
+                lastName: updatedGuardian.lastName,
+                dob: updatedGuardian.dob,
+                gender: 'female'
+            };
+            updatedRiders.tigers = [momRider];
+        } else {
+            updatedRiders.tigers = [];
+        }
+
         onChange({
             ...data,
-            guardian: { ...data.guardian, [field]: value }
+            guardian: updatedGuardian,
+            riders: updatedRiders
         });
     };
 
@@ -83,13 +106,13 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
 
             {/* Category Tabs */}
             <div className="px-4">
-                <div className="flex flex-col sm:flex-row border-b border-border-light dark:border-white/10 sm:justify-between gap-2 sm:gap-0">
+                <div className="flex flex-col sm:flex-row border-b border-[#e6e0d4] dark:border-[#2d332d] sm:justify-between gap-2 sm:gap-0">
                     {categories.map((cat) => (
                         <button
                             key={cat.id}
                             onClick={() => setActiveCategory(cat.id)}
                             className={`group flex flex-col items-center justify-center border-b-[3px] pb-[13px] pt-4 flex-1 transition-all ${activeCategory === cat.id
-                                ? 'border-primary text-text-light dark:text-white bg-white dark:bg-white/5 sm:bg-transparent rounded-t-lg sm:rounded-none'
+                                ? 'border-primary text-text-light dark:text-white bg-white dark:bg-[#2a2418] sm:bg-transparent rounded-t-lg sm:rounded-none'
                                 : 'border-transparent text-text-muted-light dark:text-gray-400 hover:border-border-light dark:hover:border-white/20'
                                 }`}
                             disabled={isSubmitting}
@@ -106,8 +129,8 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
             {/* Rider List */}
             <div className="px-4 flex flex-col gap-8">
                 {data.riders[activeCategory].map((rider: JuniorRider, index: number) => (
-                    <div key={rider.id} className="bg-white dark:bg-gray-800 rounded-xl border border-border-light dark:border-white/5 shadow-sm overflow-hidden transform transition-all hover:shadow-md">
-                        <div className="bg-primary/5 dark:bg-white/5 p-4 border-b border-border-light dark:border-white/5 flex justify-between items-center">
+                    <div key={rider.id} className="bg-white dark:bg-[#2a2418] rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-sm overflow-hidden transform transition-all hover:shadow-md">
+                        <div className="bg-primary/5 dark:bg-white/5 p-6 border-b border-neutral-100 dark:border-neutral-800 flex justify-between items-center">
                             <div className="flex items-center gap-2">
                                 <span className="material-symbols-outlined text-primary">face_6</span>
                                 <h3 className="text-text-light dark:text-white text-lg font-bold leading-tight">
@@ -116,19 +139,21 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                             </div>
                             <button
                                 onClick={() => removeRider(activeCategory, rider.id)}
-                                className="text-xs text-red-500 hover:text-red-700 font-medium flex items-center gap-1 transition-colors"
+                                className="text-xs text-red-500 hover:text-red-700 font-bold flex items-center gap-1 transition-colors bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-full"
                                 disabled={isSubmitting}
                             >
-                                <span className="material-symbols-outlined text-[16px]">delete</span> Remove
+                                <span className="material-symbols-outlined text-[16px]">delete</span> Delete
                             </button>
                         </div>
-                        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-text-light dark:text-gray-200">First Name</label>
+                        <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
+                                    First Name <span className="text-red-500">*</span>
+                                </span>
                                 <input
-                                    className={`h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 focus:ring-1 outline-none transition-all placeholder:text-text-muted-light ${errors[`${rider.id}.firstName`]
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                        : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors[`${rider.id}.firstName`]
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
+                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
                                         }`}
                                     placeholder="e.g. Leo"
                                     type="text"
@@ -138,12 +163,14 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                 />
                                 {errors[`${rider.id}.firstName`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.firstName`]}</span>}
                             </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-text-light dark:text-gray-200">Last Name</label>
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
+                                    Last Name <span className="text-red-500">*</span>
+                                </span>
                                 <input
-                                    className={`h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 focus:ring-1 outline-none transition-all placeholder:text-text-muted-light ${errors[`${rider.id}.lastName`]
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                        : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors[`${rider.id}.lastName`]
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
+                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
                                         }`}
                                     placeholder="e.g. Walker"
                                     type="text"
@@ -153,59 +180,64 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                 />
                                 {errors[`${rider.id}.lastName`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.lastName`]}</span>}
                             </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-text-light dark:text-gray-200 flex items-center justify-between">
-                                    <span>Date of Birth</span>
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
+                                    <span>Date of Birth <span className="text-red-500">*</span></span>
                                     {rider.dob && (
-                                        <span className="text-primary text-[10px] font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
-                                            {calculateAge(rider.dob)} years
+                                        <span className="text-primary normal-case font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
+                                            {calculateAge(rider.dob)} years old
                                         </span>
                                     )}
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        className={`w-full h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 focus:ring-1 outline-none transition-all ${errors[`${rider.id}.dob`]
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
-                                            }`}
-                                        placeholder="dd/mm/yyyy"
-                                        type="date"
-                                        value={rider.dob}
-                                        onChange={(e) => updateRider(activeCategory, rider.id, 'dob', e.target.value)}
-                                        disabled={isSubmitting}
-                                    />
-                                </div>
-                                <p className="text-xs text-text-muted-light dark:text-gray-400">
-                                    {activeCategory === 'cubs' ? 'Must be between 3 and 5 years old.' : activeCategory === 'champs' ? 'Must be between 6 and 10 years old.' : 'Must be 18 years or older.'}
+                                </span>
+                                <input
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors[`${rider.id}.dob`]
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
+                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
+                                        }`}
+                                    type="date"
+                                    value={rider.dob}
+                                    onChange={(e) => updateRider(activeCategory, rider.id, 'dob', e.target.value)}
+                                    disabled={isSubmitting}
+                                />
+                                <p className="text-[10px] font-bold text-text-muted-light dark:text-gray-500 uppercase tracking-widest mt-1">
+                                    {activeCategory === 'cubs' ? 'Age Range: 4-8 Years' : 'Age Range: 9-13 Years'}
                                 </p>
                                 {errors[`${rider.id}.dob`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.dob`]}</span>}
                             </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-text-light dark:text-gray-200">Gender</label>
-                                <div className="flex items-center gap-6 h-11 px-1">
-                                    <label className={`flex items-center gap-2 cursor-pointer group ${activeCategory === 'tigers' ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                                        <input
-                                            className="w-5 h-5 text-primary border-border-light focus:ring-primary bg-white dark:bg-gray-900 dark:border-gray-600 transition-all form-radio"
-                                            name={`gender_${rider.id}`}
-                                            type="radio"
-                                            value="male"
-                                            checked={rider.gender === 'male'}
-                                            onChange={() => updateRider(activeCategory, rider.id, 'gender', 'male')}
-                                            disabled={isSubmitting || activeCategory === 'tigers'}
-                                        />
-                                        <span className="text-text-light dark:text-white text-sm font-medium group-hover:text-primary transition-colors">Male</span>
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
+                                    Gender <span className="text-red-500">*</span>
+                                </span>
+                                <div className="flex gap-6 items-center h-[42px] px-1">
+                                    <label className="flex items-center gap-2 cursor-pointer group">
+                                        <div className="relative flex items-center justify-center">
+                                            <input
+                                                className="peer sr-only"
+                                                name={`gender_${rider.id}`}
+                                                type="radio"
+                                                value="male"
+                                                checked={rider.gender === 'male'}
+                                                onChange={() => updateRider(activeCategory, rider.id, 'gender', 'male')}
+                                                disabled={isSubmitting}
+                                            />
+                                            <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
+                                        </div>
+                                        <span className={`text-sm font-medium transition-colors ${rider.gender === 'male' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>Male</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer group">
-                                        <input
-                                            className="w-5 h-5 text-primary border-border-light focus:ring-primary bg-white dark:bg-gray-900 dark:border-gray-600 transition-all form-radio"
-                                            name={`gender_${rider.id}`}
-                                            type="radio"
-                                            value="female"
-                                            checked={rider.gender === 'female'}
-                                            onChange={() => updateRider(activeCategory, rider.id, 'gender', 'female')}
-                                            disabled={isSubmitting}
-                                        />
-                                        <span className="text-text-light dark:text-white text-sm font-medium group-hover:text-primary transition-colors">Female</span>
+                                        <div className="relative flex items-center justify-center">
+                                            <input
+                                                className="peer sr-only"
+                                                name={`gender_${rider.id}`}
+                                                type="radio"
+                                                value="female"
+                                                checked={rider.gender === 'female'}
+                                                onChange={() => updateRider(activeCategory, rider.id, 'gender', 'female')}
+                                                disabled={isSubmitting}
+                                            />
+                                            <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
+                                        </div>
+                                        <span className={`text-sm font-medium transition-colors ${rider.gender === 'female' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>Female</span>
                                     </label>
                                 </div>
                                 {errors[`${rider.id}.gender`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.gender`]}</span>}
@@ -217,101 +249,139 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                 <button
                     onClick={() => addRider(activeCategory)}
                     className="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-border-light dark:border-gray-600 rounded-xl text-text-muted-light dark:text-gray-400 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || (activeCategory === 'tigers' && data.riders.tigers.length >= 1)}
                 >
                     <span className="material-symbols-outlined group-hover:scale-110 transition-transform">add_circle</span>
-                    <span className="font-bold">Add Another {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1, -1)}</span>
+                    <span className="font-bold">
+                        {activeCategory === 'tigers' && data.riders.tigers.length >= 1
+                            ? 'Only one Mom can be added'
+                            : `Add Another ${activeCategory === 'tigers' ? 'Mom' : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1, -1)}`
+                        }
+                    </span>
                 </button>
 
                 <div className="h-px w-full bg-border-light dark:bg-white/10 my-2"></div>
 
                 {/* Guardian Section */}
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-6">
                     <div className="flex items-center gap-2 px-1">
                         <span className="material-symbols-outlined text-primary text-2xl">verified_user</span>
                         <h3 className="text-text-light dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">Guardian Information</h3>
-                        <span className="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide">Required</span>
+                        <span className="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide border border-red-100 dark:bg-red-900/40 dark:border-red-800">Required</span>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border-l-4 border-l-primary shadow-sm border-y border-r border-border-light dark:border-white/5">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="flex flex-col gap-1.5 md:col-span-3">
-                                <label className="text-sm font-semibold text-text-light dark:text-gray-200">
-                                    Full Name <span className="text-red-500">*</span>
-                                </label>
+                    <div className="bg-white dark:bg-[#2a2418] p-8 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-sm relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">First Name <span className="text-red-500">*</span></span>
                                 <input
-                                    className={`h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 focus:ring-1 outline-none transition-all placeholder:text-text-muted-light ${errors['guardian.fullName']
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                        : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
-                                        }`}
-                                    placeholder="Parent or Legal Guardian Name"
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.firstName'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
+                                    placeholder="Jane"
                                     type="text"
-                                    value={data.guardian.fullName}
-                                    onChange={(e) => updateGuardian('fullName', e.target.value)}
+                                    value={data.guardian.firstName}
+                                    onChange={(e) => updateGuardian('firstName', e.target.value)}
                                     disabled={isSubmitting}
                                 />
-                                {errors['guardian.fullName'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.fullName']}</span>}
+                                {errors['guardian.firstName'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.firstName']}</span>}
                             </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-text-light dark:text-gray-200">
-                                    Emergency Phone <span className="text-red-500">*</span>
-                                </label>
-                                <div className="relative">
-                                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted-light text-[20px]">phone</span>
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Last Name <span className="text-red-500">*</span></span>
+                                <input
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.lastName'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
+                                    placeholder="Doe"
+                                    type="text"
+                                    value={data.guardian.lastName}
+                                    onChange={(e) => updateGuardian('lastName', e.target.value)}
+                                    disabled={isSubmitting}
+                                />
+                                {errors['guardian.lastName'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.lastName']}</span>}
+                            </div>
+
+                            <div className="flex flex-col gap-2 md:col-span-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Participating in the ride? <span className="text-red-500">*</span></span>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    {[
+                                        { id: 'none', label: 'Not riding', icon: 'person_off' },
+                                        { id: 'mom', label: 'Riding as a Mom (5km)', icon: 'woman' },
+                                        { id: 'other', label: 'Riding in another circuit', icon: 'directions_bike' }
+                                    ].map((opt) => (
+                                        <label key={opt.id} className={`flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${data.guardian.participation === opt.id ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-gray-200 dark:border-gray-700 hover:bg-neutral-50 dark:hover:bg-neutral-800'}`}>
+                                            <input
+                                                type="radio"
+                                                name="participation"
+                                                className="peer sr-only"
+                                                checked={data.guardian.participation === opt.id}
+                                                onChange={() => updateGuardian('participation', opt.id)}
+                                            />
+                                            <div className={`size-8 rounded-lg flex items-center justify-center ${data.guardian.participation === opt.id ? 'bg-primary text-white' : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400'}`}>
+                                                <span className="material-symbols-outlined text-[20px]">{opt.icon}</span>
+                                            </div>
+                                            <span className={`text-sm font-bold ${data.guardian.participation === opt.id ? 'text-text-light dark:text-white' : 'text-text-muted-light dark:text-gray-400'}`}>{opt.label}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {data.guardian.participation === 'mom' && (
+                                <div className="flex flex-col gap-2 md:col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
+                                        <span>Date of Birth (Mom) <span className="text-red-500">*</span></span>
+                                        {data.guardian.dob && (
+                                            <span className="text-primary normal-case font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
+                                                {calculateAge(data.guardian.dob)} years old
+                                            </span>
+                                        )}
+                                    </span>
                                     <input
-                                        className={`w-full h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white pl-10 pr-4 focus:ring-1 outline-none transition-all placeholder:text-text-muted-light ${errors['guardian.emergencyPhone']
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
-                                            }`}
-                                        placeholder="+254 7XX XXX XXX"
-                                        type="tel"
-                                        value={data.guardian.emergencyPhone}
-                                        onChange={(e) => updateGuardian('emergencyPhone', e.target.value)}
+                                        className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.dob'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
+                                        type="date"
+                                        value={data.guardian.dob}
+                                        onChange={(e) => updateGuardian('dob', e.target.value)}
                                         disabled={isSubmitting}
                                     />
+                                    {errors['guardian.dob'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.dob']}</span>}
                                 </div>
+                            )}
+
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Emergency Phone <span className="text-red-500">*</span></span>
+                                <input
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.emergencyPhone'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
+                                    placeholder="+254 7XX XXX XXX"
+                                    type="tel"
+                                    value={data.guardian.emergencyPhone}
+                                    onChange={(e) => updateGuardian('emergencyPhone', e.target.value)}
+                                    disabled={isSubmitting}
+                                />
                                 {errors['guardian.emergencyPhone'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.emergencyPhone']}</span>}
                             </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-text-light dark:text-gray-200">
-                                    Email Address <span className="text-red-500">*</span>
-                                </label>
-                                <div className="relative">
-                                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted-light text-[20px]">email</span>
-                                    <input
-                                        className={`w-full h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white pl-10 pr-4 focus:ring-1 outline-none transition-all placeholder:text-text-muted-light ${errors['guardian.email']
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
-                                            }`}
-                                        placeholder="guardian@example.com"
-                                        type="email"
-                                        value={data.guardian.email}
-                                        onChange={(e) => updateGuardian('email', e.target.value)}
-                                        disabled={isSubmitting}
-                                    />
-                                </div>
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Email Address <span className="text-red-500">*</span></span>
+                                <input
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.email'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
+                                    placeholder="email@example.com"
+                                    type="email"
+                                    value={data.guardian.email}
+                                    onChange={(e) => updateGuardian('email', e.target.value)}
+                                    disabled={isSubmitting}
+                                />
                                 {errors['guardian.email'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.email']}</span>}
                             </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-text-light dark:text-gray-200">
-                                    Relationship to Child <span className="text-red-500">*</span>
-                                </label>
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Relationship <span className="text-red-500">*</span></span>
                                 <div className="relative">
                                     <select
-                                        className={`w-full h-11 rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 appearance-none focus:ring-1 outline-none transition-all cursor-pointer ${errors['guardian.relationship']
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-border-light dark:border-gray-600 focus:ring-primary focus:border-primary'
-                                            }`}
+                                        className={`w-full h-[42px] rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 appearance-none outline-none transition-all cursor-pointer text-sm ${errors['guardian.relationship'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
                                         value={data.guardian.relationship}
                                         onChange={(e) => updateGuardian('relationship', e.target.value)}
                                         disabled={isSubmitting}
                                     >
-                                        <option disabled value="">Select relationship</option>
+                                        <option value="" disabled>Select relationship</option>
                                         <option value="parent">Parent</option>
-                                        <option value="grandparent">Grandparent</option>
                                         <option value="legal_guardian">Legal Guardian</option>
                                         <option value="other">Other</option>
                                     </select>
-                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted-light">expand_more</span>
+                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
                                 </div>
                                 {errors['guardian.relationship'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.relationship']}</span>}
                             </div>
@@ -324,18 +394,18 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                 </div>
 
                 {/* Footer Buttons */}
-                <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 pb-12">
+                <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-[#e6e0d4] dark:border-[#2d332d]">
                     <button
                         onClick={onBack}
-                        className="w-full sm:w-auto px-8 h-12 rounded-lg border border-border-light dark:border-gray-600 text-text-light dark:text-white font-bold hover:bg-background-light dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                        className="flex items-center justify-center h-12 px-6 rounded-lg text-gray-500 hover:text-[#1c170d] dark:text-gray-400 dark:hover:text-white font-bold transition-colors cursor-pointer"
                         disabled={isSubmitting}
                     >
-                        <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+                        <span className="material-symbols-outlined mr-2 text-sm">arrow_back</span>
                         Back
                     </button>
                     <button
                         onClick={onNext}
-                        className="w-full sm:w-auto px-10 h-12 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark hover:shadow-primary/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+                        className="flex min-w-[200px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-green-600 active:bg-green-700 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-green-500/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                         disabled={isSubmitting}
                     >
                         {isSubmitting ? (
@@ -345,8 +415,8 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                             </div>
                         ) : (
                             <>
-                                Next: Review
-                                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-[20px]">arrow_forward</span>
+                                <span className="truncate">Next: Review</span>
+                                <span className="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
                             </>
                         )}
                     </button>

@@ -11,6 +11,16 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        const saved = localStorage.getItem('adminTheme');
+        return saved ? saved === 'dark' : false;
+    });
+
+    const toggleTheme = () => {
+        const nextMode = !isDarkMode;
+        setIsDarkMode(nextMode);
+        localStorage.setItem('adminTheme', nextMode ? 'dark' : 'light');
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,28 +54,37 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
     };
 
     return (
-        <div className="min-h-screen bg-neutral-900 flex items-center justify-center p-4 font-sans">
+        <div className={`min-h-screen flex items-center justify-center p-4 font-sans transition-colors duration-300 ${isDarkMode ? 'bg-neutral-900' : 'bg-neutral-50'}`}>
+            <div className="fixed top-6 right-6">
+                <button
+                    onClick={toggleTheme}
+                    className={`size-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-yellow-400' : 'bg-white hover:bg-neutral-100 text-neutral-600 shadow-sm border'}`}
+                >
+                    <span className="material-symbols-outlined">{isDarkMode ? 'light_mode' : 'dark_mode'}</span>
+                </button>
+            </div>
+
             <div className="w-full max-w-md">
                 <button
                     onClick={onBack}
-                    className="mb-8 flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
+                    className={`mb-8 flex items-center gap-2 transition-colors ${isDarkMode ? 'text-neutral-400 hover:text-white' : 'text-neutral-500 hover:text-neutral-900'}`}
                 >
                     <span className="material-symbols-outlined">arrow_back</span>
                     <span>Back to Home</span>
                 </button>
 
-                <div className="bg-neutral-800 rounded-3xl shadow-2xl p-8 border border-neutral-700">
+                <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200 shadow-xl'} rounded-3xl p-8 border`}>
                     <div className="text-center mb-10">
                         <div className="inline-flex size-16 rounded-2xl bg-primary/10 items-center justify-center mb-4">
                             <span className="material-symbols-outlined text-primary text-3xl">admin_panel_settings</span>
                         </div>
-                        <h1 className="text-2xl font-bold text-white mb-2">Admin Portal</h1>
-                        <p className="text-neutral-400 text-sm">Secure access for event organizers</p>
+                        <h1 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>Admin Portal</h1>
+                        <p className={`${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'} text-sm`}>Secure access for event organizers</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2 ml-1">
+                            <label className={`block text-xs font-bold uppercase tracking-widest mb-2 ml-1 ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'}`}>
                                 Email Address
                             </label>
                             <input
@@ -73,28 +92,34 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 autoFocus
-                                className="w-full px-5 py-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                                className={`w-full px-5 py-4 rounded-xl outline-none transition-all ${isDarkMode
+                                    ? 'bg-neutral-900 border-neutral-700 text-white focus:border-primary'
+                                    : 'bg-neutral-50 border-neutral-200 text-neutral-900 focus:border-primary'
+                                    } border focus:ring-2 focus:ring-primary/20`}
                                 placeholder="admin@example.com"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2 ml-1">
+                            <label className={`block text-xs font-bold uppercase tracking-widest mb-2 ml-1 ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'}`}>
                                 Password
                             </label>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-5 py-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+                                className={`w-full px-5 py-4 rounded-xl outline-none transition-all ${isDarkMode
+                                    ? 'bg-neutral-900 border-neutral-700 text-white focus:border-primary'
+                                    : 'bg-neutral-50 border-neutral-200 text-neutral-900 focus:border-primary'
+                                    } border focus:ring-2 focus:ring-primary/20`}
                                 placeholder="••••••••"
                             />
                         </div>
 
                         {error && (
-                            <div className="p-4 bg-red-900/20 border border-red-900/50 rounded-xl flex items-start gap-3">
+                            <div className={`p-4 rounded-xl flex items-start gap-3 border ${isDarkMode ? 'bg-red-900/20 border-red-900/50' : 'bg-red-50 border-red-200'}`}>
                                 <span className="material-symbols-outlined text-red-500 text-xl">error</span>
-                                <p className="text-red-400 text-sm">{error}</p>
+                                <p className={`text-sm ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>{error}</p>
                             </div>
                         )}
 
@@ -114,8 +139,8 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
                         </button>
                     </form>
 
-                    <div className="mt-8 pt-6 border-t border-neutral-700 text-center">
-                        <p className="text-xs text-neutral-500">
+                    <div className={`mt-8 pt-6 border-t text-center ${isDarkMode ? 'border-neutral-700' : 'border-neutral-100'}`}>
+                        <p className={`text-xs ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'}`}>
                             Only authorized personnel should attempt to log in. <br />
                             All access attempts are logged.
                         </p>
