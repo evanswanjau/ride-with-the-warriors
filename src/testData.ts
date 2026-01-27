@@ -90,10 +90,14 @@ export const TEST_SCENARIOS: TestScenario[] = [
         data: {
             family: {
                 guardian: {
+                    firstName: 'Super',
+                    lastName: 'Mom',
                     fullName: 'Super Mom',
                     emergencyPhone: '0799888777',
                     email: 'mom@home.com',
-                    relationship: 'Mother'
+                    relationship: 'Mother',
+                    dob: '1985-01-01',
+                    participation: 'none'
                 },
                 riders: {
                     cubs: [{ id: 'c1', firstName: 'Baby', lastName: 'Biker', dob: '2018-05-05', gender: 'male' }],
