@@ -90,7 +90,7 @@ const App = () => {
 
     setErrors({});
     setFormErrors([]);
-    navigate('/register/step/4');
+    navigate('/register/step/3');
     setShowDevTools(false);
   };
 
