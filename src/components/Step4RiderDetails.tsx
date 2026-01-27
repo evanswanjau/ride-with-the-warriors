@@ -12,9 +12,10 @@ interface Step4RiderDetailsProps {
     onBack: () => void;
     errors: Record<string, string>;
     formErrors: string[];
+    isSubmitting: boolean;
 }
 
-const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors }: Step4RiderDetailsProps) => {
+const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: Step4RiderDetailsProps) => {
     const handleInputChange = (field: keyof RiderDetails, value: string) => {
         onChange({ ...data, [field]: value });
     };
@@ -47,6 +48,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors 
                                     type="text"
                                     value={data.firstName}
                                     onChange={(e) => handleInputChange('firstName', e.target.value)}
+                                    disabled={isSubmitting}
                                 />
                             </div>
                             {errors.firstName && <span className="text-red-500 text-xs font-medium">{errors.firstName}</span>}
@@ -65,6 +67,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors 
                                     type="text"
                                     value={data.lastName}
                                     onChange={(e) => handleInputChange('lastName', e.target.value)}
+                                    disabled={isSubmitting}
                                 />
                             </div>
                             {errors.lastName && <span className="text-red-500 text-xs font-medium">{errors.lastName}</span>}
@@ -83,6 +86,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors 
                                     type="email"
                                     value={data.email}
                                     onChange={(e) => handleInputChange('email', e.target.value)}
+                                    disabled={isSubmitting}
                                 />
                             </div>
                             {errors.email && <span className="text-red-500 text-xs font-medium">{errors.email}</span>}
@@ -101,6 +105,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors 
                                     type="tel"
                                     value={data.phoneNumber}
                                     onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+                                    disabled={isSubmitting}
                                 />
                             </div>
                             {errors.phoneNumber && <span className="text-red-500 text-xs font-medium">{errors.phoneNumber}</span>}
@@ -119,6 +124,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors 
                                     type="text"
                                     value={data.idNumber}
                                     onChange={(e) => handleInputChange('idNumber', e.target.value)}
+                                    disabled={isSubmitting}
                                 />
                             </div>
                             {errors.idNumber && <span className="text-red-500 text-xs font-medium">{errors.idNumber}</span>}
@@ -141,6 +147,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors 
                                     type="date"
                                     value={data.dob}
                                     onChange={(e) => handleInputChange('dob', e.target.value)}
+                                    disabled={isSubmitting}
                                 />
                             </div>
                             {errors.dob && <span className="text-red-500 text-xs font-medium">{errors.dob}</span>}
@@ -159,6 +166,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors 
                                             value="male"
                                             checked={data.gender === 'male'}
                                             onChange={() => handleInputChange('gender', 'male')}
+                                            disabled={isSubmitting}
                                         />
                                         <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
                                     </div>
@@ -173,6 +181,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors 
                                             value="female"
                                             checked={data.gender === 'female'}
                                             onChange={() => handleInputChange('gender', 'female')}
+                                            disabled={isSubmitting}
                                         />
                                         <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
                                     </div>
@@ -189,22 +198,32 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors 
                         onClick={onBack}
                         className="flex items-center justify-center h-12 px-6 rounded-lg text-gray-500 hover:text-[#1c170d] dark:text-gray-400 dark:hover:text-white font-bold transition-colors cursor-pointer"
                         type="button"
+                        disabled={isSubmitting}
                     >
                         <span className="material-symbols-outlined mr-2 text-sm">arrow_back</span>
                         Back
                     </button>
                     <button
                         onClick={onNext}
-                        className="flex min-w-[180px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-green-600 active:bg-green-700 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-green-500/20 transition-all cursor-pointer"
+                        className="flex min-w-[200px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-green-600 active:bg-green-700 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-green-500/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                         type="button"
+                        disabled={isSubmitting}
                     >
-                        <span className="truncate">Continue</span>
-                        <span className="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
+                        {isSubmitting ? (
+                            <div className="flex items-center gap-3">
+                                <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                <span>Saving Draft...</span>
+                            </div>
+                        ) : (
+                            <>
+                                <span className="truncate">Continue</span>
+                                <span className="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
+                            </>
+                        )}
                     </button>
                 </div>
             </form>
         </div>
     );
 };
-
 export default Step4RiderDetails;

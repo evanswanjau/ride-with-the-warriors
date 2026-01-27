@@ -11,16 +11,15 @@ interface FamilyRegistrationFlowProps {
     onBack: () => void;
     errors: Record<string, string>;
     formErrors: string[];
+    isSubmitting: boolean;
 }
 
-const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formErrors }: FamilyRegistrationFlowProps) => {
+const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: FamilyRegistrationFlowProps) => {
     const categories = [
         { id: 'cubs', title: 'Cubs (Ages 3-5)', icon: 'pedal_bike' },
         { id: 'champs', title: 'Champs (Ages 6-10)', icon: 'directions_bike' },
         { id: 'tigers', title: 'Tigers (Ladies 18+)', icon: 'sports_score' }
     ];
-
-
 
     const [activeCategory, setActiveCategory] = useState('cubs');
 
@@ -93,6 +92,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                 ? 'border-primary text-text-light dark:text-white bg-white dark:bg-white/5 sm:bg-transparent rounded-t-lg sm:rounded-none'
                                 : 'border-transparent text-text-muted-light dark:text-gray-400 hover:border-border-light dark:hover:border-white/20'
                                 }`}
+                            disabled={isSubmitting}
                         >
                             <span className={`material-symbols-outlined mb-2 text-[28px] ${activeCategory === cat.id ? 'text-primary' : 'opacity-50'}`}>
                                 {cat.icon}
@@ -117,6 +117,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                             <button
                                 onClick={() => removeRider(activeCategory, rider.id)}
                                 className="text-xs text-red-500 hover:text-red-700 font-medium flex items-center gap-1 transition-colors"
+                                disabled={isSubmitting}
                             >
                                 <span className="material-symbols-outlined text-[16px]">delete</span> Remove
                             </button>
@@ -133,6 +134,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                     type="text"
                                     value={rider.firstName}
                                     onChange={(e) => updateRider(activeCategory, rider.id, 'firstName', e.target.value)}
+                                    disabled={isSubmitting}
                                 />
                                 {errors[`${rider.id}.firstName`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.firstName`]}</span>}
                             </div>
@@ -147,6 +149,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                     type="text"
                                     value={rider.lastName}
                                     onChange={(e) => updateRider(activeCategory, rider.id, 'lastName', e.target.value)}
+                                    disabled={isSubmitting}
                                 />
                                 {errors[`${rider.id}.lastName`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.lastName`]}</span>}
                             </div>
@@ -169,6 +172,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                         type="date"
                                         value={rider.dob}
                                         onChange={(e) => updateRider(activeCategory, rider.id, 'dob', e.target.value)}
+                                        disabled={isSubmitting}
                                     />
                                 </div>
                                 <p className="text-xs text-text-muted-light dark:text-gray-400">
@@ -187,7 +191,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                             value="male"
                                             checked={rider.gender === 'male'}
                                             onChange={() => updateRider(activeCategory, rider.id, 'gender', 'male')}
-                                            disabled={activeCategory === 'tigers'}
+                                            disabled={isSubmitting || activeCategory === 'tigers'}
                                         />
                                         <span className="text-text-light dark:text-white text-sm font-medium group-hover:text-primary transition-colors">Male</span>
                                     </label>
@@ -199,6 +203,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                             value="female"
                                             checked={rider.gender === 'female'}
                                             onChange={() => updateRider(activeCategory, rider.id, 'gender', 'female')}
+                                            disabled={isSubmitting}
                                         />
                                         <span className="text-text-light dark:text-white text-sm font-medium group-hover:text-primary transition-colors">Female</span>
                                     </label>
@@ -211,7 +216,8 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
 
                 <button
                     onClick={() => addRider(activeCategory)}
-                    className="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-border-light dark:border-gray-600 rounded-xl text-text-muted-light dark:text-gray-400 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all group"
+                    className="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-border-light dark:border-gray-600 rounded-xl text-text-muted-light dark:text-gray-400 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSubmitting}
                 >
                     <span className="material-symbols-outlined group-hover:scale-110 transition-transform">add_circle</span>
                     <span className="font-bold">Add Another {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1, -1)}</span>
@@ -241,6 +247,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                     type="text"
                                     value={data.guardian.fullName}
                                     onChange={(e) => updateGuardian('fullName', e.target.value)}
+                                    disabled={isSubmitting}
                                 />
                                 {errors['guardian.fullName'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.fullName']}</span>}
                             </div>
@@ -259,6 +266,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                         type="tel"
                                         value={data.guardian.emergencyPhone}
                                         onChange={(e) => updateGuardian('emergencyPhone', e.target.value)}
+                                        disabled={isSubmitting}
                                     />
                                 </div>
                                 {errors['guardian.emergencyPhone'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.emergencyPhone']}</span>}
@@ -278,6 +286,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                         type="email"
                                         value={data.guardian.email}
                                         onChange={(e) => updateGuardian('email', e.target.value)}
+                                        disabled={isSubmitting}
                                     />
                                 </div>
                                 {errors['guardian.email'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.email']}</span>}
@@ -294,6 +303,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                             }`}
                                         value={data.guardian.relationship}
                                         onChange={(e) => updateGuardian('relationship', e.target.value)}
+                                        disabled={isSubmitting}
                                     >
                                         <option disabled value="">Select relationship</option>
                                         <option value="parent">Parent</option>
@@ -317,17 +327,28 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                 <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-8 pb-12">
                     <button
                         onClick={onBack}
-                        className="w-full sm:w-auto px-8 h-12 rounded-lg border border-border-light dark:border-gray-600 text-text-light dark:text-white font-bold hover:bg-background-light dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
+                        className="w-full sm:w-auto px-8 h-12 rounded-lg border border-border-light dark:border-gray-600 text-text-light dark:text-white font-bold hover:bg-background-light dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                        disabled={isSubmitting}
                     >
                         <span className="material-symbols-outlined text-[20px]">arrow_back</span>
                         Back
                     </button>
                     <button
                         onClick={onNext}
-                        className="w-full sm:w-auto px-10 h-12 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark hover:shadow-primary/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group"
+                        className="w-full sm:w-auto px-10 h-12 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark hover:shadow-primary/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+                        disabled={isSubmitting}
                     >
-                        Next: Payment
-                        <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-[20px]">arrow_forward</span>
+                        {isSubmitting ? (
+                            <div className="flex items-center gap-3">
+                                <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                <span>Saving Draft...</span>
+                            </div>
+                        ) : (
+                            <>
+                                Next: Review
+                                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-[20px]">arrow_forward</span>
+                            </>
+                        )}
                     </button>
                 </div>
             </div>

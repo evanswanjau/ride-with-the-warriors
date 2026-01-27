@@ -10,9 +10,10 @@ interface Step4TeamDetailsProps {
     onBack: () => void;
     errors: Record<string, string>;
     formErrors: string[];
+    isSubmitting: boolean;
 }
 
-const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors }: Step4TeamDetailsProps) => {
+const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: Step4TeamDetailsProps) => {
     const updateMember = (id: string, field: keyof TeamMember, value: any) => {
         const newMembers = data.members.map(m =>
             m.id === id ? { ...m, [field]: value } : m
@@ -209,6 +210,7 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors }
                                         type="date"
                                         value={member.dob}
                                         onChange={(e) => updateMember(member.id, 'dob', e.target.value)}
+                                        disabled={isSubmitting}
                                     />
                                     {errors[`${member.id}.dob`] && <span className="text-red-500 text-xs font-medium">{errors[`${member.id}.dob`]}</span>}
                                 </label>
@@ -271,17 +273,28 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors }
                         onClick={onBack}
                         className="flex items-center justify-center h-12 px-6 rounded-lg text-gray-500 hover:text-[#1c170d] dark:text-gray-400 dark:hover:text-white font-bold transition-colors cursor-pointer"
                         type="button"
+                        disabled={isSubmitting}
                     >
                         <span className="material-symbols-outlined mr-2 text-sm">arrow_back</span>
                         Back
                     </button>
                     <button
                         onClick={onNext}
-                        className="flex min-w-[180px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-green-600 active:bg-green-700 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-green-500/20 transition-all cursor-pointer"
+                        className="flex min-w-[200px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-green-600 active:bg-green-700 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-green-500/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                         type="button"
+                        disabled={isSubmitting}
                     >
-                        <span className="truncate">Continue</span>
-                        <span className="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
+                        {isSubmitting ? (
+                            <div className="flex items-center gap-3">
+                                <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                <span>Saving Draft...</span>
+                            </div>
+                        ) : (
+                            <>
+                                <span className="truncate">Continue</span>
+                                <span className="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
+                            </>
+                        )}
                     </button>
                 </div>
             </form>

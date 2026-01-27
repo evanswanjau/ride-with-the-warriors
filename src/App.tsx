@@ -400,9 +400,9 @@ const RegistrationFlow = ({
       case 2:
         return <Step3RegistrationType selectedCircuit={selectedCircuit} selectedType={registrationType} onSelect={setRegistrationType} onNext={() => handleNext(2)} onBack={() => handleBack(2)} />;
       case 3:
-        if (registrationType === 'individual') return <Step4RiderDetails data={riderDetails} onChange={setRiderDetails} onNext={() => handleNext(3)} onBack={() => handleBack(3)} errors={errors} formErrors={formErrors} />;
-        if (registrationType === 'family') return <FamilyRegistrationFlow data={familyDetails} onChange={setFamilyDetails} onNext={() => handleNext(3)} onBack={() => handleBack(3)} errors={errors} formErrors={formErrors} />;
-        return <Step4TeamDetails data={teamDetails} onChange={setTeamDetails} onNext={() => handleNext(3)} onBack={() => handleBack(3)} errors={errors} formErrors={formErrors} />;
+        if (registrationType === 'individual') return <Step4RiderDetails data={riderDetails} onChange={setRiderDetails} onNext={() => handleNext(3)} onBack={() => handleBack(3)} errors={errors} formErrors={formErrors} isSubmitting={isSubmitting} />;
+        if (registrationType === 'family') return <FamilyRegistrationFlow data={familyDetails} onChange={setFamilyDetails} onNext={() => handleNext(3)} onBack={() => handleBack(3)} errors={errors} formErrors={formErrors} isSubmitting={isSubmitting} />;
+        return <Step4TeamDetails data={teamDetails} onChange={setTeamDetails} onNext={() => handleNext(3)} onBack={() => handleBack(3)} errors={errors} formErrors={formErrors} isSubmitting={isSubmitting} />;
       case 4:
         return <Step5Review selectedCircuitId={selectedCircuit} registrationType={registrationType} riderData={riderDetails} teamData={teamDetails} familyData={familyDetails} onBack={() => handleBack(4)} onSubmit={handleSubmit} isSubmitting={isSubmitting} registrationId={registrationId} />;
       default:
