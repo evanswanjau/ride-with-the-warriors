@@ -1,48 +1,27 @@
-// Import all local images from assets/images
-import img1 from '../assets/images/0J6A9936-17-min.jpeg';
-import img2 from '../assets/images/0J6A9951-18-min.jpeg';
-import img3 from '../assets/images/0J6A9965-19-min.jpeg';
-import img4 from '../assets/images/0J6A9984-21-min.jpeg';
-import img5 from '../assets/images/0J6A9994-22-min.jpeg';
-import img6 from '../assets/images/296A0066-27-min.jpeg';
-import img7 from '../assets/images/296A0069-28-min.jpeg';
-import img8 from '../assets/images/296A0071-29-min.jpeg';
-import img9 from '../assets/images/296A0075-30-min.jpeg';
-import img10 from '../assets/images/296A0113-31-min.jpeg';
-import img11 from '../assets/images/296A0118-32-min.jpeg';
-import img12 from '../assets/images/296A0184-33-min.jpeg';
-import img13 from '../assets/images/296A0186-34-min.jpeg';
-import img14 from '../assets/images/296A0190-35-min.jpeg';
-import img15 from '../assets/images/296A0192-36-min.jpeg';
-import img16 from '../assets/images/296A0202-37-min.jpeg';
-import img17 from '../assets/images/296A0205-38-min.jpeg';
-import img18 from '../assets/images/296A0209-39-min.jpeg';
-import img19 from '../assets/images/296A0219-40-min.jpeg';
-import img20 from '../assets/images/296A0224-41-min.jpeg';
+// Dynamically import all images from assets/images
+const imageModules = import.meta.glob('../assets/images/*.{jpeg,jpg,png,svg,webp}', { eager: true });
 
 const Gallery = () => {
-    const images = [
-        { url: img1, title: 'Mountain Trail Rush' },
-        { url: img2, title: 'Sunset Peak Ride' },
-        { url: img3, title: 'Valley Sprint' },
-        { url: img4, title: 'Team Formation' },
-        { url: img5, title: 'The Great Ascent' },
-        { url: img6, title: 'Coastal Breeze' },
-        { url: img7, title: 'Morning Mist Ride' },
-        { url: img8, title: 'Peak Performance' },
-        { url: img9, title: 'Trail Blazers' },
-        { url: img10, title: 'Endurance Test' },
-        { url: img11, title: 'Nature Sprint' },
-        { url: img12, title: 'Group Harmony' },
-        { url: img13, title: 'Summit Reach' },
-        { url: img14, title: 'Wild Ride' },
-        { url: img15, title: 'Speed of Light' },
-        { url: img16, title: 'Rhythm of the Ride' },
-        { url: img17, title: 'Horizon Call' },
-        { url: img18, title: 'Spirit of Warrior' },
-        { url: img19, title: 'Boundless Energy' },
-        { url: img20, title: 'Final Push' }
-    ];
+    // Transform glob result into the format used by the component
+    const images = Object.entries(imageModules).map(([path, module]) => {
+        // Extract filename for the title
+        const filename = path.split('/').pop() || '';
+        // Clean up filename for title (remove extension and replace dashes/underscores with spaces)
+        const title = filename
+            .replace(/\.[^/.]+$/, "")
+            .replace(/[-_]/g, " ")
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+
+        return {
+            url: (module as any).default,
+            title: title
+        };
+    });
+
+    // Sort images to keep them consistent (optional, but good for UI)
+    images.sort((a, b) => a.title.localeCompare(b.title));
 
     return (
         <div className="min-h-screen py-12">

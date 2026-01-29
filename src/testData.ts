@@ -51,7 +51,7 @@ export const TEST_SCENARIOS: TestScenario[] = [
     {
         id: 'intermediate-team',
         name: 'Intermediate Team (5 Members, Mixed)',
-        circuit: 'intermediate',
+        circuit: 'recon',
         type: 'team',
         data: {
             team: {

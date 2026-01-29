@@ -16,9 +16,10 @@ import PaymentPage from './components/PaymentPage';
 import SuccessPage from './components/SuccessPage';
 import Gallery from './components/Gallery';
 import Rules from './components/Rules';
+import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
 import type { RiderDetails, TeamDetails, FamilyDetails } from './types';
 import { isValidKenyanPhone, isValidID, calculateAge } from './utils';
-import { TEST_SCENARIOS, type TestScenario } from './testData';
 import { API_BASE_URL } from './config';
 
 const App = () => {
@@ -26,12 +27,26 @@ const App = () => {
 
   const [selectedCircuit, setSelectedCircuit] = useState('');
   const [registrationType, setRegistrationType] = useState('individual');
-  const [showDevTools, setShowDevTools] = useState(false);
   const [adminToken, setAdminToken] = useState<string | null>(localStorage.getItem('adminToken'));
   const [adminUser, setAdminUser] = useState<any>(JSON.parse(localStorage.getItem('adminUser') || 'null'));
   const [foundRegistration, setFoundRegistration] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registrationId, setRegistrationId] = useState<string | null>(null);
+  const [pricingCategories, setPricingCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/registrations/config/categories`);
+        if (!response.ok) throw new Error('Failed to fetch pricing categories');
+        const data = await response.json();
+        setPricingCategories(data.categories);
+      } catch (err) {
+        console.error('Error fetching pricing categories:', err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleAdminLogin = (token: string, admin: any) => {
     setAdminToken(token);
@@ -81,18 +96,26 @@ const App = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
-  const loadScenario = (scenario: TestScenario) => {
-    setSelectedCircuit(scenario.circuit);
-    setRegistrationType(scenario.type);
-    if (scenario.data.rider) setRiderDetails(scenario.data.rider);
-    if (scenario.data.team) setTeamDetails(scenario.data.team);
-    if (scenario.data.family) setFamilyDetails(scenario.data.family);
+  // Reload protection logic - warn user if they try to reload with data in progress
+  const hasInProgressRegistration =
+    selectedCircuit !== '' ||
+    (registrationType === 'individual' && riderDetails.firstName !== '') ||
+    (registrationType === 'team' && teamDetails.teamName !== '') ||
+    (registrationType === 'family' && familyDetails.guardian.firstName !== '');
 
-    setErrors({});
-    setFormErrors([]);
-    navigate('/register/step/3');
-    setShowDevTools(false);
-  };
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasInProgressRegistration) {
+        e.preventDefault();
+        e.returnValue = ''; // Standard browser prompt
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasInProgressRegistration]);
+
+
 
   const validateStep = (step: number) => {
     const newErrors: Record<string, string> = {};
@@ -143,17 +166,14 @@ const App = () => {
         });
 
         const numMembers = teamDetails.members.length;
-        const numFemales = teamDetails.members.filter(m => m.gender === 'female').length;
 
         if (selectedCircuit === 'corporate') {
           if (numMembers < 3 || numMembers > 5) {
             newFormErrors.push(`Corporate teams must have 3-5 members (Currently: ${numMembers})`);
           }
-        } else if (selectedCircuit === 'blitz' || selectedCircuit === 'intermediate') {
-          if (numMembers < 5) {
-            newFormErrors.push(`Competitive teams (120/60KM) must have at least 5 members (Currently: ${numMembers})`);
-          } else if (numFemales < 1) {
-            newFormErrors.push('Competitive teams must have at least one female rider');
+        } else if (selectedCircuit === 'blitz' || selectedCircuit === 'recon') {
+          if (numMembers !== 5) {
+            newFormErrors.push(`Competitive teams (120/60KM) must have exactly 5 members (Currently: ${numMembers})`);
           }
         }
       }
@@ -173,7 +193,7 @@ const App = () => {
             const age = calculateAge(familyDetails.guardian.dob);
             if (new Date(familyDetails.guardian.dob) > new Date()) newErrors['guardian.dob'] = 'Invalid';
             else if (age !== null && age < 18) {
-              newErrors['guardian.dob'] = 'Moms must be 18+';
+              newErrors['guardian.dob'] = 'Parents must be 18+';
             }
           }
         }
@@ -196,6 +216,12 @@ const App = () => {
             if (!rider.gender) newErrors[`${rider.id}.gender`] = 'Required';
           });
         });
+
+        // MANDATORY CHILD CHECK
+        const totalChildren = familyDetails.riders.cubs.length + familyDetails.riders.champs.length;
+        if (totalChildren === 0) {
+          newFormErrors.push('A family registration must include at least one child (Cub or Champ).');
+        }
       }
     }
 
@@ -289,6 +315,43 @@ const App = () => {
     }
   };
 
+  /*
+  const resetForm = () => {
+    setSelectedCircuit('');
+    setRegistrationType('individual');
+    setRiderDetails({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      idNumber: '',
+      dob: '',
+      gender: ''
+    });
+    setTeamDetails({
+      teamName: '',
+      members: [{
+        id: '1',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        idNumber: '',
+        dob: '',
+        gender: '',
+        isCaptain: true
+      }]
+    });
+    setFamilyDetails({
+      guardian: { firstName: '', lastName: '', fullName: '', emergencyPhone: '', email: '', relationship: '', participation: 'none', dob: '' },
+      riders: { cubs: [], champs: [], tigers: [] }
+    });
+    setRegistrationId(null);
+    setErrors({});
+    setFormErrors([]);
+  };
+  */
+
   const handleBack = (currentStep: number) => {
     if (currentStep === 3) {
       if (selectedCircuit === 'family') {
@@ -328,14 +391,23 @@ const App = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error?.message || 'Registration failed');
 
-      navigate(`/payment/${data.registrationId}`, {
+      const nextAmount = data.pricing.totalAmount;
+      const nextEmail = registrationType === 'individual' ? riderDetails.email :
+        registrationType === 'team' ? teamDetails.members[0].email :
+          familyDetails.guardian.email;
+      const nextRegId = data.registrationId;
+
+      // Navigate FIRST to ensure local state is still valid for any observers
+      navigate(`/payment/${nextRegId}`, {
         state: {
-          amount: data.pricing.totalAmount,
-          email: registrationType === 'individual' ? riderDetails.email :
-            registrationType === 'team' ? teamDetails.members[0].email :
-              familyDetails.guardian.email
+          amount: nextAmount,
+          email: nextEmail
         }
       });
+
+      // Then reset the form after a small delay or just don't reset it here
+      // (Resetting in SuccessPage or on new registration is safer)
+      // resetForm(); 
     } catch (error) {
       console.error('Registration error:', error);
       setFormErrors([error instanceof Error ? error.message : 'An error occurred during registration']);
@@ -369,9 +441,7 @@ const App = () => {
           handleNext={handleNext}
           handleBack={handleBack}
           handleSubmit={handleSubmit}
-          loadScenario={loadScenario}
-          showDevTools={showDevTools}
-          setShowDevTools={setShowDevTools}
+          pricingCategories={pricingCategories}
         />
       } />
 
@@ -386,6 +456,8 @@ const App = () => {
       {/* Info Pages */}
       <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
       <Route path="/rules" element={<Layout><Rules /></Layout>} />
+      <Route path="/terms-and-conditions" element={<TermsPage />} />
+      <Route path="/privacy-policy" element={<PrivacyPage />} />
 
       {/* Admin */}
       <Route path="/admin" element={
@@ -410,7 +482,8 @@ const RegistrationFlow = ({
   isSubmitting,
   registrationId,
   handleNext, handleBack, handleSubmit,
-  loadScenario, showDevTools, setShowDevTools
+  loadScenario, showDevTools, setShowDevTools,
+  pricingCategories
 }: any) => {
   const { stepId } = useParams();
   const step = parseInt(stepId || '1', 10);
@@ -422,7 +495,7 @@ const RegistrationFlow = ({
       case 2: return "Registration Type";
       case 3:
         if (registrationType === 'individual') return "Rider Details";
-        if (registrationType === 'family') return "Family Details";
+        if (registrationType === 'family') return "Parent Details";
         return "Team Details";
       case 4: return "Review Registration";
       default: return "";
@@ -432,7 +505,7 @@ const RegistrationFlow = ({
   const renderStep = () => {
     switch (step) {
       case 1:
-        return <Step2ChooseCircuit selectedCircuit={selectedCircuit} onSelect={setSelectedCircuit} onNext={() => handleNext(1)} onBack={() => { }} />;
+        return <Step2ChooseCircuit selectedCircuit={selectedCircuit} onSelect={setSelectedCircuit} onNext={() => handleNext(1)} />;
       case 2:
         if (!selectedCircuit) return <Navigate to="/register/step/1" replace />;
         return <Step3RegistrationType selectedCircuit={selectedCircuit} selectedType={registrationType} onSelect={setRegistrationType} onNext={() => handleNext(2)} onBack={() => handleBack(2)} />;
@@ -443,7 +516,20 @@ const RegistrationFlow = ({
         return <Step4TeamDetails data={teamDetails} onChange={setTeamDetails} onNext={() => handleNext(3)} onBack={() => handleBack(3)} errors={errors} formErrors={formErrors} isSubmitting={isSubmitting} />;
       case 4:
         if (!selectedCircuit) return <Navigate to="/register/step/1" replace />;
-        return <Step5Review selectedCircuitId={selectedCircuit} registrationType={registrationType} riderData={riderDetails} teamData={teamDetails} familyData={familyDetails} onBack={() => handleBack(4)} onSubmit={handleSubmit} isSubmitting={isSubmitting} registrationId={registrationId} />;
+        return (
+          <Step5Review
+            selectedCircuitId={selectedCircuit}
+            registrationType={registrationType}
+            riderData={riderDetails}
+            teamData={teamDetails}
+            familyData={familyDetails}
+            pricingCategories={pricingCategories}
+            onBack={() => handleBack(4)}
+            onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
+            registrationId={registrationId}
+          />
+        );
       default:
         return <Navigate to="/register/step/1" replace />;
     }
@@ -454,25 +540,7 @@ const RegistrationFlow = ({
       <ProgressBar currentStep={step} totalSteps={4} stepTitle={getStepTitle()} onStepClick={(s: number) => navigate(`/register/step/${s}`)} />
       {renderStep()}
 
-      <div className="fixed top-6 right-6 z-[999]">
-        <button onClick={() => setShowDevTools(!showDevTools)} className="size-10 rounded-full bg-neutral-900/50 backdrop-blur text-white shadow-2xl flex items-center justify-center hover:scale-110 transition-all border border-white/20">
-          <span className="material-symbols-outlined text-sm">terminal</span>
-        </button>
 
-        {showDevTools && (
-          <div className="absolute top-14 right-0 w-64 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-neutral-100 dark:border-neutral-800 p-4 animate-in fade-in zoom-in duration-200 origin-top-right">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4">Quick Test Scenarios</h4>
-            <div className="flex flex-col gap-2">
-              {TEST_SCENARIOS.map(s => (
-                <button key={s.id} onClick={() => loadScenario(s)} className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-bold text-neutral-600 dark:text-neutral-400 hover:text-primary dark:hover:text-primary transition-all flex items-center justify-between group">
-                  <span>{s.name}</span>
-                  <span className="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">bolt</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
     </Layout>
   );
 };

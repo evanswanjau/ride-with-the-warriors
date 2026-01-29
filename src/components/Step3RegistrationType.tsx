@@ -1,7 +1,11 @@
 import RegistrationTypeCard from './RegistrationTypeCard';
-import individualImage from '../assets/images/296A0066-27-min.jpeg';
-import teamImage from '../assets/images/296A0184-33-min.jpeg';
-import familyImage from '../assets/images/296A0224-41-min.jpeg';
+import blitzIndividual from '../assets/images/blitz-individual.jpeg';
+import blitzTeam from '../assets/images/blitz-team.jpeg';
+import reconIndividual from '../assets/images/recon-individual.jpeg';
+import reconTeam from '../assets/images/recon-team.jpeg';
+import corporateIndividual from '../assets/images/corporate-individual.jpeg';
+import corporateTeam from '../assets/images/corporate-team.jpeg';
+import familyImage from '../assets/images/family.jpeg';
 
 interface Step3RegistrationTypeProps {
     selectedCircuit: string;
@@ -18,32 +22,57 @@ const Step3RegistrationType = ({
     onNext,
     onBack,
 }: Step3RegistrationTypeProps) => {
+
+    const getIndividualImage = () => {
+        switch (selectedCircuit) {
+            case 'blitz': return blitzIndividual;
+            case 'recon': return reconIndividual;
+            case 'corporate': return corporateIndividual;
+            default: return blitzIndividual;
+        }
+    };
+
+    const getTeamImage = () => {
+        switch (selectedCircuit) {
+            case 'blitz': return blitzTeam;
+            case 'recon': return reconTeam;
+            case 'corporate': return corporateTeam;
+            default: return blitzTeam;
+        }
+    };
+
     const types = [
         {
             id: 'individual',
             title: 'INDIVIDUAL',
             description: selectedCircuit === 'family'
-                ? 'Adult Women (Tigers). Compete as an individual in the 5KM circuit.'
-                : 'Solo entry. Push your limits and compete for individual placement and time trials for a chance to win.',
-            imageUrl: individualImage,
+                ? 'Adult parent (Tiger). Compete as an individual in the 5KM circuit.'
+                : selectedCircuit === 'corporate'
+                    ? 'Represent your organization in this individual 30KM challenge. Compete for company glory and showcase your corporate spirit.'
+                    : 'Push your limits and develop your skills in this competitive solo entry. Compete for individual glory and a chance to win prize money based on your category.',
+            imageUrl: getIndividualImage(),
         },
         {
             id: 'team',
-            title: 'Team',
-            description: 'Create or join a team (5 riders). Compete for the group trophy and collective timing.',
-            imageUrl: teamImage,
-            rules: [
-                'Group must have a female rider.',
-                '60 minutes deducted if the team does not meet the requirements. (warning)',
-                'Min of 3 riders, max of 5 riders.',
-                '60 minutes deducted for each missing rider.',
-            ],
+            title: 'TEAM',
+            description: 'Create or join a team. Compete for the group trophy and collective timing.',
+            imageUrl: getTeamImage(),
+            rules: selectedCircuit === 'corporate'
+                ? [
+                    'Min of 3 riders, max of 5 riders.',
+                    'A 45-minute penalty if the team does not have a female rider.',
+                ]
+                : [
+                    'Team must consist of 5 riders.',
+                    'All teams must include at least one female rider.',
+                    'A 60-minute time penalty will be applied for any rule violations.',
+                ],
         },
         {
             id: 'family',
             title: 'Family Group',
-            description: 'Register multiple children (Cubs & Champs) under one guardian. A fun ride for the little ones.',
-            imageUrl: familyImage, // Reusing family image or import another one if available, using familyImage from imports (need to import it)
+            description: 'Register multiple children (Cubs & Champs) under one guardian. A fun ride for the little ones. Parents can also join as riders.',
+            imageUrl: familyImage,
         }
     ];
 

@@ -65,7 +65,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
 
         let updatedRiders = { ...data.riders };
 
-        // Handle Mom syncing
+        // Handle Parent syncing
         if (updatedGuardian.participation === 'mom') {
             const momRider: JuniorRider = {
                 id: 'mom-rider-id', // Fixed ID for the synced mom
@@ -254,8 +254,8 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                     <span className="material-symbols-outlined group-hover:scale-110 transition-transform">add_circle</span>
                     <span className="font-bold">
                         {activeCategory === 'tigers' && data.riders.tigers.length >= 1
-                            ? 'Only one Mom can be added'
-                            : `Add Another ${activeCategory === 'tigers' ? 'Mom' : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1, -1)}`
+                            ? 'Only one Parent can be added'
+                            : `Add Another ${activeCategory === 'tigers' ? 'Parent' : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1, -1)}`
                         }
                     </span>
                 </button>
@@ -302,7 +302,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                     {[
                                         { id: 'none', label: 'Not riding', icon: 'person_off' },
-                                        { id: 'mom', label: 'Riding as a Mom (5km)', icon: 'woman' },
+                                        { id: 'mom', label: 'Riding as a Parent (5km)', icon: 'woman' },
                                         { id: 'other', label: 'Riding in another circuit', icon: 'directions_bike' }
                                     ].map((opt) => (
                                         <label key={opt.id} className={`flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${data.guardian.participation === opt.id ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-gray-200 dark:border-gray-700 hover:bg-neutral-50 dark:hover:bg-neutral-800'}`}>
@@ -325,7 +325,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                             {data.guardian.participation === 'mom' && (
                                 <div className="flex flex-col gap-2 md:col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
                                     <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
-                                        <span>Date of Birth (Mom) <span className="text-red-500">*</span></span>
+                                        <span>Date of Birth (Parent) <span className="text-red-500">*</span></span>
                                         {data.guardian.dob && (
                                             <span className="text-primary normal-case font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
                                                 {calculateAge(data.guardian.dob)} years old

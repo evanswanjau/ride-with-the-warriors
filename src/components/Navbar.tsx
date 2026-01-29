@@ -1,12 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 
-interface NavbarProps {
-    registrationType?: string;
-}
-
-const Navbar = ({ registrationType }: NavbarProps) => {
+const Navbar = () => {
     const location = useLocation();
-    const isTeam = registrationType === 'team';
 
     const navLinks = [
         { name: 'Home', path: '/register/step/1' },
@@ -45,15 +40,7 @@ const Navbar = ({ registrationType }: NavbarProps) => {
                     {/* Mobile Menu Icon or simplified links could go here if needed */}
                     <Link to="/search" className="text-primary material-symbols-outlined">search</Link>
                 </div>
-                {isTeam ? (
-                    <button className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary hover:bg-primary-dark transition-colors text-white text-sm font-bold leading-normal tracking-[0.015em]">
-                        <span className="truncate">Sign In</span>
-                    </button>
-                ) : (
-                    <button className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:bg-border-light dark:hover:bg-border-dark text-text-light dark:text-text-dark text-sm font-bold leading-normal transition-colors">
-                        <span className="truncate">Active Route</span>
-                    </button>
-                )}
+
             </div>
         </header>
     );

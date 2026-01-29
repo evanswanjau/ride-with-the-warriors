@@ -9,6 +9,7 @@ interface CircuitCardProps {
     imageUrl: string;
     isSelected: boolean;
     onSelect: (id: string) => void;
+    isCompetitive?: boolean;
 }
 
 const CircuitCard = ({
@@ -20,12 +21,13 @@ const CircuitCard = ({
     imageUrl,
     isSelected,
     onSelect,
+    isCompetitive,
 }: CircuitCardProps) => {
     return (
         <div
             onClick={() => onSelect(id)}
-            className={`group relative flex flex-col h-full bg-white dark:bg-[#232623] rounded-3xl overflow-hidden shadow-none hover:shadow-xl transition-all cursor-pointer transform ${isSelected
-                ? 'ring-4 ring-primary -translate-y-1 shadow-xl'
+            className={`group relative flex flex-col h-full bg-white dark:bg-[#232623] rounded-3xl overflow-hidden shadow-none transition-all cursor-pointer transform ${isSelected
+                ? 'ring-4 ring-primary -translate-y-1'
                 : 'ring-2 ring-transparent hover:ring-primary/50'
                 }`}
         >
@@ -40,11 +42,17 @@ const CircuitCard = ({
                     backgroundImage: `url("${imageUrl}")`
                 }}
             >
-                <div className="absolute bottom-3 left-3">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-black bg-white/90 dark:bg-black/80 text-gray-900 dark:text-gray-100 backdrop-blur-sm shadow-sm">
+                <div className="absolute bottom-3 left-3 flex gap-2">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-white/90 dark:bg-black/80 text-gray-900 dark:text-gray-100 backdrop-blur-sm shadow-sm">
                         <span className="material-symbols-outlined text-[18px] mr-1">distance</span>
                         {distance}
                     </span>
+                    {isCompetitive && (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary text-white backdrop-blur-sm shadow-sm uppercase tracking-wider">
+                            <span className="material-symbols-outlined text-[16px] mr-1">emoji_events</span>
+                            Competitive
+                        </span>
+                    )}
                 </div>
             </div>
             <div className="p-5 flex flex-col gap-3 flex-1">

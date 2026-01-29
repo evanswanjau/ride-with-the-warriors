@@ -57,4 +57,5 @@ export interface Circuit {
     date: string;
     time: string;
     location: string;
+    isCompetitive?: boolean;
 }

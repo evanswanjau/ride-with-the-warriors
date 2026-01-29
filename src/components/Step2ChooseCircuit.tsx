@@ -1,13 +1,13 @@
 import CircuitCard from './CircuitCard';
 import { CIRCUITS } from '../constants';
-import blitzImage from '../assets/images/0J6A9936-17-min.jpeg';
-import intermediateImage from '../assets/images/0J6A9951-18-min.jpeg';
-import corporateImage from '../assets/images/0J6A9984-21-min.jpeg';
-import familyImage from '../assets/images/296A0219-40-min.jpeg';
+import blitzImage from '../assets/images/blitz.jpeg';
+import intermediateImage from '../assets/images/recon.jpeg';
+import corporateImage from '../assets/images/corporate.jpeg';
+import familyImage from '../assets/images/family.jpeg';
 
 const CIRCUIT_IMAGES: Record<string, string> = {
     blitz: blitzImage,
-    intermediate: intermediateImage,
+    recon: intermediateImage,
     corporate: corporateImage,
     family: familyImage,
 };
@@ -16,14 +16,12 @@ interface Step2ChooseCircuitProps {
     selectedCircuit: string;
     onSelect: (id: string) => void;
     onNext: () => void;
-    onBack: () => void;
 }
 
 const Step2ChooseCircuit = ({
     selectedCircuit,
     onSelect,
     onNext,
-    onBack,
 }: Step2ChooseCircuitProps) => {
     return (
         <div className="flex flex-col gap-8">
@@ -44,20 +42,14 @@ const Step2ChooseCircuit = ({
                                 imageUrl={CIRCUIT_IMAGES[circuit.id] || circuit.imageUrl || ''}
                                 isSelected={selectedCircuit === circuit.id}
                                 onSelect={onSelect}
+                                isCompetitive={circuit.isCompetitive}
                             />
                         </div>
                     );
                 })}
             </div>
 
-            <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-[#e6e0d4] dark:border-[#2d332d]">
-                <button
-                    onClick={onBack}
-                    className="flex items-center justify-center h-12 px-6 rounded-lg text-gray-500 hover:text-[#1c170d] dark:text-gray-400 dark:hover:text-white font-bold transition-colors cursor-pointer"
-                >
-                    <span className="material-symbols-outlined mr-2 text-sm">arrow_back</span>
-                    Back
-                </button>
+            <div className="flex justify-end items-center gap-4 mt-8 pt-6 border-t border-[#e6e0d4] dark:border-[#2d332d]">
                 <button
                     onClick={onNext}
                     disabled={!selectedCircuit}

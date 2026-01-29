@@ -1,6 +1,14 @@
+import { useState } from 'react';
 import { CIRCUITS } from '../constants';
 import type { RiderDetails, TeamDetails, FamilyDetails } from '../types';
 import { getClassification, calculateAge } from '../utils';
+import blitzIndividual from '../assets/images/blitz-individual.jpeg';
+import blitzTeam from '../assets/images/blitz-team.jpeg';
+import reconIndividual from '../assets/images/recon-individual.jpeg';
+import reconTeam from '../assets/images/recon-team.jpeg';
+import corporateIndividual from '../assets/images/corporate-individual.jpeg';
+import corporateTeam from '../assets/images/corporate-team.jpeg';
+import familyImage from '../assets/images/family.jpeg';
 
 interface Step5ReviewProps {
     onBack: () => void;
@@ -12,6 +20,7 @@ interface Step5ReviewProps {
     familyData: FamilyDetails;
     isSubmitting?: boolean;
     registrationId: string | null;
+    pricingCategories: any[];
 }
 
 const Step5Review = ({
@@ -23,9 +32,38 @@ const Step5Review = ({
     teamData,
     familyData,
     isSubmitting = false,
-    registrationId
+    registrationId,
+    pricingCategories = []
 }: Step5ReviewProps) => {
+    const [termsAgreed, setTermsAgreed] = useState(false);
+
     const circuit = CIRCUITS.find(c => c.id === selectedCircuitId) || CIRCUITS[0];
+
+    const getReviewImage = () => {
+        if (registrationType === 'family') return familyImage;
+
+        if (registrationType === 'individual') {
+            switch (selectedCircuitId) {
+                case 'blitz': return blitzIndividual;
+                case 'recon': return reconIndividual;
+                case 'corporate': return corporateIndividual;
+                default: return blitzIndividual;
+            }
+        }
+
+        if (registrationType === 'team') {
+            switch (selectedCircuitId) {
+                case 'blitz': return blitzTeam;
+                case 'recon': return reconTeam;
+                case 'corporate': return corporateTeam;
+                default: return blitzTeam;
+            }
+        }
+
+        return circuit.imageUrl || '';
+    };
+
+    const reviewImage = getReviewImage();
 
     // pricing and classification logic
     let totalCost = 0;
@@ -33,7 +71,7 @@ const Step5Review = ({
 
     if (registrationType === 'individual') {
         const age = calculateAge(riderData.dob || '');
-        const classification = getClassification(selectedCircuitId, 'individual', age);
+        const classification = getClassification(pricingCategories, selectedCircuitId, 'individual', age);
         totalCost = classification.price;
         lineItems.push({
             label: `${riderData.firstName} - ${classification.category}`,
@@ -43,7 +81,7 @@ const Step5Review = ({
             color: classification.hexColor
         });
     } else if (registrationType === 'team') {
-        const classification = getClassification(selectedCircuitId, 'team');
+        const classification = getClassification(pricingCategories, selectedCircuitId, 'team');
         totalCost = classification.price;
         lineItems.push({
             label: `Team: ${teamData.teamName}`,
@@ -55,7 +93,7 @@ const Step5Review = ({
     } else if (registrationType === 'family') {
         Object.entries(familyData.riders).forEach(([catId, riders]) => {
             if (riders.length > 0) {
-                const classification = getClassification('family', 'family', null, catId);
+                const classification = getClassification(pricingCategories, 'family', 'family', null, catId);
                 const cost = riders.length * classification.price;
                 totalCost += cost;
                 lineItems.push({
@@ -84,27 +122,27 @@ const Step5Review = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Full Name</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{riderData.firstName} {riderData.lastName}</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{riderData.firstName} {riderData.lastName}</p>
                         </div>
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Gender</p>
-                            <p className="text-text-light dark:text-white text-base font-medium capitalize">{riderData.gender}</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed capitalize">{riderData.gender}</p>
                         </div>
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Email Address</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{riderData.email}</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{riderData.email}</p>
                         </div>
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Phone Number</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{riderData.phoneNumber}</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{riderData.phoneNumber}</p>
                         </div>
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">ID / Passport</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{riderData.idNumber}</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{riderData.idNumber}</p>
                         </div>
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Date of Birth</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{riderData.dob} (Age: {age})</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{riderData.dob} (Age: {age})</p>
                         </div>
                     </div>
                 </div>
@@ -116,11 +154,11 @@ const Step5Review = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Team Name</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{teamData.teamName}</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{teamData.teamName}</p>
                         </div>
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Team Size</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{teamData.members.length} Members</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{teamData.members.length} Members</p>
                         </div>
                     </div>
                     <div>
@@ -150,23 +188,23 @@ const Step5Review = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Guardian Name</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{familyData.guardian.firstName} {familyData.guardian.lastName}</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{familyData.guardian.firstName} {familyData.guardian.lastName}</p>
                         </div>
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Participation</p>
-                            <p className="text-text-light dark:text-white text-base font-medium capitalize">
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed capitalize">
                                 {familyData.guardian.participation === 'none' ? 'Not riding' :
-                                    familyData.guardian.participation === 'mom' ? 'Riding as a Mom (5km)' :
+                                    familyData.guardian.participation === 'mom' ? 'Parent (5km)' :
                                         'Riding in another circuit'}
                             </p>
                         </div>
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Emergency Contact</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{familyData.guardian.emergencyPhone}</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{familyData.guardian.emergencyPhone}</p>
                         </div>
                         <div>
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Email</p>
-                            <p className="text-text-light dark:text-white text-base font-medium">{familyData.guardian.email}</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{familyData.guardian.email}</p>
                         </div>
                     </div>
                     <div>
@@ -174,7 +212,7 @@ const Step5Review = ({
                         <div className="flex flex-col gap-4">
                             {Object.entries(familyData.riders).map(([category, riders]) => {
                                 if (riders.length === 0) return null;
-                                const classification = getClassification('family', 'family', null, category);
+                                const classification = getClassification(pricingCategories, 'family', 'family', null, category);
                                 return (
                                     <div key={category} className="flex flex-col gap-2">
                                         <div className="flex items-center gap-2">
@@ -225,7 +263,7 @@ const Step5Review = ({
                             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-transparent z-10"></div>
                             <div
                                 className="h-full bg-cover bg-center transition-transform duration-1000 group-hover:scale-110"
-                                style={{ backgroundImage: `url("${circuit.imageUrl}")` }}
+                                style={{ backgroundImage: `url("${reviewImage}")` }}
                             ></div>
 
                             {/* Premium Floating Badge */}
@@ -269,55 +307,48 @@ const Step5Review = ({
                                 </div>
 
                                 <div className="flex flex-col gap-4">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="flex items-center gap-5 py-1 px-1">
                                         <div className="flex items-center gap-3">
                                             <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center">
                                                 <span className="material-symbols-outlined text-primary text-[20px]">calendar_today</span>
                                             </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-[10px] uppercase tracking-wider text-neutral-400 font-bold">Date</span>
-                                                <span className="text-base text-text-light dark:text-white font-bold">{circuit.date}</span>
+                                            <div className="flex flex-col gap-0.5">
+                                                <span className="text-[10px] uppercase tracking-wider text-neutral-400 font-bold">Event Date</span>
+                                                <span className="text-sm text-text-light dark:text-white font-bold leading-none">{circuit.date}</span>
                                             </div>
                                         </div>
+                                        <div className="h-8 w-px bg-neutral-100 dark:bg-neutral-800 hidden sm:block"></div>
                                         <div className="flex items-center gap-3">
                                             <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center">
                                                 <span className="material-symbols-outlined text-primary text-[20px]">location_on</span>
                                             </div>
-                                            <div className="flex flex-col">
+                                            <div className="flex flex-col gap-0.5">
                                                 <span className="text-[10px] uppercase tracking-wider text-neutral-400 font-bold">Location</span>
-                                                <span className="text-base text-text-light dark:text-white font-bold">{circuit.location}</span>
+                                                <span className="text-sm text-text-light dark:text-white font-bold leading-none">{circuit.location}</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     {(registrationType === 'individual' || registrationType === 'team') && (() => {
                                         const age = registrationType === 'individual' ? calculateAge(riderData.dob || '') : null;
-                                        const classification = getClassification(selectedCircuitId, registrationType, age);
+                                        const classification = getClassification(pricingCategories, selectedCircuitId, registrationType, age);
                                         return (
                                             <div
-                                                className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-3 px-6 rounded-2xl border border-black/10"
+                                                className="flex flex-wrap items-center gap-10 py-3 px-6 rounded-2xl border border-white/20 shadow-inner"
                                                 style={{
-                                                    backgroundColor: classification.hexColor,
-                                                    backgroundImage: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3))',
-                                                    backgroundBlendMode: 'multiply'
+                                                    backgroundColor: classification.hexColor || '#f97316',
                                                 }}
                                             >
-                                                <div className="flex flex-col gap-1">
-                                                    <span className="text-[10px] uppercase tracking-wider text-white font-bold">Category</span>
-                                                    <span className="text-base text-white font-bold uppercase tracking-tight">{classification.category}</span>
+                                                <div className="flex flex-col gap-0.5">
+                                                    <span className="text-[10px] uppercase tracking-wider text-white/70 font-bold">Category</span>
+                                                    <span className="text-base text-white font-bold uppercase tracking-tight leading-none">{classification.category}</span>
                                                 </div>
-                                                <div className="flex flex-col gap-1">
-                                                    <span className="text-[10px] uppercase tracking-wider text-white font-bold">Category Bib Range</span>
-                                                    <span className="text-base text-white font-bold tracking-wide">
+                                                <div className="h-8 w-px bg-white/20 hidden sm:block"></div>
+                                                <div className="flex flex-col gap-0.5">
+                                                    <span className="text-[10px] uppercase tracking-wider text-white/70 font-bold">Bib Number</span>
+                                                    <span className="text-base text-white font-bold tracking-wide leading-none">
                                                         {registrationId ? `#${registrationId}` : classification.regRange}
                                                     </span>
-                                                </div>
-                                                <div className="flex flex-col gap-1">
-                                                    <span className="text-[10px] uppercase tracking-wider text-white font-bold">Assigned Color</span>
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="size-3 rounded-full bg-white shadow-sm"></div>
-                                                        <span className="text-base text-white font-bold uppercase tracking-tight">{classification.colorCode}</span>
-                                                    </div>
                                                 </div>
                                             </div>
                                         );
@@ -386,15 +417,32 @@ const Step5Review = ({
 
                         <div className="flex flex-col gap-3">
                             <div className="flex items-start gap-3 px-1">
-                                <input className="mt-1 size-4 rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-neutral-800 cursor-pointer" id="terms" name="terms" type="checkbox" />
+                                <input
+                                    className="mt-1 size-4 rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-neutral-800 cursor-pointer"
+                                    id="terms"
+                                    name="terms"
+                                    type="checkbox"
+                                    checked={termsAgreed}
+                                    onChange={(e) => setTermsAgreed(e.target.checked)}
+                                />
                                 <label className="text-sm text-text-muted-light dark:text-gray-400 cursor-pointer" htmlFor="terms">
-                                    I agree to the <span className="text-primary font-bold hover:underline">Terms & Conditions</span> and <span className="text-primary font-bold hover:underline">Privacy Policy</span>.
+                                    I agree to the <a
+                                        href="/terms-and-conditions"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary font-bold hover:underline"
+                                    >Terms & Conditions</a> and <a
+                                        href="/privacy-policy"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary font-bold hover:underline"
+                                    >Privacy Policy</a>.
                                 </label>
                             </div>
 
                             <button
                                 onClick={onSubmit}
-                                disabled={isSubmitting}
+                                disabled={isSubmitting || !termsAgreed}
                                 className="w-full h-14 rounded-xl bg-primary text-white text-lg font-bold shadow-lg shadow-primary/25 hover:bg-primary-dark hover:shadow-primary/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <span>{isSubmitting ? 'Processing...' : 'Proceed to Payment'}</span>
