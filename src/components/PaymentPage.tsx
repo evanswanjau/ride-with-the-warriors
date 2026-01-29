@@ -94,7 +94,7 @@ const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageP
                                             { s: "Lipa na M-PESA", d: "Open M-Pesa Menu" },
                                             { s: "Paybill", d: "Select Payment Services" },
                                             { s: "400200", d: "Enter Business Number" },
-                                            { s: "Account No", d: "Enter Account Number" },
+                                            { s: "12345XXXXX978", d: "Enter Account Number" },
                                             { s: "KES " + amount.toLocaleString(), d: "Enter Amount & PIN" }
                                         ].map((step, i) => (
                                             <li key={i} className="flex items-center gap-4 group">
