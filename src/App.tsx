@@ -482,7 +482,6 @@ const RegistrationFlow = ({
   isSubmitting,
   registrationId,
   handleNext, handleBack, handleSubmit,
-  loadScenario, showDevTools, setShowDevTools,
   pricingCategories
 }: any) => {
   const { stepId } = useParams();

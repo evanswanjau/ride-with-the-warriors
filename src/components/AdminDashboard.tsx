@@ -465,7 +465,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                             ) : Object.keys(groupedCategories).length === 0 ? (
                                 <div className="py-20 text-center text-neutral-500">No pricing categories found.</div>
                             ) : (
-                                Object.entries(groupedCategories).map(([circuitId, categories]) => (
+                                Object.entries(groupedCategories).map(([circuitId, categories]: [string, any]) => (
                                     <div key={circuitId} className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} rounded-3xl border overflow-hidden`}>
                                         <div className={`px-6 py-4 border-b ${isDarkMode ? 'bg-neutral-700/50 border-neutral-700' : 'bg-neutral-50 border-neutral-100'}`}>
                                             <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>
@@ -485,7 +485,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 </tr>
                                             </thead>
                                             <tbody className={`divide-y ${isDarkMode ? 'divide-neutral-700' : 'divide-neutral-100'}`}>
-                                                {categories.map((cat) => (
+                                                {categories.map((cat: any) => (
                                                     <tr key={cat.id} className={`transition-colors ${isDarkMode ? 'hover:bg-neutral-700/30' : 'hover:bg-neutral-50'}`}>
                                                         <td className="px-6 py-4">
                                                             <div className="flex items-center gap-2">

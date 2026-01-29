@@ -9,7 +9,7 @@ interface PaymentPageProps {
 }
 
 
-const PaymentPage = ({ registrationId, amount, email, onBack, onSuccess }: PaymentPageProps) => {
+const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageProps) => {
     const [isProcessing, setIsProcessing] = useState(false);
 
     const handleConfirm = () => {
