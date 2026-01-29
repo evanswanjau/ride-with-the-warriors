@@ -66,7 +66,7 @@ const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageP
                                             <div className="h-px bg-neutral-100 dark:bg-neutral-700"></div>
                                             <div className="flex items-center justify-between">
                                                 <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Account No.</span>
-                                                <span className="text-2xl font-black text-primary font-mono tracking-tight uppercase">01116046086300</span>
+                                                <span className="text-2xl font-black text-primary font-mono tracking-tight uppercase">12345XXXXX978</span>
                                             </div>
                                             <div className="h-px bg-neutral-100 dark:bg-neutral-700"></div>
                                             <div className="flex items-center justify-between">
@@ -94,7 +94,7 @@ const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageP
                                             { s: "Lipa na M-PESA", d: "Open M-Pesa Menu" },
                                             { s: "Paybill", d: "Select Payment Services" },
                                             { s: "400200", d: "Enter Business Number" },
-                                            { s: "01116046086300", d: "Enter Account Number" },
+                                            { s: "Account No", d: "Enter Account Number" },
                                             { s: "KES " + amount.toLocaleString(), d: "Enter Amount & PIN" }
                                         ].map((step, i) => (
                                             <li key={i} className="flex items-center gap-4 group">
