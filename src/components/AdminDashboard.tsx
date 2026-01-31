@@ -343,7 +343,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                     <td className="px-6 py-5">
                                                         <div className="flex items-center gap-2">
                                                             <div className="size-3 rounded-full" style={{ backgroundColor: catColor }}></div>
-                                                            <span className={`font-mono text-xs font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>#{reg.id}</span>
+                                                            <span className={`font-mono text-xs font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>{reg.id}</span>
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-5">

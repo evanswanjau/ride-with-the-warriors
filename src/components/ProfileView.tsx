@@ -35,7 +35,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
     const handleShare = async () => {
         const shareData = {
             title: 'Ride with the Warriors Registration',
-            text: `View my registration for ${circuit.title} - #${registration.id}`,
+            text: `View my registration for ${circuit.title} - ${registration.id}`,
             url: window.location.href,
         };
 
@@ -211,7 +211,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                 </div>
                                 <div className="bg-neutral-50 px-6 py-3 rounded-2xl border border-neutral-100 backdrop-blur-sm self-stretch md:self-auto flex flex-col justify-center">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-0.5 text-center md:text-right">Ticket ID</p>
-                                    <p className="text-xl font-mono font-black text-neutral-900 tracking-tight text-center md:text-right">#{registration.id}</p>
+                                    <p className="text-xl font-mono font-black text-neutral-900 tracking-tight text-center md:text-right">{registration.id}</p>
                                 </div>
                             </div>
 

@@ -77,7 +77,7 @@ const Step5Review = ({
             label: `${riderData.firstName} - ${classification.category}`,
             amount: classification.price,
             category: classification.category,
-            regRange: registrationId ? `#${registrationId}` : classification.regRange,
+            regRange: registrationId ? registrationId : classification.regRange,
             color: classification.hexColor
         });
     } else if (registrationType === 'team') {
@@ -87,7 +87,7 @@ const Step5Review = ({
             label: `Team: ${teamData.teamName}`,
             amount: classification.price,
             category: classification.category,
-            regRange: registrationId ? `#${registrationId}` : classification.regRange,
+            regRange: registrationId ? registrationId : classification.regRange,
             color: classification.hexColor
         });
     } else if (registrationType === 'family') {
@@ -101,7 +101,7 @@ const Step5Review = ({
                     amount: cost,
                     count: riders.length,
                     category: classification.category,
-                    regRange: registrationId ? `#${registrationId}` : classification.regRange,
+                    regRange: registrationId ? registrationId : classification.regRange,
                     color: classification.hexColor
                 });
             }
@@ -347,7 +347,7 @@ const Step5Review = ({
                                                 <div className="flex flex-col gap-0.5">
                                                     <span className="text-[10px] uppercase tracking-wider text-white/70 font-bold">Bib Number</span>
                                                     <span className="text-base text-white font-bold tracking-wide leading-none">
-                                                        {registrationId ? `#${registrationId}` : classification.regRange}
+                                                        {registrationId ? registrationId : classification.regRange}
                                                     </span>
                                                 </div>
                                             </div>
