@@ -70,7 +70,10 @@ const App = () => {
     phoneNumber: '',
     idNumber: '',
     dob: '',
-    gender: ''
+    gender: '',
+    tshirtSize: '',
+    emergencyContactName: '',
+    emergencyPhone: ''
   });
 
   const [teamDetails, setTeamDetails] = useState<TeamDetails>({
@@ -84,12 +87,15 @@ const App = () => {
       idNumber: '',
       dob: '',
       gender: '',
+      tshirtSize: '',
+      emergencyContactName: '',
+      emergencyPhone: '',
       isCaptain: true
     }]
   });
 
   const [familyDetails, setFamilyDetails] = useState<FamilyDetails>({
-    guardian: { firstName: '', lastName: '', fullName: '', emergencyPhone: '', email: '', relationship: '', participation: 'none', dob: '' },
+    guardian: { firstName: '', lastName: '', fullName: '', emergencyPhone: '', email: '', relationship: '', participation: 'none', dob: '', emergencyContactName: '', tshirtSize: '' },
     riders: { cubs: [], champs: [], tigers: [] }
   });
 
@@ -141,6 +147,10 @@ const App = () => {
           }
         }
         if (!riderDetails.gender) newErrors.gender = 'Gender is required';
+        if (!riderDetails.tshirtSize) newErrors.tshirtSize = 'T-shirt size is required';
+        if (!riderDetails.emergencyContactName?.trim()) newErrors.emergencyContactName = 'Emergency contact name is required';
+        if (!riderDetails.emergencyPhone?.trim()) newErrors.emergencyPhone = 'Emergency phone is required';
+        else if (!isValidKenyanPhone(riderDetails.emergencyPhone)) newErrors.emergencyPhone = 'Invalid Kenyan phone number';
       }
       else if (registrationType === 'team') {
         if (!teamDetails.teamName.trim()) newErrors.teamName = 'Team name is required';
@@ -149,7 +159,7 @@ const App = () => {
           if (!member.firstName.trim()) newErrors[`${member.id}.firstName`] = 'Required';
           if (!member.lastName.trim()) newErrors[`${member.id}.lastName`] = 'Required';
           if (!member.email.trim()) newErrors[`${member.id}.email`] = 'Required';
-          else if (!/\S+@\S+\.\S+/.test(member.email)) newErrors[`${member.id}.email`] = 'Invalid email';
+          else if (!/\S+@\S+\.\S/.test(member.email)) newErrors[`${member.id}.email`] = 'Invalid email';
           if (!member.phoneNumber.trim()) newErrors[`${member.id}.phoneNumber`] = 'Required';
           else if (!isValidKenyanPhone(member.phoneNumber)) newErrors[`${member.id}.phoneNumber`] = 'Invalid';
           if (!member.idNumber.trim()) newErrors[`${member.id}.idNumber`] = 'Required';
@@ -163,6 +173,10 @@ const App = () => {
             }
           }
           if (!member.gender) newErrors[`${member.id}.gender`] = 'Required';
+          if (!member.tshirtSize) newErrors[`${member.id}.tshirtSize`] = 'Required';
+          if (!member.emergencyContactName?.trim()) newErrors[`${member.id}.emergencyContactName`] = 'Required';
+          if (!member.emergencyPhone?.trim()) newErrors[`${member.id}.emergencyPhone`] = 'Required';
+          else if (!isValidKenyanPhone(member.emergencyPhone)) newErrors[`${member.id}.emergencyPhone`] = 'Invalid';
         });
 
         const numMembers = teamDetails.members.length;
@@ -181,7 +195,7 @@ const App = () => {
         if (!familyDetails.guardian.firstName.trim()) newErrors['guardian.firstName'] = 'First name is required';
         if (!familyDetails.guardian.lastName.trim()) newErrors['guardian.lastName'] = 'Last name is required';
         if (!familyDetails.guardian.email.trim()) newErrors['guardian.email'] = 'Guardian email is required';
-        else if (!/\S+@\S+\.\S+/.test(familyDetails.guardian.email)) newErrors['guardian.email'] = 'Invalid email';
+        else if (!/\S+@\S+\.\S/.test(familyDetails.guardian.email)) newErrors['guardian.email'] = 'Invalid email';
         if (!familyDetails.guardian.emergencyPhone.trim()) newErrors['guardian.emergencyPhone'] = 'Emergency phone is required';
         else if (!isValidKenyanPhone(familyDetails.guardian.emergencyPhone)) newErrors['guardian.emergencyPhone'] = 'Invalid Kenyan number';
         if (!familyDetails.guardian.relationship) newErrors['guardian.relationship'] = 'Relationship is required';
@@ -196,6 +210,7 @@ const App = () => {
               newErrors['guardian.dob'] = 'Parents must be 18+';
             }
           }
+          if (!familyDetails.guardian.tshirtSize) newErrors['guardian.tshirtSize'] = 'T-shirt size is required';
         }
 
         Object.entries(familyDetails.riders).forEach(([category, riders]) => {
@@ -214,6 +229,7 @@ const App = () => {
               }
             }
             if (!rider.gender) newErrors[`${rider.id}.gender`] = 'Required';
+            if (!rider.tshirtSize) newErrors[`${rider.id}.tshirtSize`] = 'Required';
           });
         });
 

@@ -144,6 +144,14 @@ const Step5Review = ({
                             <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Date of Birth</p>
                             <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{riderData.dob} (Age: {age})</p>
                         </div>
+                        <div>
+                            <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">T-shirt Size</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{riderData.tshirtSize || 'Not selected'}</p>
+                        </div>
+                        <div>
+                            <p className="text-text-muted-light dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1">Emergency Contact</p>
+                            <p className="text-sm text-black dark:text-white font-bold leading-relaxed">{riderData.emergencyContactName} ({riderData.emergencyPhone})</p>
+                        </div>
                     </div>
                 </div>
             );
@@ -175,7 +183,14 @@ const Step5Review = ({
                                             <span className="text-[10px] uppercase tracking-wide text-text-muted-light dark:text-gray-400">{member.isCaptain ? 'Captain' : 'Rider'}</span>
                                         </div>
                                     </div>
-                                    <span className="text-xs font-medium text-text-light dark:text-gray-300">{member.gender === 'male' ? 'M' : 'F'} (Age: {calculateAge(member.dob)})</span>
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-xs font-bold text-primary">{member.tshirtSize}</span>
+                                            <span className="text-[8px] uppercase tracking-tighter text-neutral-400">Size</span>
+                                        </div>
+                                        <div className="h-6 w-px bg-neutral-100 dark:bg-neutral-700"></div>
+                                        <span className="text-xs font-medium text-text-light dark:text-gray-300">{member.gender === 'male' ? 'M' : 'F'} (Age: {calculateAge(member.dob)})</span>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -229,6 +244,11 @@ const Step5Review = ({
                                                         <span className="text-sm font-bold text-text-light dark:text-white">{rider.firstName} {rider.lastName}</span>
                                                     </div>
                                                     <div className="flex items-center gap-4">
+                                                        <div className="flex flex-col items-end">
+                                                            <span className="text-xs font-bold text-primary">{rider.tshirtSize}</span>
+                                                            <span className="text-[8px] uppercase tracking-tighter text-neutral-400">Size</span>
+                                                        </div>
+                                                        <div className="h-6 w-px bg-neutral-100 dark:bg-neutral-700"></div>
                                                         <span className="text-xs font-medium text-text-muted-light dark:text-gray-400 uppercase">{rider.gender || 'Any'}</span>
                                                         <span className="text-xs font-bold text-primary">{calculateAge(rider.dob)} Years</span>
                                                     </div>

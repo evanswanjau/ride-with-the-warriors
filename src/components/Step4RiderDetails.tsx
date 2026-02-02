@@ -190,6 +190,71 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                             </div>
                             {errors.gender && <span className="text-red-500 text-xs font-medium">{errors.gender}</span>}
                         </div>
+                        <div className="flex flex-col gap-2">
+                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
+                                T-shirt Size <span className="text-red-500">*</span>
+                            </span>
+                            <div className="relative">
+                                <select
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all appearance-none cursor-pointer ${errors.tshirtSize
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
+                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
+                                        }`}
+                                    value={data.tshirtSize}
+                                    onChange={(e) => handleInputChange('tshirtSize', e.target.value)}
+                                    disabled={isSubmitting}
+                                >
+                                    <option value="">Select Size</option>
+                                    <option value="S">Small (S)</option>
+                                    <option value="M">Medium (M)</option>
+                                    <option value="L">Large (L)</option>
+                                    <option value="XL">Extra Large (XL)</option>
+                                    <option value="XXL">Double Extra Large (XXL)</option>
+                                </select>
+                                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
+                            </div>
+                            {errors.tshirtSize && <span className="text-red-500 text-xs font-medium">{errors.tshirtSize}</span>}
+                        </div>
+
+                        <label className="flex flex-col gap-2">
+                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
+                                Emergency Contact Name <span className="text-red-500">*</span>
+                            </span>
+                            <div className="relative">
+                                <input
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors.emergencyContactName
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
+                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
+                                        }`}
+                                    placeholder="Emergency Contact Name"
+                                    type="text"
+                                    value={data.emergencyContactName}
+                                    onChange={(e) => handleInputChange('emergencyContactName', e.target.value)}
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+                            {errors.emergencyContactName && <span className="text-red-500 text-xs font-medium">{errors.emergencyContactName}</span>}
+                        </label>
+
+                        <label className="flex flex-col gap-2">
+                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
+                                Emergency Contact Phone <span className="text-red-500">*</span>
+                            </span>
+                            <div className="relative">
+                                <input
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors.emergencyPhone
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
+                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
+                                        }`}
+                                    placeholder="07XX XXX XXX"
+                                    type="tel"
+                                    value={data.emergencyPhone}
+                                    onChange={(e) => handleInputChange('emergencyPhone', e.target.value)}
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+                            {errors.emergencyPhone && <span className="text-red-500 text-xs font-medium">{errors.emergencyPhone}</span>}
+                        </label>
                     </div>
                 </div>
 

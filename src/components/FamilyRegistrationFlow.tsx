@@ -29,7 +29,16 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                 ...data.riders,
                 [category]: [
                     ...data.riders[category],
-                    { id: Math.random().toString(36).substr(2, 9), firstName: '', lastName: '', dob: '', gender: category === 'tigers' ? 'female' : '' }
+                    {
+                        id: Math.random().toString(36).substr(2, 9),
+                        firstName: '',
+                        lastName: '',
+                        dob: '',
+                        gender: category === 'tigers' ? 'female' : '',
+                        tshirtSize: '',
+                        emergencyContactName: '',
+                        emergencyPhone: ''
+                    }
                 ]
             }
         });
@@ -72,7 +81,10 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                 firstName: updatedGuardian.firstName,
                 lastName: updatedGuardian.lastName,
                 dob: updatedGuardian.dob,
-                gender: 'female'
+                gender: 'female',
+                tshirtSize: updatedGuardian.tshirtSize,
+                emergencyContactName: '',
+                emergencyPhone: ''
             };
             updatedRiders.tigers = [momRider];
         } else {
@@ -242,6 +254,54 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                 </div>
                                 {errors[`${rider.id}.gender`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.gender`]}</span>}
                             </div>
+
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
+                                    T-shirt Size <span className="text-red-500">*</span>
+                                </span>
+                                <div className="relative">
+                                    <select
+                                        className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all appearance-none cursor-pointer ${errors[`${rider.id}.tshirtSize`]
+                                            ? 'border-red-500 focus:border-red-500'
+                                            : 'border-gray-300 dark:border-gray-700 focus:border-primary'
+                                            }`}
+                                        value={rider.tshirtSize}
+                                        onChange={(e) => updateRider(activeCategory, rider.id, 'tshirtSize', e.target.value)}
+                                        disabled={isSubmitting}
+                                    >
+                                        <option value="">Select Size</option>
+                                        <option value="XS">Youth XS</option>
+                                        <option value="S">Youth S</option>
+                                        <option value="M">Youth M</option>
+                                        <option value="L">Youth L</option>
+                                        <option value="XL">Youth XL</option>
+                                        <option value="S_ADULT">Adult S</option>
+                                        <option value="M_ADULT">Adult M</option>
+                                    </select>
+                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
+                                </div>
+                                {errors[`${rider.id}.tshirtSize`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.tshirtSize`]}</span>}
+                            </div>
+
+                            <div className="flex flex-col gap-2 md:col-span-2">
+                                <p className="text-[10px] font-black text-text-muted-light dark:text-gray-500 uppercase tracking-widest">Optional: Emergency contact if different from guardian</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <input
+                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2 text-xs outline-none focus:border-primary"
+                                        placeholder="Emergency Name"
+                                        value={rider.emergencyContactName}
+                                        onChange={(e) => updateRider(activeCategory, rider.id, 'emergencyContactName', e.target.value)}
+                                        disabled={isSubmitting}
+                                    />
+                                    <input
+                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2 text-xs outline-none focus:border-primary"
+                                        placeholder="Emergency Phone"
+                                        value={rider.emergencyPhone}
+                                        onChange={(e) => updateRider(activeCategory, rider.id, 'emergencyPhone', e.target.value)}
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -298,6 +358,18 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                             </div>
 
                             <div className="flex flex-col gap-2 md:col-span-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Alternative Emergency Contact Name (Optional)</span>
+                                <input
+                                    className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none focus:border-primary"
+                                    placeholder="e.g. Spouse, Grandparent"
+                                    type="text"
+                                    value={data.guardian.emergencyContactName}
+                                    onChange={(e) => updateGuardian('emergencyContactName', e.target.value)}
+                                    disabled={isSubmitting}
+                                />
+                            </div>
+
+                            <div className="flex flex-col gap-2 md:col-span-2">
                                 <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Participating in the ride? <span className="text-red-500">*</span></span>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                     {[
@@ -323,24 +395,52 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                             </div>
 
                             {data.guardian.participation === 'mom' && (
-                                <div className="flex flex-col gap-2 md:col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                                    <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
-                                        <span>Date of Birth (Parent) <span className="text-red-500">*</span></span>
-                                        {data.guardian.dob && (
-                                            <span className="text-primary normal-case font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
-                                                {calculateAge(data.guardian.dob)} years old
-                                            </span>
-                                        )}
-                                    </span>
-                                    <input
-                                        className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.dob'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
-                                        type="date"
-                                        value={data.guardian.dob}
-                                        onChange={(e) => updateGuardian('dob', e.target.value)}
-                                        disabled={isSubmitting}
-                                    />
-                                    {errors['guardian.dob'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.dob']}</span>}
-                                </div>
+                                <>
+                                    <div className="flex flex-col gap-2 md:col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
+                                            <span>Date of Birth (Parent) <span className="text-red-500">*</span></span>
+                                            {data.guardian.dob && (
+                                                <span className="text-primary normal-case font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
+                                                    {calculateAge(data.guardian.dob)} years old
+                                                </span>
+                                            )}
+                                        </span>
+                                        <input
+                                            className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.dob'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
+                                            type="date"
+                                            value={data.guardian.dob}
+                                            onChange={(e) => updateGuardian('dob', e.target.value)}
+                                            disabled={isSubmitting}
+                                        />
+                                        {errors['guardian.dob'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.dob']}</span>}
+                                    </div>
+
+                                    <div className="flex flex-col gap-2 md:col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
+                                            T-shirt Size (Parent) <span className="text-red-500">*</span>
+                                        </span>
+                                        <div className="relative">
+                                            <select
+                                                className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all appearance-none cursor-pointer ${errors['guardian.tshirtSize']
+                                                    ? 'border-red-500 focus:border-red-500'
+                                                    : 'border-gray-300 dark:border-gray-700 focus:border-primary'
+                                                    }`}
+                                                value={data.guardian.tshirtSize}
+                                                onChange={(e) => updateGuardian('tshirtSize', e.target.value)}
+                                                disabled={isSubmitting}
+                                            >
+                                                <option value="">Select Size</option>
+                                                <option value="S">Small (S)</option>
+                                                <option value="M">Medium (M)</option>
+                                                <option value="L">Large (L)</option>
+                                                <option value="XL">Extra Large (XL)</option>
+                                                <option value="XXL">Double Extra Large (XXL)</option>
+                                            </select>
+                                            <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
+                                        </div>
+                                        {errors['guardian.tshirtSize'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.tshirtSize']}</span>}
+                                    </div>
+                                </>
                             )}
 
                             <div className="flex flex-col gap-2">
@@ -422,7 +522,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                     </button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

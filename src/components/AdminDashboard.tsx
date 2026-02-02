@@ -158,6 +158,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 Email: r.email,
                 Phone: r.phoneNumber,
                 Team: r.teamName || '',
+                TshirtSize: r.tshirtSize || '',
+                EmergencyContact: r.emergencyContactName || '',
+                EmergencyPhone: r.emergencyPhone || '',
                 Type: r.type,
                 Circuit: r.circuitId,
                 Category: r.category,
@@ -324,6 +327,8 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             <th className="px-6 py-5">BIB</th>
                                             <th className="px-6 py-5">Participant</th>
                                             <th className="px-6 py-5">Category / Circuit</th>
+                                            <th className="px-6 py-5">T-Shirt</th>
+                                            <th className="px-6 py-5">Emergency</th>
                                             <th className="px-6 py-5">Contact Info</th>
                                             <th className="px-6 py-5 text-center">Amount</th>
                                             <th className="px-6 py-5">Status</th>
@@ -361,6 +366,13 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                         <div className="text-[10px] text-neutral-500 uppercase tracking-widest leading-none mt-1">
                                                             {CIRCUITS.find(c => c.id === reg.circuitId)?.id.toUpperCase() || reg.circuitId}
                                                         </div>
+                                                    </td>
+                                                    <td className="px-6 py-5">
+                                                        <div className={`text-xs font-black ${isDarkMode ? 'text-white' : 'text-primary'}`}>{reg.tshirtSize || '—'}</div>
+                                                    </td>
+                                                    <td className="px-6 py-5">
+                                                        <div className={`text-xs font-bold leading-tight ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>{reg.emergencyContactName || '—'}</div>
+                                                        <div className="text-[10px] text-neutral-500 mt-1">{reg.emergencyPhone || ''}</div>
                                                     </td>
                                                     <td className="px-6 py-5">
                                                         <div className={`text-xs ${isDarkMode ? 'text-neutral-300' : 'text-neutral-600'}`}>{reg.email || 'No Email'}</div>

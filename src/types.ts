@@ -6,6 +6,9 @@ export interface RiderDetails {
     idNumber: string;
     dob: string;
     gender: 'male' | 'female' | '';
+    tshirtSize: string;
+    emergencyContactName: string;
+    emergencyPhone: string;
 }
 
 
@@ -27,6 +30,9 @@ export interface JuniorRider {
     lastName: string;
     dob: string;
     gender: 'male' | 'female' | '';
+    tshirtSize: string;
+    emergencyContactName: string;
+    emergencyPhone: string;
 }
 
 export interface FamilyDetails {
@@ -36,8 +42,10 @@ export interface FamilyDetails {
         fullName: string; // Redundant but kept for compatibility, we will sync it
         dob: string;      // Required if participation is 'mom'
         emergencyPhone: string;
+        emergencyContactName: string; // Added for plan consistency
         email: string;
         relationship: string;
+        tshirtSize: string;
         participation: 'none' | 'mom' | 'other';
     };
     riders: {
