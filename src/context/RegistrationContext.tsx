@@ -21,6 +21,7 @@ interface RegistrationContextType {
     isSubmitting: boolean;
     registrationId: string | null;
     pricingCategories: any[];
+    serverClassifications: any[];
     foundRegistration: any;
     setFoundRegistration: (val: any) => void;
 
@@ -44,6 +45,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [registrationId, setRegistrationId] = useState<string | null>(null);
     const [pricingCategories, setPricingCategories] = useState<any[]>([]);
+    const [serverClassifications, setServerClassifications] = useState<any[]>([]);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [formErrors, setFormErrors] = useState<string[]>([]);
 
@@ -280,6 +282,9 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                 }
 
                 setRegistrationId(data.registrationId);
+                if (data.classifications) {
+                    setServerClassifications(data.classifications);
+                }
                 navigate('/register/step/4');
             } catch (error) {
                 console.error('Draft save error:', error);
@@ -357,6 +362,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
             isSubmitting,
             registrationId,
             pricingCategories,
+            serverClassifications,
             foundRegistration, setFoundRegistration,
             handleNext, handleBack, handleSubmit, validateStep,
             hasInProgressRegistration

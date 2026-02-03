@@ -21,6 +21,7 @@ interface Step5ReviewProps {
     isSubmitting?: boolean;
     registrationId: string | null;
     pricingCategories: any[];
+    serverClassifications?: any[];
 }
 
 const Step5Review = ({
@@ -33,7 +34,8 @@ const Step5Review = ({
     familyData,
     isSubmitting = false,
     registrationId,
-    pricingCategories = []
+    pricingCategories = [],
+    serverClassifications = []
 }: Step5ReviewProps) => {
     const [termsAgreed, setTermsAgreed] = useState(false);
 
@@ -71,7 +73,9 @@ const Step5Review = ({
 
     if (registrationType === 'individual') {
         const age = calculateAge(riderData.dob || '');
-        const classification = getClassification(pricingCategories, selectedCircuitId, 'individual', age);
+        const classification = (serverClassifications && serverClassifications.length > 0)
+            ? serverClassifications[0]
+            : getClassification(pricingCategories, selectedCircuitId, 'individual', age);
         totalCost = classification.price;
         lineItems.push({
             label: `${riderData.firstName} - ${classification.category}`,
@@ -81,7 +85,9 @@ const Step5Review = ({
             color: classification.hexColor
         });
     } else if (registrationType === 'team') {
-        const classification = getClassification(pricingCategories, selectedCircuitId, 'team');
+        const classification = (serverClassifications && serverClassifications.length > 0)
+            ? serverClassifications[0]
+            : getClassification(pricingCategories, selectedCircuitId, 'team');
         totalCost = classification.price;
         lineItems.push({
             label: `Team: ${teamData.teamName}`,
@@ -93,7 +99,12 @@ const Step5Review = ({
     } else if (registrationType === 'family') {
         Object.entries(familyData.riders).forEach(([catId, riders]) => {
             if (riders.length > 0) {
-                const classification = getClassification(pricingCategories, 'family', 'family', null, catId);
+                const classification = serverClassifications?.find(c => {
+                    if (catId === 'cubs') return c.category === 'Cubs';
+                    if (catId === 'champs') return c.category === 'Champs';
+                    if (catId === 'tigers') return c.category === 'Parent';
+                    return false;
+                }) || getClassification(pricingCategories, 'family', 'family', null, catId);
                 const cost = riders.length * classification.price;
                 totalCost += cost;
                 lineItems.push({
@@ -227,7 +238,12 @@ const Step5Review = ({
                         <div className="flex flex-col gap-4">
                             {Object.entries(familyData.riders).map(([category, riders]) => {
                                 if (riders.length === 0) return null;
-                                const classification = getClassification(pricingCategories, 'family', 'family', null, category);
+                                const classification = serverClassifications?.find(c => {
+                                    if (category === 'cubs') return c.category === 'Cubs';
+                                    if (category === 'champs') return c.category === 'Champs';
+                                    if (category === 'tigers') return c.category === 'Parent';
+                                    return false;
+                                }) || getClassification(pricingCategories, 'family', 'family', null, category);
                                 return (
                                     <div key={category} className="flex flex-col gap-2">
                                         <div className="flex items-center gap-2">
@@ -351,7 +367,9 @@ const Step5Review = ({
 
                                     {(registrationType === 'individual' || registrationType === 'team') && (() => {
                                         const age = registrationType === 'individual' ? calculateAge(riderData.dob || '') : null;
-                                        const classification = getClassification(pricingCategories, selectedCircuitId, registrationType, age);
+                                        const classification = (serverClassifications && serverClassifications.length > 0)
+                                            ? serverClassifications[0]
+                                            : getClassification(pricingCategories, selectedCircuitId, registrationType, age);
                                         return (
                                             <div
                                                 className="flex flex-wrap items-center gap-10 py-3 px-6 rounded-2xl border border-white/20 shadow-inner"

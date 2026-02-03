@@ -24,6 +24,7 @@ const RegisterPage = () => {
         isSubmitting,
         registrationId,
         pricingCategories,
+        serverClassifications,
         handleNext, handleBack, handleSubmit
     } = useRegistration();
 
@@ -62,6 +63,7 @@ const RegisterPage = () => {
                         teamData={teamDetails}
                         familyData={familyDetails}
                         pricingCategories={pricingCategories}
+                        serverClassifications={serverClassifications}
                         onBack={() => handleBack(4)}
                         onSubmit={handleSubmit}
                         isSubmitting={isSubmitting}
