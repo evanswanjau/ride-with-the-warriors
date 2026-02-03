@@ -400,7 +400,7 @@ const App = () => {
           circuitId: selectedCircuit,
           type: registrationType,
           payload,
-          registrationId,
+          ...(registrationId ? { registrationId } : {}),
         }),
       });
 
