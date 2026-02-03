@@ -165,6 +165,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 Circuit: r.circuitId,
                 Category: r.category,
                 Amount: r.totalAmount,
+                MpesaCode: r.mpesaCode || '',
                 Status: r.status,
                 Date: new Date(r.createdAt).toLocaleString()
             })));
@@ -331,6 +332,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             <th className="px-6 py-5">Emergency</th>
                                             <th className="px-6 py-5">Contact Info</th>
                                             <th className="px-6 py-5 text-center">Amount</th>
+                                            <th className="px-6 py-5">M-Pesa</th>
                                             <th className="px-6 py-5">Status</th>
                                             <th className="px-6 py-5">Date</th>
                                             <th className="px-6 py-5 text-right">Actions</th>
@@ -381,6 +383,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                     <td className="px-6 py-5 text-center">
                                                         <div className="font-mono font-black text-primary text-sm">{(reg.totalAmount || 0).toLocaleString()}/=</div>
                                                         {reg.totalAmount === 0 && <div className="text-[8px] text-neutral-600 uppercase font-bold">Group Paid</div>}
+                                                    </td>
+                                                    <td className="px-6 py-5">
+                                                        <div className="font-mono text-[10px] font-bold text-neutral-500">{reg.mpesaCode || '—'}</div>
                                                     </td>
                                                     <td className="px-6 py-5">
                                                         <select

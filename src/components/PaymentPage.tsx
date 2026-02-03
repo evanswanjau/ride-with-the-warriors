@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_BASE_URL } from '../config';
 
 interface PaymentPageProps {
     registrationId: string;
@@ -11,14 +12,41 @@ interface PaymentPageProps {
 
 const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageProps) => {
     const [isProcessing, setIsProcessing] = useState(false);
+    const [mpesaCode, setMpesaCode] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
+        if (!mpesaCode) {
+            setError('Please enter your M-Pesa transaction code');
+            return;
+        }
+
         setIsProcessing(true);
-        // Simulate a brief loading state before success
-        setTimeout(() => {
+        setError(null);
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/registrations/verify-mpesa`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ registrationId, mpesaCode }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Success!
+                setTimeout(() => {
+                    setIsProcessing(false);
+                    onSuccess();
+                }, 500);
+            } else {
+                setError(data.error?.message || 'Verification failed. Please try again.');
+                setIsProcessing(false);
+            }
+        } catch (err) {
+            setError('Connection error. Please try again.');
             setIsProcessing(false);
-            onSuccess();
-        }, 1000);
+        }
     };
 
     return (
@@ -66,7 +94,7 @@ const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageP
                                             <div className="h-px bg-neutral-100 dark:bg-neutral-700"></div>
                                             <div className="flex items-center justify-between">
                                                 <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Account No.</span>
-                                                <span className="text-2xl font-black text-primary font-mono tracking-tight uppercase">12345XXXXX978</span>
+                                                <span className="text-2xl font-black text-primary font-mono tracking-tight uppercase">{registrationId}</span>
                                             </div>
                                             <div className="h-px bg-neutral-100 dark:bg-neutral-700"></div>
                                             <div className="flex items-center justify-between">
@@ -74,6 +102,22 @@ const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageP
                                                 <span className="text-2xl font-black text-primary font-mono tracking-tight uppercase">KES {amount.toLocaleString()}</span>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Transaction Code</p>
+                                        <input
+                                            type="text"
+                                            value={mpesaCode}
+                                            onChange={(e) => setMpesaCode(e.target.value.toUpperCase())}
+                                            placeholder="SXXXXXXXXX"
+                                            className="w-full p-4 rounded-2xl bg-white dark:bg-neutral-800 border-2 border-neutral-100 dark:border-neutral-700 focus:border-primary outline-none transition-all font-mono font-black text-lg placeholder:font-sans placeholder:font-normal placeholder:text-neutral-300"
+                                            maxLength={10}
+                                        />
+                                        {error && (
+                                            <p className="text-xs font-bold text-red-500 animate-in fade-in slide-in-from-top-1">{error}</p>
+                                        )}
+                                        <p className="text-[10px] text-neutral-400 font-medium">Enter the 10-character code from your M-Pesa SMS.</p>
                                     </div>
 
                                     <div className="hidden md:block pt-4">
@@ -94,14 +138,15 @@ const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageP
                                             { s: "Lipa na M-PESA", d: "Open M-Pesa Menu" },
                                             { s: "Paybill", d: "Select Payment Services" },
                                             { s: "400200", d: "Enter Business Number" },
-                                            { s: "12345XXXXX978", d: "Enter Account Number" },
-                                            { s: "KES " + amount.toLocaleString(), d: "Enter Amount & PIN" }
+                                            { s: registrationId, d: "Enter Account Number" },
+                                            { s: "KES " + amount.toLocaleString(), d: "Enter Amount & PIN" },
+                                            { s: "M-Pesa Code", d: "Enter code on this page" }
                                         ].map((step, i) => (
                                             <li key={i} className="flex items-center gap-4 group">
                                                 <span className="size-6 shrink-0 rounded-lg bg-neutral-100 dark:bg-neutral-900 text-neutral-500 flex items-center justify-center font-black text-[10px] group-hover:bg-primary group-hover:text-white transition-colors">{i + 1}</span>
                                                 <div className="flex flex-col">
                                                     <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-tight leading-none mb-1">{step.d}</span>
-                                                    <span className="text-sm font-bold text-neutral-900 dark:text-white leading-none">{step.s}</span>
+                                                    <span className="text-sm font-bold text-neutral-900 dark:text-white leading-none uppercase">{step.s}</span>
                                                 </div>
                                             </li>
                                         ))}
@@ -115,11 +160,14 @@ const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageP
                                         className="w-full py-5 rounded-[24px] bg-[#1a1a1a] dark:bg-white text-white dark:text-black font-black text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                                     >
                                         {isProcessing ? (
-                                            <div className="size-6 border-4 border-current/30 border-t-current animate-spin rounded-full" />
+                                            <div className="flex items-center gap-3">
+                                                <div className="size-5 border-3 border-current/30 border-t-current animate-spin rounded-full" />
+                                                <span>VERIFYING...</span>
+                                            </div>
                                         ) : (
                                             <>
-                                                <span>COMPLETE ORDER</span>
-                                                <span className="material-symbols-outlined font-bold">arrow_forward</span>
+                                                <span>VERIFY PAYMENT</span>
+                                                <span className="material-symbols-outlined font-bold">verified_user</span>
                                             </>
                                         )}
                                     </button>
