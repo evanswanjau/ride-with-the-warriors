@@ -62,7 +62,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
     });
 
     const [familyDetails, setFamilyDetails] = useState<FamilyDetails>({
-        guardian: { firstName: '', lastName: '', fullName: '', emergencyPhone: '', email: '', relationship: '', participation: 'none', dob: '', emergencyContactName: '', tshirtSize: '' },
+        guardian: { firstName: '', lastName: '', fullName: '', phoneNumber: '', emergencyPhone: '', email: '', idNumber: '', gender: '', relationship: '', participation: 'none', dob: '', emergencyContactName: '', tshirtSize: '' },
         riders: { cubs: [], champs: [], tigers: [] }
     });
 
@@ -157,10 +157,13 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                 });
 
                 const numMembers = teamDetails.members.length;
+                const hasFemale = teamDetails.members.some(m => m.gender === 'female');
+
                 if (selectedCircuit === 'corporate') {
                     if (numMembers < 3 || numMembers > 5) newFormErrors.push(`Corporate teams must have 3-5 members (Currently: ${numMembers})`);
                 } else if (selectedCircuit === 'blitz' || selectedCircuit === 'recon') {
                     if (numMembers !== 5) newFormErrors.push(`Competitive teams (120/60KM) must have exactly 5 members (Currently: ${numMembers})`);
+                    if (!hasFemale) newFormErrors.push(`Competitive teams (120/60KM) must have at least one female rider.`);
                 }
             }
             else if (registrationType === 'family') {

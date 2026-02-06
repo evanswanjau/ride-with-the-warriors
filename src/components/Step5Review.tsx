@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CIRCUITS } from '../constants';
 import type { RiderDetails, TeamDetails, FamilyDetails } from '../types';
-import { getClassification, calculateAge } from '../utils';
+import { getClassification, calculateAge, getContrastText } from '../utils';
 import blitzIndividual from '../assets/images/blitz-individual.jpeg';
 import blitzTeam from '../assets/images/blitz-team.jpeg';
 import reconIndividual from '../assets/images/recon-individual.jpeg';
@@ -247,7 +247,7 @@ const Step5Review = ({
                                 return (
                                     <div key={category} className="flex flex-col gap-2">
                                         <div className="flex items-center gap-2">
-                                            <span className="text-xs font-bold text-white uppercase tracking-wider px-2 py-1 rounded shadow-sm" style={{ backgroundColor: classification.hexColor }}>
+                                            <span className="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded shadow-sm" style={{ backgroundColor: classification.hexColor, color: getContrastText(classification.hexColor) }}>
                                                 {classification.category}
                                             </span>
                                             <span className="text-[10px] font-bold text-text-muted-light dark:text-gray-400 uppercase tracking-widest leading-none">REG: {classification.regRange}</span>
@@ -378,13 +378,13 @@ const Step5Review = ({
                                                 }}
                                             >
                                                 <div className="flex flex-col gap-0.5">
-                                                    <span className="text-[10px] uppercase tracking-wider text-white/70 font-bold">Category</span>
-                                                    <span className="text-base text-white font-bold uppercase tracking-tight leading-none">{classification.category}</span>
+                                                    <span className="text-[10px] uppercase tracking-wider font-bold" style={{ color: getContrastText(classification.hexColor) }}>Category</span>
+                                                    <span className="text-base font-bold uppercase tracking-tight leading-none" style={{ color: getContrastText(classification.hexColor) }}>{classification.category}</span>
                                                 </div>
                                                 <div className="h-8 w-px bg-white/20 hidden sm:block"></div>
-                                                <div className="flex flex-col gap-0.5">
-                                                    <span className="text-[10px] uppercase tracking-wider text-white/70 font-bold">Bib Number</span>
-                                                    <span className="text-base text-white font-bold tracking-wide leading-none">
+                                                <div className="flex flex-col gap-0.5" style={{ color: getContrastText(classification.hexColor) }}>
+                                                    <span className="text-[10px] uppercase tracking-wider font-bold">Bib Number</span>
+                                                    <span className="text-base font-bold tracking-wide leading-none">
                                                         {registrationId ? registrationId : classification.regRange}
                                                     </span>
                                                 </div>

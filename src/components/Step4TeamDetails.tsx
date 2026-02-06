@@ -47,11 +47,45 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
 
     return (
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1 w-full gap-8">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-text-light dark:text-white tracking-tight text-[32px] md:text-4xl font-bold leading-tight">Build Your Squad</h1>
-                <p className="text-text-muted-light dark:text-gray-400 text-base font-normal leading-normal max-w-2xl">
-                    Enter your team details and add your fellow warriors. Minimum 2 members required.
-                </p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-text-light dark:text-white tracking-tight text-[32px] md:text-4xl font-bold leading-tight">Build Your Squad</h1>
+                    <p className="text-text-muted-light dark:text-gray-400 text-base font-normal leading-normal max-w-2xl">
+                        Enter your team details and add your fellow warriors. Minimum 2 members required.
+                    </p>
+                </div>
+                <button
+                    onClick={() => {
+                        const firstNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'];
+                        const lastNames = ['Smith', 'Johnson', 'Brown', 'Davis', 'Wilson'];
+                        const genders: Array<'male' | 'female'> = ['female', 'male', 'male', 'female', 'female'];
+
+                        const members: TeamMember[] = firstNames.map((fn, i) => ({
+                            id: Math.random().toString(36).substr(2, 9),
+                            firstName: fn,
+                            lastName: lastNames[i],
+                            email: `${fn.toLowerCase()}.${lastNames[i].toLowerCase()}.${Math.floor(Math.random() * 1000)}@example.com`,
+                            phoneNumber: `07${Math.floor(10000000 + Math.random() * 90000000)}`,
+                            idNumber: `${Math.floor(10000000 + Math.random() * 90000000)}`,
+                            dob: `${1985 + i}-01-01`,
+                            gender: genders[i],
+                            tshirtSize: ['S', 'M', 'L', 'XL', 'M', 'S'][i],
+                            emergencyContactName: 'Emergency Contact',
+                            emergencyPhone: '0711223344',
+                            isCaptain: i === 0
+                        }));
+
+                        onChange({
+                            teamName: 'Warriors United',
+                            members
+                        });
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all font-semibold text-sm w-fit"
+                    type="button"
+                >
+                    <span className="material-symbols-outlined text-lg">magic_button</span>
+                    Fill with Test Data
+                </button>
             </div>
 
             <ErrorBanner errors={formErrors} />

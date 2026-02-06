@@ -22,11 +22,34 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
 
     return (
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1 w-full gap-8">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-text-light dark:text-white tracking-tight text-[32px] md:text-4xl font-bold leading-tight">Rider Details</h1>
-                <p className="text-text-muted-light dark:text-gray-400 text-base font-normal leading-normal max-w-2xl">
-                    Please provide your personal information to complete the registration.
-                </p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-text-light dark:text-white tracking-tight text-[32px] md:text-4xl font-bold leading-tight">Rider Details</h1>
+                    <p className="text-text-muted-light dark:text-gray-400 text-base font-normal leading-normal max-w-2xl">
+                        Please provide your personal information to complete the registration.
+                    </p>
+                </div>
+                <button
+                    onClick={() => {
+                        onChange({
+                            firstName: 'Jane',
+                            lastName: 'Doe',
+                            email: `jane.doe.${Math.floor(Math.random() * 1000)}@example.com`,
+                            phoneNumber: '0712345678',
+                            idNumber: '12345678',
+                            dob: '1995-05-15',
+                            gender: 'female',
+                            tshirtSize: 'M',
+                            emergencyContactName: 'John Smith',
+                            emergencyPhone: '0787654321'
+                        });
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all font-semibold text-sm w-fit"
+                    type="button"
+                >
+                    <span className="material-symbols-outlined text-lg">magic_button</span>
+                    Fill with Test Data
+                </button>
             </div>
 
             <ErrorBanner errors={formErrors} />

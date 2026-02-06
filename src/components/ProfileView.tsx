@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { CIRCUITS } from '../constants';
-import { calculateAge, getCategoryColor } from '../utils';
+import { calculateAge, getCategoryColor, getContrastText } from '../utils';
 
 interface ProfileViewProps {
     registration: any;
@@ -15,8 +15,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
     const pricing = registration.pricing;
     const payload = registration.payload;
     const categoryColor = getCategoryColor(registration.id);
-    const darkColors = ['#000080', '#800020', '#78350f', '#a855f7', '#6b7280', '#800020'];
-    const isDarkBackground = darkColors.includes(categoryColor.toLowerCase());
+    const contrastText = getContrastText(categoryColor);
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -253,7 +252,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                 <div className="mt-4 flex flex-wrap gap-2">
                                     <span
                                         className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm"
-                                        style={{ backgroundColor: categoryColor, color: isDarkBackground ? 'white' : 'inherit' }}
+                                        style={{ backgroundColor: categoryColor, color: contrastText }}
                                     >
                                         Category: {registration.category || 'Rider'}
                                     </span>

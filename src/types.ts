@@ -31,6 +31,7 @@ export interface JuniorRider {
     dob: string;
     gender: 'male' | 'female' | '';
     tshirtSize: string;
+    idNumber: string;
     emergencyContactName: string;
     emergencyPhone: string;
 }
@@ -44,6 +45,9 @@ export interface FamilyDetails {
         emergencyPhone: string;
         emergencyContactName: string; // Added for plan consistency
         email: string;
+        phoneNumber: string;
+        idNumber: string;
+        gender: 'male' | 'female' | '';
         relationship: string;
         tshirtSize: string;
         participation: 'none' | 'mom' | 'other';

@@ -36,6 +36,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                         dob: '',
                         gender: category === 'tigers' ? 'female' : '',
                         tshirtSize: '',
+                        idNumber: '',
                         emergencyContactName: '',
                         emergencyPhone: ''
                     }
@@ -81,10 +82,11 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                 firstName: updatedGuardian.firstName,
                 lastName: updatedGuardian.lastName,
                 dob: updatedGuardian.dob,
-                gender: 'female',
+                idNumber: updatedGuardian.idNumber,
+                gender: updatedGuardian.gender || 'female',
                 tshirtSize: updatedGuardian.tshirtSize,
                 emergencyContactName: '',
-                emergencyPhone: ''
+                emergencyPhone: updatedGuardian.phoneNumber
             };
             updatedRiders.tigers = [momRider];
         } else {
@@ -109,6 +111,71 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                     <p className="text-text-muted-light dark:text-gray-400 text-base font-normal leading-normal max-w-2xl">
                         Register your little warriors for their specific age groups. You can add multiple riders across different categories.
                     </p>
+                </div>
+                <div className="flex items-center">
+                    <button
+                        onClick={() => {
+                            onChange({
+                                guardian: {
+                                    firstName: 'Jane',
+                                    lastName: 'Doe',
+                                    fullName: 'Jane Doe',
+                                    dob: '1985-06-20',
+                                    email: `jane.doe.${Math.floor(Math.random() * 1000)}@example.com`,
+                                    phoneNumber: '0712345678',
+                                    idNumber: '12345678',
+                                    gender: 'female',
+                                    participation: 'mom',
+                                    tshirtSize: 'M',
+                                    relationship: 'Mother',
+                                    emergencyPhone: '0788990011',
+                                    emergencyContactName: 'John Doe'
+                                },
+                                riders: {
+                                    cubs: [{
+                                        id: Math.random().toString(36).substr(2, 9),
+                                        firstName: 'Little',
+                                        lastName: 'Doe',
+                                        dob: '2020-01-01',
+                                        gender: 'male',
+                                        tshirtSize: 'S',
+                                        idNumber: '',
+                                        emergencyContactName: '',
+                                        emergencyPhone: ''
+                                    }],
+                                    champs: [{
+                                        id: Math.random().toString(36).substr(2, 9),
+                                        firstName: 'Big',
+                                        lastName: 'Doe',
+                                        dob: '2015-01-01',
+                                        gender: 'female',
+                                        tshirtSize: 'L',
+                                        idNumber: '',
+                                        emergencyContactName: '',
+                                        emergencyPhone: ''
+                                    }],
+                                    tigers: [
+                                        {
+                                            id: 'mom-rider-id',
+                                            firstName: 'Jane',
+                                            lastName: 'Doe',
+                                            dob: '1985-06-20',
+                                            idNumber: '12345678',
+                                            gender: 'female',
+                                            tshirtSize: 'M',
+                                            emergencyContactName: '',
+                                            emergencyPhone: '0712345678'
+                                        }
+                                    ]
+                                }
+                            });
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all font-semibold text-sm w-fit h-fit"
+                        type="button"
+                    >
+                        <span className="material-symbols-outlined text-lg">magic_button</span>
+                        Fill with Test Data
+                    </button>
                 </div>
             </div>
 
@@ -218,6 +285,34 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                             </div>
                             <div className="flex flex-col gap-2">
                                 <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
+                                    T-shirt Size <span className="text-red-500">*</span>
+                                </span>
+                                <div className="relative">
+                                    <select
+                                        className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all appearance-none cursor-pointer ${errors[`${rider.id}.tshirtSize`]
+                                            ? 'border-red-500 focus:border-red-500'
+                                            : 'border-gray-300 dark:border-gray-700 focus:border-primary'
+                                            }`}
+                                        value={rider.tshirtSize}
+                                        onChange={(e) => updateRider(activeCategory, rider.id, 'tshirtSize', e.target.value)}
+                                        disabled={isSubmitting}
+                                    >
+                                        <option value="">Select Size</option>
+                                        <option value="XS">Youth XS</option>
+                                        <option value="S">Youth S</option>
+                                        <option value="M">Youth M</option>
+                                        <option value="L">Youth L</option>
+                                        <option value="XL">Youth XL</option>
+                                        <option value="S_ADULT">Adult S</option>
+                                        <option value="M_ADULT">Adult M</option>
+                                    </select>
+                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
+                                </div>
+                                {errors[`${rider.id}.tshirtSize`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.tshirtSize`]}</span>}
+                            </div>
+
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
                                     Gender <span className="text-red-500">*</span>
                                 </span>
                                 <div className="flex gap-6 items-center h-[42px] px-1">
@@ -255,53 +350,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                 {errors[`${rider.id}.gender`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.gender`]}</span>}
                             </div>
 
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                    T-shirt Size <span className="text-red-500">*</span>
-                                </span>
-                                <div className="relative">
-                                    <select
-                                        className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all appearance-none cursor-pointer ${errors[`${rider.id}.tshirtSize`]
-                                            ? 'border-red-500 focus:border-red-500'
-                                            : 'border-gray-300 dark:border-gray-700 focus:border-primary'
-                                            }`}
-                                        value={rider.tshirtSize}
-                                        onChange={(e) => updateRider(activeCategory, rider.id, 'tshirtSize', e.target.value)}
-                                        disabled={isSubmitting}
-                                    >
-                                        <option value="">Select Size</option>
-                                        <option value="XS">Youth XS</option>
-                                        <option value="S">Youth S</option>
-                                        <option value="M">Youth M</option>
-                                        <option value="L">Youth L</option>
-                                        <option value="XL">Youth XL</option>
-                                        <option value="S_ADULT">Adult S</option>
-                                        <option value="M_ADULT">Adult M</option>
-                                    </select>
-                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
-                                </div>
-                                {errors[`${rider.id}.tshirtSize`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.tshirtSize`]}</span>}
-                            </div>
 
-                            <div className="flex flex-col gap-2 md:col-span-2">
-                                <p className="text-[10px] font-black text-text-muted-light dark:text-gray-500 uppercase tracking-widest">Optional: Emergency contact if different from guardian</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <input
-                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2 text-xs outline-none focus:border-primary"
-                                        placeholder="Emergency Name"
-                                        value={rider.emergencyContactName}
-                                        onChange={(e) => updateRider(activeCategory, rider.id, 'emergencyContactName', e.target.value)}
-                                        disabled={isSubmitting}
-                                    />
-                                    <input
-                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2 text-xs outline-none focus:border-primary"
-                                        placeholder="Emergency Phone"
-                                        value={rider.emergencyPhone}
-                                        onChange={(e) => updateRider(activeCategory, rider.id, 'emergencyPhone', e.target.value)}
-                                        disabled={isSubmitting}
-                                    />
-                                </div>
-                            </div>
                         </div>
                     </div>
                 ))}
@@ -315,7 +364,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                     <span className="font-bold">
                         {activeCategory === 'tigers' && data.riders.tigers.length >= 1
                             ? 'Only one Parent can be added'
-                            : `Add Another ${activeCategory === 'tigers' ? 'Parent' : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1, -1)}`
+                            : `${data.riders[activeCategory].length === 0 ? 'Add a' : 'Add Another'} ${activeCategory === 'tigers' ? 'Parent' : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1, -1)}`
                         }
                     </span>
                 </button>
@@ -357,16 +406,32 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                 {errors['guardian.lastName'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.lastName']}</span>}
                             </div>
 
-                            <div className="flex flex-col gap-2 md:col-span-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Alternative Emergency Contact Name (Optional)</span>
+
+
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Email Address <span className="text-red-500">*</span></span>
                                 <input
-                                    className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none focus:border-primary"
-                                    placeholder="e.g. Spouse, Grandparent"
-                                    type="text"
-                                    value={data.guardian.emergencyContactName}
-                                    onChange={(e) => updateGuardian('emergencyContactName', e.target.value)}
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.email'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
+                                    placeholder="email@example.com"
+                                    type="email"
+                                    value={data.guardian.email}
+                                    onChange={(e) => updateGuardian('email', e.target.value)}
                                     disabled={isSubmitting}
                                 />
+                                {errors['guardian.email'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.email']}</span>}
+                            </div>
+
+                            <div className="flex flex-col gap-2">
+                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Phone Number <span className="text-red-500">*</span></span>
+                                <input
+                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.phoneNumber'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
+                                    placeholder="+254 7XX XXX XXX"
+                                    type="tel"
+                                    value={data.guardian.phoneNumber}
+                                    onChange={(e) => updateGuardian('phoneNumber', e.target.value)}
+                                    disabled={isSubmitting}
+                                />
+                                {errors['guardian.phoneNumber'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.phoneNumber']}</span>}
                             </div>
 
                             <div className="flex flex-col gap-2 md:col-span-2">
@@ -396,7 +461,20 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
 
                             {data.guardian.participation === 'mom' && (
                                 <>
-                                    <div className="flex flex-col gap-2 md:col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">ID / Passport Number <span className="text-red-500">*</span></span>
+                                        <input
+                                            className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.idNumber'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
+                                            placeholder="12345678"
+                                            type="text"
+                                            value={data.guardian.idNumber}
+                                            onChange={(e) => updateGuardian('idNumber', e.target.value)}
+                                            disabled={isSubmitting}
+                                        />
+                                        {errors['guardian.idNumber'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.idNumber']}</span>}
+                                    </div>
+
+                                    <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
                                         <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
                                             <span>Date of Birth (Parent) <span className="text-red-500">*</span></span>
                                             {data.guardian.dob && (
@@ -415,16 +493,44 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                         {errors['guardian.dob'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.dob']}</span>}
                                     </div>
 
-                                    <div className="flex flex-col gap-2 md:col-span-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                            T-shirt Size (Parent) <span className="text-red-500">*</span>
-                                        </span>
+                                    <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Gender <span className="text-red-500">*</span></span>
+                                        <div className="flex gap-6 items-center h-[42px] px-1">
+                                            <label className="flex items-center gap-2 cursor-pointer group">
+                                                <input
+                                                    className="peer sr-only"
+                                                    name="guardian_gender"
+                                                    type="radio"
+                                                    value="male"
+                                                    checked={data.guardian.gender === 'male'}
+                                                    onChange={() => updateGuardian('gender', 'male')}
+                                                    disabled={isSubmitting}
+                                                />
+                                                <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
+                                                <span className={`text-sm font-medium transition-colors ${data.guardian.gender === 'male' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>Male</span>
+                                            </label>
+                                            <label className="flex items-center gap-2 cursor-pointer group">
+                                                <input
+                                                    className="peer sr-only"
+                                                    name="guardian_gender"
+                                                    type="radio"
+                                                    value="female"
+                                                    checked={data.guardian.gender === 'female'}
+                                                    onChange={() => updateGuardian('gender', 'female')}
+                                                    disabled={isSubmitting}
+                                                />
+                                                <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
+                                                <span className={`text-sm font-medium transition-colors ${data.guardian.gender === 'female' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>Female</span>
+                                            </label>
+                                        </div>
+                                        {errors['guardian.gender'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.gender']}</span>}
+                                    </div>
+
+                                    <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">T-shirt Size (Parent) <span className="text-red-500">*</span></span>
                                         <div className="relative">
                                             <select
-                                                className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all appearance-none cursor-pointer ${errors['guardian.tshirtSize']
-                                                    ? 'border-red-500 focus:border-red-500'
-                                                    : 'border-gray-300 dark:border-gray-700 focus:border-primary'
-                                                    }`}
+                                                className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all appearance-none cursor-pointer ${errors['guardian.tshirtSize'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
                                                 value={data.guardian.tshirtSize}
                                                 onChange={(e) => updateGuardian('tshirtSize', e.target.value)}
                                                 disabled={isSubmitting}
@@ -442,32 +548,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                     </div>
                                 </>
                             )}
-
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Emergency Phone <span className="text-red-500">*</span></span>
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.emergencyPhone'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
-                                    placeholder="+254 7XX XXX XXX"
-                                    type="tel"
-                                    value={data.guardian.emergencyPhone}
-                                    onChange={(e) => updateGuardian('emergencyPhone', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                                {errors['guardian.emergencyPhone'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.emergencyPhone']}</span>}
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Email Address <span className="text-red-500">*</span></span>
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.email'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
-                                    placeholder="email@example.com"
-                                    type="email"
-                                    value={data.guardian.email}
-                                    onChange={(e) => updateGuardian('email', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                                {errors['guardian.email'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.email']}</span>}
-                            </div>
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2 md:col-span-2">
                                 <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Relationship <span className="text-red-500">*</span></span>
                                 <div className="relative">
                                     <select
