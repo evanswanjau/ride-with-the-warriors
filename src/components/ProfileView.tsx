@@ -1,10 +1,9 @@
-import { useState } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
+import { useState, useEffect } from 'react';
+import { QRCodeCanvas } from 'qrcode.react';
 import {
     AiOutlineArrowLeft,
     AiOutlineCheck,
     AiOutlineShareAlt,
-    AiOutlinePrinter,
     AiOutlineSafety,
     AiOutlineCheckCircle,
     AiOutlineHourglass,
@@ -14,10 +13,15 @@ import {
     AiOutlineTeam,
     AiOutlineDown,
     AiOutlineStar,
-    AiOutlineUser
+    AiOutlineUser,
+    AiOutlineDownload
 } from 'react-icons/ai';
+import { jsPDF } from 'jspdf';
+import { toPng } from 'html-to-image';
 import { CIRCUITS } from '../constants';
+
 import { calculateAge, getCategoryColor, getContrastText } from '../utils';
+
 
 interface ProfileViewProps {
     registration: any;
@@ -27,11 +31,27 @@ interface ProfileViewProps {
 const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
     const [showAllMembers, setShowAllMembers] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
+    const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
     const circuit = CIRCUITS.find(c => c.id === registration.circuitId) || CIRCUITS[0];
     const pricing = registration.pricing;
     const payload = registration.payload;
     const categoryColor = getCategoryColor(registration.id);
     const contrastText = getContrastText(categoryColor);
+
+    // Generate QR code data URL for PDF
+    useEffect(() => {
+        const generateQrDataUrl = () => {
+            // Find the QR canvas in the DOM after render
+            setTimeout(() => {
+                const qrCanvas = document.querySelector('#qr-code-canvas canvas') as HTMLCanvasElement;
+                if (qrCanvas) {
+                    const dataUrl = qrCanvas.toDataURL('image/png');
+                    setQrCodeDataUrl(dataUrl);
+                }
+            }, 100);
+        };
+        generateQrDataUrl();
+    }, [registration.id]);
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -41,11 +61,49 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
         });
     };
 
-    const handleDownloadPDF = () => {
-        // Browser print is the most reliable way to generate PDFs with modern CSS
-        // Our @media print styles ensure a clean, professional ticket-only output
-        window.print();
+    const handleDownloadPDF = async () => {
+        const ticketElement = document.getElementById('ticket-container');
+        if (!ticketElement) {
+            console.error('Ticket container not found');
+            return;
+        }
+
+        try {
+            // Step 1: Capture as high-res PNG (2x for sharpness)
+            const dataUrl = await toPng(ticketElement, {
+                cacheBust: true,
+                pixelRatio: 2,
+                backgroundColor: '#ffffff',
+            });
+
+            // Step 2: Create PDF (A4 Portrait)
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+
+            // Step 3: Calculate dimensions to maintain aspect ratio
+            const margin = 10;
+            const imgWidth = pageWidth - (margin * 2);
+
+            // Get original dimensions from dataUrl to calculate aspect ratio
+            const img = new Image();
+            img.src = dataUrl;
+            await new Promise((resolve) => {
+                img.onload = resolve;
+            });
+
+            const imgHeight = (img.height * imgWidth) / img.width;
+
+            // Step 4: Add image to PDF
+            pdf.addImage(dataUrl, 'PNG', margin, margin, imgWidth, imgHeight);
+
+            // Step 5: Save
+            pdf.save(`RideWithWarriors_Ticket_${registration.firstName}_${registration.lastName}.pdf`);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+        }
     };
+
+
 
     const handleShare = async () => {
         const shareData = {
@@ -117,29 +175,24 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
         if (registration.type === 'individual') {
             info.details = [
                 { label: 'ID/Passport', value: registration.idNumber || riderDetails?.idNumber },
-                { label: 'Date of Birth', value: registration.dob || riderDetails?.dob },
-                { label: 'Age', value: calculateAge(registration.dob || riderDetails?.dob) || 'N/A' },
-                { label: 'Gender', value: registration.gender || riderDetails?.gender },
-                { label: 'T-shirt Size', value: info.tshirtSize }
+                { label: 'DOB / Age', value: `${registration.dob || riderDetails?.dob} (${calculateAge(registration.dob || riderDetails?.dob) || 'N/A'})` },
+                { label: 'Gender', value: registration.gender || riderDetails?.gender }
             ];
         } else if (registration.type === 'team') {
             info.subtitle = registration.teamName || teamDetails?.teamName || 'Team Member';
             info.details = [
                 { label: 'Role', value: registration.isCaptain ? 'Captain' : 'Rider' },
                 { label: 'ID/Passport', value: registration.idNumber || specificMember?.idNumber },
-                { label: 'Date of Birth', value: registration.dob || specificMember?.dob },
-                { label: 'Age', value: calculateAge(registration.dob || specificMember?.dob) || 'N/A' },
-                { label: 'Gender', value: registration.gender || specificMember?.gender },
-                { label: 'T-shirt Size', value: info.tshirtSize }
+                { label: 'DOB / Age', value: `${registration.dob || specificMember?.dob} (${calculateAge(registration.dob || specificMember?.dob) || 'N/A'})` },
+                { label: 'Gender', value: registration.gender || specificMember?.gender }
             ];
         } else if (registration.type === 'family') {
             info.subtitle = registration.guardianName ? `${registration.guardianName}'s Family` : 'Family Group';
             info.details = [
                 { label: 'Guardian', value: registration.guardianName || familyDetails?.guardian?.fullName },
                 { label: 'Category', value: registration.category },
-                { label: 'Age', value: calculateAge(registration.dob || specificMember?.dob) || 'N/A' },
-                { label: 'Gender', value: registration.gender || specificMember?.gender },
-                { label: 'T-shirt Size', value: info.tshirtSize }
+                { label: 'DOB / Age', value: `${registration.dob || specificMember?.dob} (${calculateAge(registration.dob || specificMember?.dob) || 'N/A'})` },
+                { label: 'Gender', value: registration.gender || specificMember?.gender }
             ];
         }
 
@@ -222,15 +275,15 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                             onClick={handleDownloadPDF}
                             className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-primary-dark transition-all font-black uppercase tracking-widest text-[10px]"
                         >
-                            <AiOutlinePrinter className="text-lg" />
-                            Print / Save as PDF
+                            <AiOutlineDownload className="text-lg" />
+                            Download PDF
                         </button>
                     </div>
                 </div>
 
                 {/* Ticket Container - Redesigned for Rectangular Boarding Pass Aesthetic */}
                 {/* Simple Ticket Card */}
-                <div className="relative max-w-6xl mx-auto flex flex-col lg:flex-row bg-white rounded-3xl overflow-hidden border border-neutral-200 shadow-xl">
+                <div id="ticket-container" className="relative max-w-6xl mx-auto flex flex-col lg:flex-row bg-white rounded-3xl overflow-hidden border border-neutral-200">
 
                     {/* Color Accent Border */}
                     <div
@@ -317,105 +370,104 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                         </div>
 
                         <div className="flex flex-col items-center gap-4">
-                            <div className="p-3 bg-white rounded-2xl border border-neutral-100 shadow-sm">
-                                <QRCodeSVG
+                            <div id="qr-code-canvas" className="p-3 bg-white rounded-2xl border border-neutral-100">
+                                <QRCodeCanvas
                                     value={`${window.location.host === 'localhost:5173' || window.location.host.includes('vercel.app') ? window.location.origin : 'https://ridewiththewarriors.com'}/profile/${registration.id}`}
                                     size={120}
                                     level="H"
                                     includeMargin={true}
                                 />
                             </div>
-                            <div className="text-center">
-                                <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Scan to Verify</p>
-                                <p className="font-mono text-[9px] text-neutral-400">{btoa(registration.id).slice(0, 16).toUpperCase()}</p>
-                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Additional Details (Collapsible Roster for Teams) */}
-                <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 no-print">
-                    {/* Contact details Card */}
-                    <div className="bg-white rounded-[2rem] p-8 border border-neutral-200">
-                        <h3 className="text-lg font-black text-neutral-900 uppercase tracking-tighter mb-6 flex items-center gap-3">
-                            <AiOutlineContacts className="text-primary no-print" />
-                            Contact Information
-                        </h3>
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-1 font-bold">Email Address</p>
-                                    <p className="text-neutral-900 font-bold break-all">{info.email}</p>
-                                </div>
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-1 font-bold">Primary Phone</p>
-                                    <p className="text-neutral-900 font-bold">{info.phone}</p>
-                                </div>
-                            </div>
-
-                            <div className="pt-4 border-t border-neutral-100">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2 font-bold">Emergency Contact</p>
-                                <div className="bg-neutral-50 dark:bg-neutral-900/50 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-800">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-xs font-bold text-neutral-900 dark:text-white uppercase">{info.emergencyContact}</span>
-                                        <span className="text-[10px] font-mono text-primary font-black">{info.emergencyPhone}</span>
+                {/* Single Combined Details Card */}
+                <div className="mt-8 bg-white rounded-[2rem] p-8 border border-neutral-200 no-print">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        {/* Left Side: Contact details */}
+                        <div>
+                            <h3 className="text-lg font-black text-neutral-900 uppercase tracking-tighter mb-6 flex items-center gap-3">
+                                <AiOutlineContacts className="text-primary no-print" />
+                                Contact Information
+                            </h3>
+                            <div className="space-y-6">
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Email Address</p>
+                                        <p className="text-neutral-900 font-medium break-all">{info.email}</p>
                                     </div>
-                                    <p className="text-[9px] text-neutral-400 uppercase font-bold tracking-widest">Designated Contact Person</p>
-                                </div>
-                            </div>
-
-                            <div className="pt-4 grid grid-cols-2 gap-4 border-t border-neutral-100">
-                                <div>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-1 font-bold">T-shirt Size</p>
-                                    <p className="text-primary font-black uppercase text-lg">{info.tshirtSize}</p>
-                                </div>
-                                {info.details.filter(d => d.label !== 'T-shirt Size').map((detail, idx) => (
-                                    <div key={idx}>
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-1 font-bold">{detail.label}</p>
-                                        <p className="text-neutral-900 font-bold capitalize">{detail.value}</p>
+                                    <div>
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Primary Phone</p>
+                                        <p className="text-neutral-900 font-medium">{info.phone}</p>
                                     </div>
-                                ))}
+                                </div>
+
+                                <div className="pt-4 border-t border-neutral-100 grid grid-cols-2 gap-6">
+                                    <div>
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">T-shirt Size</p>
+                                        <p className="text-primary font-bold uppercase text-lg">{info.tshirtSize}</p>
+                                    </div>
+                                    {info.details.map((detail, idx) => (
+                                        <div key={idx}>
+                                            <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">{detail.label}</p>
+                                            <p className="text-neutral-900 font-medium capitalize">{detail.value}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="pt-4 grid grid-cols-2 gap-6 border-t border-neutral-100">
+                                    <div>
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Emergency Contact</p>
+                                        <p className="text-neutral-900 font-medium uppercase">{info.emergencyContact}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Emergency Phone</p>
+                                        <p className="text-primary font-bold font-mono">{info.emergencyPhone}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Payment History Card */}
-                    <div className="bg-white rounded-[2rem] p-8 border border-neutral-200">
-                        <h3 className="text-lg font-black text-neutral-900 uppercase tracking-tighter mb-6 flex items-center gap-3">
-                            <AiOutlineFileText className="text-primary no-print" />
-                            Transaction Summary
-                        </h3>
-                        <div className="space-y-4">
-                            {pricing?.lineItems?.map((item: any, idx: number) => (
-                                <div key={idx} className="flex justify-between items-center py-2 border-b border-neutral-50 last:border-0">
-                                    <span className="text-sm text-neutral-500 font-medium font-bold">{item.label}</span>
-                                    <span className="text-sm font-black text-neutral-900 leading-none">KES {item.amount.toLocaleString()}</span>
-                                </div>
-                            ))}
-                            <div className="mt-4 pt-4 flex justify-between items-center border-t border-neutral-100">
-                                <span className="text-lg font-black text-neutral-900 uppercase tracking-tighter">Total Price</span>
-                                <span className="text-2xl font-black text-primary">KES {pricing?.totalAmount?.toLocaleString() || 0}</span>
-                            </div>
-
-                            <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/10 rounded-2xl border border-green-100 dark:border-green-800/50">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="size-8 rounded-full bg-green-500 flex items-center justify-center text-white">
-                                        <AiOutlineCreditCard className="text-sm" />
+                        {/* Right Side / Vertical Follow: Transaction summary */}
+                        <div className="md:border-l md:border-neutral-100 md:pl-12 pt-12 md:pt-0 border-t md:border-t-0 mt-12 md:mt-0 pt-12 md:pt-0">
+                            <h3 className="text-lg font-black text-neutral-900 uppercase tracking-tighter mb-6 flex items-center gap-3">
+                                <AiOutlineFileText className="text-primary no-print" />
+                                Transaction Summary
+                            </h3>
+                            <div className="space-y-4">
+                                {pricing?.lineItems?.map((item: any, idx: number) => (
+                                    <div key={idx} className="flex justify-between items-center py-2 border-b border-neutral-50 last:border-0">
+                                        <span className="text-sm text-neutral-500 font-medium font-bold">{item.label}</span>
+                                        <span className="text-sm font-black text-neutral-900 leading-none">KES {item.amount.toLocaleString()}</span>
                                     </div>
-                                    <p className="text-[10px] font-black text-green-700 dark:text-green-400 uppercase tracking-widest">Payment Example</p>
+                                ))}
+                                <div className="mt-4 pt-4 flex justify-between items-center border-t border-neutral-100">
+                                    <span className="text-lg font-black text-neutral-900 uppercase tracking-tighter">Total Price</span>
+                                    <span className="text-2xl font-black text-primary">KES {pricing?.totalAmount?.toLocaleString() || 0}</span>
                                 </div>
-                                <div className="flex justify-between items-end">
-                                    <div>
-                                        <p className="text-[9px] text-green-600/60 dark:text-green-400/50 uppercase font-bold mb-0.5">M-Pesa Reference</p>
-                                        <p className="text-xs font-mono font-black text-green-800 dark:text-green-300">RBC7XL9N2J</p>
-                                    </div>
-                                    <p className="text-[9px] text-green-600/60 dark:text-green-400/50 font-bold uppercase">Success</p>
-                                </div>
-                            </div>
 
-                            <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest text-center mt-6">
-                                Registered on {formatDate(registration.createdAt)}
-                            </p>
+                                <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/10 rounded-2xl border border-green-100 dark:border-green-800/50">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="size-8 rounded-full bg-green-500 flex items-center justify-center text-white">
+                                            <AiOutlineCreditCard className="text-sm" />
+                                        </div>
+                                        <p className="text-[10px] font-black text-green-700 dark:text-green-400 uppercase tracking-widest">Payment Example</p>
+                                    </div>
+                                    <div className="flex justify-between items-end">
+                                        <div>
+                                            <p className="text-[9px] text-green-600/60 dark:text-green-400/50 uppercase font-bold mb-0.5">M-Pesa Reference</p>
+                                            <p className="text-xs font-mono font-black text-green-800 dark:text-green-300">RBC7XL9N2J</p>
+                                        </div>
+                                        <p className="text-[9px] text-green-600/60 dark:text-green-400/50 font-bold uppercase">Success</p>
+                                    </div>
+                                </div>
+
+                                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest text-center mt-6">
+                                    Registered on {formatDate(registration.createdAt)}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
