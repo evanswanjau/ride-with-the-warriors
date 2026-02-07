@@ -1,6 +1,16 @@
 import type { TeamDetails, TeamMember } from '../types';
 import ErrorBanner from './ErrorBanner';
 import { calculateAge } from '../utils';
+import {
+    AiOutlineExperiment,
+    AiOutlineStar,
+    AiOutlineUser,
+    AiOutlineDelete,
+    AiOutlinePlusCircle,
+    AiOutlineArrowLeft,
+    AiOutlineArrowRight,
+    AiOutlineDown
+} from 'react-icons/ai';
 
 
 interface Step4TeamDetailsProps {
@@ -83,7 +93,7 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all font-semibold text-sm w-fit"
                     type="button"
                 >
-                    <span className="material-symbols-outlined text-lg">magic_button</span>
+                    <AiOutlineExperiment className="text-lg" />
                     Fill with Test Data
                 </button>
             </div>
@@ -126,7 +136,7 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
                             <div className="flex items-center justify-between p-6 border-b border-border-light dark:border-neutral-800">
                                 <div className="flex items-center gap-4">
                                     <div className={`size-10 rounded-full flex items-center justify-center ${member.isCaptain ? 'bg-primary/10 text-primary' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-500'}`}>
-                                        <span className="material-symbols-outlined">{member.isCaptain ? 'stars' : 'person'}</span>
+                                        {member.isCaptain ? <AiOutlineStar /> : <AiOutlineUser />}
                                     </div>
                                     <div>
                                         <h3 className="text-text-light dark:text-white text-lg font-bold">
@@ -143,7 +153,7 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
                                         className="size-10 rounded-full flex items-center justify-center text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
                                         title="Remove Member"
                                     >
-                                        <span className="material-symbols-outlined text-[20px]">delete</span>
+                                        <AiOutlineDelete className="text-[20px]" />
                                     </button>
                                 )}
                             </div>
@@ -310,7 +320,7 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
                                             <option value="XL">Extra Large (XL)</option>
                                             <option value="XXL">Double Extra Large (XXL)</option>
                                         </select>
-                                        <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
+                                        <AiOutlineDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
                                     </div>
                                     {errors[`${member.id}.tshirtSize`] && <span className="text-red-500 text-xs font-medium">{errors[`${member.id}.tshirtSize`]}</span>}
                                 </div>
@@ -358,7 +368,7 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
                             className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border-light dark:border-neutral-700 bg-background-light dark:bg-transparent p-6 text-sm font-bold text-text-muted-light transition-all hover:bg-white dark:hover:bg-neutral-800 hover:border-primary hover:text-primary"
                             type="button"
                         >
-                            <span className="material-symbols-outlined">add_circle</span>
+                            <AiOutlinePlusCircle />
                             <span>Add Team Member</span>
                         </button>
                     )}
@@ -371,7 +381,7 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
                         type="button"
                         disabled={isSubmitting}
                     >
-                        <span className="material-symbols-outlined mr-2 text-sm">arrow_back</span>
+                        <AiOutlineArrowLeft className="mr-2 text-sm" />
                         Back
                     </button>
                     <button
@@ -388,7 +398,7 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
                         ) : (
                             <>
                                 <span className="truncate">Continue</span>
-                                <span className="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
+                                <AiOutlineArrowRight className="ml-2 text-xl" />
                             </>
                         )}
                     </button>

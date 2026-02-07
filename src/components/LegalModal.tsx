@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { AiOutlineClose } from 'react-icons/ai';
 
 interface LegalModalProps {
     isOpen: boolean;
@@ -43,7 +44,7 @@ const LegalModal = ({ isOpen, onClose, title, children }: LegalModalProps) => {
                         onClick={onClose}
                         className="size-10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-text-light dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all cursor-pointer"
                     >
-                        <span className="material-symbols-outlined">close</span>
+                        <AiOutlineClose />
                     </button>
                 </div>
 

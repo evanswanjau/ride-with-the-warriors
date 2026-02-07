@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import {
+    AiOutlineCheckCircle,
+    AiOutlineArrowLeft,
+    AiOutlineSafety
+} from 'react-icons/ai';
 import { API_BASE_URL } from '../config';
 
 interface PaymentPageProps {
@@ -55,7 +60,7 @@ const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageP
                 {/* Header */}
                 <div className="text-center mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
                     <div className="inline-flex items-center justify-center size-16 rounded-2xl bg-green-500/10 mb-4">
-                        <span className="material-symbols-outlined text-green-500 text-4xl">check_circle</span>
+                        <AiOutlineCheckCircle className="text-green-500 text-4xl" />
                     </div>
                     <h1 className="text-4xl font-black text-neutral-900 dark:text-white mb-2">Registration Successful!</h1>
                     <div className="flex flex-col items-center gap-2">
@@ -122,7 +127,7 @@ const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageP
 
                                     <div className="hidden md:block pt-4">
                                         <button onClick={onBack} className="py-4 text-sm font-bold text-neutral-400 hover:text-primary transition-colors flex items-center gap-2 group">
-                                            <span className="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                                            <AiOutlineArrowLeft className="text-sm group-hover:-translate-x-1 transition-transform" />
                                             Change Details
                                         </button>
                                     </div>
@@ -167,13 +172,13 @@ const PaymentPage = ({ registrationId, amount, onBack, onSuccess }: PaymentPageP
                                         ) : (
                                             <>
                                                 <span>VERIFY PAYMENT</span>
-                                                <span className="material-symbols-outlined font-bold">verified_user</span>
+                                                <AiOutlineSafety className="font-bold" />
                                             </>
                                         )}
                                     </button>
 
                                     <button onClick={onBack} className="md:hidden w-full py-2 text-sm font-bold text-neutral-400 hover:text-primary transition-colors flex items-center justify-center gap-2">
-                                        <span className="material-symbols-outlined text-sm">arrow_back</span>
+                                        <AiOutlineArrowLeft className="text-sm" />
                                         Back to Review
                                     </button>
                                 </div>

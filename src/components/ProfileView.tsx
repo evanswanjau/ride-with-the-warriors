@@ -1,5 +1,21 @@
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import {
+    AiOutlineArrowLeft,
+    AiOutlineCheck,
+    AiOutlineShareAlt,
+    AiOutlinePrinter,
+    AiOutlineSafety,
+    AiOutlineCheckCircle,
+    AiOutlineHourglass,
+    AiOutlineContacts,
+    AiOutlineFileText,
+    AiOutlineCreditCard,
+    AiOutlineTeam,
+    AiOutlineDown,
+    AiOutlineStar,
+    AiOutlineUser
+} from 'react-icons/ai';
 import { CIRCUITS } from '../constants';
 import { calculateAge, getCategoryColor, getContrastText } from '../utils';
 
@@ -190,7 +206,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                         onClick={onBack}
                         className="flex items-center gap-2 text-neutral-500 hover:text-primary transition-all group"
                     >
-                        <span className="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                        <AiOutlineArrowLeft className="group-hover:-translate-x-1 transition-transform" />
                         <span className="text-sm font-black uppercase tracking-widest leading-none pt-0.5">Back to Search</span>
                     </button>
 
@@ -199,14 +215,14 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                             onClick={handleShare}
                             className="flex items-center gap-2 px-4 py-2.5 bg-white border border-neutral-200 rounded-xl hover:bg-neutral-50 transition-all font-black uppercase tracking-widest text-[10px]"
                         >
-                            <span className="material-symbols-outlined text-lg">{copySuccess ? 'check' : 'share'}</span>
+                            {copySuccess ? <AiOutlineCheck className="text-lg" /> : <AiOutlineShareAlt className="text-lg" />}
                             {copySuccess ? 'Copied!' : 'Share'}
                         </button>
                         <button
                             onClick={handleDownloadPDF}
                             className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-primary-dark transition-all font-black uppercase tracking-widest text-[10px]"
                         >
-                            <span className="material-symbols-outlined text-lg">print</span>
+                            <AiOutlinePrinter className="text-lg" />
                             Print / Save as PDF
                         </button>
                     </div>
@@ -228,7 +244,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                             <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
                                 <div className="flex items-center gap-3">
                                     <div className="size-10 bg-neutral-900 rounded-xl flex items-center justify-center">
-                                        <span className="material-symbols-outlined text-white text-xl">shield</span>
+                                        <AiOutlineSafety className="text-white text-xl" />
                                     </div>
                                     <div>
                                         <h2 className="text-lg font-black text-neutral-900 uppercase tracking-tighter leading-none">
@@ -295,9 +311,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                 ? 'bg-green-50 border-green-100 text-green-600'
                                 : 'bg-amber-50 border-amber-100 text-amber-600'
                                 }`}>
-                                <span className="material-symbols-outlined text-lg">
-                                    {registration.status === 'PAID' || registration.status === 'CONFIRMED' ? 'check_circle' : 'hourglass_empty'}
-                                </span>
+                                {registration.status === 'PAID' || registration.status === 'CONFIRMED' ? <AiOutlineCheckCircle className="text-lg" /> : <AiOutlineHourglass className="text-lg" />}
                                 {registration.status}
                             </div>
                         </div>
@@ -324,7 +338,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                     {/* Contact details Card */}
                     <div className="bg-white rounded-[2rem] p-8 border border-neutral-200">
                         <h3 className="text-lg font-black text-neutral-900 uppercase tracking-tighter mb-6 flex items-center gap-3">
-                            <span className="material-symbols-outlined text-primary no-print" style={{ fontVariationSettings: "'FILL' 1" }}>person_pin_circle</span>
+                            <AiOutlineContacts className="text-primary no-print" />
                             Contact Information
                         </h3>
                         <div className="space-y-6">
@@ -368,7 +382,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                     {/* Payment History Card */}
                     <div className="bg-white rounded-[2rem] p-8 border border-neutral-200">
                         <h3 className="text-lg font-black text-neutral-900 uppercase tracking-tighter mb-6 flex items-center gap-3">
-                            <span className="material-symbols-outlined text-primary no-print">receipt_long</span>
+                            <AiOutlineFileText className="text-primary no-print" />
                             Transaction Summary
                         </h3>
                         <div className="space-y-4">
@@ -386,7 +400,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                             <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/10 rounded-2xl border border-green-100 dark:border-green-800/50">
                                 <div className="flex items-center gap-3 mb-2">
                                     <div className="size-8 rounded-full bg-green-500 flex items-center justify-center text-white">
-                                        <span className="material-symbols-outlined text-sm">payments</span>
+                                        <AiOutlineCreditCard className="text-sm" />
                                     </div>
                                     <p className="text-[10px] font-black text-green-700 dark:text-green-400 uppercase tracking-widest">Payment Example</p>
                                 </div>
@@ -415,7 +429,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                             >
                                 <div className="flex items-center gap-6">
                                     <div className="size-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                                        <span className="material-symbols-outlined text-3xl">groups</span>
+                                        <AiOutlineTeam className="text-3xl" />
                                     </div>
                                     <div>
                                         <h3 className="text-xl font-black text-neutral-900 uppercase tracking-tighter mb-1">Team Roster</h3>
@@ -423,9 +437,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                     </div>
                                 </div>
                                 <div className="size-12 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-900">
-                                    <span className="material-symbols-outlined transition-transform duration-300" style={{ transform: showAllMembers ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-                                        expand_more
-                                    </span>
+                                    <AiOutlineDown className="transition-transform duration-300" style={{ transform: showAllMembers ? 'rotate(180deg)' : 'rotate(0deg)' }} />
                                 </div>
                             </button>
                         </div>
@@ -436,7 +448,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                     <div key={idx} className="bg-white rounded-2xl p-6 border border-neutral-200 hover:border-primary/30 transition-colors">
                                         <div className="flex items-center gap-4 mb-4">
                                             <div className={`size-12 rounded-xl flex items-center justify-center ${member.isCaptain ? 'bg-primary text-white' : 'bg-neutral-100 text-neutral-400'}`}>
-                                                <span className="material-symbols-outlined">{member.isCaptain ? 'stars' : 'person'}</span>
+                                                {member.isCaptain ? <AiOutlineStar /> : <AiOutlineUser />}
                                             </div>
                                             <div>
                                                 <h4 className="font-black text-neutral-900 uppercase tracking-tighter leading-tight">

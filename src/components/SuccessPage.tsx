@@ -1,4 +1,11 @@
 import { useState, useEffect } from 'react';
+import {
+    AiOutlineCheck,
+    AiOutlineBarcode,
+    AiOutlineUp,
+    AiOutlineDown,
+    AiOutlineIdcard
+} from 'react-icons/ai';
 import Confetti from 'react-confetti';
 import { calculateAge } from '../utils';
 import { API_BASE_URL } from '../config';
@@ -59,7 +66,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
             <div className="max-w-2xl w-full text-center relative z-10 py-12">
                 <div className="mb-10 animate-in zoom-in duration-700">
                     <div className="size-24 rounded-full bg-green-500 text-white flex items-center justify-center mx-auto shadow-2xl shadow-green-500/30 scale-110">
-                        <span className="material-symbols-outlined text-6xl">check</span>
+                        <AiOutlineCheck className="text-6xl" />
                     </div>
                 </div>
 
@@ -76,7 +83,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
                             {isTeam ? 'Team Registration ID' : 'Your Registration ID'}
                         </p>
                         <div className="flex items-center justify-center gap-3 mb-6">
-                            <span className="material-symbols-outlined text-primary text-3xl">confirmation_number</span>
+                            <AiOutlineBarcode className="text-primary text-3xl" />
                             <span className="text-4xl font-mono font-black text-primary select-all tracking-tighter">{registrationId}</span>
                         </div>
 
@@ -86,9 +93,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
                                     onClick={() => setShowMembers(!showMembers)}
                                     className="flex items-center justify-center gap-2 w-full text-sm font-bold text-neutral-500 hover:text-primary transition-colors mb-4"
                                 >
-                                    <span className="material-symbols-outlined">
-                                        {showMembers ? 'expand_less' : 'expand_more'}
-                                    </span>
+                                    {showMembers ? <AiOutlineUp /> : <AiOutlineDown />}
                                     {showMembers ? 'Hide Member Details' : `View All ${members.length} Member Details`}
                                 </button>
 
@@ -120,7 +125,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
                             onClick={onViewProfile}
                             className="w-full py-5 rounded-[24px] bg-neutral-900 dark:bg-primary text-white font-bold text-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 shadow-xl"
                         >
-                            <span className="material-symbols-outlined">badge</span>
+                            <AiOutlineIdcard />
                             <span>View My Full Profile</span>
                         </button>
 

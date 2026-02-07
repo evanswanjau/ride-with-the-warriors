@@ -3,6 +3,12 @@
 import type { RiderDetails } from '../types';
 import ErrorBanner from './ErrorBanner';
 import { calculateAge } from '../utils';
+import {
+    AiOutlineExperiment,
+    AiOutlineDown,
+    AiOutlineArrowLeft,
+    AiOutlineArrowRight
+} from 'react-icons/ai';
 
 
 interface Step4RiderDetailsProps {
@@ -47,7 +53,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all font-semibold text-sm w-fit"
                     type="button"
                 >
-                    <span className="material-symbols-outlined text-lg">magic_button</span>
+                    <AiOutlineExperiment className="text-lg" />
                     Fill with Test Data
                 </button>
             </div>
@@ -234,7 +240,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                                     <option value="XL">Extra Large (XL)</option>
                                     <option value="XXL">Double Extra Large (XXL)</option>
                                 </select>
-                                <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
+                                <AiOutlineDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
                             </div>
                             {errors.tshirtSize && <span className="text-red-500 text-xs font-medium">{errors.tshirtSize}</span>}
                         </div>
@@ -288,7 +294,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                         type="button"
                         disabled={isSubmitting}
                     >
-                        <span className="material-symbols-outlined mr-2 text-sm">arrow_back</span>
+                        <AiOutlineArrowLeft className="mr-2 text-sm" />
                         Back
                     </button>
                     <button
@@ -305,7 +311,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                         ) : (
                             <>
                                 <span className="truncate">Continue</span>
-                                <span className="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
+                                <AiOutlineArrowRight className="ml-2 text-xl" />
                             </>
                         )}
                     </button>

@@ -1,4 +1,12 @@
 import { useState } from 'react';
+import {
+    AiOutlineSun,
+    AiOutlineMoon,
+    AiOutlineArrowLeft,
+    AiOutlineSafety,
+    AiOutlineExclamationCircle,
+    AiOutlineKey
+} from 'react-icons/ai';
 import { API_BASE_URL } from '../config';
 
 interface AdminLoginProps {
@@ -60,7 +68,9 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
                     onClick={toggleTheme}
                     className={`size-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-yellow-400' : 'bg-white hover:bg-neutral-100 text-neutral-600 shadow-sm border'}`}
                 >
-                    <span className="material-symbols-outlined">{isDarkMode ? 'light_mode' : 'dark_mode'}</span>
+                    <div className="text-xl">
+                        {isDarkMode ? <AiOutlineSun /> : <AiOutlineMoon />}
+                    </div>
                 </button>
             </div>
 
@@ -69,14 +79,14 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
                     onClick={onBack}
                     className={`mb-8 flex items-center gap-2 transition-colors ${isDarkMode ? 'text-neutral-400 hover:text-white' : 'text-neutral-500 hover:text-neutral-900'}`}
                 >
-                    <span className="material-symbols-outlined">arrow_back</span>
+                    <AiOutlineArrowLeft className="text-xl" />
                     <span>Back to Home</span>
                 </button>
 
                 <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200 shadow-xl'} rounded-3xl p-8 border`}>
                     <div className="text-center mb-10">
                         <div className="inline-flex size-16 rounded-2xl bg-primary/10 items-center justify-center mb-4">
-                            <span className="material-symbols-outlined text-primary text-3xl">admin_panel_settings</span>
+                            <AiOutlineSafety className="text-primary text-3xl" />
                         </div>
                         <h1 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>Admin Portal</h1>
                         <p className={`${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'} text-sm`}>Secure access for event organizers</p>
@@ -118,7 +128,7 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
 
                         {error && (
                             <div className={`p-4 rounded-xl flex items-start gap-3 border ${isDarkMode ? 'bg-red-900/20 border-red-900/50' : 'bg-red-50 border-red-200'}`}>
-                                <span className="material-symbols-outlined text-red-500 text-xl">error</span>
+                                <AiOutlineExclamationCircle className="text-red-500 text-xl" />
                                 <p className={`text-sm ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>{error}</p>
                             </div>
                         )}
@@ -133,7 +143,7 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
                             ) : (
                                 <>
                                     <span>Authenticate</span>
-                                    <span className="material-symbols-outlined text-[18px]">key</span>
+                                    <AiOutlineKey className="text-[18px]" />
                                 </>
                             )}
                         </button>

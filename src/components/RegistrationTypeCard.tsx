@@ -1,3 +1,5 @@
+import { AiOutlineCheck } from 'react-icons/ai';
+
 interface RegistrationTypeCardProps {
     id: string;
     title: string;
@@ -27,7 +29,7 @@ const RegistrationTypeCard = ({
         >
             {isSelected && (
                 <div className="absolute top-3 right-3 z-10 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
-                    <span className="material-symbols-outlined text-[20px] font-bold">check</span>
+                    <AiOutlineCheck className="text-[20px] font-bold" />
                 </div>
             )}
             <div

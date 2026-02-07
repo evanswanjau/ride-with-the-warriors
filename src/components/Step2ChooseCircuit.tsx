@@ -1,4 +1,5 @@
 import CircuitCard from './CircuitCard';
+import { AiOutlineArrowRight } from 'react-icons/ai';
 import { CIRCUITS } from '../constants';
 import blitzImage from '../assets/images/blitz.jpeg';
 import intermediateImage from '../assets/images/recon.jpeg';
@@ -59,7 +60,7 @@ const Step2ChooseCircuit = ({
                         }`}
                 >
                     <span className="truncate">Continue</span>
-                    <span className="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
+                    <AiOutlineArrowRight className="ml-2 text-xl" />
                 </button>
             </div>
         </div>

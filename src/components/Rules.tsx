@@ -1,3 +1,5 @@
+import { AiOutlineSafety } from 'react-icons/ai';
+
 const Rules = () => {
     const categories = [
         {
@@ -45,7 +47,7 @@ const Rules = () => {
                         <div key={idx} className="bg-white dark:bg-neutral-800 rounded-3xl p-8 shadow-xl border border-neutral-100 dark:border-neutral-700 hover:border-primary/30 transition-all group">
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                                    <span className="material-symbols-outlined font-black">verified</span>
+                                    <AiOutlineSafety className="font-black" />
                                 </div>
                                 <h2 className="text-2xl font-bold text-neutral-900 dark:text-white">{cat.title}</h2>
                             </div>

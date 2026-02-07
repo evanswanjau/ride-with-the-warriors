@@ -4,6 +4,24 @@ import ErrorBanner from './ErrorBanner';
 import { calculateAge } from '../utils';
 
 
+import {
+    AiOutlineExperiment,
+    AiOutlineUser,
+    AiOutlineDelete,
+    AiOutlinePlusCircle,
+    AiOutlineSafety,
+    AiOutlineInfoCircle,
+    AiOutlineArrowLeft,
+    AiOutlineArrowRight,
+    AiOutlineDown
+} from 'react-icons/ai';
+import {
+    MdPedalBike,
+    MdDirectionsBike,
+    MdPersonOff,
+    MdWoman
+} from 'react-icons/md';
+
 interface FamilyRegistrationFlowProps {
     data: FamilyDetails;
     onChange: (data: FamilyDetails) => void;
@@ -16,8 +34,8 @@ interface FamilyRegistrationFlowProps {
 
 const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: FamilyRegistrationFlowProps) => {
     const categories = [
-        { id: 'cubs', title: 'Cubs (Ages 4-8)', icon: 'pedal_bike' },
-        { id: 'champs', title: 'Champs (Ages 9-13)', icon: 'directions_bike' }
+        { id: 'cubs', title: 'Cubs (Ages 4-8)', icon: MdPedalBike },
+        { id: 'champs', title: 'Champs (Ages 9-13)', icon: MdDirectionsBike }
     ];
 
     const [activeCategory, setActiveCategory] = useState('cubs');
@@ -173,7 +191,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all font-semibold text-sm w-fit h-fit"
                         type="button"
                     >
-                        <span className="material-symbols-outlined text-lg">magic_button</span>
+                        <AiOutlineExperiment className="text-lg" />
                         Fill with Test Data
                     </button>
                 </div>
@@ -196,9 +214,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                 }`}
                             disabled={isSubmitting}
                         >
-                            <span className={`material-symbols-outlined mb-2 text-[28px] ${activeCategory === cat.id ? 'text-primary' : 'opacity-50'}`}>
-                                {cat.icon}
-                            </span>
+                            <cat.icon className={`mb-2 text-[28px] ${activeCategory === cat.id ? 'text-primary' : 'opacity-50'}`} />
                             <p className="text-sm font-bold leading-normal tracking-[0.015em]">{cat.title}</p>
                         </button>
                     ))}
@@ -211,7 +227,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                     <div key={rider.id} className="bg-white dark:bg-[#2a2418] rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-sm overflow-hidden transform transition-all hover:shadow-md">
                         <div className="bg-primary/5 dark:bg-white/5 p-6 border-b border-neutral-100 dark:border-neutral-800 flex justify-between items-center">
                             <div className="flex items-center gap-2">
-                                <span className="material-symbols-outlined text-primary">face_6</span>
+                                <AiOutlineUser className="text-primary text-xl" />
                                 <h3 className="text-text-light dark:text-white text-lg font-bold leading-tight">
                                     {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1, -1)} Rider {index + 1}
                                 </h3>
@@ -221,7 +237,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                 className="text-xs text-red-500 hover:text-red-700 font-bold flex items-center gap-1 transition-colors bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-full"
                                 disabled={isSubmitting}
                             >
-                                <span className="material-symbols-outlined text-[16px]">delete</span> Delete
+                                <AiOutlineDelete className="text-[16px]" /> Delete
                             </button>
                         </div>
                         <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
@@ -306,7 +322,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                         <option value="S_ADULT">Adult S</option>
                                         <option value="M_ADULT">Adult M</option>
                                     </select>
-                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
+                                    <AiOutlineDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
                                 </div>
                                 {errors[`${rider.id}.tshirtSize`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.tshirtSize`]}</span>}
                             </div>
@@ -360,7 +376,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                     className="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-border-light dark:border-gray-600 rounded-xl text-text-muted-light dark:text-gray-400 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isSubmitting || (activeCategory === 'tigers' && data.riders.tigers.length >= 1)}
                 >
-                    <span className="material-symbols-outlined group-hover:scale-110 transition-transform">add_circle</span>
+                    <AiOutlinePlusCircle className="group-hover:scale-110 transition-transform" />
                     <span className="font-bold">
                         {activeCategory === 'tigers' && data.riders.tigers.length >= 1
                             ? 'Only one Parent can be added'
@@ -374,7 +390,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                 {/* Guardian Section */}
                 <div className="flex flex-col gap-6">
                     <div className="flex items-center gap-2 px-1">
-                        <span className="material-symbols-outlined text-primary text-2xl">verified_user</span>
+                        <AiOutlineSafety className="text-primary text-2xl" />
                         <h3 className="text-text-light dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">Guardian Information</h3>
                         <span className="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide border border-red-100 dark:bg-red-900/40 dark:border-red-800">Required</span>
                     </div>
@@ -438,9 +454,9 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                 <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Participating in the ride? <span className="text-red-500">*</span></span>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                     {[
-                                        { id: 'none', label: 'Not riding', icon: 'person_off' },
-                                        { id: 'mom', label: 'Riding as a Parent (5km)', icon: 'woman' },
-                                        { id: 'other', label: 'Riding in another circuit', icon: 'directions_bike' }
+                                        { id: 'none', label: 'Not riding', icon: MdPersonOff },
+                                        { id: 'mom', label: 'Riding as a Parent (5km)', icon: MdWoman },
+                                        { id: 'other', label: 'Riding in another circuit', icon: MdDirectionsBike }
                                     ].map((opt) => (
                                         <label key={opt.id} className={`flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${data.guardian.participation === opt.id ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-gray-200 dark:border-gray-700 hover:bg-neutral-50 dark:hover:bg-neutral-800'}`}>
                                             <input
@@ -451,7 +467,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                                 onChange={() => updateGuardian('participation', opt.id)}
                                             />
                                             <div className={`size-8 rounded-lg flex items-center justify-center ${data.guardian.participation === opt.id ? 'bg-primary text-white' : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400'}`}>
-                                                <span className="material-symbols-outlined text-[20px]">{opt.icon}</span>
+                                                <opt.icon className="text-[20px]" />
                                             </div>
                                             <span className={`text-sm font-bold ${data.guardian.participation === opt.id ? 'text-text-light dark:text-white' : 'text-text-muted-light dark:text-gray-400'}`}>{opt.label}</span>
                                         </label>
@@ -542,7 +558,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                                 <option value="XL">Extra Large (XL)</option>
                                                 <option value="XXL">Double Extra Large (XXL)</option>
                                             </select>
-                                            <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
+                                            <AiOutlineDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
                                         </div>
                                         {errors['guardian.tshirtSize'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.tshirtSize']}</span>}
                                     </div>
@@ -562,14 +578,14 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                         <option value="legal_guardian">Legal Guardian</option>
                                         <option value="other">Other</option>
                                     </select>
-                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">expand_more</span>
+                                    <AiOutlineDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
                                 </div>
                                 {errors['guardian.relationship'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.relationship']}</span>}
                             </div>
                         </div>
                     </div>
                     <p className="text-sm text-text-muted-light dark:text-gray-400 px-1">
-                        <span className="material-symbols-outlined align-middle text-[18px] mr-1">info</span>
+                        <AiOutlineInfoCircle className="align-middle text-[18px] mr-1" />
                         This guardian will be the primary contact for all registered children during the event.
                     </p>
                 </div>
@@ -581,7 +597,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                         className="flex items-center justify-center h-12 px-6 rounded-lg text-gray-500 hover:text-[#1c170d] dark:text-gray-400 dark:hover:text-white font-bold transition-colors cursor-pointer"
                         disabled={isSubmitting}
                     >
-                        <span className="material-symbols-outlined mr-2 text-sm">arrow_back</span>
+                        <AiOutlineArrowLeft className="mr-2 text-sm" />
                         Back
                     </button>
                     <button
@@ -597,7 +613,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                         ) : (
                             <>
                                 <span className="truncate">Next: Review</span>
-                                <span className="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
+                                <AiOutlineArrowRight className="ml-2 text-xl" />
                             </>
                         )}
                     </button>

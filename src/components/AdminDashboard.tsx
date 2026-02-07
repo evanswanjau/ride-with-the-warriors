@@ -1,5 +1,21 @@
 import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
+import {
+    AiOutlineSafety,
+    AiOutlineTable,
+    AiOutlineSun,
+    AiOutlineMoon,
+    AiOutlineTeam,
+    AiOutlineDollar,
+    AiOutlineExclamationCircle,
+    AiOutlineCheckCircle,
+    AiOutlineCloseCircle,
+    AiOutlineSearch,
+    AiOutlineEye,
+    AiOutlineDelete,
+    AiOutlineLeft,
+    AiOutlineRight
+} from 'react-icons/ai';
 import { CIRCUITS } from '../constants';
 import { API_BASE_URL } from '../config';
 
@@ -191,7 +207,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             <header className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} border-b py-4 px-8 flex items-center justify-between sticky top-0 z-50`}>
                 <div className="flex items-center gap-4">
                     <div className="size-10 bg-primary/20 rounded-xl flex items-center justify-center">
-                        <span className="material-symbols-outlined text-primary">shield_person</span>
+                        <AiOutlineSafety className="text-primary text-xl" />
                     </div>
                     <div>
                         <h1 className="text-xl font-bold">Admin Workspace</h1>
@@ -204,7 +220,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                             onClick={handleExport}
                             className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 ${isDarkMode ? 'bg-green-600 hover:bg-green-500 text-white' : 'bg-green-500 hover:bg-green-600 text-white'}`}
                         >
-                            <span className="material-symbols-outlined">table_view</span>
+                            <AiOutlineTable className="text-lg" />
                             Export Excel
                         </button>
                     )}
@@ -213,7 +229,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         className={`size-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-neutral-700 hover:bg-neutral-600 text-yellow-400' : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-600'}`}
                         title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                     >
-                        <span className="material-symbols-outlined">{isDarkMode ? 'light_mode' : 'dark_mode'}</span>
+                        {isDarkMode ? <AiOutlineSun className="text-xl" /> : <AiOutlineMoon className="text-xl" />}
                     </button>
                     <button
                         onClick={onLogout}
@@ -237,7 +253,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     : 'text-neutral-600 hover:bg-neutral-100'
                                 }`}
                         >
-                            <span className="material-symbols-outlined">groups</span>
+                            <AiOutlineTeam className="text-xl" />
                             Registrations
                         </button>
                         <button
@@ -249,7 +265,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     : 'text-neutral-600 hover:bg-neutral-100'
                                 }`}
                         >
-                            <span className="material-symbols-outlined">payments</span>
+                            <AiOutlineDollar className="text-xl" />
                             Pricing
                         </button>
                     </nav>
@@ -259,7 +275,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 <main className="flex-1 p-8 max-w-7xl mx-auto space-y-8">
                     {error && (
                         <div className="p-4 bg-red-500/10 border border-red-500 text-red-500 rounded-2xl flex items-center gap-3">
-                            <span className="material-symbols-outlined">error</span>
+                            <AiOutlineExclamationCircle className="text-xl" />
                             <p className="font-bold">{error}</p>
                             <button onClick={() => activeView === 'registrations' ? fetchData() : fetchPricingCategories()} className="ml-auto underline">Retry</button>
                         </div>
@@ -270,11 +286,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                             {/* Stats Section */}
                             {stats && (
                                 <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-                                    <StatCard label="Total" value={stats.summary.total} icon="groups" color="primary" isDarkMode={isDarkMode} />
-                                    <StatCard label="Paid" value={stats.summary.paid} icon="check_circle" color="green-500" isDarkMode={isDarkMode} />
-                                    <StatCard label="Unpaid" value={stats.summary.unpaid} icon="error" color="yellow-500" isDarkMode={isDarkMode} />
-                                    <StatCard label="Cancelled" value={stats.summary.cancelled} icon="cancel" color="red-500" isDarkMode={isDarkMode} />
-                                    <StatCard label="Revenue" value={`KES ${stats.summary.revenue?.toLocaleString() || 0}`} icon="payments" color="emerald-500" isDarkMode={isDarkMode} />
+                                    <StatCard label="Total" value={stats.summary.total} icon={<AiOutlineTeam />} color="primary" isDarkMode={isDarkMode} />
+                                    <StatCard label="Paid" value={stats.summary.paid} icon={<AiOutlineCheckCircle />} color="green-500" isDarkMode={isDarkMode} />
+                                    <StatCard label="Unpaid" value={stats.summary.unpaid} icon={<AiOutlineExclamationCircle />} color="yellow-500" isDarkMode={isDarkMode} />
+                                    <StatCard label="Cancelled" value={stats.summary.cancelled} icon={<AiOutlineCloseCircle />} color="red-500" isDarkMode={isDarkMode} />
+                                    <StatCard label="Revenue" value={`KES ${stats.summary.revenue?.toLocaleString() || 0}`} icon={<AiOutlineDollar />} color="emerald-500" isDarkMode={isDarkMode} />
                                 </div>
                             )}
 
@@ -283,7 +299,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 <div className="flex-1 min-w-[300px]">
                                     <label className={`block text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-widest mb-2 ml-1`}>Search</label>
                                     <div className="relative">
-                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-neutral-500 text-xl">search</span>
+                                        <AiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-xl" />
                                         <input
                                             type="text"
                                             value={filter.search}
@@ -411,14 +427,14 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                                 className={`size-9 rounded-lg flex items-center justify-center transition-all ${isDarkMode ? 'hover:bg-neutral-700 text-neutral-400 hover:text-white' : 'hover:bg-neutral-100 text-neutral-500 hover:text-primary'}`}
                                                                 title="View Full Profile"
                                                             >
-                                                                <span className="material-symbols-outlined text-[20px]">visibility</span>
+                                                                <AiOutlineEye className="text-[20px]" />
                                                             </a>
                                                             <button
                                                                 onClick={() => handleDelete(reg.id)}
                                                                 className={`size-9 rounded-lg flex items-center justify-center transition-all ${isDarkMode ? 'hover:bg-red-500/10 text-neutral-400 hover:text-red-500' : 'hover:bg-red-50 text-neutral-500 hover:text-red-500'}`}
                                                                 title="Delete Registration"
                                                             >
-                                                                <span className="material-symbols-outlined text-[20px]">delete</span>
+                                                                <AiOutlineDelete className="text-[20px]" />
                                                             </button>
                                                         </div>
                                                     </td>
@@ -442,7 +458,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 : isDarkMode ? 'bg-neutral-700 hover:bg-neutral-600 text-white' : 'bg-white hover:bg-neutral-50 text-neutral-600 border border-neutral-200'
                                                 }`}
                                         >
-                                            <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                                            <AiOutlineLeft className="text-[16px]" />
                                             Previous
                                         </button>
                                         <div className={`px-4 py-2 rounded-lg text-xs font-bold ${isDarkMode ? 'bg-neutral-900 text-neutral-400' : 'bg-neutral-100 text-neutral-600'}`}>
@@ -457,7 +473,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 }`}
                                         >
                                             Next
-                                            <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                                            <AiOutlineRight className="text-[16px]" />
                                         </button>
                                     </div>
                                 </div>
@@ -552,8 +568,8 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
 const StatCard = ({ label, value, icon, color, isDarkMode }: any) => (
     <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} p-6 rounded-3xl border`}>
         <div className="flex justify-between items-start mb-4">
-            <div className={`size-10 rounded-xl bg-${color}/10 flex items-center justify-center`}>
-                <span className={`material-symbols-outlined text-${color}`}>{icon}</span>
+            <div className={`size-10 rounded-xl bg-${color}/10 flex items-center justify-center text-xl`}>
+                <span className={`text-${color}`}>{icon}</span>
             </div>
             <span className={`text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-[0.2em]`}>{label}</span>
         </div>

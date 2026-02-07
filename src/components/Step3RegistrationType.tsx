@@ -1,4 +1,5 @@
 import RegistrationTypeCard from './RegistrationTypeCard';
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 import blitzIndividual from '../assets/images/blitz-individual.jpeg';
 import blitzTeam from '../assets/images/blitz-team.jpeg';
 import reconIndividual from '../assets/images/recon-individual.jpeg';
@@ -110,7 +111,7 @@ const Step3RegistrationType = ({
                     onClick={onBack}
                     className="flex items-center justify-center h-12 px-6 rounded-lg text-gray-500 hover:text-[#1c170d] dark:text-gray-400 dark:hover:text-white font-bold transition-colors cursor-pointer"
                 >
-                    <span className="material-symbols-outlined mr-2 text-sm">arrow_back</span>
+                    <AiOutlineArrowLeft className="mr-2 text-sm" />
                     Back
                 </button>
                 <button
@@ -122,7 +123,7 @@ const Step3RegistrationType = ({
                         }`}
                 >
                     <span className="truncate">Continue</span>
-                    <span className="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
+                    <AiOutlineArrowRight className="ml-2 text-xl" />
                 </button>
             </div>
         </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AiOutlineInbox } from 'react-icons/ai';
 
 interface Registration {
     id: string;
@@ -88,9 +89,7 @@ const AdminView = () => {
 
                 {registrations.length === 0 ? (
                     <div className="bg-white dark:bg-neutral-800 rounded-xl p-12 text-center">
-                        <span className="material-symbols-outlined text-6xl text-neutral-300 dark:text-neutral-600 mb-4">
-                            inbox
-                        </span>
+                        <AiOutlineInbox className="text-6xl text-neutral-300 dark:text-neutral-600 mb-4 inline-block" />
                         <p className="text-neutral-600 dark:text-neutral-400">No registrations yet</p>
                     </div>
                 ) : (

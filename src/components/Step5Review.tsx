@@ -1,4 +1,14 @@
 import { useState } from 'react';
+import {
+    AiOutlineEdit,
+    AiOutlineSwapRight,
+    AiOutlineCalendar,
+    AiOutlineEnvironment,
+    AiOutlineUser,
+    AiOutlineArrowRight,
+    AiOutlineLock,
+    AiOutlineStar
+} from 'react-icons/ai';
 import { CIRCUITS } from '../constants';
 import type { RiderDetails, TeamDetails, FamilyDetails } from '../types';
 import { getClassification, calculateAge, getContrastText } from '../utils';
@@ -187,7 +197,7 @@ const Step5Review = ({
                                 <div key={member.id || idx} className="flex items-center justify-between p-3 border-b border-border-light dark:border-neutral-700 last:border-0 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
                                     <div className="flex items-center gap-3">
                                         <div className={`size-8 rounded-full flex items-center justify-center ${member.isCaptain ? 'bg-primary/10 text-primary' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-500'}`}>
-                                            <span className="material-symbols-outlined text-sm">{member.isCaptain ? 'stars' : 'person'}</span>
+                                            {member.isCaptain ? <AiOutlineStar className="text-sm" /> : <AiOutlineUser className="text-sm" />}
                                         </div>
                                         <div className="flex flex-col">
                                             <span className="text-sm font-bold text-text-light dark:text-white leading-tight">{member.firstName} {member.lastName}</span>
@@ -256,7 +266,7 @@ const Step5Review = ({
                                             {riders.map((rider, idx) => (
                                                 <div key={rider.id || idx} className="flex items-center justify-between p-3 border-b border-border-light dark:border-neutral-700 last:border-0 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
                                                     <div className="flex items-center gap-3">
-                                                        <span className="material-symbols-outlined text-neutral-400 text-sm">pedal_bike</span>
+                                                        <AiOutlineUser className="text-neutral-400 text-sm" />
                                                         <span className="text-sm font-bold text-text-light dark:text-white">{rider.firstName} {rider.lastName}</span>
                                                     </div>
                                                     <div className="flex items-center gap-4">
@@ -318,14 +328,14 @@ const Step5Review = ({
                                 onClick={onBack}
                                 className="absolute top-6 right-6 z-30 flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/25 backdrop-blur-xl text-white text-xs font-bold transition-all border border-white/20 shadow-2xl group/btn"
                             >
-                                <span className="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">edit</span>
+                                <AiOutlineEdit className="text-[18px] group-hover:rotate-12 transition-transform" />
                                 <span className="tracking-wide">REFINE CHOICE</span>
                             </button>
 
                             {/* Distance Badge */}
                             <div className="absolute bottom-6 left-6 z-20">
                                 <span className="inline-flex items-center px-4 py-2 rounded-2xl text-sm font-black bg-white/90 dark:bg-black/80 text-gray-900 dark:text-gray-100 backdrop-blur-md shadow-2xl border border-white/20">
-                                    <span className="material-symbols-outlined text-[20px] mr-2">distance</span>
+                                    <AiOutlineSwapRight className="text-[20px] mr-2" />
                                     {circuit.distance}
                                 </span>
                             </div>
@@ -346,7 +356,7 @@ const Step5Review = ({
                                     <div className="flex items-center gap-5 py-1 px-1">
                                         <div className="flex items-center gap-3">
                                             <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center">
-                                                <span className="material-symbols-outlined text-primary text-[20px]">calendar_today</span>
+                                                <AiOutlineCalendar className="text-primary text-[20px]" />
                                             </div>
                                             <div className="flex flex-col gap-0.5">
                                                 <span className="text-[10px] uppercase tracking-wider text-neutral-400 font-bold">Event Date</span>
@@ -356,7 +366,7 @@ const Step5Review = ({
                                         <div className="h-8 w-px bg-neutral-100 dark:bg-neutral-800 hidden sm:block"></div>
                                         <div className="flex items-center gap-3">
                                             <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center">
-                                                <span className="material-symbols-outlined text-primary text-[20px]">location_on</span>
+                                                <AiOutlineEnvironment className="text-primary text-[20px]" />
                                             </div>
                                             <div className="flex flex-col gap-0.5">
                                                 <span className="text-[10px] uppercase tracking-wider text-neutral-400 font-bold">Location</span>
@@ -406,7 +416,7 @@ const Step5Review = ({
                             {/* Section 2: Registration Details */}
                             <div className="px-6 md:px-8 pb-8 pt-6 border-t border-neutral-100 dark:border-neutral-800 flex flex-col gap-6">
                                 <div className="flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-primary">person</span>
+                                    <AiOutlineUser className="text-primary text-xl" />
                                     <h3 className="text-lg font-bold text-text-light dark:text-white">Full Personnel Details</h3>
                                 </div>
                                 {renderRegistrationDetails()}
@@ -484,7 +494,7 @@ const Step5Review = ({
                                 className="w-full h-14 rounded-xl bg-primary text-white text-lg font-bold shadow-lg shadow-primary/25 hover:bg-primary-dark hover:shadow-primary/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <span>{isSubmitting ? 'Processing...' : 'Proceed to Payment'}</span>
-                                {!isSubmitting && <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>}
+                                {!isSubmitting && <AiOutlineArrowRight className="group-hover:translate-x-1 transition-transform" />}
                             </button>
 
                             <button
@@ -495,7 +505,7 @@ const Step5Review = ({
                             </button>
                         </div>
                         <div className="flex items-center justify-center gap-2 text-text-muted-light dark:text-gray-500 text-xs">
-                            <span className="material-symbols-outlined text-sm">lock</span>
+                            <AiOutlineLock className="text-sm" />
                             <span>Secured by SSL Encryption</span>
                         </div>
                     </div>

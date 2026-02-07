@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
+import {
+    AiOutlineSearch,
+    AiOutlineExclamationCircle,
+    AiOutlineArrowRight
+} from 'react-icons/ai';
 
 type SearchType = 'id' | 'email' | 'phone';
 
@@ -114,9 +119,7 @@ const ProfileLookup = ({ onFound }: ProfileLookupProps) => {
                     <form onSubmit={handleSearch}>
                         <div className="mb-6">
                             <div className="relative">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-neutral-400">
-                                    search
-                                </span>
+                                <AiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-xl" />
                                 <input
                                     type="text"
                                     value={searchValue}
@@ -134,9 +137,7 @@ const ProfileLookup = ({ onFound }: ProfileLookupProps) => {
 
                         {error && (
                             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-start gap-3">
-                                <span className="material-symbols-outlined text-red-600 dark:text-red-400 text-xl">
-                                    error
-                                </span>
+                                <AiOutlineExclamationCircle className="text-red-600 dark:text-red-400 text-xl" />
                                 <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
                             </div>
                         )}
@@ -154,7 +155,7 @@ const ProfileLookup = ({ onFound }: ProfileLookupProps) => {
                             ) : (
                                 <>
                                     <span>Search Registration</span>
-                                    <span className="material-symbols-outlined">arrow_forward</span>
+                                    <AiOutlineArrowRight />
                                 </>
                             )}
                         </button>
