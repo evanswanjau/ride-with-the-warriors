@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import {
     AiOutlineArrowLeft,
@@ -31,27 +31,12 @@ interface ProfileViewProps {
 const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
     const [showAllMembers, setShowAllMembers] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
-    const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
     const circuit = CIRCUITS.find(c => c.id === registration.circuitId) || CIRCUITS[0];
     const pricing = registration.pricing;
     const payload = registration.payload;
     const categoryColor = getCategoryColor(registration.id);
     const contrastText = getContrastText(categoryColor);
 
-    // Generate QR code data URL for PDF
-    useEffect(() => {
-        const generateQrDataUrl = () => {
-            // Find the QR canvas in the DOM after render
-            setTimeout(() => {
-                const qrCanvas = document.querySelector('#qr-code-canvas canvas') as HTMLCanvasElement;
-                if (qrCanvas) {
-                    const dataUrl = qrCanvas.toDataURL('image/png');
-                    setQrCodeDataUrl(dataUrl);
-                }
-            }, 100);
-        };
-        generateQrDataUrl();
-    }, [registration.id]);
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -97,7 +82,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
             pdf.addImage(dataUrl, 'PNG', margin, margin, imgWidth, imgHeight);
 
             // Step 5: Save
-            pdf.save(`RideWithWarriors_Ticket_${registration.firstName}_${registration.lastName}.pdf`);
+            pdf.save(`RideWithWarriors_Ticket_${registration.id}_${registration.firstName}_${registration.lastName}.pdf`);
         } catch (error) {
             console.error('Error generating PDF:', error);
         }
