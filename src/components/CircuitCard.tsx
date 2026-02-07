@@ -1,4 +1,4 @@
-
+import { MdCheck, MdMap, MdEmojiEvents } from 'react-icons/md';
 
 interface CircuitCardProps {
     id: string;
@@ -33,7 +33,7 @@ const CircuitCard = ({
         >
             {isSelected && (
                 <div className="absolute top-3 right-3 z-10 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
-                    <span className="material-symbols-outlined text-[20px] font-bold">check</span>
+                    <MdCheck size={20} className="font-bold" />
                 </div>
             )}
             <div
@@ -44,12 +44,12 @@ const CircuitCard = ({
             >
                 <div className="absolute bottom-3 left-3 flex gap-2">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-white/90 dark:bg-black/80 text-gray-900 dark:text-gray-100 backdrop-blur-sm shadow-sm">
-                        <span className="material-symbols-outlined text-[18px] mr-1">distance</span>
+                        <MdMap size={18} className="mr-1" />
                         {distance}
                     </span>
                     {isCompetitive && (
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary text-white backdrop-blur-sm shadow-sm uppercase tracking-wider">
-                            <span className="material-symbols-outlined text-[16px] mr-1">emoji_events</span>
+                            <MdEmojiEvents size={16} className="mr-1" />
                             Competitive
                         </span>
                     )}
