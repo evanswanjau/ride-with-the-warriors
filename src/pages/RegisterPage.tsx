@@ -30,13 +30,13 @@ const RegisterPage = () => {
 
     const getStepTitle = () => {
         switch (step) {
-            case 1: return "Choose Your Circuit";
-            case 2: return "Registration Type";
+            case 1: return "CHOOSE YOUR CIRCUIT";
+            case 2: return "REGISTRATION TYPE";
             case 3:
-                if (registrationType === 'individual') return "Rider Details";
-                if (registrationType === 'family') return "Parent Details";
-                return "Team Details";
-            case 4: return "Review Registration";
+                if (registrationType === 'individual') return "RIDER DETAILS";
+                if (registrationType === 'family') return "PARENT DETAILS";
+                return "TEAM DETAILS";
+            case 4: return "REVIEW REGISTRATION";
             default: return "";
         }
     };

@@ -33,3 +33,9 @@
 body {
   @apply bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-display antialiased;
 }
+
+button,
+a,
+[role="button"] {
+  cursor: pointer;
+}

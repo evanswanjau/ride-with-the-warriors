@@ -382,19 +382,19 @@ const Step5Review = ({
                                             : getClassification(pricingCategories, selectedCircuitId, registrationType, age);
                                         return (
                                             <div
-                                                className="flex flex-wrap items-center gap-10 py-3 px-6 rounded-2xl border border-white/20 shadow-inner"
+                                                className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4 sm:gap-10 py-4 px-6 rounded-2xl border border-white/20 shadow-inner"
                                                 style={{
                                                     backgroundColor: classification.hexColor || '#f97316',
                                                 }}
                                             >
                                                 <div className="flex flex-col gap-0.5">
                                                     <span className="text-[10px] uppercase tracking-wider font-bold" style={{ color: getContrastText(classification.hexColor) }}>Category</span>
-                                                    <span className="text-base font-bold uppercase tracking-tight leading-none" style={{ color: getContrastText(classification.hexColor) }}>{classification.category}</span>
+                                                    <span className="text-sm sm:text-base font-bold uppercase tracking-tight leading-none" style={{ color: getContrastText(classification.hexColor) }}>{classification.category}</span>
                                                 </div>
-                                                <div className="h-8 w-px bg-white/20 hidden sm:block"></div>
+                                                <div className="h-px sm:h-8 w-full sm:w-px bg-white/20"></div>
                                                 <div className="flex flex-col gap-0.5" style={{ color: getContrastText(classification.hexColor) }}>
                                                     <span className="text-[10px] uppercase tracking-wider font-bold">Bib Number</span>
-                                                    <span className="text-base font-bold tracking-wide leading-none">
+                                                    <span className="text-sm sm:text-base font-bold tracking-wide leading-none">
                                                         {registrationId ? registrationId : classification.regRange}
                                                     </span>
                                                 </div>

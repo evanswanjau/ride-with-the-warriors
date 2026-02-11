@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { RegistrationProvider } from './context/RegistrationContext';
 import Layout from './components/Layout';
 import Gallery from './components/Gallery';
-import Rules from './components/Rules';
+import Faqs from './components/Faqs';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import RegisterPage from './pages/RegisterPage';
@@ -31,7 +31,7 @@ const App = () => {
 
         {/* Info Pages */}
         <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
-        <Route path="/rules" element={<Layout><Rules /></Layout>} />
+        <Route path="/faqs" element={<Layout><Faqs /></Layout>} />
         <Route path="/terms-and-conditions" element={<TermsPage />} />
         <Route path="/privacy-policy" element={<PrivacyPage />} />
 

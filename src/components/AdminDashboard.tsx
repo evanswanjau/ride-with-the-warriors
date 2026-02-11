@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import {
-    AiOutlineSafety,
     AiOutlineTable,
     AiOutlineSun,
     AiOutlineMoon,
@@ -16,6 +15,7 @@ import {
     AiOutlineLeft,
     AiOutlineRight
 } from 'react-icons/ai';
+import logo from '../assets/images/logo.png';
 import { CIRCUITS } from '../constants';
 import { API_BASE_URL } from '../config';
 
@@ -206,9 +206,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             {/* Header */}
             <header className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} border-b py-4 px-8 flex items-center justify-between sticky top-0 z-50`}>
                 <div className="flex items-center gap-4">
-                    <div className="size-10 bg-primary/20 rounded-xl flex items-center justify-center">
-                        <AiOutlineSafety className="text-primary text-xl" />
-                    </div>
+                    <img src={logo} alt="Ride With The Warriors" className="h-10 w-auto object-contain" />
                     <div>
                         <h1 className="text-xl font-bold">Admin Workspace</h1>
                         <p className={`text-xs ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>Welcome back, {admin.name}</p>
@@ -240,39 +238,39 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 </div>
             </header>
 
-            <div className="flex">
-                {/* Side Menu */}
-                <aside className={`w-64 min-h-[calc(100vh-73px)] ${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} border-r`}>
-                    <nav className="p-4 space-y-2">
+            <div className="flex flex-col lg:flex-row">
+                {/* Side Menu - Collapsible on mobile */}
+                <aside className={`lg:w-64 w-full lg:min-h-[calc(100vh-73px)] ${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} border-r border-b lg:border-b-0`}>
+                    <nav className="p-4 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible items-center lg:items-stretch">
                         <button
                             onClick={() => setActiveView('registrations')}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeView === 'registrations'
+                            className={`flex-1 lg:w-full flex items-center justify-center lg:justify-start gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${activeView === 'registrations'
                                 ? 'bg-primary text-white shadow-lg'
                                 : isDarkMode
                                     ? 'text-neutral-400 hover:bg-neutral-700 hover:text-white'
                                     : 'text-neutral-600 hover:bg-neutral-100'
                                 }`}
                         >
-                            <AiOutlineTeam className="text-xl" />
-                            Registrations
+                            <AiOutlineTeam className="text-xl shrink-0" />
+                            <span className="hidden sm:inline">Registrations</span>
                         </button>
                         <button
                             onClick={() => setActiveView('pricing')}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeView === 'pricing'
+                            className={`flex-1 lg:w-full flex items-center justify-center lg:justify-start gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${activeView === 'pricing'
                                 ? 'bg-primary text-white shadow-lg'
                                 : isDarkMode
                                     ? 'text-neutral-400 hover:bg-neutral-700 hover:text-white'
                                     : 'text-neutral-600 hover:bg-neutral-100'
                                 }`}
                         >
-                            <AiOutlineDollar className="text-xl" />
-                            Pricing
+                            <AiOutlineDollar className="text-xl shrink-0" />
+                            <span className="hidden sm:inline">Pricing</span>
                         </button>
                     </nav>
                 </aside>
 
                 {/* Main Content */}
-                <main className="flex-1 p-8 max-w-7xl mx-auto space-y-8">
+                <main className="flex-1 p-4 md:p-8 w-full max-w-7xl mx-auto space-y-8 overflow-x-hidden">
                     {error && (
                         <div className="p-4 bg-red-500/10 border border-red-500 text-red-500 rounded-2xl flex items-center gap-3">
                             <AiOutlineExclamationCircle className="text-xl" />
@@ -285,7 +283,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         <>
                             {/* Stats Section */}
                             {stats && (
-                                <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
                                     <StatCard label="Total" value={stats.summary.total} icon={<AiOutlineTeam />} color="primary" isDarkMode={isDarkMode} />
                                     <StatCard label="Paid" value={stats.summary.paid} icon={<AiOutlineCheckCircle />} color="green-500" isDarkMode={isDarkMode} />
                                     <StatCard label="Unpaid" value={stats.summary.unpaid} icon={<AiOutlineExclamationCircle />} color="yellow-500" isDarkMode={isDarkMode} />
@@ -295,8 +293,8 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                             )}
 
                             {/* Filters */}
-                            <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} p-6 rounded-3xl border flex flex-wrap gap-4 items-end`}>
-                                <div className="flex-1 min-w-[300px]">
+                            <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} p-4 md:p-6 rounded-3xl border flex flex-col sm:flex-row flex-wrap gap-4 items-stretch sm:items-end`}>
+                                <div className="flex-1 min-w-[200px]">
                                     <label className={`block text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-widest mb-2 ml-1`}>Search</label>
                                     <div className="relative">
                                         <AiOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-xl" />
@@ -309,143 +307,149 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         />
                                     </div>
                                 </div>
-                                <div>
-                                    <label className={`block text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-widest mb-2 ml-1`}>Circuit</label>
-                                    <select
-                                        value={filter.circuitId}
-                                        onChange={(e) => setFilter({ ...filter, circuitId: e.target.value })}
-                                        className={`border rounded-xl py-2.5 px-4 text-sm outline-none transition-all ${isDarkMode ? 'bg-neutral-900 border-neutral-700 text-white focus:border-primary' : 'bg-neutral-50 border-neutral-200 text-neutral-900 focus:border-primary focus:bg-white'}`}
-                                    >
-                                        <option value="">All Circuits</option>
-                                        {CIRCUITS.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className={`block text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-widest mb-2 ml-1`}>Status</label>
-                                    <select
-                                        value={filter.status}
-                                        onChange={(e) => setFilter({ ...filter, status: e.target.value })}
-                                        className={`border rounded-xl py-2.5 px-4 text-sm outline-none transition-all ${isDarkMode ? 'bg-neutral-900 border-neutral-700 text-white focus:border-primary' : 'bg-neutral-50 border-neutral-200 text-neutral-900 focus:border-primary focus:bg-white'}`}
-                                    >
-                                        <option value="">All Status</option>
-                                        <option value="UNPAID">Unpaid</option>
-                                        <option value="PAID">Paid</option>
-                                        <option value="CONFIRMED">Confirmed</option>
-                                        <option value="CANCELLED">Cancelled</option>
-                                    </select>
+                                <div className="flex gap-4">
+                                    <div className="flex-1">
+                                        <label className={`block text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-widest mb-2 ml-1`}>Circuit</label>
+                                        <select
+                                            value={filter.circuitId}
+                                            onChange={(e) => setFilter({ ...filter, circuitId: e.target.value })}
+                                            className={`w-full border rounded-xl py-2.5 px-4 text-sm outline-none transition-all ${isDarkMode ? 'bg-neutral-900 border-neutral-700 text-white focus:border-primary' : 'bg-neutral-50 border-neutral-200 text-neutral-900 focus:border-primary focus:bg-white'}`}
+                                        >
+                                            <option value="">All Circuits</option>
+                                            {CIRCUITS.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+                                        </select>
+                                    </div>
+                                    <div className="flex-1">
+                                        <label className={`block text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-widest mb-2 ml-1`}>Status</label>
+                                        <select
+                                            value={filter.status}
+                                            onChange={(e) => setFilter({ ...filter, status: e.target.value })}
+                                            className={`w-full border rounded-xl py-2.5 px-4 text-sm outline-none transition-all ${isDarkMode ? 'bg-neutral-900 border-neutral-700 text-white focus:border-primary' : 'bg-neutral-50 border-neutral-200 text-neutral-900 focus:border-primary focus:bg-white'}`}
+                                        >
+                                            <option value="">All Status</option>
+                                            <option value="UNPAID">Unpaid</option>
+                                            <option value="PAID">Paid</option>
+                                            <option value="CONFIRMED">Confirmed</option>
+                                            <option value="CANCELLED">Cancelled</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Table Section */}
                             <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} rounded-3xl border overflow-hidden`}>
-                                <table className="w-full text-left text-sm">
-                                    <thead>
-                                        <tr className={`${isDarkMode ? 'bg-neutral-700/50 text-neutral-400' : 'bg-neutral-50 text-neutral-500'} text-[10px] font-bold uppercase tracking-widest border-b ${isDarkMode ? 'border-neutral-700' : 'border-neutral-100'}`}>
-                                            <th className="px-6 py-5">BIB</th>
-                                            <th className="px-6 py-5">Participant</th>
-                                            <th className="px-6 py-5">Category / Circuit</th>
-                                            <th className="px-6 py-5">T-Shirt</th>
-                                            <th className="px-6 py-5">Emergency</th>
-                                            <th className="px-6 py-5">Contact Info</th>
-                                            <th className="px-6 py-5 text-center">Amount</th>
-                                            <th className="px-6 py-5">M-Pesa</th>
-                                            <th className="px-6 py-5">Status</th>
-                                            <th className="px-6 py-5">Date</th>
-                                            <th className="px-6 py-5 text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className={`divide-y ${isDarkMode ? 'divide-neutral-700' : 'divide-neutral-100'}`}>
-                                        {loading && registrations.length === 0 ? (
-                                            <tr><td colSpan={8} className="py-20 text-center text-neutral-500">Loading registrations...</td></tr>
-                                        ) : registrations.length === 0 ? (
-                                            <tr><td colSpan={8} className="py-20 text-center text-neutral-500">No registrations found matching your criteria.</td></tr>
-                                        ) : registrations.map((reg) => {
-                                            const catColor = pricingCategories.find(c => c.categoryName === reg.category)?.hexColor || '#000000';
-                                            return (
-                                                <tr key={reg.id} className={`transition-colors ${isDarkMode ? 'hover:bg-neutral-700/30' : 'hover:bg-neutral-50'}`}>
-                                                    <td className="px-6 py-5">
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="size-3 rounded-full" style={{ backgroundColor: catColor }}></div>
-                                                            <span className={`font-mono text-xs font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>{reg.id}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <div className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>
-                                                            {capitalizeWords(reg.firstName || 'Unknown')} {capitalizeWords(reg.lastName || '')}
-                                                        </div>
-                                                        {reg.teamName && (
-                                                            <div className="text-[10px] text-neutral-500 uppercase tracking-wider mt-1">
-                                                                Team: {reg.teamName}
-                                                            </div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <div className={`text-xs font-bold ${isDarkMode ? 'text-white' : 'text-neutral-800'}`}>{reg.category || 'Rider'}</div>
-                                                        <div className="text-[10px] text-neutral-500 uppercase tracking-widest leading-none mt-1">
-                                                            {CIRCUITS.find(c => c.id === reg.circuitId)?.id.toUpperCase() || reg.circuitId}
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <div className={`text-xs font-black ${isDarkMode ? 'text-white' : 'text-primary'}`}>{reg.tshirtSize || '—'}</div>
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <div className={`text-xs font-bold leading-tight ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>{reg.emergencyContactName || '—'}</div>
-                                                        <div className="text-[10px] text-neutral-500 mt-1">{reg.emergencyPhone || ''}</div>
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <div className={`text-xs ${isDarkMode ? 'text-neutral-300' : 'text-neutral-600'}`}>{reg.email || 'No Email'}</div>
-                                                        <div className="text-[10px] text-neutral-500 mt-1">{reg.phoneNumber || 'No Phone'}</div>
-                                                    </td>
-                                                    <td className="px-6 py-5 text-center">
-                                                        <div className="font-mono font-black text-primary text-sm">{(reg.totalAmount || 0).toLocaleString()}/=</div>
-                                                        {reg.totalAmount === 0 && <div className="text-[8px] text-neutral-600 uppercase font-bold">Group Paid</div>}
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <div className="font-mono text-[10px] font-bold text-neutral-500">{reg.mpesaCode || '—'}</div>
-                                                    </td>
-                                                    <td className="px-6 py-5">
-                                                        <select
-                                                            value={reg.status}
-                                                            onChange={(e) => handleStatusUpdate(reg.id, e.target.value)}
-                                                            className={`text-[10px] font-bold px-3 py-1.5 rounded-full border-none outline-none cursor-pointer shadow-sm ${getStatusColor(reg.status)}`}
-                                                        >
-                                                            <option value="UNPAID">UNPAID</option>
-                                                            <option value="PAID">PAID</option>
-                                                            <option value="CONFIRMED">CONFIRMED</option>
-                                                            <option value="CANCELLED">CANCELLED</option>
-                                                        </select>
-                                                    </td>
-                                                    <td className={`px-6 py-5 text-[11px] tabular-nums font-medium ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
-                                                        {formatDate(reg.createdAt)}
-                                                    </td>
-                                                    <td className="px-6 py-5 text-right">
-                                                        <div className="flex items-center justify-end gap-1">
-                                                            <a
-                                                                href={`/profile/${reg.id}`}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className={`size-9 rounded-lg flex items-center justify-center transition-all ${isDarkMode ? 'hover:bg-neutral-700 text-neutral-400 hover:text-white' : 'hover:bg-neutral-100 text-neutral-500 hover:text-primary'}`}
-                                                                title="View Full Profile"
-                                                            >
-                                                                <AiOutlineEye className="text-[20px]" />
-                                                            </a>
-                                                            <button
-                                                                onClick={() => handleDelete(reg.id)}
-                                                                className={`size-9 rounded-lg flex items-center justify-center transition-all ${isDarkMode ? 'hover:bg-red-500/10 text-neutral-400 hover:text-red-500' : 'hover:bg-red-50 text-neutral-500 hover:text-red-500'}`}
-                                                                title="Delete Registration"
-                                                            >
-                                                                <AiOutlineDelete className="text-[20px]" />
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left text-sm min-w-[1000px]">
+                                        <thead>
+                                            <tr className={`${isDarkMode ? 'bg-neutral-700/50 text-neutral-400' : 'bg-neutral-50 text-neutral-500'} text-[10px] font-bold uppercase tracking-widest border-b ${isDarkMode ? 'border-neutral-700' : 'border-neutral-100'}`}>
+                                                <th className="px-6 py-5">BIB</th>
+                                                <th className="px-6 py-5">Participant</th>
+                                                <th className="px-6 py-5">Category / Circuit</th>
+                                                <th className="px-6 py-5">T-Shirt</th>
+                                                <th className="px-6 py-5">Emergency</th>
+                                                <th className="px-6 py-5">Contact Info</th>
+                                                <th className="px-6 py-5 text-center">Amount</th>
+                                                <th className="px-6 py-5">M-Pesa</th>
+                                                <th className="px-6 py-5">Status</th>
+                                                <th className="px-6 py-5">Date</th>
+                                                <th className="px-6 py-5 text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className={`divide-y ${isDarkMode ? 'divide-neutral-700' : 'divide-neutral-100'}`}>
+                                            {loading && registrations.length === 0 ? (
+                                                <tr><td colSpan={11} className="py-20 text-center text-neutral-500">Loading registrations...</td></tr>
+                                            ) : registrations.length === 0 ? (
+                                                <tr><td colSpan={11} className="py-20 text-center text-neutral-500">No registrations found matching your criteria.</td></tr>
+                                            ) : (
+                                                registrations.map((reg) => {
+                                                    const catColor = pricingCategories.find(c => c.categoryName === reg.category)?.hexColor || '#000000';
+                                                    return (
+                                                        <tr key={reg.id} className={`transition-colors ${isDarkMode ? 'hover:bg-neutral-700/30' : 'hover:bg-neutral-50'}`}>
+                                                            <td className="px-6 py-5">
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="size-3 rounded-full" style={{ backgroundColor: catColor }}></div>
+                                                                    <span className={`font-mono text-xs font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>{reg.id}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-5">
+                                                                <div className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>
+                                                                    {capitalizeWords(reg.firstName || 'Unknown')} {capitalizeWords(reg.lastName || '')}
+                                                                </div>
+                                                                {reg.teamName && (
+                                                                    <div className="text-[10px] text-neutral-500 uppercase tracking-wider mt-1">
+                                                                        Team: {reg.teamName}
+                                                                    </div>
+                                                                )}
+                                                            </td>
+                                                            <td className="px-6 py-5">
+                                                                <div className={`text-xs font-bold ${isDarkMode ? 'text-white' : 'text-neutral-800'}`}>{reg.category || 'Rider'}</div>
+                                                                <div className="text-[10px] text-neutral-500 uppercase tracking-widest leading-none mt-1">
+                                                                    {CIRCUITS.find(c => c.id === reg.circuitId)?.id.toUpperCase() || reg.circuitId}
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-5">
+                                                                <div className={`text-xs font-black ${isDarkMode ? 'text-white' : 'text-primary'}`}>{reg.tshirtSize || '—'}</div>
+                                                            </td>
+                                                            <td className="px-6 py-5">
+                                                                <div className={`text-xs font-bold leading-tight ${isDarkMode ? 'text-neutral-300' : 'text-neutral-700'}`}>{reg.emergencyContactName || '—'}</div>
+                                                                <div className="text-[10px] text-neutral-500 mt-1">{reg.emergencyPhone || ''}</div>
+                                                            </td>
+                                                            <td className="px-6 py-5">
+                                                                <div className={`text-xs ${isDarkMode ? 'text-neutral-300' : 'text-neutral-600'}`}>{reg.email || 'No Email'}</div>
+                                                                <div className="text-[10px] text-neutral-500 mt-1">{reg.phoneNumber || 'No Phone'}</div>
+                                                            </td>
+                                                            <td className="px-6 py-5 text-center">
+                                                                <div className="font-mono font-black text-primary text-sm">{(reg.totalAmount || 0).toLocaleString()}/=</div>
+                                                                {reg.totalAmount === 0 && <div className="text-[8px] text-neutral-600 uppercase font-bold">Group Paid</div>}
+                                                            </td>
+                                                            <td className="px-6 py-5">
+                                                                <div className="font-mono text-[10px] font-bold text-neutral-500">{reg.mpesaCode || '—'}</div>
+                                                            </td>
+                                                            <td className="px-6 py-5">
+                                                                <select
+                                                                    value={reg.status}
+                                                                    onChange={(e) => handleStatusUpdate(reg.id, e.target.value)}
+                                                                    className={`text-[10px] font-bold px-3 py-1.5 rounded-full border-none outline-none cursor-pointer shadow-sm ${getStatusColor(reg.status)}`}
+                                                                >
+                                                                    <option value="UNPAID">UNPAID</option>
+                                                                    <option value="PAID">PAID</option>
+                                                                    <option value="CONFIRMED">CONFIRMED</option>
+                                                                    <option value="CANCELLED">CANCELLED</option>
+                                                                </select>
+                                                            </td>
+                                                            <td className={`px-6 py-5 text-[11px] tabular-nums font-medium ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                                                                {formatDate(reg.createdAt)}
+                                                            </td>
+                                                            <td className="px-6 py-5 text-right">
+                                                                <div className="flex items-center justify-end gap-1">
+                                                                    <a
+                                                                        href={`/profile/${reg.id}`}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className={`size-9 rounded-lg flex items-center justify-center transition-all ${isDarkMode ? 'hover:bg-neutral-700 text-neutral-400 hover:text-white' : 'hover:bg-neutral-100 text-neutral-500 hover:text-primary'}`}
+                                                                        title="View Full Profile"
+                                                                    >
+                                                                        <AiOutlineEye className="text-[20px]" />
+                                                                    </a>
+                                                                    <button
+                                                                        onClick={() => handleDelete(reg.id)}
+                                                                        className={`size-9 rounded-lg flex items-center justify-center transition-all ${isDarkMode ? 'hover:bg-red-500/10 text-neutral-400 hover:text-red-500' : 'hover:bg-red-50 text-neutral-500 hover:text-red-500'}`}
+                                                                        title="Delete Registration"
+                                                                    >
+                                                                        <AiOutlineDelete className="text-[20px]" />
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
 
                                 {/* Pagination */}
-                                <div className={`p-6 border-t flex items-center justify-between ${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-neutral-50 border-neutral-100'}`}>
+                                <div className={`p-6 border-t flex flex-col sm:flex-row items-center justify-between gap-4 ${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-neutral-50 border-neutral-100'}`}>
                                     <div className={`text-xs font-medium ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>
                                         Showing <span className={isDarkMode ? 'text-white' : 'text-neutral-900'}>{(pagination.page - 1) * pagination.limit + 1}</span> to <span className={isDarkMode ? 'text-white' : 'text-neutral-900'}>{Math.min(pagination.page * pagination.limit, pagination.total)}</span> of <span className={isDarkMode ? 'text-white' : 'text-neutral-900'}>{pagination.total}</span> results
                                     </div>
@@ -482,7 +486,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     ) : (
                         /* Pricing View */
                         <div className="space-y-6">
-                            <div className="flex items-center justify-between">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <div>
                                     <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>Pricing Categories</h2>
                                     <p className={`text-sm ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>Manage pricing rules for all circuits and categories</p>
@@ -505,55 +509,57 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 {CIRCUITS.find(c => c.id === circuitId)?.title || circuitId.toUpperCase()}
                                             </h3>
                                         </div>
-                                        <table className="w-full text-left text-sm">
-                                            <thead>
-                                                <tr className={`${isDarkMode ? 'bg-neutral-700/30 text-neutral-400' : 'bg-neutral-50 text-neutral-500'} text-[10px] font-bold uppercase tracking-widest border-b ${isDarkMode ? 'border-neutral-700' : 'border-neutral-100'}`}>
-                                                    <th className="px-6 py-4">Color</th>
-                                                    <th className="px-6 py-4">Category</th>
-                                                    <th className="px-6 py-4">Type</th>
-                                                    <th className="px-6 py-4">Age Range</th>
-                                                    <th className="px-6 py-4">Price</th>
-                                                    <th className="px-6 py-4">BIB Range</th>
-                                                    <th className="px-6 py-4">Remarks</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className={`divide-y ${isDarkMode ? 'divide-neutral-700' : 'divide-neutral-100'}`}>
-                                                {categories.map((cat: any) => (
-                                                    <tr key={cat.id} className={`transition-colors ${isDarkMode ? 'hover:bg-neutral-700/30' : 'hover:bg-neutral-50'}`}>
-                                                        <td className="px-6 py-4">
-                                                            <div className="flex items-center gap-2">
-                                                                <div className="size-4 rounded-full border border-neutral-300" style={{ backgroundColor: cat.hexColor }}></div>
-                                                                <span className="text-[10px] text-neutral-500 uppercase">{cat.colorCode}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>{cat.categoryName}</span>
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <span className="text-xs text-neutral-500 uppercase">{cat.type}</span>
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <span className={`text-xs ${isDarkMode ? 'text-neutral-300' : 'text-neutral-600'}`}>
-                                                                {cat.minAge !== null && cat.maxAge !== null
-                                                                    ? `${cat.minAge}-${cat.maxAge}`
-                                                                    : cat.familyCategory
-                                                                        ? cat.familyCategory
-                                                                        : 'All Ages'}
-                                                            </span>
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <span className="font-mono font-bold text-primary">KES {cat.price.toLocaleString()}</span>
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <span className={`font-mono text-xs ${isDarkMode ? 'text-neutral-400' : 'text-neutral-600'}`}>{cat.regRange}</span>
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <span className={`text-xs ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>{cat.remarks || '—'}</span>
-                                                        </td>
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-left text-sm min-w-[800px]">
+                                                <thead>
+                                                    <tr className={`${isDarkMode ? 'bg-neutral-700/30 text-neutral-400' : 'bg-neutral-50 text-neutral-500'} text-[10px] font-bold uppercase tracking-widest border-b ${isDarkMode ? 'border-neutral-700' : 'border-neutral-100'}`}>
+                                                        <th className="px-6 py-4">Color</th>
+                                                        <th className="px-6 py-4">Category</th>
+                                                        <th className="px-6 py-4">Type</th>
+                                                        <th className="px-6 py-4">Age Range</th>
+                                                        <th className="px-6 py-4">Price</th>
+                                                        <th className="px-6 py-4">BIB Range</th>
+                                                        <th className="px-6 py-4">Remarks</th>
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody className={`divide-y ${isDarkMode ? 'divide-neutral-700' : 'divide-neutral-100'}`}>
+                                                    {categories.map((cat: any) => (
+                                                        <tr key={cat.id} className={`transition-colors ${isDarkMode ? 'hover:bg-neutral-700/30' : 'hover:bg-neutral-50'}`}>
+                                                            <td className="px-6 py-4">
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="size-4 rounded-full border border-neutral-300" style={{ backgroundColor: cat.hexColor }}></div>
+                                                                    <span className="text-[10px] text-neutral-500 uppercase">{cat.colorCode}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>{cat.categoryName}</span>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <span className="text-xs text-neutral-500 uppercase">{cat.type}</span>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <span className={`text-xs ${isDarkMode ? 'text-neutral-300' : 'text-neutral-600'}`}>
+                                                                    {cat.minAge !== null && cat.maxAge !== null
+                                                                        ? `${cat.minAge}-${cat.maxAge}`
+                                                                        : cat.familyCategory
+                                                                            ? cat.familyCategory
+                                                                            : 'All Ages'}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <span className="font-mono font-bold text-primary">KES {cat.price.toLocaleString()}</span>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <span className={`font-mono text-xs ${isDarkMode ? 'text-neutral-400' : 'text-neutral-600'}`}>{cat.regRange}</span>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <span className={`text-xs ${isDarkMode ? 'text-neutral-400' : 'text-neutral-500'}`}>{cat.remarks || '—'}</span>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 ))
                             )}
@@ -568,7 +574,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
 const StatCard = ({ label, value, icon, color, isDarkMode }: any) => (
     <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} p-6 rounded-3xl border`}>
         <div className="flex justify-between items-start mb-4">
-            <div className={`size-10 rounded-xl bg-${color}/10 flex items-center justify-center text-xl`}>
+            <div className={`size-10 rounded-xl flex items-center justify-center text-xl bg-${color}/10`}>
                 <span className={`text-${color}`}>{icon}</span>
             </div>
             <span className={`text-[10px] font-bold ${isDarkMode ? 'text-neutral-500' : 'text-neutral-400'} uppercase tracking-[0.2em]`}>{label}</span>
