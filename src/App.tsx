@@ -17,9 +17,12 @@ import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
 import AdminPage from './pages/AdminPage';
 
+import ScrollToTop from './utils/ScrollToTop';
+
 const App = () => {
   return (
     <RegistrationProvider>
+      <ScrollToTop />
       <Routes>
         {/* Public Pages */}
         <Route path="/" element={<Layout isFullWidth><HomePage /></Layout>} />
