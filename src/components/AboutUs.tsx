@@ -2,9 +2,10 @@ import { Link } from 'react-router-dom';
 import { AiOutlineAim, AiOutlineHeart, AiOutlineGlobal, AiOutlineStar } from 'react-icons/ai';
 import storyImage from '../assets/images/296A0186-34-min.jpeg';
 import teamImage from '../assets/images/296A0075-30-min.jpeg';
-import collageImage1 from '../assets/images/296A0118-32-min.jpeg';
-import collageImage2 from '../assets/images/296A0192-36-min.jpeg';
-import collageImage3 from '../assets/images/296A0205-38-min.jpeg';
+import collageImage1 from '../assets/images/collage1.jpeg';
+import collageImage2 from '../assets/images/collage2.jpeg';
+import collageImage3 from '../assets/images/collage3.jpeg';
+import reconImage from '../assets/images/recon-team.jpeg';
 
 const AboutUs = () => {
     const pillars = [
@@ -112,7 +113,7 @@ const AboutUs = () => {
                     <div className="relative">
                         <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 via-transparent to-emerald-500/10 rounded-[3rem] blur-2xl opacity-50" />
                         <div className="relative overflow-hidden rounded-[2.5rem]">
-                            <img src={collageImage1} alt="RWTW history" className="w-full aspect-[4/3] object-cover hover:scale-105 transition-transform duration-700" />
+                            <img src={reconImage} alt="RWTW history" className="w-full aspect-[4/3] object-cover hover:scale-105 transition-transform duration-700" />
                         </div>
                     </div>
 
