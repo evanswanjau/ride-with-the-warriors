@@ -293,7 +293,7 @@ const Step5Review = ({
 
 
     return (
-        <div className="layout-content-container flex flex-col max-w-[960px] flex-1 w-full gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="layout-content-container flex flex-col flex-1 w-full gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex flex-col gap-2">
                 <h1 className="text-text-light dark:text-white tracking-tight text-[32px] md:text-4xl font-bold leading-tight">Review Your Registration</h1>
                 <p className="text-text-muted-light dark:text-gray-400 text-base font-normal leading-normal max-w-2xl">

@@ -24,11 +24,18 @@ const Gallery = () => {
     images.sort((a, b) => a.title.localeCompare(b.title));
 
     return (
-        <div className="min-h-screen py-12">
-            <div className="text-center mb-16">
-                <h1 className="text-5xl font-black text-neutral-900 dark:text-white mb-4">Event Gallery</h1>
-                <p className="text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto font-medium">
-                    Relive the most intense moments from previous Ride With The Warriors events. From epic climbs to muddy sprints.
+        <div className="min-h-screen">
+            {/* --- Header Section --- */}
+            <div className="flex flex-col items-center text-center mb-16">
+                <span className="px-4 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium mb-4 uppercase tracking-widest">
+                    Gallery
+                </span>
+                <h1 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white mb-6 tracking-tight">
+                    Event <span className="text-emerald-500">Gallery.</span>
+                </h1>
+                <p className="text-neutral-600 dark:text-neutral-400 max-w-xl text-lg leading-relaxed">
+                    Relive the most intense moments from previous Ride With The Warriors events.
+                    From epic climbs to muddy sprints.
                 </p>
             </div>
 

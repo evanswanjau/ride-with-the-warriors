@@ -76,7 +76,7 @@ const RegisterPage = () => {
     };
 
     return (
-        <Layout registrationType={registrationType}>
+        <Layout registrationType={registrationType} maxWidth="max-w-5xl">
             <ProgressBar currentStep={step} totalSteps={4} stepTitle={getStepTitle()} onStepClick={(s: number) => navigate(`/register/step/${s}`)} />
             {renderStep()}
         </Layout>

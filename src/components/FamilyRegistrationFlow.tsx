@@ -119,7 +119,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
     };
 
     return (
-        <div className="layout-content-container flex flex-col max-w-[960px] flex-1 w-full gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="layout-content-container flex flex-col flex-1 w-full gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header Section */}
             <div className="flex flex-wrap justify-between gap-3 px-4">
                 <div className="flex min-w-72 flex-col gap-3">

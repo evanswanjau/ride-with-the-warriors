@@ -135,48 +135,53 @@ const Faqs = () => {
     ]
 
     return (
-        <div className="min-h-screen py-12">
-            <div className="max-w-4xl mx-auto">
-                <div className="text-center mb-16">
-                    <h1 className="text-5xl font-black text-neutral-900 dark:text-white mb-4">Frequently Asked Questions</h1>
-                    <p className="text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto font-medium">
-                        Everything you need to know about the Regimental Ride. Can't find what you're looking for? Reach out to our support team.
-                    </p>
-                </div>
+        <div className="min-h-screen">
+            {/* --- Header Section --- */}
+            <div className="flex flex-col items-center text-center mb-16">
+                <span className="px-4 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium mb-4 uppercase tracking-widest">
+                    Help Center
+                </span>
+                <h1 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white mb-6 tracking-tight">
+                    Common <span className="text-emerald-500">Questions.</span>
+                </h1>
+                <p className="text-neutral-600 dark:text-neutral-400 max-w-xl text-lg leading-relaxed">
+                    Everything you need to know about the Regimental Ride.
+                    Can't find what you're looking for? Reach out to our support team.
+                </p>
+            </div>
 
-                <div className="space-y-16">
-                    {faqCategories.map((category, idx) => (
-                        <div key={idx} className="bg-white dark:bg-[#232623] rounded-3xl p-8 md:p-12 shadow-none">
-                            <h2 className="text-2xl font-black text-neutral-900 dark:text-white mb-8 flex items-center gap-4">
-                                <span className="size-2 rounded-full bg-primary"></span>
-                                {category.title}
-                            </h2>
-                            <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
-                                {category.questions.map((faq, fidx) => {
-                                    const key = `${idx}-${fidx}`;
-                                    return (
-                                        <FAQItem key={fidx} question={faq.question} answer={faq.answer} isOpen={openKey === key} onToggle={() => handleToggle(key)} />
-                                    );
-                                })}
-                            </div>
+            <div className="space-y-16">
+                {faqCategories.map((category, idx) => (
+                    <div key={idx} className="bg-white dark:bg-[#232623] rounded-3xl p-8 md:p-12 shadow-none">
+                        <h2 className="text-2xl font-black text-neutral-900 dark:text-white mb-8 flex items-center gap-4">
+                            <span className="size-2 rounded-full bg-primary"></span>
+                            {category.title}
+                        </h2>
+                        <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+                            {category.questions.map((faq, fidx) => {
+                                const key = `${idx}-${fidx}`;
+                                return (
+                                    <FAQItem key={fidx} question={faq.question} answer={faq.answer} isOpen={openKey === key} onToggle={() => handleToggle(key)} />
+                                );
+                            })}
                         </div>
-                    ))}
-                </div>
-
-                <div className="mt-20 p-12 rounded-[2.5rem] bg-neutral-900 dark:bg-primary text-center relative overflow-hidden group">
-                    <div className="relative z-10">
-                        <h3 className="text-2xl md:text-3xl font-black text-white mb-4">Still have questions?</h3>
-                        <p className="text-neutral-400 dark:text-white/80 mb-8 max-w-md mx-auto">
-                            Our team is here to help you get ready for the big day. No question is too small.
-                        </p>
-                        <button className="px-8 py-4 bg-primary dark:bg-white text-white dark:text-primary font-bold rounded-2xl hover:scale-105 transition-transform">
-                            Contact Support
-                        </button>
                     </div>
-                    {/* Background decorative elements */}
-                    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 size-64 bg-primary/20 dark:bg-white/10 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 size-64 bg-primary/20 dark:bg-white/10 rounded-full blur-3xl"></div>
+                ))}
+            </div>
+
+            <div className="mt-20 p-12 rounded-[2.5rem] bg-neutral-900 dark:bg-primary text-center relative overflow-hidden group">
+                <div className="relative z-10">
+                    <h3 className="text-2xl md:text-3xl font-black text-white mb-4">Still have questions?</h3>
+                    <p className="text-neutral-400 dark:text-white/80 mb-8 max-w-md mx-auto">
+                        Our team is here to help you get ready for the big day. No question is too small.
+                    </p>
+                    <button className="px-8 py-4 bg-primary dark:bg-white text-white dark:text-primary font-bold rounded-2xl hover:scale-105 transition-transform">
+                        Contact Support
+                    </button>
                 </div>
+                {/* Background decorative elements */}
+                <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 size-64 bg-primary/20 dark:bg-white/10 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 size-64 bg-primary/20 dark:bg-white/10 rounded-full blur-3xl"></div>
             </div>
         </div>
     );

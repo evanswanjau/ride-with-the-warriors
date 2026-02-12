@@ -27,7 +27,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
     };
 
     return (
-        <div className="layout-content-container flex flex-col max-w-[960px] flex-1 w-full gap-8">
+        <div className="layout-content-container flex flex-col flex-1 w-full gap-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex flex-col gap-2">
                     <h1 className="text-text-light dark:text-white tracking-tight text-[32px] md:text-4xl font-bold leading-tight">Rider Details</h1>
