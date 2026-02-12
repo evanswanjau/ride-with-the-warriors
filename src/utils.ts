@@ -105,7 +105,7 @@ export const getCategoryColor = (id: string | null | undefined): string => {
     if (hasTPrefix || hasCPrefix) {
         if (hasTPrefix) return '#ec4899'; // Pink (Parents)
         if (hasCPrefix) {
-            if (numId >= 201 && numId <= 299) return '#ef4444'; // Red (Cubs)
+            if (numId >= 201 && numId <= 299) return '#1e3a8a'; // Navy Blue (Cubs)
             if (numId >= 301 && numId <= 999) return '#78350f'; // Brown (Champs)
         }
     }
@@ -113,8 +113,8 @@ export const getCategoryColor = (id: string | null | undefined): string => {
     // Teams (Blitz) 7001-7999 -> Sky Blue
     if (numId >= 7001 && numId <= 7999) return '#0ea5e9';
 
-    // Veterans 6001-6999 -> Navy Blue
-    if (numId >= 6001 && numId <= 6999) return '#1e3a8a';
+    // Veterans 6001-6999 -> Red
+    if (numId >= 6001 && numId <= 6999) return '#ef4444';
 
     // Vanguard 5001-5999 -> Green
     if (numId >= 5001 && numId <= 5999) return '#22c55e';
@@ -122,8 +122,8 @@ export const getCategoryColor = (id: string | null | undefined): string => {
     // Airborne 4001-4999 -> Purple
     if (numId >= 4001 && numId <= 4999) return '#a855f7';
 
-    // Commanders 3001-3999 -> White
-    if (numId >= 3001 && numId <= 3999) return '#ffffff';
+    // Commanders 3001-3999 -> Indigo
+    if (numId >= 3001 && numId <= 3999) return '#6366f1';
 
     // Recon Individual 2001-2999 -> Yellow
     if (numId >= 2001 && numId <= 2999) return '#eab308';

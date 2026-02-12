@@ -36,7 +36,7 @@ const AboutUs = () => {
 
     return (
         <div className="min-h-screen">
-            <div className="max-w-6xl mx-auto px-4 pt-24 pb-12">            {/* ── Header (Contact Us style) ────────────────────────────── */}
+            <div className="max-w-6xl mx-auto px-4 pt-28 pb-12">            {/* ── Header (Contact Us style) ────────────────────────────── */}
                 <div className="flex flex-col items-center text-center mb-16">
                     <span className="px-4 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium mb-4 uppercase tracking-widest">
                         Our Story

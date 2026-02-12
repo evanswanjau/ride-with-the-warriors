@@ -252,7 +252,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 }`}
                         >
                             <AiOutlineTeam className="text-xl shrink-0" />
-                            <span className="hidden sm:inline">Registrations</span>
+                            <span className="font-bold">Registrations</span>
                         </button>
                         <button
                             onClick={() => setActiveView('pricing')}
@@ -264,7 +264,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 }`}
                         >
                             <AiOutlineDollar className="text-xl shrink-0" />
-                            <span className="hidden sm:inline">Pricing</span>
+                            <span className="font-bold">Pricing</span>
                         </button>
                     </nav>
                 </aside>
@@ -342,13 +342,13 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     <table className="w-full text-left text-sm min-w-[1000px]">
                                         <thead>
                                             <tr className={`${isDarkMode ? 'bg-neutral-700/50 text-neutral-400' : 'bg-neutral-50 text-neutral-500'} text-[10px] font-bold uppercase tracking-widest border-b ${isDarkMode ? 'border-neutral-700' : 'border-neutral-100'}`}>
-                                                <th className="px-6 py-5">BIB</th>
+                                                <th className="px-6 py-5"></th>
                                                 <th className="px-6 py-5">Participant</th>
                                                 <th className="px-6 py-5">Category / Circuit</th>
                                                 <th className="px-6 py-5">T-Shirt</th>
                                                 <th className="px-6 py-5">Emergency</th>
                                                 <th className="px-6 py-5">Contact Info</th>
-                                                <th className="px-6 py-5 text-center">Amount</th>
+                                                <th className="px-6 py-5 text-center">Color</th>
                                                 <th className="px-6 py-5">M-Pesa</th>
                                                 <th className="px-6 py-5">Status</th>
                                                 <th className="px-6 py-5">Date</th>
@@ -366,10 +366,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                     return (
                                                         <tr key={reg.id} className={`transition-colors ${isDarkMode ? 'hover:bg-neutral-700/30' : 'hover:bg-neutral-50'}`}>
                                                             <td className="px-6 py-5">
-                                                                <div className="flex items-center gap-2">
-                                                                    <div className="size-3 rounded-full" style={{ backgroundColor: catColor }}></div>
-                                                                    <span className={`font-mono text-xs font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>{reg.id}</span>
-                                                                </div>
+                                                                <span className={`font-mono text-xs font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>{reg.id}</span>
                                                             </td>
                                                             <td className="px-6 py-5">
                                                                 <div className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>
@@ -399,8 +396,13 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                                 <div className="text-[10px] text-neutral-500 mt-1">{reg.phoneNumber || 'No Phone'}</div>
                                                             </td>
                                                             <td className="px-6 py-5 text-center">
-                                                                <div className="font-mono font-black text-primary text-sm">{(reg.totalAmount || 0).toLocaleString()}/=</div>
-                                                                {reg.totalAmount === 0 && <div className="text-[8px] text-neutral-600 uppercase font-bold">Group Paid</div>}
+                                                                <div
+                                                                    className="inline-block w-12 h-6 rounded shadow-sm"
+                                                                    style={{
+                                                                        backgroundColor: catColor
+                                                                    }}
+                                                                ></div>
+                                                                {reg.totalAmount === 0 && <div className="text-[8px] text-neutral-600 uppercase font-bold mt-1">Group Paid</div>}
                                                             </td>
                                                             <td className="px-6 py-5">
                                                                 <div className="font-mono text-[10px] font-bold text-neutral-500">{reg.mpesaCode || '—'}</div>
@@ -513,11 +515,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             <table className="w-full text-left text-sm min-w-[800px]">
                                                 <thead>
                                                     <tr className={`${isDarkMode ? 'bg-neutral-700/30 text-neutral-400' : 'bg-neutral-50 text-neutral-500'} text-[10px] font-bold uppercase tracking-widest border-b ${isDarkMode ? 'border-neutral-700' : 'border-neutral-100'}`}>
-                                                        <th className="px-6 py-4">Color</th>
                                                         <th className="px-6 py-4">Category</th>
                                                         <th className="px-6 py-4">Type</th>
                                                         <th className="px-6 py-4">Age Range</th>
-                                                        <th className="px-6 py-4">Price</th>
+                                                        <th className="px-6 py-4 text-center">Color</th>
                                                         <th className="px-6 py-4">BIB Range</th>
                                                         <th className="px-6 py-4">Remarks</th>
                                                     </tr>
@@ -525,12 +526,6 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <tbody className={`divide-y ${isDarkMode ? 'divide-neutral-700' : 'divide-neutral-100'}`}>
                                                     {categories.map((cat: any) => (
                                                         <tr key={cat.id} className={`transition-colors ${isDarkMode ? 'hover:bg-neutral-700/30' : 'hover:bg-neutral-50'}`}>
-                                                            <td className="px-6 py-4">
-                                                                <div className="flex items-center gap-2">
-                                                                    <div className="size-4 rounded-full border border-neutral-300" style={{ backgroundColor: cat.hexColor }}></div>
-                                                                    <span className="text-[10px] text-neutral-500 uppercase">{cat.colorCode}</span>
-                                                                </div>
-                                                            </td>
                                                             <td className="px-6 py-4">
                                                                 <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}>{cat.categoryName}</span>
                                                             </td>
@@ -546,8 +541,13 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                                             : 'All Ages'}
                                                                 </span>
                                                             </td>
-                                                            <td className="px-6 py-4">
-                                                                <span className="font-mono font-bold text-primary">KES {cat.price.toLocaleString()}</span>
+                                                            <td className="px-6 py-4 text-center">
+                                                                <div
+                                                                    className="inline-block w-12 h-6 rounded shadow-sm"
+                                                                    style={{
+                                                                        backgroundColor: cat.hexColor
+                                                                    }}
+                                                                ></div>
                                                             </td>
                                                             <td className="px-6 py-4">
                                                                 <span className={`font-mono text-xs ${isDarkMode ? 'text-neutral-400' : 'text-neutral-600'}`}>{cat.regRange}</span>
