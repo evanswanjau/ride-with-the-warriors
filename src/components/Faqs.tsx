@@ -142,7 +142,7 @@ const Faqs = () => {
                     Help Center
                 </span>
                 <h1 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white mb-6 tracking-tight">
-                    Frequently Asked<span className="text-emerald-500">Questions.</span>
+                    Frequently Asked{" "}<span className="text-emerald-500">Questions.</span>
                 </h1>
                 <p className="text-neutral-600 dark:text-neutral-400 max-w-xl text-lg leading-relaxed">
                     Everything you need to know about the Regimental Ride.
