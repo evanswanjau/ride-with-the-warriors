@@ -340,10 +340,13 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
             const nextEmail = registrationType === 'individual' ? riderDetails.email :
                 registrationType === 'team' ? teamDetails.members[0].email :
                     familyDetails.guardian.email;
+            const nextPhone = registrationType === 'individual' ? riderDetails.phoneNumber :
+                registrationType === 'team' ? teamDetails.members[0].phoneNumber :
+                    familyDetails.guardian.emergencyPhone;
             const nextRegId = data.registrationId;
 
             navigate(`/payment/${nextRegId}`, {
-                state: { amount: nextAmount, email: nextEmail }
+                state: { amount: nextAmount, email: nextEmail, phoneNumber: nextPhone }
             });
         } catch (error) {
             console.error('Registration error:', error);

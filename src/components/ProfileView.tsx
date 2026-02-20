@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { QRCodeCanvas } from 'qrcode.react';
 import {
     AiOutlineArrowLeft,
@@ -29,6 +30,7 @@ interface ProfileViewProps {
 }
 
 const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
+    const navigate = useNavigate();
     const [showAllMembers, setShowAllMembers] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
     const circuit = CIRCUITS.find(c => c.id === registration.circuitId) || CIRCUITS[0];
@@ -433,21 +435,118 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                     <span className="text-2xl font-black text-primary">KES {pricing?.totalAmount?.toLocaleString() || 0}</span>
                                 </div>
 
-                                <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/10 rounded-2xl border border-green-100 dark:border-green-800/50">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <div className="size-8 rounded-full bg-green-500 flex items-center justify-center text-white">
-                                            <AiOutlineCreditCard className="text-sm" />
+                                {/* Payment Card */}
+                                {registration.latestPayment ? (
+                                    <div className={`mt-6 p-4 rounded-2xl border ${registration.latestPayment.status === 'PAID'
+                                        ? 'bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-800/50'
+                                        : registration.latestPayment.status === 'FAILED'
+                                            ? 'bg-red-50 dark:bg-red-900/10 border-red-100 dark:border-red-800/50'
+                                            : 'bg-amber-50 dark:bg-amber-900/10 border-amber-100 dark:border-amber-800/50'
+                                        }`}>
+                                        {/* Header */}
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <div className={`size-8 rounded-full flex items-center justify-center text-white ${registration.latestPayment.status === 'PAID' ? 'bg-green-500' :
+                                                registration.latestPayment.status === 'FAILED' ? 'bg-red-500' : 'bg-amber-500'
+                                                }`}>
+                                                <AiOutlineCreditCard className="text-sm" />
+                                            </div>
+                                            <p className={`text-[10px] font-black uppercase tracking-widest ${registration.latestPayment.status === 'PAID' ? 'text-green-700 dark:text-green-400' :
+                                                registration.latestPayment.status === 'FAILED' ? 'text-red-700 dark:text-red-400' : 'text-amber-700 dark:text-amber-400'
+                                                }`}>
+                                                {registration.latestPayment.status === 'PAID' ? 'Payment Confirmed' :
+                                                    registration.latestPayment.status === 'FAILED' ? 'Payment Failed' : 'Payment Pending'}
+                                            </p>
                                         </div>
-                                        <p className="text-[10px] font-black text-green-700 dark:text-green-400 uppercase tracking-widest">Payment Example</p>
-                                    </div>
-                                    <div className="flex justify-between items-end">
-                                        <div>
-                                            <p className="text-[9px] text-green-600/60 dark:text-green-400/50 uppercase font-bold mb-0.5">M-Pesa Reference</p>
-                                            <p className="text-xs font-mono font-black text-green-800 dark:text-green-300">RBC7XL9N2J</p>
+
+                                        {/* Receipt fields */}
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {registration.latestPayment.mpesaReceiptNumber && (
+                                                <div className="col-span-2">
+                                                    <p className="text-[9px] text-neutral-400 uppercase font-bold mb-0.5">Transaction Code</p>
+                                                    <p className="text-sm font-mono font-black text-neutral-900 dark:text-neutral-100 tracking-wider">
+                                                        {registration.latestPayment.mpesaReceiptNumber}
+                                                    </p>
+                                                </div>
+                                            )}
+                                            {registration.latestPayment.transactionDate && (
+                                                <div>
+                                                    <p className="text-[9px] text-neutral-400 uppercase font-bold mb-0.5">Transaction Time</p>
+                                                    <p className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                                                        {(() => {
+                                                            const d = registration.latestPayment.transactionDate.toString();
+                                                            if (d.length === 14) {
+                                                                const dt = new Date(
+                                                                    `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}T${d.slice(8, 10)}:${d.slice(10, 12)}:${d.slice(12, 14)}`
+                                                                );
+                                                                const ord = (n: number) => {
+                                                                    const s = ['th', 'st', 'nd', 'rd'];
+                                                                    const v = n % 100;
+                                                                    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+                                                                };
+                                                                const day = ord(dt.getDate());
+                                                                const mon = dt.toLocaleDateString('en-GB', { month: 'short' });
+                                                                const yr = dt.getFullYear();
+                                                                const time = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                                                                return `${day} ${mon} ${yr}, ${time}`;
+                                                            }
+                                                            return d;
+                                                        })()}
+                                                    </p>
+                                                </div>
+                                            )}
+                                            <div>
+                                                <p className="text-[9px] text-neutral-400 uppercase font-bold mb-0.5">Amount</p>
+                                                <p className="text-sm font-black text-primary">KES {(registration.latestPayment.amount || 0).toLocaleString()}</p>
+                                            </div>
+                                            {registration.latestPayment.phone && (
+                                                <div>
+                                                    <p className="text-[9px] text-neutral-400 uppercase font-bold mb-0.5">Phone</p>
+                                                    <p className="text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300">{registration.latestPayment.phone}</p>
+                                                </div>
+                                            )}
+                                            {registration.latestPayment.status === 'FAILED' && registration.latestPayment.failureReason && (
+                                                <div className="col-span-2">
+                                                    <p className="text-[9px] text-red-500 uppercase font-bold mb-0.5">Reason</p>
+                                                    <p className="text-xs text-red-600 dark:text-red-400">{registration.latestPayment.failureReason}</p>
+                                                </div>
+                                            )}
                                         </div>
-                                        <p className="text-[9px] text-green-600/60 dark:text-green-400/50 font-bold uppercase">Success</p>
+
+                                        {/* Retry / Pay Now button — shown when not yet PAID */}
+                                        {registration.latestPayment.status !== 'PAID' && registration.status !== 'PAID' && registration.status !== 'CONFIRMED' && (
+                                            <button
+                                                onClick={() => navigate(`/payment/${registration.id}`, {
+                                                    state: {
+                                                        amount: registration.totalAmount || registration.pricing?.totalAmount || registration.latestPayment.amount || 0,
+                                                        email: registration.email || '',
+                                                        phoneNumber: registration.phoneNumber || registration.latestPayment.phone || ''
+                                                    }
+                                                })}
+                                                className="mt-4 flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-white text-xs font-black uppercase tracking-widest hover:bg-primary-dark transition-all"
+                                            >
+                                                <AiOutlineCreditCard />
+                                                {registration.latestPayment.status === 'FAILED' ? 'Retry Payment' : 'Complete Payment'}
+                                            </button>
+                                        )}
                                     </div>
-                                </div>
+                                ) : (registration.status !== 'PAID' && registration.status !== 'CONFIRMED') ? (
+                                    <div className="mt-6 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 flex flex-col items-center gap-3">
+                                        <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">No payment recorded yet</p>
+                                        <button
+                                            onClick={() => navigate(`/payment/${registration.id}`, {
+                                                state: {
+                                                    amount: registration.totalAmount || registration.pricing?.totalAmount || 0,
+                                                    email: registration.email || '',
+                                                    phoneNumber: registration.phoneNumber || ''
+                                                }
+                                            })}
+                                            className="flex items-center gap-2 w-full py-3 rounded-xl bg-primary text-white text-xs font-black uppercase tracking-widest hover:bg-primary-dark transition-all justify-center"
+                                        >
+                                            <AiOutlineCreditCard />
+                                            Pay Now
+                                        </button>
+                                    </div>
+                                ) : null}
 
                                 <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest text-center mt-6">
                                     Registered on {formatDate(registration.createdAt)}
