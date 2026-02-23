@@ -40,9 +40,9 @@ const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsForm
                 <button
                     onClick={() => {
                         onChange({
-                            firstName: 'Evans',
-                            lastName: 'Wanjau',
-                            email: `evans.${Math.floor(Math.random() * 1000)}@example.com`,
+                            firstName: 'John',
+                            lastName: 'Doe',
+                            email: `john.doe.${Math.floor(Math.random() * 1000)}@example.com`,
                             phoneNumber: '0712345678',
                             idNumber: '12345678',
                             gender: 'male',
@@ -66,7 +66,7 @@ const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsForm
                         </span>
                         <input
                             className={inputClass('firstName')}
-                            placeholder="Evans"
+                            placeholder="John"
                             type="text"
                             value={data.firstName}
                             onChange={(e) => handleInputChange('firstName', e.target.value)}
@@ -81,7 +81,7 @@ const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsForm
                         </span>
                         <input
                             className={inputClass('lastName')}
-                            placeholder="Wanjau"
+                            placeholder="Doe"
                             type="text"
                             value={data.lastName}
                             onChange={(e) => handleInputChange('lastName', e.target.value)}
@@ -96,7 +96,7 @@ const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsForm
                         </span>
                         <input
                             className={inputClass('email')}
-                            placeholder="evans@example.com"
+                            placeholder="john@example.com"
                             type="email"
                             value={data.email}
                             onChange={(e) => handleInputChange('email', e.target.value)}

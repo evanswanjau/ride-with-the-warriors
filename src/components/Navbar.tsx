@@ -87,7 +87,7 @@ const Navbar = () => {
                         to="/raffle/step/1"
                         className="px-5 py-2.5 bg-amber-400 text-neutral-900 text-sm font-black uppercase tracking-widest rounded-xl hover:bg-amber-500 transition-all shadow-sm active:scale-95"
                     >
-                        🎟️ Raffle
+                        Raffle
                     </Link>
                 </nav>
                 <div className="flex items-center gap-4 md:hidden">
@@ -147,7 +147,7 @@ const Navbar = () => {
                             onClick={() => setIsMenuOpen(false)}
                             className="px-6 py-4 bg-amber-400 text-neutral-900 font-black uppercase tracking-widest rounded-2xl text-center active:scale-95 transition-all shadow-lg"
                         >
-                            🎟️ Get a Free Raffle Ticket
+                            Get a Free Raffle Ticket
                         </Link>
                     </nav>
                 </div>

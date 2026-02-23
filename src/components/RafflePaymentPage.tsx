@@ -24,7 +24,7 @@ function formatKenyanPhone(raw: string): string {
     return phone;
 }
 
-const RAFFLE_AMOUNT = 10;
+const RAFFLE_AMOUNT = 1000;
 
 const RafflePaymentPage = ({ ticketId, phoneNumber: prefilledPhone, onBack, onSuccess }: RafflePaymentPageProps) => {
     const [mpesaPhone, setMpesaPhone] = useState(prefilledPhone ? formatKenyanPhone(prefilledPhone) : '');
