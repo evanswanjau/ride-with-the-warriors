@@ -83,6 +83,12 @@ const Navbar = () => {
                     >
                         Register
                     </Link>
+                    <Link
+                        to="/raffle/step/1"
+                        className="px-5 py-2.5 bg-amber-400 text-neutral-900 text-sm font-black uppercase tracking-widest rounded-xl hover:bg-amber-500 transition-all shadow-sm active:scale-95"
+                    >
+                        🎟️ Raffle
+                    </Link>
                 </nav>
                 <div className="flex items-center gap-4 md:hidden">
                     <Link to="/search" className={`text-2xl hover:opacity-80 transition-opacity ${isHome && !isScrolled && !isMenuOpen ? 'text-white' : 'text-primary'}`}>
@@ -135,6 +141,13 @@ const Navbar = () => {
                             className="px-6 py-4 bg-primary text-white font-black uppercase tracking-widest rounded-2xl text-center mt-4 active:scale-95 transition-all shadow-lg"
                         >
                             Register Now
+                        </Link>
+                        <Link
+                            to="/raffle/step/1"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="px-6 py-4 bg-amber-400 text-neutral-900 font-black uppercase tracking-widest rounded-2xl text-center active:scale-95 transition-all shadow-lg"
+                        >
+                            🎟️ Get a Free Raffle Ticket
                         </Link>
                     </nav>
                 </div>

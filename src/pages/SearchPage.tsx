@@ -7,9 +7,16 @@ const SearchPage = () => {
 
     return (
         <Layout>
-            <ProfileLookup onFound={(reg) => setFoundRegistration(reg)} />
+            <ProfileLookup
+                onFound={(reg: any) => setFoundRegistration(reg)}
+                onRaffleFound={(ticket: any) => {
+                    // Logic for raffle ticket found if needed in global state
+                    console.log('Raffle ticket found:', ticket);
+                }}
+            />
         </Layout>
     );
 };
 
 export default SearchPage;
+
