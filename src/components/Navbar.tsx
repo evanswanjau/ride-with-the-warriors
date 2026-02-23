@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
-import logo from '../assets/images/logo.png';
 
 const Navbar = () => {
     const location = useLocation();
@@ -61,8 +60,7 @@ const Navbar = () => {
     return (
         <header className={getNavbarClasses()}>
             <Link to="/" className={`flex items-center gap-4 hover:opacity-80 transition-opacity ${isHome && !isScrolled && !isMenuOpen ? 'text-white' : 'text-text-light dark:text-text-dark'}`}>
-                <img src={logo} alt="Ride With The Warriors" className="h-10 w-auto object-contain" />
-                <h2 className="text-xl font-bold leading-tight  hidden sm:block uppercase">
+                <h2 className="text-xl font-bold leading-tight uppercase">
                     Ride With The Warriors
                 </h2>
             </Link>
@@ -112,7 +110,7 @@ const Navbar = () => {
                 <div className="flex flex-col h-full">
                     <div className="flex justify-between items-center px-4 py-3 border-b border-neutral-100 dark:border-neutral-800">
                         <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4">
-                            <img src={logo} alt="Logo" className="h-8 w-auto" />
+                            <span className="text-xl font-bold uppercase text-text-light dark:text-white">RWTW</span>
                         </Link>
                         <button
                             onClick={toggleMenu}
