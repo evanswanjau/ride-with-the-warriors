@@ -386,7 +386,7 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
                     </button>
                     <button
                         onClick={onNext}
-                        className="flex min-w-[200px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-green-600 active:bg-green-700 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-green-500/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                        className="flex min-w-[200px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-primary-dark active:bg-primary/80 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-primary/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                         type="button"
                         disabled={isSubmitting}
                     >

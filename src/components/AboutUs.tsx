@@ -39,11 +39,11 @@ const AboutUs = () => {
         <div className="min-h-screen">
             <div className="max-w-6xl mx-auto px-4 pt-28 pb-12">            {/* ── Header (Contact Us style) ────────────────────────────── */}
                 <div className="flex flex-col items-center text-center mb-16">
-                    <span className="px-4 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium mb-4 uppercase tracking-widest">
+                    <span className="px-4 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-4 uppercase tracking-widest">
                         Our Story
                     </span>
                     <h1 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white mb-6 tracking-tight">
-                        About <span className="text-emerald-500">Us.</span>
+                        About <span className="text-primary">Us.</span>
                     </h1>
                     <p className="text-neutral-600 dark:text-neutral-400 max-w-xl text-lg leading-relaxed">
                         A premier multi-national cycling movement rooted in service, unity, fitness, and honour.
@@ -57,7 +57,7 @@ const AboutUs = () => {
                     </div>
                     <blockquote className="relative z-10 text-2xl md:text-3xl lg:text-4xl font-black text-neutral-900 dark:text-white leading-snug">
                         Ride with Honour —{' '}
-                        <span className="bg-gradient-to-r from-primary to-emerald-500 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                             Supporting the Widows
                         </span>
                     </blockquote>
@@ -111,7 +111,7 @@ const AboutUs = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
                     {/* Image — Left */}
                     <div className="relative">
-                        <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 via-transparent to-emerald-500/10 rounded-[3rem] blur-2xl opacity-50" />
+                        <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 via-transparent to-primary/10 rounded-[3rem] blur-2xl opacity-50" />
                         <div className="relative overflow-hidden rounded-[2.5rem]">
                             <img src={reconImage} alt="RWTW history" className="w-full aspect-[4/3] object-cover hover:scale-105 transition-transform duration-700" />
                         </div>
@@ -157,7 +157,7 @@ const AboutUs = () => {
                 <div className="bg-neutral-900 dark:bg-[#161816] rounded-[2.5rem] p-10 md:p-14 grid grid-cols-2 md:grid-cols-4 gap-8 mb-20 relative overflow-hidden">
                     {/* Decorative gradient orbs */}
                     <div className="absolute -top-20 -right-20 w-60 h-60 bg-primary/20 rounded-full blur-[100px]" />
-                    <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-emerald-500/10 rounded-full blur-[100px]" />
+                    <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-primary/10 rounded-full blur-[100px]" />
 
                     {[
                         { value: '500', label: 'Riders Expected', suffix: '+' },
@@ -218,7 +218,7 @@ const AboutUs = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                         {/* Image with decorative frame */}
                         <div className="relative order-2 lg:order-1">
-                            <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 via-transparent to-emerald-500/10 rounded-[3rem] blur-2xl opacity-50" />
+                            <div className="absolute -inset-4 bg-gradient-to-br from-primary/20 via-transparent to-primary/10 rounded-[3rem] blur-2xl opacity-50" />
                             <div className="relative overflow-hidden rounded-[2.5rem]">
                                 <img src={teamImage} alt="KDF Airborne Fraternity riders" className="w-full aspect-[4/3] object-cover hover:scale-105 transition-transform duration-700" />
                             </div>
@@ -231,7 +231,7 @@ const AboutUs = () => {
                             </div>
                             <h2 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white leading-[1.05] mb-8">
                                 Setting a New{' '}
-                                <span className="bg-gradient-to-r from-primary to-emerald-500 bg-clip-text text-transparent">
+                                <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                                     Benchmark
                                 </span>
                             </h2>
@@ -256,15 +256,15 @@ const AboutUs = () => {
                     {/* Dark gradient bg */}
                     <div className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-[#0a1a0f] to-neutral-900 rounded-[2.5rem]" />
                     <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/15 rounded-full blur-[150px]" />
-                    <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-emerald-500/10 rounded-full blur-[120px]" />
+                    <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-primary/10 rounded-full blur-[120px]" />
 
                     <div className="relative z-10">
-                        <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-emerald-400 text-xs font-black uppercase tracking-[0.3em] mb-8">
+                        <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-primary-light text-xs font-black uppercase tracking-[0.3em] mb-8">
                             Join the Movement
                         </div>
                         <h2 className="text-4xl md:text-6xl font-black text-white leading-[0.95] mb-6">
                             Ready to{' '}
-                            <span className="bg-gradient-to-r from-emerald-400 via-primary to-emerald-300 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-primary-light via-primary to-primary/60 bg-clip-text text-transparent">
                                 Ride
                             </span>
                             ?
@@ -276,7 +276,7 @@ const AboutUs = () => {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 to="/register/step/1"
-                                className="group px-10 py-4 bg-primary text-white font-bold rounded-2xl hover:bg-emerald-600 transition-all inline-flex items-center justify-center gap-3"
+                                className="group px-10 py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-dark transition-all inline-flex items-center justify-center gap-3"
                             >
                                 Register for RWTW 2026
                                 <span className="group-hover:translate-x-1 transition-transform">→</span>

@@ -216,7 +216,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     {activeView === 'registrations' && (
                         <button
                             onClick={handleExport}
-                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 ${isDarkMode ? 'bg-green-600 hover:bg-green-500 text-white' : 'bg-green-500 hover:bg-green-600 text-white'}`}
+                            className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold transition-all hover:bg-primary-dark flex items-center gap-2"
                         >
                             <AiOutlineTable className="text-lg" />
                             Export Excel
@@ -285,10 +285,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                             {stats && (
                                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
                                     <StatCard label="Total" value={stats.summary.total} icon={<AiOutlineTeam />} color="primary" isDarkMode={isDarkMode} />
-                                    <StatCard label="Paid" value={stats.summary.paid} icon={<AiOutlineCheckCircle />} color="green-500" isDarkMode={isDarkMode} />
+                                    <StatCard label="Paid" value={stats.summary.paid} icon={<AiOutlineCheckCircle />} color="primary" isDarkMode={isDarkMode} />
                                     <StatCard label="Unpaid" value={stats.summary.unpaid} icon={<AiOutlineExclamationCircle />} color="yellow-500" isDarkMode={isDarkMode} />
                                     <StatCard label="Cancelled" value={stats.summary.cancelled} icon={<AiOutlineCloseCircle />} color="red-500" isDarkMode={isDarkMode} />
-                                    <StatCard label="Revenue" value={`KES ${stats.summary.revenue?.toLocaleString() || 0}`} icon={<AiOutlineDollar />} color="emerald-500" isDarkMode={isDarkMode} />
+                                    <StatCard label="Revenue" value={`KES ${stats.summary.revenue?.toLocaleString() || 0}`} icon={<AiOutlineDollar />} color="primary" isDarkMode={isDarkMode} />
                                 </div>
                             )}
 
@@ -585,8 +585,8 @@ const StatCard = ({ label, value, icon, color, isDarkMode }: any) => (
 
 const getStatusColor = (status: string) => {
     switch (status) {
-        case 'PAID': return 'bg-green-500/10 text-green-500';
-        case 'CONFIRMED': return 'bg-primary/10 text-primary';
+        case 'PAID': return 'bg-primary/20 text-primary-dark dark:text-primary-light';
+        case 'CONFIRMED': return 'bg-primary text-white';
         case 'CANCELLED': return 'bg-red-500/10 text-red-500';
         default: return 'bg-yellow-500/10 text-yellow-500';
     }

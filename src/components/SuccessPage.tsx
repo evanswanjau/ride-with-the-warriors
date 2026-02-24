@@ -65,7 +65,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
 
             <div className="max-w-2xl w-full text-center relative z-10 py-12">
                 <div className="mb-10 animate-in zoom-in duration-700">
-                    <div className="size-24 rounded-full bg-green-500 text-white flex items-center justify-center mx-auto shadow-2xl shadow-green-500/30 scale-110">
+                    <div className="size-24 rounded-full bg-primary text-white flex items-center justify-center mx-auto shadow-2xl shadow-primary/30 scale-110">
                         <AiOutlineCheck className="text-6xl" />
                     </div>
                 </div>

@@ -53,7 +53,7 @@ const RaffleProfilePage = () => {
                     <p className="text-sm text-neutral-500 dark:text-neutral-400">{error}</p>
                     <button
                         onClick={() => navigate('/search')}
-                        className="px-6 py-3 rounded-2xl bg-primary text-white font-bold text-sm hover:bg-emerald-600 transition-all"
+                        className="px-6 py-3 rounded-2xl bg-primary text-white font-bold text-sm hover:bg-primary-dark transition-all"
                     >
                         Search Again
                     </button>

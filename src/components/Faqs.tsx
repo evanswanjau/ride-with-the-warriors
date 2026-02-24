@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 
 const FAQItem = ({ question, answer, isOpen, onToggle }: { question: string; answer: string; isOpen: boolean; onToggle: () => void }) => {
@@ -138,11 +139,11 @@ const Faqs = () => {
         <div className="min-h-screen">
             {/* --- Header Section --- */}
             <div className="flex flex-col items-center text-center mb-16">
-                <span className="px-4 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium mb-4 uppercase tracking-widest">
+                <span className="px-4 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-4 uppercase tracking-widest">
                     Help Center
                 </span>
                 <h1 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white mb-6 tracking-tight">
-                    Frequently Asked{" "}<span className="text-emerald-500">Questions.</span>
+                    Frequently Asked{" "}<span className="text-primary">Questions.</span>
                 </h1>
                 <p className="text-neutral-600 dark:text-neutral-400 max-w-xl text-lg leading-relaxed">
                     Everything you need to know about the Regimental Ride.
@@ -154,7 +155,6 @@ const Faqs = () => {
                 {faqCategories.map((category, idx) => (
                     <div key={idx} className="bg-white dark:bg-[#232623] rounded-3xl p-8 md:p-12 shadow-none">
                         <h2 className="text-2xl font-black text-neutral-900 dark:text-white mb-8 flex items-center gap-4">
-                            <span className="size-2 rounded-full bg-primary"></span>
                             {category.title}
                         </h2>
                         <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
@@ -175,9 +175,12 @@ const Faqs = () => {
                     <p className="text-neutral-400 dark:text-white/80 mb-8 max-w-md mx-auto">
                         Our team is here to help you get ready for the big day. No question is too small.
                     </p>
-                    <button className="px-8 py-4 bg-primary dark:bg-white text-white dark:text-primary font-bold rounded-2xl hover:scale-105 transition-transform">
+                    <Link
+                        to="/contact"
+                        className="inline-block px-8 py-4 bg-primary dark:bg-white text-white dark:text-primary font-bold rounded-2xl hover:scale-105 transition-transform"
+                    >
                         Contact Support
-                    </button>
+                    </Link>
                 </div>
                 {/* Background decorative elements */}
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 size-64 bg-primary/20 dark:bg-white/10 rounded-full blur-3xl"></div>

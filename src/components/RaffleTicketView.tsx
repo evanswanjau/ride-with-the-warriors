@@ -108,7 +108,7 @@ const RaffleTicketView = ({ ticket, onBack }: RaffleTicketViewProps) => {
                         </button>
                         <button
                             onClick={handleDownloadPDF}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-green-600 transition-all font-black uppercase tracking-widest text-[10px]"
+                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-primary-dark transition-all font-black uppercase tracking-widest text-[10px]"
                         >
                             <AiOutlineDownload className="text-lg" />
                             Download PDF
@@ -180,7 +180,7 @@ const RaffleTicketView = ({ ticket, onBack }: RaffleTicketViewProps) => {
                         <div className="w-full text-center lg:text-left mb-6">
                             <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-3 text-center">Status</p>
                             <div className={`py-3 px-4 rounded-2xl flex items-center justify-center gap-2 border font-black uppercase tracking-widest text-xs ${ticket.status === 'PAID'
-                                ? 'bg-green-50 border-green-100 text-green-600'
+                                ? 'bg-primary/10 border-primary/20 text-primary-dark'
                                 : 'bg-amber-50 border-amber-100 text-amber-600'
                                 }`}>
                                 {ticket.status === 'PAID' ? <AiOutlineCheckCircle className="text-lg" /> : <AiOutlineHourglass className="text-lg" />}

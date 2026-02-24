@@ -198,7 +198,7 @@ const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsForm
             <div className="flex justify-end mt-4">
                 <button
                     onClick={onNext}
-                    className="flex min-w-[200px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-green-600 active:bg-green-700 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-green-500/20 transition-all cursor-pointer"
+                    className="flex min-w-[200px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-primary-dark active:bg-primary/80 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-primary/20 transition-all cursor-pointer"
                     type="button"
                 >
                     <span className="truncate">Continue</span>

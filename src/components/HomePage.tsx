@@ -54,11 +54,11 @@ const HomePage = () => {
                     <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
                 </div>
                 <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-                    <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-green-400 text-xs font-black uppercase tracking-[0.2em] mb-8">
+                    <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary-light text-xs font-black uppercase tracking-[0.2em] mb-8">
                         2nd Edition — 05 July 2026
                     </div>
                     <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[0.9] tracking-tight">
-                        Ride With<br />The <span className="text-green-500">Warriors</span>
+                        Ride With<br />The <span className="text-primary">Warriors</span>
                     </h1>
                     <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-10 font-light leading-relaxed drop-shadow-sm">
                         A premier multi-national cycling event hosted by the KDF Airborne Fraternity.
@@ -67,7 +67,7 @@ const HomePage = () => {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
                             to="/register/step/1"
-                            className="px-10 py-4 bg-primary text-white font-bold text-lg rounded-2xl hover:bg-green-600 hover:scale-105 transition-all delay-150 duration-300 ease-in-out "
+                            className="px-10 py-4 bg-primary text-white font-bold text-lg rounded-2xl hover:bg-primary-dark hover:scale-105 transition-all delay-150 duration-300 ease-in-out "
                         >
                             Register Now
                         </Link>
@@ -92,7 +92,7 @@ const HomePage = () => {
                 <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8">
                     {stats.map((stat, idx) => (
                         <div key={idx} className="text-center">
-                            <div className="text-green-500 text-2xl mb-2 flex justify-center">{stat.icon}</div>
+                            <div className="text-primary text-2xl mb-2 flex justify-center">{stat.icon}</div>
                             <div className="text-3xl md:text-4xl font-black text-white mb-1">{stat.value}</div>
                             <div className="text-xs font-bold uppercase tracking-widest text-neutral-400">{stat.label}</div>
                         </div>
@@ -103,18 +103,18 @@ const HomePage = () => {
             {/* About Preview Section - Redesigned */}
             <section className="py-24 px-4 relative overflow-hidden bg-neutral-50/50 dark:bg-neutral-900/50">
                 {/* Decorative background element */}
-                <div className="absolute top-0 right-0 w-1/3 h-full bg-emerald-500/5 -skew-x-12 transform origin-top-right z-0 pointer-events-none"></div>
+                <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 transform origin-top-right z-0 pointer-events-none"></div>
 
                 <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
                     {/* Left Column: Content (Swapped from Right) */}
                     <div>
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-widest mb-6">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+                            <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                             Our Mission
                         </div>
                         <h2 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white mb-6 leading-[1.1]">
                             More Than Just <br />
-                            <span className="text-emerald-600 dark:text-emerald-500">A Race.</span>
+                            <span className="text-primary">A Race.</span>
                         </h2>
                         <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8 leading-relaxed">
                             Ride With The Warriors is a fusion of elite cycling challenge and military tradition.
@@ -124,7 +124,7 @@ const HomePage = () => {
 
                         <div className="space-y-6 mb-10">
                             <div className="flex gap-4 items-start">
-                                <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-emerald-600 text-2xl shrink-0 transition-colors duration-300">
+                                <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-primary text-2xl shrink-0 transition-colors duration-300">
                                     <AiOutlineTrophy />
                                 </div>
                                 <div>
@@ -134,7 +134,7 @@ const HomePage = () => {
                             </div>
 
                             <div className="flex gap-4 items-start">
-                                <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-emerald-600 text-2xl shrink-0 transition-colors duration-300">
+                                <div className="w-12 h-12 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-primary text-2xl shrink-0 transition-colors duration-300">
                                     <AiOutlineTeam />
                                 </div>
                                 <div>
@@ -146,7 +146,7 @@ const HomePage = () => {
 
                         <Link
                             to="/about"
-                            className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-500 font-bold hover:gap-4 transition-all"
+                            className="inline-flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all"
                         >
                             Read Our Full Story →
                         </Link>
@@ -201,7 +201,7 @@ const HomePage = () => {
                                 name: 'Blitz Circuit',
                                 type: 'Competitive',
                                 distance: '120 KM',
-                                color: 'bg-emerald-500/10 text-emerald-500',
+                                color: 'bg-primary/10 text-primary',
                                 description: 'The ultimate endurance test for elite cyclists pushing their limits.'
                             },
                             {
@@ -209,7 +209,7 @@ const HomePage = () => {
                                 name: 'Recon Circuit',
                                 type: 'Competitive',
                                 distance: '60 KM',
-                                color: 'bg-emerald-500/10 text-emerald-500',
+                                color: 'bg-primary/10 text-primary',
                                 description: 'A perfect balance of speed and stamina for seasoned riders.'
                             },
                             {
@@ -217,7 +217,7 @@ const HomePage = () => {
                                 name: 'Corporate',
                                 type: 'Non-Competitive',
                                 distance: '30 KM',
-                                color: 'bg-emerald-500/10 text-emerald-500',
+                                color: 'bg-primary/10 text-primary',
                                 description: 'Build team spirit and network while enjoying a scenic ride.'
                             },
                             {
@@ -225,7 +225,7 @@ const HomePage = () => {
                                 name: 'Family Fun',
                                 type: 'Leisure',
                                 distance: '5 KM',
-                                color: 'bg-emerald-500/10 text-emerald-500',
+                                color: 'bg-primary/10 text-primary',
                                 description: 'A safe and enjoyable route for families and beginners of all ages.'
                             },
                         ].map((circuit, idx) => (
@@ -245,7 +245,7 @@ const HomePage = () => {
                         ))}
                     </div>
                     <div className="text-center mt-12">
-                        <Link to="/participants" className="px-10 py-4 bg-primary text-white font-bold rounded-2xl hover:bg-green-600 hover:scale-105 transition-all inline-block">
+                        <Link to="/participants" className="px-10 py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary-dark hover:scale-105 transition-all inline-block">
                             View All Categories
                         </Link>
                     </div>
@@ -264,7 +264,7 @@ const HomePage = () => {
                     </p>
                     <Link
                         to="/register/step/1"
-                        className="px-12 py-5 bg-primary text-white font-bold text-lg rounded-2xl hover:bg-green-600 hover:scale-105 transition-all shadow-lg shadow-primary/30 inline-block"
+                        className="px-12 py-5 bg-primary text-white font-bold text-lg rounded-2xl hover:bg-primary-dark hover:scale-105 transition-all shadow-lg shadow-primary/30 inline-block"
                     >
                         Register for RWTW 2026
                     </Link>

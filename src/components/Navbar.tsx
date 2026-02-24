@@ -86,7 +86,7 @@ const Navbar = () => {
                     </Link>
                     <Link
                         to="/register/step/1"
-                        className="px-5 py-2.5 bg-primary text-white text-sm font-black uppercase tracking-widest rounded-xl hover:bg-emerald-600 transition-all shadow-sm active:scale-95 ml-2"
+                        className="px-5 py-2.5 bg-primary text-white text-sm font-black uppercase tracking-widest rounded-xl hover:bg-primary-dark transition-all shadow-sm active:scale-95 ml-2"
                     >
                         Register
                     </Link>

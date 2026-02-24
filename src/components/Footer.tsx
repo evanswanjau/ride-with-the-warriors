@@ -5,15 +5,13 @@ const Footer = () => {
 
     return (
         <footer className="bg-transparent border-none py-8 px-4 mt-auto">
-            <div className="max-w-6xl mx-auto flex flex-col items-center justify-center gap-2 text-center">
-                <div className="text-neutral-500 dark:text-neutral-400 text-xs font-normal">
-                    © {currentYear} Ride With The Warriors. All rights reserved.
-                </div>
-                <div className="flex gap-6 text-xs font-normal">
-                    <Link to="/privacy-policy" className="text-neutral-500 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-500 transition-colors">
+            <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-x-6 gap-y-2 text-center text-neutral-500 dark:text-neutral-400 text-[11px] font-light">
+                <p>© {currentYear} Ride With The Warriors. All rights reserved.</p>
+                <div className="flex items-center gap-6">
+                    <Link to="/privacy-policy" className="hover:text-primary transition-colors">
                         Privacy Policy
                     </Link>
-                    <Link to="/terms-and-conditions" className="text-neutral-500 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-500 transition-colors">
+                    <Link to="/terms-and-conditions" className="hover:text-primary transition-colors">
                         Terms & Conditions
                     </Link>
                 </div>

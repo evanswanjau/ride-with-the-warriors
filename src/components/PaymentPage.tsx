@@ -153,8 +153,8 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
             <div className="max-w-4xl mx-auto text-neutral-900 dark:text-neutral-100">
                 {/* Header */}
                 <div className="text-center mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div className="inline-flex items-center justify-center size-16 rounded-2xl bg-green-500/10 mb-4">
-                        <AiOutlineCheckCircle className="text-green-500 text-4xl" />
+                    <div className="inline-flex items-center justify-center size-16 rounded-2xl bg-primary/10 mb-4">
+                        <AiOutlineCheckCircle className="text-primary text-4xl" />
                     </div>
                     <h1 className="text-4xl font-black text-neutral-900 dark:text-white mb-4">Registration Successful!</h1>
 
@@ -183,7 +183,7 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                         {/* Amount */}
                         <div className="text-left">
                             <p className="text-[10px] uppercase tracking-widest font-bold text-neutral-400">Amount Due</p>
-                            <p className="font-black text-green-600 text-lg leading-none">KES {(regInfo?.amount ?? amount).toLocaleString()}</p>
+                            <p className="font-black text-primary text-lg leading-none">KES {(regInfo?.amount ?? amount).toLocaleString()}</p>
                         </div>
                     </div>
 
@@ -200,7 +200,7 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                             <div className="p-8 md:p-12 bg-neutral-50 dark:bg-neutral-900/50 border-b md:border-b-0 md:border-r border-neutral-100 dark:border-neutral-700">
                                 <div className="space-y-8">
                                     <div className="flex items-center gap-3">
-                                        <div className="size-12 rounded-2xl bg-[#3fbb2d] flex items-center justify-center shadow-lg shadow-[#3fbb2d]/20">
+                                        <div className="size-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
                                             <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/M-PESA_LOGO-01.svg" alt="M-Pesa" className="h-6 invert brightness-0" />
                                         </div>
                                         <div>
@@ -237,14 +237,14 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                                             </div>
                                         </>
                                     ) : (
-                                        <div className="p-8 rounded-[32px] bg-green-500/5 border-2 border-green-500/20 flex flex-col items-center text-center space-y-6 animate-pulse">
-                                            <div className="size-20 rounded-full bg-green-500 flex items-center justify-center">
+                                        <div className="p-8 rounded-[32px] bg-primary/5 border-2 border-primary/20 flex flex-col items-center text-center space-y-6 animate-pulse">
+                                            <div className="size-20 rounded-full bg-primary flex items-center justify-center">
                                                 <div className="size-10 border-4 border-white border-t-transparent animate-spin rounded-full" />
                                             </div>
                                             <div>
                                                 <h3 className="text-xl font-black text-neutral-900 dark:text-white mb-2">Prompt Sent!</h3>
                                                 <p className="text-neutral-600 dark:text-neutral-400 font-bold leading-relaxed">
-                                                    Kindly check your phone and enter your <span className="text-green-600">M-Pesa PIN</span> to complete the payment.
+                                                    Kindly check your phone and enter your <span className="text-primary">M-Pesa PIN</span> to complete the payment.
                                                 </p>
                                             </div>
                                         </div>
@@ -264,19 +264,19 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                                 <div className="space-y-6">
                                     <div className="space-y-6">
                                         <div className="flex items-start gap-4">
-                                            <span className="size-6 shrink-0 rounded-lg bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 flex items-center justify-center font-black text-[10px]">1</span>
+                                            <span className="size-6 shrink-0 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-black text-[10px]">1</span>
                                             <p className="text-sm text-neutral-600 dark:text-neutral-400 font-medium">
                                                 Enter your phone number and click 'Send Prompt'.
                                             </p>
                                         </div>
                                         <div className="flex items-start gap-4">
-                                            <span className="size-6 shrink-0 rounded-lg bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 flex items-center justify-center font-black text-[10px]">2</span>
+                                            <span className="size-6 shrink-0 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-black text-[10px]">2</span>
                                             <p className="text-sm text-neutral-600 dark:text-neutral-400 font-medium">
                                                 Check your phone for the M-Pesa prompt and enter your PIN.
                                             </p>
                                         </div>
                                         <div className="flex items-start gap-4">
-                                            <span className="size-6 shrink-0 rounded-lg bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 flex items-center justify-center font-black text-[10px]">3</span>
+                                            <span className="size-6 shrink-0 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-black text-[10px]">3</span>
                                             <p className="text-sm text-neutral-600 dark:text-neutral-400 font-medium">
                                                 Wait here for your registration to be confirmed.
                                             </p>
@@ -287,7 +287,7 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                                 <div className="pt-10 space-y-4">
                                     {paymentStatus === 'pending' ? (
                                         <div className="space-y-4">
-                                            <div className="flex items-center justify-center gap-3 py-4 text-green-600 font-black animate-pulse">
+                                            <div className="flex items-center justify-center gap-3 py-4 text-primary font-black animate-pulse">
                                                 <div className="size-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                                                 <div className="size-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                                                 <div className="size-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -305,7 +305,7 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                                             <button
                                                 onClick={handleConfirm}
                                                 disabled={isProcessing}
-                                                className="w-full py-5 rounded-[24px] text-white font-black text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50 bg-green-600 hover:bg-green-700"
+                                                className="w-full py-5 rounded-[24px] text-white font-black text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50 bg-primary hover:bg-primary-dark"
                                             >
                                                 {isProcessing ? (
                                                     <div className="flex items-center gap-3">

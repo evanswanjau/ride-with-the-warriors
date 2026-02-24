@@ -44,8 +44,8 @@ const ContactUs = () => {
             title: 'Call Us',
             detail: '0703 752 118',
             link: 'tel:0703752118',
-            color: 'text-emerald-500',
-            bg: 'bg-emerald-500/10'
+            color: 'text-primary',
+            bg: 'bg-primary/10'
         },
         {
             icon: <AiOutlineEnvironment />,
@@ -61,11 +61,11 @@ const ContactUs = () => {
         <div className="min-h-screen">
             {/* --- Header Section --- */}
             <div className="flex flex-col items-center text-center mb-16">
-                <span className="px-4 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium mb-4 uppercase tracking-widest">
+                <span className="px-4 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-4 uppercase tracking-widest">
                     Contact
                 </span>
                 <h1 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white mb-6 tracking-tight">
-                    Get in <span className="text-emerald-500">Touch.</span>
+                    Get in <span className="text-primary">Touch.</span>
                 </h1>
                 <p className="text-neutral-600 dark:text-neutral-400 max-w-xl text-lg leading-relaxed">
                     Have questions about RWTW 2026? Whether it's registration, logistics, or
@@ -96,7 +96,7 @@ const ContactUs = () => {
                 <div className="space-y-4">
                     {contactCards.map((card, idx) => (
                         <a key={idx} href={card.link} target="_blank" rel="noopener noreferrer"
-                            className="block p-6 bg-white dark:bg-[#232623] rounded-[1.5rem] border border-neutral-100 dark:border-neutral-800 transition-all hover:border-emerald-500/50 group">
+                            className="block p-6 bg-white dark:bg-[#232623] rounded-[1.5rem] border border-neutral-100 dark:border-neutral-800 transition-all hover:border-primary/50 group">
                             <div className="flex items-center gap-5">
                                 <div className={`w-12 h-12 rounded-xl ${card.bg} ${card.color} flex items-center justify-center text-xl group-hover:scale-110 transition-transform`}>
                                     {card.icon}
@@ -109,11 +109,11 @@ const ContactUs = () => {
                         </a>
                     ))}
 
-                    <div className="p-8 bg-emerald-600 rounded-[2rem] text-white relative overflow-hidden group">
+                    <div className="p-8 bg-primary rounded-[2rem] text-white relative overflow-hidden group">
                         <AiOutlineClockCircle className="absolute -right-4 -bottom-4 text-9xl opacity-10 group-hover:rotate-12 transition-transform" />
                         <h4 className="font-bold text-xl mb-2">Office Hours</h4>
-                        <p className="text-emerald-100 text-sm">Mon - Fri: 8:00 AM - 5:00 PM</p>
-                        <p className="text-emerald-100 text-sm">Sat: 9:00 AM - 1:00 PM</p>
+                        <p className="text-white/80 text-sm">Mon - Fri: 8:00 AM - 5:00 PM</p>
+                        <p className="text-white/80 text-sm">Sat: 9:00 AM - 1:00 PM</p>
                     </div>
                 </div>
 
@@ -136,7 +136,7 @@ const ContactUs = () => {
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full rounded-2xl border-2 border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-5 py-3 outline-none focus:border-emerald-500 transition-all dark:text-white duration-300 delay-100 ease-in-out"
+                                    className="w-full rounded-2xl border-2 border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-5 py-3 outline-none focus:border-primary transition-all dark:text-white duration-300 delay-100 ease-in-out"
                                     placeholder="Enter your name"
                                 />
                             </div>
@@ -149,7 +149,7 @@ const ContactUs = () => {
                                         required
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        className="w-full rounded-2xl border-2 border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-5 py-3 outline-none focus:border-emerald-500 transition-all dark:text-white duration-300 delay-100 ease-in-out"
+                                        className="w-full rounded-2xl border-2 border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-5 py-3 outline-none focus:border-primary transition-all dark:text-white duration-300 delay-100 ease-in-out"
                                         placeholder="email@example.com"
                                     />
                                 </div>
@@ -160,7 +160,7 @@ const ContactUs = () => {
                                         required
                                         value={formData.phone}
                                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                        className="w-full rounded-2xl border-2 border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-5 py-3 outline-none focus:border-emerald-500 transition-all dark:text-white duration-300 delay-100 ease-in-out"
+                                        className="w-full rounded-2xl border-2 border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-5 py-3 outline-none focus:border-primary transition-all dark:text-white duration-300 delay-100 ease-in-out"
                                         placeholder="07XX XXX XXX"
                                     />
                                 </div>
@@ -173,7 +173,7 @@ const ContactUs = () => {
                                     required
                                     value={formData.subject}
                                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                                    className="w-full rounded-2xl border-2 border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-5 py-3 outline-none focus:border-emerald-500 transition-all dark:text-white duration-300 delay-100 ease-in-out"
+                                    className="w-full rounded-2xl border-2 border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-5 py-3 outline-none focus:border-primary transition-all dark:text-white duration-300 delay-100 ease-in-out"
                                     placeholder="How can we help?"
                                 />
                             </div>
@@ -185,7 +185,7 @@ const ContactUs = () => {
                                     rows={5}
                                     value={formData.message}
                                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                                    className="w-full rounded-2xl border-2 border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-5 py-4 outline-none focus:border-emerald-500 transition-all dark:text-white resize-none duration-300 delay-100 ease-in-out"
+                                    className="w-full rounded-2xl border-2 border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 px-5 py-4 outline-none focus:border-primary transition-all dark:text-white resize-none duration-300 delay-100 ease-in-out"
                                     placeholder="Write your message here..."
                                 />
                             </div>
@@ -194,8 +194,8 @@ const ContactUs = () => {
                                 type="submit"
                                 disabled={status !== 'idle'}
                                 className={`w-full sm:w-auto px-10 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all active:scale-95 ${status === 'success'
-                                    ? 'bg-emerald-100 text-emerald-600'
-                                    : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                                    ? 'bg-primary/10 text-primary'
+                                    : 'bg-primary text-white hover:bg-primary-dark'
                                     }`}
                             >
                                 {status === 'idle' && (
@@ -233,7 +233,7 @@ const ContactUs = () => {
                                 href="https://maps.app.goo.gl/FqXgWrtojwBmY5GJA"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline"
+                                className="inline-flex items-center gap-2 text-primary font-bold hover:underline"
                             >
                                 <AiOutlineEnvironment />
                                 Get Directions to Ulinzi Sports Complex

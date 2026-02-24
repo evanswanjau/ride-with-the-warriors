@@ -122,7 +122,7 @@ const Participants = () => {
                             </div>
                             <Link
                                 to={`/register/step/1`}
-                                className="inline-flex items-center gap-2 px-8 py-3 bg-primary text-white font-bold rounded-2xl hover:bg-green-600 hover:scale-105 transition-all w-fit"
+                                className="inline-flex items-center gap-2 px-8 py-3 bg-primary text-white font-bold rounded-2xl hover:bg-primary-dark hover:scale-105 transition-all w-fit"
                             >
                                 Register for {cat.title} <AiOutlineArrowRight />
                             </Link>
