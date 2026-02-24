@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
+import logo from '../assets/images/logo.png';
 
 const Navbar = () => {
     const location = useLocation();
@@ -60,7 +61,8 @@ const Navbar = () => {
     return (
         <header className={getNavbarClasses()}>
             <Link to="/" className={`flex items-center gap-4 hover:opacity-80 transition-opacity ${isHome && !isScrolled && !isMenuOpen ? 'text-white' : 'text-text-light dark:text-text-dark'}`}>
-                <h2 className="text-xl font-bold leading-tight uppercase">
+                <img src={logo} alt="Ride With The Warriors" className="h-10 w-auto object-contain" />
+                <h2 className="text-xl font-bold leading-tight uppercase hidden sm:block">
                     Ride With The Warriors
                 </h2>
             </Link>
@@ -75,6 +77,13 @@ const Navbar = () => {
                             {link.name}
                         </Link>
                     ))}
+                    <Link
+                        to="/search"
+                        className={`text-xl transition-all ${getTextColorClass(location.pathname === '/search')} hover:scale-110 active:scale-95`}
+                        title="Search Registrations"
+                    >
+                        <AiOutlineSearch />
+                    </Link>
                     <Link
                         to="/register/step/1"
                         className="px-5 py-2.5 bg-primary text-white text-sm font-black uppercase tracking-widest rounded-xl hover:bg-emerald-600 transition-all shadow-sm active:scale-95 ml-2"
@@ -110,6 +119,7 @@ const Navbar = () => {
                 <div className="flex flex-col h-full">
                     <div className="flex justify-between items-center px-4 py-3 border-b border-neutral-100 dark:border-neutral-800">
                         <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-4">
+                            <img src={logo} alt="Logo" className="h-8 w-auto" />
                             <span className="text-xl font-bold uppercase text-text-light dark:text-white">RWTW</span>
                         </Link>
                         <button

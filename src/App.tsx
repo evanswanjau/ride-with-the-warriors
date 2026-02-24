@@ -22,11 +22,13 @@ import RaffleProfilePage from './pages/RaffleProfilePage';
 import RafflePaymentPageRoute from './pages/RafflePaymentPageRoute';
 
 import ScrollToTop from './utils/ScrollToTop';
+import PageTitle from './utils/PageTitle';
 
 const App = () => {
   return (
     <RegistrationProvider>
       <ScrollToTop />
+      <PageTitle />
       <Routes>
         {/* Public Pages */}
         <Route path="/" element={<Layout isFullWidth><HomePage /></Layout>} />
