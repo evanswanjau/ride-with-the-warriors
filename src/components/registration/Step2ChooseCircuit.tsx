@@ -1,10 +1,10 @@
 import type { CSSProperties } from "react";
 import CircuitCard from "./CircuitCard";
-import { CIRCUITS } from "../constants";
-import blitzImage from "../assets/images/blitz.jpeg";
-import intermediateImage from "../assets/images/recon.jpeg";
-import corporateImage from "../assets/images/corporate.jpeg";
-import familyImage from "../assets/images/family.jpeg";
+import { CIRCUITS } from "../../constants";
+import blitzImage from "../../assets/images/blitz.jpeg";
+import intermediateImage from "../../assets/images/recon.jpeg";
+import corporateImage from "../../assets/images/corporate.jpeg";
+import familyImage from "../../assets/images/family.jpeg";
 
 const CIRCUIT_IMAGES: Record<string, string> = {
     blitz: blitzImage,

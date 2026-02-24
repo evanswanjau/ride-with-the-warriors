@@ -7,8 +7,8 @@ import {
     AiOutlineIdcard
 } from 'react-icons/ai';
 import Confetti from 'react-confetti';
-import { calculateAge } from '../utils';
-import { API_BASE_URL } from '../config';
+import { calculateAge } from '../../utils';
+import { API_BASE_URL } from '../../config';
 
 interface SuccessPageProps {
     registrationId: string;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import type { FamilyDetails, JuniorRider } from '../types';
-import ErrorBanner from './ErrorBanner';
-import { calculateAge } from '../utils';
+import type { FamilyDetails, JuniorRider } from '../../types';
+import ErrorBanner from '../common/ErrorBanner';
+import { calculateAge } from '../../utils';
 
 
 import {

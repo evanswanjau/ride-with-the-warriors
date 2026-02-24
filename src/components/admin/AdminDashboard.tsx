@@ -15,9 +15,9 @@ import {
     AiOutlineLeft,
     AiOutlineRight
 } from 'react-icons/ai';
-import logo from '../assets/images/logo.png';
-import { CIRCUITS } from '../constants';
-import { API_BASE_URL } from '../config';
+import logo from '../../assets/images/logo.png';
+import { CIRCUITS } from '../../constants';
+import { API_BASE_URL } from '../../config';
 
 interface AdminDashboardProps {
     token: string;

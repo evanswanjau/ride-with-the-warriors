@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
-import logo from '../assets/images/logo.png';
+import logo from '../../assets/images/logo.png';
 
 const Navbar = () => {
     const location = useLocation();

@@ -1,12 +1,12 @@
 import RegistrationTypeCard from './RegistrationTypeCard';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
-import blitzIndividual from '../assets/images/blitz-individual.jpeg';
-import blitzTeam from '../assets/images/blitz-team.jpeg';
-import reconIndividual from '../assets/images/recon-individual.jpeg';
-import reconTeam from '../assets/images/recon-team.jpeg';
-import corporateIndividual from '../assets/images/corporate-individual.jpeg';
-import corporateTeam from '../assets/images/corporate-team.jpeg';
-import familyImage from '../assets/images/family.jpeg';
+import blitzIndividual from '../../assets/images/blitz-individual.jpeg';
+import blitzTeam from '../../assets/images/blitz-team.jpeg';
+import reconIndividual from '../../assets/images/recon-individual.jpeg';
+import reconTeam from '../../assets/images/recon-team.jpeg';
+import corporateIndividual from '../../assets/images/corporate-individual.jpeg';
+import corporateTeam from '../../assets/images/corporate-team.jpeg';
+import familyImage from '../../assets/images/family.jpeg';
 
 interface Step3RegistrationTypeProps {
     selectedCircuit: string;

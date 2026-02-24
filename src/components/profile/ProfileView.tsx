@@ -19,9 +19,9 @@ import {
 } from 'react-icons/ai';
 import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
-import { CIRCUITS } from '../constants';
+import { CIRCUITS } from '../../constants';
 
-import { calculateAge, getCategoryColor, getContrastText } from '../utils';
+import { calculateAge, getCategoryColor, getContrastText } from '../../utils';
 
 
 interface ProfileViewProps {

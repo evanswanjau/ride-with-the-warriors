@@ -1,8 +1,8 @@
 
 
-import type { RiderDetails } from '../types';
-import ErrorBanner from './ErrorBanner';
-import { calculateAge } from '../utils';
+import type { RiderDetails } from '../../types';
+import ErrorBanner from '../common/ErrorBanner';
+import { calculateAge } from '../../utils';
 import {
     AiOutlineExperiment,
     AiOutlineDown,

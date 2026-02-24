@@ -1,13 +1,13 @@
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { useRegistration } from '../context/RegistrationContext';
-import Layout from '../components/Layout';
-import ProgressBar from '../components/ProgressBar';
-import Step2ChooseCircuit from '../components/Step2ChooseCircuit';
-import Step3RegistrationType from '../components/Step3RegistrationType';
-import Step4RiderDetails from '../components/Step4RiderDetails';
-import Step4TeamDetails from '../components/Step4TeamDetails';
-import FamilyRegistrationFlow from '../components/FamilyRegistrationFlow';
-import Step5Review from '../components/Step5Review';
+import Layout from '../components/layout/Layout';
+import ProgressBar from '../components/layout/ProgressBar';
+import Step2ChooseCircuit from '../components/registration/Step2ChooseCircuit';
+import Step3RegistrationType from '../components/registration/Step3RegistrationType';
+import Step4RiderDetails from '../components/registration/Step4RiderDetails';
+import Step4TeamDetails from '../components/registration/Step4TeamDetails';
+import FamilyRegistrationFlow from '../components/registration/FamilyRegistrationFlow';
+import Step5Review from '../components/registration/Step5Review';
 
 const RegisterPage = () => {
     const { stepId } = useParams();

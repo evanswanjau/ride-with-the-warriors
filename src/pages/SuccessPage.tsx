@@ -1,5 +1,5 @@
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import SuccessPage from '../components/SuccessPage';
+import SuccessPage from '../components/registration/SuccessPage';
 import { useRegistration } from '../context/RegistrationContext';
 import { API_BASE_URL } from '../config';
 

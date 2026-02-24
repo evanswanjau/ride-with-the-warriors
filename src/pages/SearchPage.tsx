@@ -1,5 +1,5 @@
-import Layout from '../components/Layout';
-import ProfileLookup from '../components/ProfileLookup';
+import Layout from '../components/layout/Layout';
+import ProfileLookup from '../components/profile/ProfileLookup';
 import { useRegistration } from '../context/RegistrationContext';
 
 const SearchPage = () => {

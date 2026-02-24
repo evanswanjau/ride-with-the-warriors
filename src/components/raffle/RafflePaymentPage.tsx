@@ -5,7 +5,7 @@ import {
     AiOutlineEnvironment,
     AiOutlineCalendar,
 } from 'react-icons/ai';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../../config';
 
 interface RafflePaymentPageProps {
     ticketId: string;

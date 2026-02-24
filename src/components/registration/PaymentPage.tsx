@@ -6,7 +6,7 @@ import {
     AiOutlineUser,
     AiOutlineEnvironment
 } from 'react-icons/ai';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../../config';
 
 interface PaymentPageProps {
     registrationId: string;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import AdminLogin from '../components/AdminLogin';
-import AdminDashboard from '../components/AdminDashboard';
+import AdminLogin from '../components/admin/AdminLogin';
+import AdminDashboard from '../components/admin/AdminDashboard';
 
 const AdminPage = () => {
     const [adminToken, setAdminToken] = useState<string | null>(localStorage.getItem('adminToken'));

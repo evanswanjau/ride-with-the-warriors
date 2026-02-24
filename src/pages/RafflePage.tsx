@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import RaffleDetailsForm from '../components/RaffleDetailsForm';
-import RaffleReview from '../components/RaffleReview';
+import Layout from '../components/layout/Layout';
+import RaffleDetailsForm from '../components/raffle/RaffleDetailsForm';
+import RaffleReview from '../components/raffle/RaffleReview';
 import { API_BASE_URL } from '../config';
 
 const STEPS = ['YOUR DETAILS', 'CONFIRM'];

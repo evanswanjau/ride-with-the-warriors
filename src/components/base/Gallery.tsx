@@ -1,5 +1,5 @@
 // Dynamically import all images from assets/images
-const imageModules = import.meta.glob('../assets/images/*.{jpeg,jpg,png,svg,webp}', { eager: true });
+const imageModules = import.meta.glob('../../assets/images/*.{jpeg,jpg,png,svg,webp}', { eager: true });
 
 const Gallery = () => {
     // Transform glob result into the format used by the component

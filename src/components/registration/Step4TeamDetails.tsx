@@ -1,6 +1,6 @@
-import type { TeamDetails, TeamMember } from '../types';
-import ErrorBanner from './ErrorBanner';
-import { calculateAge } from '../utils';
+import type { TeamDetails, TeamMember } from '../../types';
+import ErrorBanner from '../common/ErrorBanner';
+import { calculateAge } from '../../utils';
 import {
     AiOutlineExperiment,
     AiOutlineStar,

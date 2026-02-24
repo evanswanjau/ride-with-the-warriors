@@ -1,5 +1,5 @@
 import { useNavigate, useParams, Navigate, useLocation } from 'react-router-dom';
-import PaymentPage from '../components/PaymentPage';
+import PaymentPage from '../components/registration/PaymentPage';
 
 const PaymentPageRoute = () => {
     const { regId } = useParams();

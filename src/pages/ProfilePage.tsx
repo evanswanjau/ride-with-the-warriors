@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import ProfileView from '../components/ProfileView';
+import ProfileView from '../components/profile/ProfileView';
 import { useRegistration } from '../context/RegistrationContext';
 import { API_BASE_URL } from '../config';
 

@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineTeam, AiOutlineTrophy } from 'react-icons/ai';
-import heroImage from '../assets/images/hero.jpeg';
-import highlightImage1 from '../assets/images/296A0069-28-min.jpeg';
-import highlightImage2 from '../assets/images/296A0184-33-min.jpeg';
-import highlightImage3 from '../assets/images/296A0219-40-min.jpeg';
+import heroImage from '../../assets/images/hero.jpeg';
+import highlightImage1 from '../../assets/images/296A0069-28-min.jpeg';
+import highlightImage2 from '../../assets/images/296A0184-33-min.jpeg';
+import highlightImage3 from '../../assets/images/296A0219-40-min.jpeg';
 
 const HomePage = () => {
     const heroRef = useRef<HTMLImageElement>(null);
