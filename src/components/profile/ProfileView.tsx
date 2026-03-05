@@ -5,7 +5,6 @@ import {
     AiOutlineArrowLeft,
     AiOutlineCheck,
     AiOutlineShareAlt,
-    AiOutlineSafety,
     AiOutlineCheckCircle,
     AiOutlineHourglass,
     AiOutlineCreditCard,
@@ -403,7 +402,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
 
                         <div className="flex flex-col items-center gap-4">
                             <div id="qr-code-canvas" className="p-3 bg-white rounded-2xl border border-neutral-100">
-                                        <QRCodeCanvas
+                                <QRCodeCanvas
                                     value={`${window.location.host === 'localhost:5173' || window.location.host.includes('vercel.app') ? window.location.origin : 'https://ridewiththewarriors.com'}/profile/${registration.id}`}
                                     size={160}
                                     level="H"
