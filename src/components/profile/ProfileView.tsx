@@ -8,8 +8,6 @@ import {
     AiOutlineSafety,
     AiOutlineCheckCircle,
     AiOutlineHourglass,
-    AiOutlineContacts,
-    AiOutlineFileText,
     AiOutlineCreditCard,
     AiOutlineTeam,
     AiOutlineDown,
@@ -20,6 +18,7 @@ import {
 import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import { CIRCUITS } from '../../constants';
+import logo from '../../assets/images/logo.png';
 
 import { calculateAge, getCategoryColor, getContrastText } from '../../utils';
 
@@ -46,6 +45,28 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
             month: 'long',
             day: 'numeric'
         });
+    };
+
+    const formatPaymentTimestamp = (raw: any) => {
+        if (!raw) return '';
+        const d = raw.toString();
+        if (d.length === 14) {
+            const dt = new Date(
+                `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}T${d.slice(8, 10)}:${d.slice(10, 12)}:${d.slice(12, 14)}`
+            );
+            const ord = (n: number) => {
+                const s = ['th', 'st', 'nd', 'rd'] as const;
+                const v = n % 100;
+                // @ts-ignore - index safety not critical for display
+                return n + (s[(v - 20) % 10] || s[v] || s[0]);
+            };
+            const day = ord(dt.getDate());
+            const mon = dt.toLocaleDateString('en-GB', { month: 'short' });
+            const yr = dt.getFullYear();
+            const time = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            return `${day} ${mon} ${yr}, ${time}`;
+        }
+        return d;
     };
 
     const handleDownloadPDF = async () => {
@@ -272,35 +293,41 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                 {/* Simple Ticket Card */}
                 <div id="ticket-container" className="relative max-w-6xl mx-auto flex flex-col lg:flex-row bg-white rounded-3xl overflow-hidden border border-neutral-200">
 
-                    {/* Color Accent Border */}
-                    <div
-                        className="w-full lg:w-3 h-2 lg:h-auto"
-                        style={{ backgroundColor: categoryColor }}
-                    />
-
                     {/* Main Content Area */}
                     <div className="flex-[3] p-6 lg:p-8 flex flex-col justify-between">
                         <div>
                             <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
                                 <div className="flex items-center gap-3">
-                                    <div className="size-10 bg-neutral-900 rounded-xl flex items-center justify-center">
-                                        <AiOutlineSafety className="text-white text-xl" />
+                                    <div className="h-10 w-10 rounded-xl overflow-hidden flex items-center justify-center">
+                                        <img
+                                            src={logo}
+                                            alt="Ride With The Warriors"
+                                            className="h-10 w-10 object-contain"
+                                        />
                                     </div>
                                     <div>
-                                        <h2 className="text-lg font-black text-neutral-900 uppercase tracking-tighter leading-none">
-                                            Ride with <span className="text-primary">Warriors</span>
+                                        <h2 className="text-lg md:text-xl font-black text-neutral-900 tracking-tight leading-snug uppercase">
+                                            RIDE WITH THE WARRIORS
                                         </h2>
-                                        <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mt-1">Official Participant Pass 2026</p>
+                                        <p className="text-[10px] font-bold text-neutral-400 tracking-wide mt-1 uppercase">
+                                            Official participant pass 2026
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Pass ID</p>
-                                    <p className="text-lg font-mono font-black text-neutral-900 tracking-tight">{registration.id}</p>
+                                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
+                                        Pass ID
+                                    </p>
+                                    <p className="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
+                                        {registration.id}
+                                    </p>
                                 </div>
                             </div>
 
                             <div className="mb-8">
-                                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2">Participant Name</p>
+                                <p className="text-[10px] font-bold text-neutral-400 tracking-wide mb-2 uppercase">
+                                    Participant name
+                                </p>
                                 <h1 className="text-3xl md:text-5xl font-black text-neutral-900 uppercase tracking-tighter truncate leading-tight">
                                     {registration.firstName} {registration.lastName}
                                 </h1>
@@ -320,22 +347,40 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                         </div>
 
                         {/* Event Details Row */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 border-t border-neutral-100">
-                            <div>
-                                <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Circuit</p>
-                                <p className="text-sm font-black text-neutral-900 uppercase leading-tight">{circuit.title}</p>
-                            </div>
-                            <div>
-                                <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Distance</p>
-                                <p className="text-sm font-black text-neutral-900 uppercase leading-tight">{circuit.distance}</p>
-                            </div>
-                            <div>
-                                <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Date</p>
-                                <p className="text-sm font-black text-neutral-900 uppercase leading-tight">{circuit.date}</p>
-                            </div>
-                            <div>
-                                <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Start Time</p>
-                                <p className="text-sm font-black text-neutral-900 uppercase leading-tight">{circuit.time}</p>
+                        <div className="pt-6 border-t border-neutral-100">
+                            <div className="flex flex-wrap items-start justify-between gap-y-3 text-left">
+                                <div className="flex flex-col min-w-[120px] flex-1">
+                                    <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
+                                        Circuit
+                                    </p>
+                                    <p className="text-sm font-black text-neutral-900 uppercase leading-tight">
+                                        {circuit.title}
+                                    </p>
+                                </div>
+                                <div className="flex flex-col min-w-[120px] flex-1">
+                                    <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
+                                        Distance
+                                    </p>
+                                    <p className="text-sm font-black text-neutral-900 uppercase leading-tight">
+                                        {circuit.distance}
+                                    </p>
+                                </div>
+                                <div className="flex flex-col min-w-[120px] flex-1">
+                                    <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
+                                        Date
+                                    </p>
+                                    <p className="text-sm font-black text-neutral-900 uppercase leading-tight">
+                                        {circuit.date}
+                                    </p>
+                                </div>
+                                <div className="flex flex-col min-w-[120px] flex-1">
+                                    <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
+                                        Start Time
+                                    </p>
+                                    <p className="text-sm font-black text-neutral-900 uppercase leading-tight">
+                                        {circuit.time}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -358,15 +403,27 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
 
                         <div className="flex flex-col items-center gap-4">
                             <div id="qr-code-canvas" className="p-3 bg-white rounded-2xl border border-neutral-100">
-                                <QRCodeCanvas
+                                        <QRCodeCanvas
                                     value={`${window.location.host === 'localhost:5173' || window.location.host.includes('vercel.app') ? window.location.origin : 'https://ridewiththewarriors.com'}/profile/${registration.id}`}
-                                    size={120}
+                                    size={160}
                                     level="H"
                                     includeMargin={true}
+                                    imageSettings={{
+                                        src: logo,
+                                        height: 32,
+                                        width: 32,
+                                        excavate: true
+                                    }}
                                 />
                             </div>
                         </div>
                     </div>
+
+                    {/* Color Accent Border - Bottom */}
+                    <div
+                        className="absolute bottom-0 left-0 w-full h-1"
+                        style={{ backgroundColor: categoryColor }}
+                    />
                 </div>
 
                 {/* Additional Details (Collapsible Roster for Teams) */}
@@ -375,30 +432,37 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                         {/* Left Side: Contact details */}
                         <div>
-                            <h3 className="text-lg font-black text-neutral-900 uppercase tracking-tighter mb-6 flex items-center gap-3">
-                                <AiOutlineContacts className="text-primary no-print" />
-                                Contact Information
+                            <h3 className="text-lg font-black text-neutral-900 tracking-tight mb-6 uppercase">
+                                Contact information
                             </h3>
                             <div className="space-y-6">
                                 <div className="grid grid-cols-2 gap-6">
                                     <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Email Address</p>
+                                        <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
+                                            Email address
+                                        </p>
                                         <p className="text-neutral-900 font-medium break-all">{info.email}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Primary Phone</p>
+                                        <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
+                                            Primary phone
+                                        </p>
                                         <p className="text-neutral-900 font-medium">{info.phone}</p>
                                     </div>
                                 </div>
 
                                 <div className="pt-4 border-t border-neutral-100 grid grid-cols-2 gap-6">
                                     <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">T-shirt Size</p>
-                                        <p className="text-primary font-bold uppercase text-lg">{info.tshirtSize}</p>
+                                        <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
+                                            T‑shirt size
+                                        </p>
+                                        <p className="text-primary font-bold text-lg">{info.tshirtSize}</p>
                                     </div>
                                     {info.details.map((detail, idx) => (
                                         <div key={idx}>
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">{detail.label}</p>
+                                            <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
+                                                {detail.label}
+                                            </p>
                                             <p className="text-neutral-900 font-medium capitalize">{detail.value}</p>
                                         </div>
                                     ))}
@@ -406,11 +470,15 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
 
                                 <div className="pt-4 grid grid-cols-2 gap-6 border-t border-neutral-100">
                                     <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Emergency Contact</p>
-                                        <p className="text-neutral-900 font-medium uppercase">{info.emergencyContact}</p>
+                                        <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
+                                            Emergency contact
+                                        </p>
+                                        <p className="text-neutral-900 font-medium">{info.emergencyContact}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Emergency Phone</p>
+                                        <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
+                                            Emergency phone
+                                        </p>
                                         <p className="text-primary font-bold font-mono">{info.emergencyPhone}</p>
                                     </div>
                                 </div>
@@ -419,9 +487,8 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
 
                         {/* Right Side / Vertical Follow: Transaction summary */}
                         <div className="md:border-l md:border-neutral-100 md:pl-12 pt-12 md:pt-0 border-t md:border-t-0 mt-12 md:mt-0 pt-12 md:pt-0">
-                            <h3 className="text-lg font-black text-neutral-900 uppercase tracking-tighter mb-6 flex items-center gap-3">
-                                <AiOutlineFileText className="text-primary no-print" />
-                                Transaction Summary
+                            <h3 className="text-lg font-black text-neutral-900 tracking-tight mb-6 uppercase">
+                                Transaction summary
                             </h3>
                             <div className="space-y-4">
                                 {pricing?.lineItems?.map((item: any, idx: number) => (
@@ -462,7 +529,9 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                         <div className="grid grid-cols-2 gap-3">
                                             {registration.latestPayment.mpesaReceiptNumber && (
                                                 <div className="col-span-2">
-                                                    <p className="text-[9px] text-neutral-400 uppercase font-bold mb-0.5">Transaction Code</p>
+                                                    <p className="text-[9px] text-neutral-400 font-bold mb-0.5 uppercase">
+                                                        Transaction code
+                                                    </p>
                                                     <p className="text-sm font-mono font-black text-neutral-900 dark:text-neutral-100 tracking-wider">
                                                         {registration.latestPayment.mpesaReceiptNumber}
                                                     </p>
@@ -470,43 +539,27 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                             )}
                                             {registration.latestPayment.transactionDate && (
                                                 <div>
-                                                    <p className="text-[9px] text-neutral-400 uppercase font-bold mb-0.5">Transaction Time</p>
+                                                    <p className="text-[9px] text-neutral-400 font-bold mb-0.5 uppercase">
+                                                        Payment timestamp
+                                                    </p>
                                                     <p className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
-                                                        {(() => {
-                                                            const d = registration.latestPayment.transactionDate.toString();
-                                                            if (d.length === 14) {
-                                                                const dt = new Date(
-                                                                    `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}T${d.slice(8, 10)}:${d.slice(10, 12)}:${d.slice(12, 14)}`
-                                                                );
-                                                                const ord = (n: number) => {
-                                                                    const s = ['th', 'st', 'nd', 'rd'];
-                                                                    const v = n % 100;
-                                                                    return n + (s[(v - 20) % 10] || s[v] || s[0]);
-                                                                };
-                                                                const day = ord(dt.getDate());
-                                                                const mon = dt.toLocaleDateString('en-GB', { month: 'short' });
-                                                                const yr = dt.getFullYear();
-                                                                const time = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-                                                                return `${day} ${mon} ${yr}, ${time}`;
-                                                            }
-                                                            return d;
-                                                        })()}
+                                                        {formatPaymentTimestamp(registration.latestPayment.transactionDate)}
                                                     </p>
                                                 </div>
                                             )}
                                             <div>
-                                                <p className="text-[9px] text-neutral-400 uppercase font-bold mb-0.5">Amount</p>
+                                                <p className="text-[9px] text-neutral-400 font-bold mb-0.5 uppercase">Amount</p>
                                                 <p className="text-sm font-black text-primary">KES {(registration.latestPayment.amount || 0).toLocaleString()}</p>
                                             </div>
                                             {registration.latestPayment.phone && (
                                                 <div>
-                                                    <p className="text-[9px] text-neutral-400 uppercase font-bold mb-0.5">Phone</p>
+                                                    <p className="text-[9px] text-neutral-400 font-bold mb-0.5 uppercase">Phone</p>
                                                     <p className="text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300">{registration.latestPayment.phone}</p>
                                                 </div>
                                             )}
                                             {registration.latestPayment.status === 'FAILED' && registration.latestPayment.failureReason && (
                                                 <div className="col-span-2">
-                                                    <p className="text-[9px] text-red-500 uppercase font-bold mb-0.5">Reason</p>
+                                                    <p className="text-[9px] text-red-500 font-bold mb-0.5 uppercase">Reason</p>
                                                     <p className="text-xs text-red-600 dark:text-red-400">{registration.latestPayment.failureReason}</p>
                                                 </div>
                                             )}
@@ -531,7 +584,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                     </div>
                                 ) : (registration.status !== 'PAID' && registration.status !== 'CONFIRMED') ? (
                                     <div className="mt-6 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 flex flex-col items-center gap-3">
-                                        <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">No payment recorded yet</p>
+                                        <p className="text-[10px] font-black text-neutral-400 tracking-wide">No payment recorded yet</p>
                                         <button
                                             onClick={() => navigate(`/payment/${registration.id}`, {
                                                 state: {
@@ -548,7 +601,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                     </div>
                                 ) : null}
 
-                                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest text-center mt-6">
+                                <p className="text-[10px] text-neutral-400 font-bold tracking-wide text-center mt-6">
                                     Registered on {formatDate(registration.createdAt)}
                                 </p>
                             </div>

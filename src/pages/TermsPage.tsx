@@ -1,5 +1,5 @@
-import Layout from '../components/Layout';
-import { TermsAndConditions } from '../components/LegalContent';
+import Layout from '../components/layout/Layout';
+import { TermsAndConditions } from '../components/common/LegalContent';
 
 const TermsPage = () => {
     return (

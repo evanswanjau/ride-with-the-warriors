@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import RaffleTicketView from '../components/RaffleTicketView';
+import Layout from '../components/layout/Layout';
+import RaffleTicketView from '../components/raffle/RaffleTicketView';
 import { API_BASE_URL } from '../config';
 
 const RaffleProfilePage = () => {

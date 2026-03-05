@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useLocation, Navigate } from 'react-router-dom';
-import RafflePaymentPage from '../components/RafflePaymentPage';
+import RafflePaymentPage from '../components/raffle/RafflePaymentPage';
 
 const RafflePaymentPageRoute = () => {
     const { id } = useParams();

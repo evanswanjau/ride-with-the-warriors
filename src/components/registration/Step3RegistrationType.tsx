@@ -7,6 +7,8 @@ import reconTeam from '../../assets/images/recon-team.jpeg';
 import corporateIndividual from '../../assets/images/corporate-individual.jpeg';
 import corporateTeam from '../../assets/images/corporate-team.jpeg';
 import familyImage from '../../assets/images/family.jpeg';
+import RegistrationStepLayout from './ui/RegistrationStepLayout';
+import { PrimaryButton, SecondaryButton } from './ui/Buttons';
 
 interface Step3RegistrationTypeProps {
     selectedCircuit: string;
@@ -89,19 +91,27 @@ const Step3RegistrationType = ({
     });
 
     return (
-        <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-2">
-                <h1 style={{
-                    fontSize: "clamp(28px, 5vw, 42px)",
-                    fontWeight: 900,
-                    color: "#111",
-                    lineHeight: 1.1,
-                    margin: "0 0 10px",
-                    letterSpacing: "-0.02em",
-                }}>Registration Type</h1>
-                <p style={{ fontSize: 13.5, color: "#555", lineHeight: 1.65, margin: 0, flex: 1 }}>Choose how you want to participate in the {selectedCircuit?.toUpperCase()} circuit.</p>
-            </div>
-
+        <RegistrationStepLayout
+            title="Registration Type"
+            subtitle={`Choose how you want to participate in the ${selectedCircuit?.toUpperCase()} circuit.`}
+            footer={(
+                <>
+                    <SecondaryButton onClick={onBack} type="button" className="min-w-[120px]">
+                        <AiOutlineArrowLeft className="mr-2 text-xl" />
+                        Back
+                    </SecondaryButton>
+                    <PrimaryButton
+                        onClick={onNext}
+                        disabled={!selectedType}
+                        type="button"
+                        className="min-w-[180px]"
+                    >
+                        <span className="truncate">Continue</span>
+                        <AiOutlineArrowRight className="ml-2 text-xl" />
+                    </PrimaryButton>
+                </>
+            )}
+        >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {visibleTypes.map((type) => (
                     <div key={type.id} className="relative flex">
@@ -113,29 +123,7 @@ const Step3RegistrationType = ({
                     </div>
                 ))}
             </div>
-
-            <div className="flex justify-between items-center gap-4 mt-8 pt-6 border-t border-[#e6e0d4] dark:border-[#2d332d]">
-                <button
-                    onClick={onBack}
-                    className="flex min-w-[120px] items-center justify-center rounded-lg h-12 px-6 text-gray-600 border border-gray-300 hover:bg-gray-50 transition-all font-bold"
-                >
-                    <AiOutlineArrowLeft className="mr-2 text-xl" />
-                    Back
-                </button>
-
-                <button
-                    onClick={onNext}
-                    disabled={!selectedType}
-                    className={`flex min-w-[180px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg transition-all ${selectedType
-                        ? 'bg-primary hover:bg-primary-dark active:bg-primary/80 shadow-primary/20 cursor-pointer'
-                        : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed shadow-none'
-                        }`}
-                >
-                    <span className="truncate">Continue</span>
-                    <AiOutlineArrowRight className="ml-2 text-xl" />
-                </button>
-            </div>
-        </div>
+        </RegistrationStepLayout>
     );
 };
 

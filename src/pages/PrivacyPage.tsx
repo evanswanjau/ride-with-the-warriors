@@ -1,5 +1,5 @@
-import Layout from '../components/Layout';
-import { PrivacyPolicy } from '../components/LegalContent';
+import Layout from '../components/layout/Layout';
+import { PrivacyPolicy } from '../components/common/LegalContent';
 
 const PrivacyPage = () => {
     return (

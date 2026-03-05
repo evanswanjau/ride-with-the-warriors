@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import { MdMap, MdEmojiEvents } from 'react-icons/md';
-import blitzImage from '../assets/images/blitz.jpeg';
-import reconImage from '../assets/images/recon.jpeg';
-import corporateImage from '../assets/images/corporate.jpeg';
-import familyImage from '../assets/images/family.jpeg';
+import blitzImage from '../../assets/images/blitz.jpeg';
+import reconImage from '../../assets/images/recon.jpeg';
+import corporateImage from '../../assets/images/corporate.jpeg';
+import familyImage from '../../assets/images/family.jpeg';
 
 interface CategoryCard {
     id: string;
