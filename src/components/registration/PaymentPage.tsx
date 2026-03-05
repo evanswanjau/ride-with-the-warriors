@@ -42,6 +42,12 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                 if (!res.ok) return;
                 const { registration: r } = await res.json();
                 const p = r.payload;
+
+                // Restore phone number if prop was missing (on refresh)
+                if (!mpesaPhone && r.phoneNumber) {
+                    setMpesaPhone(formatKenyanPhone(r.phoneNumber));
+                }
+
                 let name = '';
                 if (r.type === 'individual') {
                     name = `${p.riderDetails?.firstName || ''} ${p.riderDetails?.lastName || ''}`.trim();
@@ -122,7 +128,7 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     registrationId,
-                    amount,
+                    amount: regInfo?.amount || amount,
                     phoneNumber: formatted  // always 254XXXXXXXXX
                 }),
             });
