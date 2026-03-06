@@ -93,7 +93,7 @@ const AdminView = () => {
                         <p className="text-neutral-600 dark:text-neutral-400">No registrations yet</p>
                     </div>
                 ) : (
-                    <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg overflow-hidden">
+                    <div className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead className="bg-neutral-100 dark:bg-neutral-700">

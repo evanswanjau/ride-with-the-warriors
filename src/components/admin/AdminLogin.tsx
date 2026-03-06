@@ -66,7 +66,7 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
             <div className="fixed top-6 right-6">
                 <button
                     onClick={toggleTheme}
-                    className={`size-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-yellow-400' : 'bg-white hover:bg-neutral-100 text-neutral-600 shadow-sm border'}`}
+                    className={`size-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-neutral-800 hover:bg-neutral-700 text-yellow-400' : 'bg-white hover:bg-neutral-100 text-neutral-600 border border-neutral-200'}`}
                 >
                     <div className="text-xl">
                         {isDarkMode ? <AiOutlineSun /> : <AiOutlineMoon />}
@@ -83,7 +83,7 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
                     <span>Back to Home</span>
                 </button>
 
-                <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200 shadow-xl'} rounded-3xl p-8 border`}>
+                <div className={`${isDarkMode ? 'bg-neutral-800 border-neutral-700' : 'bg-white border-neutral-200'} rounded-3xl p-8 border`}>
                     <div className="text-center mb-10">
                         <div className="inline-flex size-16 rounded-2xl bg-primary/10 items-center justify-center mb-4">
                             <AiOutlineSafety className="text-primary text-3xl" />
@@ -136,7 +136,7 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-4 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-primary/20 disabled:opacity-50"
+                            className="w-full py-4 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                         >
                             {loading ? (
                                 <div className="size-5 border-2 border-white/30 border-t-white animate-spin rounded-full" />

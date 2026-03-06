@@ -155,7 +155,7 @@ const Navbar = () => {
                             onClick={() => setIsMenuOpen(false)}
                             className="px-6 py-4 bg-amber-400 text-neutral-900 font-black uppercase tracking-widest rounded-2xl text-center active:scale-95 transition-all shadow-lg"
                         >
-                            Get a Free Raffle Ticket
+                            Buy Raffle Tickets
                         </Link>
                     </nav>
                 </div>

@@ -9,8 +9,10 @@ import { API_BASE_URL } from '../../config';
 
 interface RafflePaymentPageProps {
     ticketId: string;
+    ticketIds: string[];
     email: string;
     phoneNumber?: string;
+    amount: number;
     onBack: () => void;
     onSuccess: () => void;
 }
@@ -24,9 +26,8 @@ function formatKenyanPhone(raw: string): string {
     return phone;
 }
 
-const RAFFLE_AMOUNT = 1000;
 
-const RafflePaymentPage = ({ ticketId, phoneNumber: prefilledPhone, onBack, onSuccess }: RafflePaymentPageProps) => {
+const RafflePaymentPage = ({ ticketId, ticketIds, amount, phoneNumber: prefilledPhone, onBack, onSuccess }: RafflePaymentPageProps) => {
     const [mpesaPhone, setMpesaPhone] = useState(prefilledPhone ? formatKenyanPhone(prefilledPhone) : '');
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentStatus, setPaymentStatus] = useState<'initial' | 'pending' | 'error'>('initial');
@@ -73,7 +74,7 @@ const RafflePaymentPage = ({ ticketId, phoneNumber: prefilledPhone, onBack, onSu
             const res = await fetch(`${API_BASE_URL}/raffle/pay/stk-push`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ticketId, phoneNumber: formatted }),
+                body: JSON.stringify({ ticketIds, phoneNumber: formatted }),
             });
             const data = await res.json();
             if (res.ok && data.success) {
@@ -124,7 +125,7 @@ const RafflePaymentPage = ({ ticketId, phoneNumber: prefilledPhone, onBack, onSu
                         <div className="hidden sm:block h-8 w-px bg-neutral-100 dark:bg-neutral-700" />
                         <div className="text-left">
                             <p className="text-[10px] uppercase tracking-widest font-bold text-neutral-400">Amount</p>
-                            <p className="font-black text-amber-500 text-lg leading-none">KES {RAFFLE_AMOUNT.toLocaleString()}</p>
+                            <p className="font-black text-amber-500 text-lg leading-none">KES {amount.toLocaleString()}</p>
                         </div>
                     </div>
                     <p className="text-xs text-neutral-400 mt-3 font-mono">

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useNavigate, useParams, Navigate, useLocation } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import RaffleDetailsForm from '../components/raffle/RaffleDetailsForm';
 import RaffleReview from '../components/raffle/RaffleReview';
@@ -12,14 +12,17 @@ const RafflePage = () => {
     const step = parseInt(stepId || '1', 10);
     const navigate = useNavigate();
 
+    const location = useLocation();
+
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneNumber: '',
-        idNumber: '',
-        gender: 'male',
-        acceptedTerms: false,
+        firstName: location.state?.firstName || '',
+        lastName: location.state?.lastName || '',
+        email: location.state?.email || '',
+        phoneNumber: location.state?.phoneNumber || '',
+        idNumber: location.state?.idNumber || '',
+        gender: location.state?.gender || 'male',
+        quantity: location.state?.quantity || '1',
+        acceptedTerms: location.state?.acceptedTerms || false,
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,6 +38,10 @@ const RafflePage = () => {
             errs['email'] = 'Email is required';
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
             errs['email'] = 'Please enter a valid email address';
+        }
+        const qty = parseInt(formData.quantity);
+        if (isNaN(qty) || qty < 1) {
+            errs['quantity'] = 'Must be at least 1 ticket';
         }
         setErrors(errs);
         return Object.keys(errs).length === 0;
@@ -66,19 +73,22 @@ const RafflePage = () => {
                     phoneNumber: formData.phoneNumber.trim() || null,
                     idNumber: formData.idNumber.trim(),
                     gender: formData.gender,
+                    quantity: formData.quantity,
                 }),
             });
             const data = await res.json();
             if (!res.ok) {
                 const msg = data?.error?.message || 'Something went wrong. Please try again.';
-                if (data?.error?.code === 'DUPLICATE') {
-                    setSubmitError(`An entry with this email already exists. Your raffle code may be: ${data?.error?.existingId || 'check your email'}.`);
-                } else {
-                    setSubmitError(msg);
-                }
+                setSubmitError(msg);
                 return;
             }
-            navigate(`/raffle/payment/${data.ticketId}`, { state: { ...formData } });
+            navigate(`/raffle/payment/${data.ticketIds[0]}`, {
+                state: {
+                    ...formData,
+                    ticketIds: data.ticketIds,
+                    amount: data.amount
+                }
+            });
         } catch (err) {
             setSubmitError('A network error occurred. Please check your connection and try again.');
         } finally {

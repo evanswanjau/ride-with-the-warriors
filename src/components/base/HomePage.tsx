@@ -6,6 +6,8 @@ import highlightImage1 from '../../assets/images/296A0069-28-min.jpeg';
 import highlightImage2 from '../../assets/images/296A0184-33-min.jpeg';
 import highlightImage3 from '../../assets/images/296A0219-40-min.jpeg';
 
+import RaffleHomeSection from './RaffleHomeSection';
+
 const HomePage = () => {
     const heroRef = useRef<HTMLImageElement>(null);
 
@@ -67,9 +69,15 @@ const HomePage = () => {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
                             to="/register/step/1"
-                            className="px-10 py-4 bg-primary text-white font-bold text-lg rounded-2xl hover:bg-primary-dark hover:scale-105 transition-all delay-150 duration-300 ease-in-out "
+                            className="px-10 py-4 bg-primary text-white font-bold text-lg rounded-2xl hover:bg-primary-dark hover:scale-105 transition-all delay-150 duration-300 ease-in-out shadow-lg shadow-primary/30"
                         >
-                            Register Now
+                            Register to Cycle
+                        </Link>
+                        <Link
+                            to="/raffle/step/1"
+                            className="px-10 py-4 bg-amber-400 text-neutral-900 font-bold text-lg rounded-2xl hover:bg-amber-500 hover:scale-105 transition-all delay-150 duration-300 ease-in-out shadow-lg shadow-amber-400/30"
+                        >
+                            Buy Raffle Tickets
                         </Link>
                         <Link
                             to="/about"
@@ -252,8 +260,11 @@ const HomePage = () => {
                 </div>
             </section>
 
+            {/* Raffle Section */}
+            <RaffleHomeSection />
+
             {/* CTA Section */}
-            <section className="py-24 px-4">
+            <section className="py-24 px-4 bg-neutral-50 dark:bg-[#0a0a0a]">
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white mb-6">
                         Ready to <span className="text-primary">Ride</span>?
@@ -262,12 +273,20 @@ const HomePage = () => {
                         Join hundreds of riders on July 5th, 2026 at the Ulinzi Sports Complex.
                         Whether you're a pro cyclist or bringing the family, there's a circuit for you.
                     </p>
-                    <Link
-                        to="/register/step/1"
-                        className="px-12 py-5 bg-primary text-white font-bold text-lg rounded-2xl hover:bg-primary-dark hover:scale-105 transition-all shadow-lg shadow-primary/30 inline-block"
-                    >
-                        Register for RWTW 2026
-                    </Link>
+                    <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                        <Link
+                            to="/register/step/1"
+                            className="px-12 py-5 bg-primary text-white font-bold text-lg rounded-2xl hover:bg-primary-dark hover:scale-105 transition-all shadow-lg shadow-primary/30 inline-block w-full sm:w-auto"
+                        >
+                            Register to Cycle
+                        </Link>
+                        <Link
+                            to="/raffle/step/1"
+                            className="px-12 py-5 bg-amber-400 text-neutral-900 font-bold text-lg rounded-2xl hover:bg-amber-500 hover:scale-105 transition-all shadow-lg shadow-amber-400/30 inline-block w-full sm:w-auto"
+                        >
+                            Buy Raffle Tickets
+                        </Link>
+                    </div>
                 </div>
             </section>
         </div>

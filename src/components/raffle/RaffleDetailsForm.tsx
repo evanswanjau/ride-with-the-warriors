@@ -8,6 +8,7 @@ interface RaffleDetailsFormProps {
         phoneNumber: string;
         idNumber: string;
         gender: string;
+        quantity: string;
         acceptedTerms: boolean;
     };
     onChange: (data: any) => void;
@@ -40,12 +41,14 @@ const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsForm
                 <button
                     onClick={() => {
                         onChange({
+                            ...data,
                             firstName: 'John',
                             lastName: 'Doe',
                             email: `john.doe.${Math.floor(Math.random() * 1000)}@example.com`,
                             phoneNumber: '0712345678',
                             idNumber: '12345678',
                             gender: 'male',
+                            quantity: data.quantity || '1',
                             acceptedTerms: true,
                         });
                     }}
@@ -170,6 +173,59 @@ const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsForm
                             </label>
                         </div>
                         {errors.gender && <span className="text-red-500 text-xs font-medium">{errors.gender}</span>}
+                    </div>
+
+                    {/* Quantity */}
+                    <div className="flex flex-col gap-2">
+                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
+                            Number of Tickets <span className="text-red-500">*</span>
+                        </span>
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden h-[42px]">
+                                <button
+                                    type="button"
+                                    onClick={() => handleInputChange('quantity', Math.max(1, (parseInt(data.quantity) || 1) - 1).toString())}
+                                    disabled={parseInt(data.quantity) <= 1 || !data.quantity}
+                                    className={`px-4 h-full transition-colors text-lg font-bold ${parseInt(data.quantity) <= 1 || !data.quantity
+                                        ? 'opacity-50 cursor-not-allowed bg-neutral-50 dark:bg-neutral-900 text-gray-400'
+                                        : 'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                                        }`}
+                                >-</button>
+                                <input
+                                    className="w-16 h-full text-center bg-transparent border-none outline-none font-bold text-neutral-900 dark:text-white"
+                                    type="number"
+                                    min="1"
+                                    max="50"
+                                    value={data.quantity}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (val === '') {
+                                            handleInputChange('quantity', '');
+                                        } else {
+                                            const num = parseInt(val);
+                                            if (!isNaN(num)) {
+                                                handleInputChange('quantity', Math.max(1, num).toString());
+                                            }
+                                        }
+                                    }}
+                                    onBlur={() => {
+                                        const num = parseInt(data.quantity);
+                                        if (isNaN(num) || num < 1) {
+                                            handleInputChange('quantity', '1');
+                                        }
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => handleInputChange('quantity', ((parseInt(data.quantity) || 1) + 1).toString())}
+                                    className="px-4 h-full bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors text-lg font-bold"
+                                >+</button>
+                            </div>
+                            <div className="text-sm font-bold text-primary">
+                                Total: KSH {((parseInt(data.quantity) || 1) * 1000).toLocaleString()}
+                            </div>
+                        </div>
+                        {errors.quantity && <span className="text-red-500 text-xs font-medium">{errors.quantity}</span>}
                     </div>
                 </div>
 

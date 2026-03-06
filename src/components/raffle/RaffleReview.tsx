@@ -8,6 +8,7 @@ interface RaffleReviewProps {
         phoneNumber?: string;
         idNumber: string;
         gender: string;
+        quantity: string;
         acceptedTerms: boolean;
     };
     onBack: () => void;
@@ -31,9 +32,9 @@ const RaffleReview = ({ data, onBack, onSubmit, isSubmitting, error }: RaffleRev
                 <div className="bg-amber-50 dark:bg-amber-900/20 px-6 py-4 border-b border-amber-100 dark:border-amber-900/30 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <AiOutlineShopping className="text-amber-500 text-xl" />
-                        <span className="text-sm font-black text-neutral-900 dark:text-white uppercase tracking-wider">Order Summary</span>
+                        <span className="text-sm font-black text-neutral-900 dark:text-white uppercase tracking-wider">Order Summary ({data.quantity} {parseInt(data.quantity) === 1 ? 'Ticket' : 'Tickets'})</span>
                     </div>
-                    <span className="text-lg font-black text-amber-600 dark:text-amber-400">KES 1,000</span>
+                    <span className="text-lg font-black text-amber-600 dark:text-amber-400">KES {(parseInt(data.quantity) * 1000).toLocaleString()}</span>
                 </div>
 
                 <div className="p-6 space-y-6">
