@@ -4,7 +4,10 @@ import { API_BASE_URL } from '../../config';
 import {
     AiOutlineSearch,
     AiOutlineExclamationCircle,
-    AiOutlineArrowRight
+    AiOutlineArrowRight,
+    AiOutlineIdcard,
+    AiOutlineMail,
+    AiOutlineMobile,
 } from 'react-icons/ai';
 
 type SearchType = 'id' | 'email' | 'phone';
@@ -14,6 +17,30 @@ interface ProfileLookupProps {
     onRaffleFound: (ticket: any) => void;
 }
 
+const TABS: { type: SearchType; label: string; icon: React.ReactNode; placeholder: string; hint: string }[] = [
+    {
+        type: 'id',
+        label: 'Reg / Raffle ID',
+        icon: <AiOutlineIdcard />,
+        placeholder: 'Registration ID or Raffle Code (e.g. AA001)',
+        hint: 'Registration ID (e.g. 1001), Passport number, or Raffle Code (e.g. AA001)',
+    },
+    {
+        type: 'email',
+        label: 'Email',
+        icon: <AiOutlineMail />,
+        placeholder: 'e.g. john@example.com',
+        hint: 'Use the email address you registered with',
+    },
+    {
+        type: 'phone',
+        label: 'Phone',
+        icon: <AiOutlineMobile />,
+        placeholder: 'e.g. 0712 345 678',
+        hint: 'Use your M-Pesa phone number',
+    },
+];
+
 const ProfileLookup = ({ onFound, onRaffleFound }: ProfileLookupProps) => {
     const navigate = useNavigate();
     const [searchType, setSearchType] = useState<SearchType>('id');
@@ -21,46 +48,25 @@ const ProfileLookup = ({ onFound, onRaffleFound }: ProfileLookupProps) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const active = TABS.find(t => t.type === searchType)!;
+
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!searchValue.trim()) {
-            setError('Please enter a value to search');
-            return;
-        }
-
+        if (!searchValue.trim()) { setError('Please enter a value to search'); return; }
         setLoading(true);
         setError(null);
-
         try {
             const response = await fetch(`${API_BASE_URL}/profile/search`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    searchType,
-                    searchValue: searchValue.trim(),
-                }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ searchType, searchValue: searchValue.trim() }),
             });
-
             const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error?.message || 'No registration or raffle ticket found');
-            }
-
+            if (!response.ok) throw new Error(data.error?.message || 'No registration or raffle ticket found');
             const { registration, raffleTicket } = data;
-
-            if (registration) {
-                onFound(registration);
-                navigate(`/profile/${registration.id}`);
-            } else if (raffleTicket) {
-                onRaffleFound(raffleTicket);
-                navigate(`/raffle/profile/${raffleTicket.id}`);
-            } else {
-                setError('Nothing found matching your search. Please try again.');
-            }
+            if (registration) { onFound(registration); navigate(`/profile/${registration.id}`); }
+            else if (raffleTicket) { onRaffleFound(raffleTicket); navigate(`/raffle/profile/${raffleTicket.id}`); }
+            else setError('Nothing found matching your search. Please try again.');
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred');
         } finally {
@@ -68,102 +74,287 @@ const ProfileLookup = ({ onFound, onRaffleFound }: ProfileLookupProps) => {
         }
     };
 
-    const getPlaceholder = () => {
-        switch (searchType) {
-            case 'id':
-                return 'Registration ID or Raffle Code (e.g. AA001)';
-            case 'email':
-                return 'e.g., john@example.com';
-            case 'phone':
-                return 'e.g., 0712345678';
-            default:
-                return '';
-        }
-    };
-
     return (
-        <div className="flex items-center justify-center min-h-[400px] py-12">
-            <div className="w-full max-w-2xl px-4">
-                <div className="text-center mb-8">
-                    <h1 className="text-4xl font-black text-neutral-900 dark:text-white mb-3">
-                        Track My Entry
-                    </h1>
-                    <p className="text-neutral-600 dark:text-neutral-400 font-medium">
-                        Search for your event registration or raffle ticket
-                    </p>
-                </div>
+        <>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
-                <div className="bg-white dark:bg-neutral-800 rounded-[32px] shadow-2xl p-6 md:p-10 border border-neutral-100 dark:border-neutral-700/50">
-                    {/* Search Type Tabs */}
-                    <div className="flex gap-2 mb-8 bg-neutral-100 dark:bg-neutral-900/50 p-1.5 rounded-2xl">
-                        {(['id', 'email', 'phone'] as const).map((type) => (
-                            <button
-                                key={type}
-                                onClick={() => setSearchType(type)}
-                                className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all duration-300 ${searchType === type
-                                    ? 'bg-white dark:bg-neutral-800 text-primary shadow-lg shadow-primary/10'
-                                    : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                                    }`}
-                            >
-                                {type.toUpperCase()}
-                            </button>
-                        ))}
+                :root, [data-theme="dark"] {
+                    --color-primary: #2d6a2d;
+                    --color-primary-dark: #1e4d1e;
+                    --color-primary-light: #4caf50;
+                    --pl-bg:        #0a0a0a;
+                    --pl-card:      #141414;
+                    --pl-raised:    #111111;
+                    --pl-border:    rgba(255,255,255,0.07);
+                    --pl-border-2:  rgba(255,255,255,0.13);
+                    --pl-text-1:    #ffffff;
+                    --pl-text-2:    rgba(255,255,255,0.58);
+                    --pl-text-3:    rgba(255,255,255,0.32);
+                    --pl-input-bg:  #0a0a0a;
+                    --pl-tab-bg:    rgba(255,255,255,0.04);
+                    --pl-tab-active:#141414;
+                    --pl-error-bg:  rgba(220,38,38,0.07);
+                    --pl-error-bd:  rgba(220,38,38,0.22);
+                    --pl-err-text:  #ef4444;
+                }
+                [data-theme="light"] {
+                    --color-primary: #245924;
+                    --color-primary-dark: #1a421a;
+                    --color-primary-light: #2d6a2d;
+                    --pl-bg:        #f5f2eb;
+                    --pl-card:      #ffffff;
+                    --pl-raised:    #edeae2;
+                    --pl-border:    rgba(0,0,0,0.09);
+                    --pl-border-2:  rgba(0,0,0,0.15);
+                    --pl-text-1:    #111111;
+                    --pl-text-2:    rgba(20,20,20,0.60);
+                    --pl-text-3:    rgba(20,20,20,0.38);
+                    --pl-input-bg:  #f9f7f3;
+                    --pl-tab-bg:    rgba(0,0,0,0.04);
+                    --pl-tab-active:#ffffff;
+                    --pl-error-bg:  rgba(185,28,28,0.05);
+                    --pl-error-bd:  rgba(185,28,28,0.18);
+                    --pl-err-text:  #b91c1c;
+                }
+
+                .pl-page {
+                    font-family: 'Barlow', sans-serif;
+                    background: var(--pl-bg);
+                    color: var(--pl-text-1);
+                    min-height: calc(100vh - 80px);
+                    display: flex; align-items: center; justify-content: center;
+                    padding: 64px 24px 80px;
+                    transition: background 0.3s, color 0.3s;
+                }
+                .pl-inner { width: 100%; max-width: 560px; }
+
+                /* ── Header ── */
+                .pl-label-row {
+                    display: flex; align-items: center; gap: 12px;
+                    justify-content: center; margin-bottom: 20px;
+                }
+                .pl-label-line { height: 1px; width: 36px; background: var(--color-primary); flex-shrink: 0; }
+                .pl-eyebrow {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.65rem; font-weight: 700;
+                    letter-spacing: 0.28em; text-transform: uppercase;
+                    color: var(--color-primary-light);
+                }
+                .pl-title {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: clamp(3rem, 9vw, 5.5rem);
+                    letter-spacing: 0.03em; line-height: 0.92;
+                    color: var(--pl-text-1); text-align: center;
+                    margin-bottom: 12px;
+                }
+                .pl-title span { color: var(--color-primary-light); }
+                .pl-subtitle {
+                    font-size: 0.95rem; font-weight: 300;
+                    color: var(--pl-text-3); text-align: center; line-height: 1.6;
+                    margin-bottom: 44px;
+                }
+
+                /* ── Panel ── */
+                .pl-panel {
+                    background: var(--pl-card);
+                    border: 1px solid var(--pl-border);
+                    padding: 40px 36px;
+                    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+                    margin-bottom: 20px;
+                }
+                @media (max-width: 480px) { .pl-panel { padding: 28px 22px; } }
+
+                /* ── Tabs ── */
+                .pl-tabs {
+                    display: grid; grid-template-columns: repeat(3, 1fr);
+                    gap: 3px; background: var(--pl-tab-bg);
+                    border: 1px solid var(--pl-border);
+                    padding: 4px; margin-bottom: 36px;
+                    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+                }
+                .pl-tab {
+                    display: flex; align-items: center; justify-content: center; gap: 7px;
+                    padding: 11px 8px;
+                    background: none; border: none; cursor: pointer;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.72rem; font-weight: 700;
+                    letter-spacing: 0.16em; text-transform: uppercase;
+                    color: var(--pl-text-3);
+                    transition: color 0.2s, background 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+                }
+                .pl-tab svg { font-size: 0.9rem; }
+                .pl-tab.active {
+                    background: var(--pl-tab-active);
+                    color: var(--color-primary-light);
+                    border: 1px solid var(--pl-border);
+                }
+                .pl-tab:not(.active):hover { color: var(--pl-text-2); }
+
+                /* ── Input ── */
+                .pl-input-wrap {
+                    position: relative; margin-bottom: 10px;
+                }
+                .pl-input-icon {
+                    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+                    color: var(--pl-text-3); font-size: 1.15rem;
+                    pointer-events: none; transition: color 0.2s;
+                }
+                .pl-input-wrap:focus-within .pl-input-icon { color: var(--color-primary-light); }
+                .pl-input {
+                    width: 100%;
+                    background: var(--pl-input-bg);
+                    border: 1px solid var(--pl-border);
+                    padding: 16px 18px 16px 44px;
+                    font-family: 'Barlow', sans-serif;
+                    font-size: 0.97rem; font-weight: 500;
+                    color: var(--pl-text-1);
+                    outline: none;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                }
+                .pl-input::placeholder { color: var(--pl-text-3); font-weight: 400; }
+                .pl-input:focus {
+                    border-color: var(--color-primary);
+                    box-shadow: 0 0 0 2px rgba(45,106,45,0.12);
+                }
+                .pl-hint {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.65rem; font-weight: 700;
+                    letter-spacing: 0.18em; text-transform: uppercase;
+                    color: var(--pl-text-3); text-align: center;
+                    margin-top: 10px; line-height: 1.6;
+                }
+
+                /* ── Error ── */
+                .pl-error {
+                    display: flex; align-items: flex-start; gap: 10px;
+                    background: var(--pl-error-bg);
+                    border: 1px solid var(--pl-error-bd);
+                    padding: 13px 16px; margin-top: 20px;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                }
+                .pl-error svg { color: var(--pl-err-text); font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+                .pl-error-text { font-size: 0.85rem; color: var(--pl-err-text); line-height: 1.5; }
+
+                /* ── Submit ── */
+                .pl-submit {
+                    position: relative; overflow: hidden;
+                    width: 100%; padding: 18px 32px;
+                    margin-top: 28px;
+                    background: var(--color-primary); color: #fff;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 1rem; font-weight: 800;
+                    letter-spacing: 0.16em; text-transform: uppercase;
+                    border: none; cursor: pointer;
+                    display: flex; align-items: center; justify-content: center; gap: 12px;
+                    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+                }
+                .pl-submit::before {
+                    content: ''; position: absolute; top: 0; left: -80%;
+                    width: 60%; height: 100%;
+                    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.42) 50%, transparent 80%);
+                    transform: skewX(-20deg); pointer-events: none;
+                }
+                .pl-submit:hover:not(:disabled)::before { left: 140%; transition: left 0.55s cubic-bezier(0.25,0.46,0.45,0.94); }
+                .pl-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(45,106,45,0.38); background: var(--color-primary-dark); }
+                .pl-submit:active:not(:disabled) { transform: translateY(0); }
+                .pl-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+                .pl-submit svg { font-size: 1.1rem; transition: transform 0.2s; }
+                .pl-submit:hover:not(:disabled) svg { transform: translateX(3px); }
+
+                .pl-spinner {
+                    width: 18px; height: 18px;
+                    border: 2px solid rgba(255,255,255,0.3);
+                    border-top-color: #fff; border-radius: 50%;
+                    animation: plSpin 0.7s linear infinite;
+                }
+                @keyframes plSpin { to { transform: rotate(360deg); } }
+
+                /* ── Footer ── */
+                .pl-footer {
+                    text-align: center;
+                    font-size: 0.82rem; color: var(--pl-text-3);
+                }
+                .pl-footer a {
+                    color: var(--color-primary-light); text-decoration: none;
+                    font-weight: 600; transition: color 0.2s;
+                }
+                .pl-footer a:hover { color: var(--color-primary); text-decoration: underline; }
+            `}</style>
+
+            <div className="pl-page">
+                <div className="pl-inner">
+
+                    {/* ── Header ── */}
+                    <div className="pl-label-row">
+                        <div className="pl-label-line" />
+                        <span className="pl-eyebrow">Participant Lookup</span>
+                        <div className="pl-label-line" />
                     </div>
+                    <h1 className="pl-title">Track My <span>Entry.</span></h1>
+                    <p className="pl-subtitle">Search for your event registration or raffle ticket</p>
 
-                    {/* Search Form */}
-                    <form onSubmit={handleSearch} className="space-y-6">
-                        <div>
-                            <div className="relative group">
-                                <AiOutlineSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-neutral-400 text-2xl transition-colors group-focus-within:text-primary" />
-                                <input
-                                    type="text"
-                                    value={searchValue}
-                                    onChange={(e) => setSearchValue(e.target.value)}
-                                    placeholder={getPlaceholder()}
-                                    className="w-full pl-14 pr-6 py-5 rounded-2xl border-2 border-neutral-100 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-white placeholder-neutral-400 focus:border-primary focus:bg-white dark:focus:bg-neutral-800 focus:outline-none transition-all text-lg font-medium"
-                                />
-                            </div>
-                            <p className="mt-3 text-[11px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 text-center">
-                                {searchType === 'id' && 'Registration ID (e.g. 1001), Passport, or Raffle Code (e.g. AA001)'}
-                                {searchType === 'email' && 'Use the email you registered with'}
-                                {searchType === 'phone' && 'Use your M-Pesa phone number'}
-                            </p>
+                    {/* ── Panel ── */}
+                    <div className="pl-panel">
+
+                        {/* Tabs */}
+                        <div className="pl-tabs">
+                            {TABS.map(tab => (
+                                <button
+                                    key={tab.type}
+                                    className={`pl-tab${searchType === tab.type ? ' active' : ''}`}
+                                    onClick={() => { setSearchType(tab.type); setSearchValue(''); setError(null); }}
+                                >
+                                    {tab.icon}
+                                    {tab.label}
+                                </button>
+                            ))}
                         </div>
 
-                        {error && (
-                            <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/30 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
-                                <AiOutlineExclamationCircle className="text-red-500 text-xl shrink-0 mt-0.5" />
-                                <p className="text-red-600 dark:text-red-400 text-sm font-semibold">{error}</p>
+                        {/* Form */}
+                        <form onSubmit={handleSearch}>
+                            <div className="pl-input-wrap">
+                                <AiOutlineSearch className="pl-input-icon" />
+                                <input
+                                    type={active.type === 'email' ? 'email' : 'text'}
+                                    value={searchValue}
+                                    onChange={e => setSearchValue(e.target.value)}
+                                    placeholder={active.placeholder}
+                                    className="pl-input"
+                                    autoComplete="off"
+                                    spellCheck={false}
+                                />
                             </div>
-                        )}
+                            <p className="pl-hint">{active.hint}</p>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full h-16 rounded-2xl bg-neutral-900 dark:bg-primary text-white text-lg font-black shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group"
-                        >
-                            {loading ? (
-                                <>
-                                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                                    <span>Searching Ecosystem...</span>
-                                </>
-                            ) : (
-                                <>
-                                    <span>Search Everything</span>
-                                    <AiOutlineArrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
-                                </>
+                            {error && (
+                                <div className="pl-error">
+                                    <AiOutlineExclamationCircle />
+                                    <span className="pl-error-text">{error}</span>
+                                </div>
                             )}
-                        </button>
-                    </form>
-                </div>
 
-                <div className="text-center mt-10">
-                    <p className="text-sm font-bold text-neutral-500 dark:text-neutral-400">
-                        Need help? <a href="/contact" className="text-primary hover:underline">Contact Support</a>
+                            <button type="submit" disabled={loading} className="pl-submit">
+                                {loading ? (
+                                    <><div className="pl-spinner" /><span>Searching…</span></>
+                                ) : (
+                                    <><span>Search Profile</span><AiOutlineArrowRight /></>
+                                )}
+                            </button>
+                        </form>
+                    </div>
+
+                    {/* Footer */}
+                    <p className="pl-footer">
+                        Need help? <a href="/contact">Contact Support</a>
                     </p>
+
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

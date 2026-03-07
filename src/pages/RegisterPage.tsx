@@ -75,9 +75,29 @@ const RegisterPage = () => {
         }
     };
 
+    const isFamily = selectedCircuit === 'family';
+    const labels = isFamily ? ["CIRCUIT", "DETAILS", "REVIEW"] : ["CIRCUIT", "TYPE", "DETAILS", "REVIEW"];
+    const displayStep = isFamily
+        ? (step === 1 ? 1 : step === 3 ? 2 : step === 4 ? 3 : step)
+        : step;
+
+    const handleStepClick = (s: number) => {
+        if (isFamily) {
+            const targetStep = s === 1 ? 1 : s === 2 ? 3 : s === 3 ? 4 : s;
+            navigate(`/register/step/${targetStep}`);
+        } else {
+            navigate(`/register/step/${s}`);
+        }
+    };
+
     return (
         <Layout registrationType={registrationType} maxWidth="max-w-5xl">
-            <ProgressBar currentStep={step} totalSteps={4} stepTitle={getStepTitle()} onStepClick={(s: number) => navigate(`/register/step/${s}`)} />
+            <ProgressBar
+                currentStep={displayStep}
+                stepTitle={getStepTitle()}
+                labels={labels}
+                onStepClick={handleStepClick}
+            />
             {renderStep()}
         </Layout>
     );

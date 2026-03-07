@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const MapIcon = () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
         <line x1="9" y1="3" x2="9" y2="18" />
         <line x1="15" y1="6" x2="15" y2="21" />
@@ -9,13 +9,13 @@ const MapIcon = () => (
 );
 
 const TrophyIcon = () => (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M6 4h12v10a6 6 0 0 1-12 0V4ZM8 21h8M12 17v4" />
     </svg>
 );
 
 const CheckIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="20 6 9 17 4 12" />
     </svg>
 );
@@ -44,157 +44,278 @@ const CircuitCard = ({
     isCompetitive,
 }: CircuitCardProps) => {
     const [hovered, setHovered] = useState(false);
+    const active = isSelected || hovered;
 
     return (
-        <div
-            onClick={() => onSelect(id)}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            style={{
-                position: "relative",
-                borderRadius: "20px",
-                overflow: "hidden",
-                cursor: "pointer",
-                background: "#fff",
-                boxShadow: isSelected
-                    ? "0 0 0 3px #2d6a4f, 0 20px 60px rgba(45,106,79,0.18)"
-                    : hovered
-                        ? "0 16px 48px rgba(0,0,0,0.12)"
-                        : "0 2px 16px rgba(0,0,0,0.07)",
-                transform: isSelected ? "translateY(-4px)" : hovered ? "translateY(-2px)" : "none",
-                transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                display: "flex",
-                flexDirection: "column",
-                height: "100%",
-            }}
-        >
-            {/* Selection indicator */}
+        <>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+
+                :root, [data-theme="dark"] {
+                    --cc-bg:          #111111;
+                    --cc-bg-hover:    #161616;
+                    --cc-border:      rgba(255,255,255,0.08);
+                    --cc-border-sel:  #2d6a2d;
+                    --cc-text-1:      #ffffff;
+                    --cc-text-2:      rgba(255,255,255,0.55);
+                    --cc-text-3:      rgba(255,255,255,0.32);
+                    --cc-primary:     #2d6a2d;
+                    --cc-primary-lt:  #4caf50;
+                    --cc-accent:      #f59e0b;
+                    --cc-number:      rgba(45,106,45,0.10);
+                    --cc-number-sel:  rgba(45,106,45,0.25);
+                    --cc-divider:     rgba(255,255,255,0.07);
+                    --cc-sel-glow:    rgba(45,106,45,0.22);
+                    --cc-tag-comp-bg: rgba(45,106,45,0.15);
+                    --cc-tag-comp-bd: rgba(45,106,45,0.35);
+                    --cc-badge-bg:    rgba(0,0,0,0.55);
+                    --cc-badge-bd:    rgba(255,255,255,0.15);
+                }
+                [data-theme="light"] {
+                    --cc-bg:          #ffffff;
+                    --cc-bg-hover:    #f9f9f9;
+                    --cc-border:      rgba(0,0,0,0.09);
+                    --cc-border-sel:  #245924;
+                    --cc-text-1:      #111111;
+                    --cc-text-2:      rgba(20,20,20,0.60);
+                    --cc-text-3:      rgba(20,20,20,0.40);
+                    --cc-primary:     #245924;
+                    --cc-primary-lt:  #2d6a2d;
+                    --cc-accent:      #d97706;
+                    --cc-number:      rgba(36,89,36,0.07);
+                    --cc-number-sel:  rgba(36,89,36,0.18);
+                    --cc-divider:     rgba(0,0,0,0.07);
+                    --cc-sel-glow:    rgba(36,89,36,0.14);
+                    --cc-tag-comp-bg: rgba(36,89,36,0.08);
+                    --cc-tag-comp-bd: rgba(36,89,36,0.22);
+                    --cc-badge-bg:    rgba(0,0,0,0.45);
+                    --cc-badge-bd:    rgba(255,255,255,0.2);
+                }
+
+                .cc-root {
+                    font-family: 'Barlow', sans-serif;
+                    position: relative;
+                    background: var(--cc-bg);
+                    border: 1px solid var(--cc-border);
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+                    overflow: hidden;
+                    cursor: pointer;
+                    transition: border-color 0.25s, transform 0.28s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.28s;
+                    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+                }
+                .cc-root.cc-hovered {
+                    border-color: rgba(45,106,45,0.35);
+                    transform: translateY(-4px);
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+                }
+                .cc-root.cc-selected {
+                    border-color: var(--cc-border-sel);
+                    transform: translateY(-6px);
+                    box-shadow: 0 0 0 1px var(--cc-border-sel), 0 24px 60px var(--cc-sel-glow);
+                }
+
+                /* Shimmer sweep */
+                .cc-shimmer {
+                    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+                    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.05) 50%, transparent 80%);
+                    transform: skewX(-20deg); pointer-events: none; z-index: 4;
+                    transition: left 0s;
+                }
+                .cc-root.cc-hovered .cc-shimmer,
+                .cc-root.cc-selected .cc-shimmer {
+                    left: 150%;
+                    transition: left 0.65s cubic-bezier(0.25,0.46,0.45,0.94);
+                }
+
+                /* Ghost distance number */
+                .cc-ghost-number {
+                    position: absolute; bottom: 0; right: 16px;
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 7rem; line-height: 0.85;
+                    color: var(--cc-number);
+                    pointer-events: none; user-select: none;
+                    transition: color 0.3s;
+                    z-index: 1;
+                }
+                .cc-root.cc-hovered .cc-ghost-number,
+                .cc-root.cc-selected .cc-ghost-number { color: var(--cc-number-sel); }
+
+                /* Image */
+                .cc-image-wrap {
+                    position: relative; height: 196px; overflow: hidden; flex-shrink: 0;
+                }
+                .cc-image-wrap img {
+                    width: 100%; height: 100%; object-fit: cover;
+                    transition: transform 0.55s ease;
+                }
+                .cc-root.cc-hovered .cc-image-wrap img,
+                .cc-root.cc-selected .cc-image-wrap img { transform: scale(1.06); }
+                .cc-image-overlay {
+                    position: absolute; inset: 0;
+                    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.15) 55%, transparent 100%);
+                }
+
+                /* Image badges */
+                .cc-badge-row {
+                    position: absolute; bottom: 12px; left: 14px;
+                    display: flex; gap: 7px; align-items: center; z-index: 3;
+                }
+                .cc-badge {
+                    display: inline-flex; align-items: center; gap: 5px;
+                    padding: 4px 10px;
+                    background: var(--cc-badge-bg);
+                    border: 1px solid var(--cc-badge-bd);
+                    backdrop-filter: blur(8px);
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 11px; font-weight: 700;
+                    letter-spacing: 0.08em; text-transform: uppercase;
+                    color: #ffffff;
+                    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+                }
+                .cc-badge-competitive {
+                    background: var(--cc-tag-comp-bg);
+                    border-color: var(--cc-tag-comp-bd);
+                    color: #4caf50;
+                }
+
+                /* Selection check */
+                .cc-check {
+                    position: absolute; top: 13px; right: 13px; z-index: 10;
+                    width: 30px; height: 30px;
+                    display: flex; align-items: center; justify-content: center;
+                    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+                    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+                }
+                .cc-check-idle {
+                    background: rgba(0,0,0,0.4);
+                    border: 1px solid rgba(255,255,255,0.22);
+                    backdrop-filter: blur(6px);
+                    color: rgba(255,255,255,0.35);
+                }
+                .cc-check-active {
+                    background: var(--cc-primary);
+                    border: 1px solid var(--cc-primary-lt);
+                    color: #fff;
+                    box-shadow: 0 4px 14px var(--cc-sel-glow);
+                }
+
+                /* Content */
+                .cc-body {
+                    padding: 20px 22px 22px;
+                    flex: 1; display: flex; flex-direction: column; gap: 10px;
+                    position: relative; z-index: 2;
+                }
+                .cc-subtitle {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 10px; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--cc-primary-lt);
+                    margin: 0 0 4px;
+                }
+                .cc-title {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.8rem; letter-spacing: 0.04em; line-height: 0.95;
+                    color: var(--cc-text-1);
+                    margin: 0;
+                }
+                .cc-desc {
+                    font-size: 13px; line-height: 1.72;
+                    color: var(--cc-text-2);
+                    margin: 0; flex: 1;
+                }
+
+                /* Footer */
+                .cc-footer {
+                    display: flex; align-items: center; justify-content: space-between;
+                    padding-top: 14px;
+                    border-top: 1px solid var(--cc-divider);
+                    margin-top: 4px;
+                }
+                .cc-status {
+                    display: inline-flex; align-items: center; gap: 6px;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 10px; font-weight: 700;
+                    letter-spacing: 0.18em; text-transform: uppercase;
+                    transition: color 0.2s;
+                }
+                .cc-status-idle { color: var(--cc-text-3); }
+                .cc-status-active { color: var(--cc-primary-lt); }
+                .cc-dot {
+                    width: 5px; height: 5px;
+                    border-radius: 50%;
+                    background: currentColor;
+                    animation: ccPulse 1.6s ease-in-out infinite;
+                }
+                @keyframes ccPulse {
+                    0%, 100% { opacity: 1; transform: scale(1); }
+                    50%       { opacity: 0.45; transform: scale(0.7); }
+                }
+                .cc-arrow {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+                    color: var(--cc-text-3);
+                    transition: color 0.2s, transform 0.2s;
+                }
+                .cc-root.cc-hovered .cc-arrow,
+                .cc-root.cc-selected .cc-arrow {
+                    color: var(--cc-primary-lt);
+                    transform: translateX(3px);
+                }
+            `}</style>
+
             <div
-                style={{
-                    position: "absolute",
-                    top: 14,
-                    right: 14,
-                    zIndex: 10,
-                    width: 32,
-                    height: 32,
-                    borderRadius: "50%",
-                    background: isSelected ? "#2d6a4f" : "rgba(255,255,255,0.9)",
-                    border: isSelected ? "none" : "2px solid rgba(255,255,255,0.6)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: isSelected ? "#fff" : "rgba(0,0,0,0.3)",
-                    transition: "all 0.2s ease",
-                    boxShadow: isSelected ? "0 4px 12px rgba(45,106,79,0.4)" : "0 2px 8px rgba(0,0,0,0.15)",
-                    backdropFilter: "blur(4px)",
-                }}
+                onClick={() => onSelect(id)}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+                className={`cc-root${isSelected ? " cc-selected" : hovered ? " cc-hovered" : ""}`}
             >
-                <CheckIcon />
-            </div>
+                {/* Shimmer sweep */}
+                <div className="cc-shimmer" />
 
-            {/* Image */}
-            <div style={{ position: "relative", height: 200, overflow: "hidden" }}>
-                <img
-                    src={imageUrl}
-                    alt={title}
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        transition: "transform 0.5s ease",
-                        transform: hovered ? "scale(1.05)" : "scale(1)",
-                    }}
-                />
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)",
-                    }}
-                />
-                <div style={{ position: "absolute", bottom: 14, left: 14, display: "flex", gap: 8, alignItems: "center" }}>
-                    <span
-                        style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 5,
-                            padding: "5px 10px",
-                            borderRadius: 20,
-                            fontSize: 12,
-                            fontWeight: 700,
-                            background: "rgba(255,255,255,0.95)",
-                            color: "#1a1a1a",
-                            backdropFilter: "blur(8px)",
-                            letterSpacing: "0.01em",
-                        }}
-                    >
-                        <MapIcon /> {distance}
-                    </span>
-                    {isCompetitive && (
-                        <span
-                            style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: 4,
-                                padding: "5px 10px",
-                                borderRadius: 20,
-                                fontSize: 10,
-                                fontWeight: 800,
-                                background: "#2d6a4f",
-                                color: "#fff",
-                                backdropFilter: "blur(8px)",
-                                letterSpacing: "0.08em",
-                                textTransform: "uppercase",
-                            }}
-                        >
-                            <TrophyIcon /> Competitive
+                {/* Ghost distance number in body */}
+                <div className="cc-ghost-number">{distance.replace(/\D/g, '')}</div>
+
+                {/* Selection check */}
+                <div className={`cc-check ${isSelected ? "cc-check-active" : "cc-check-idle"}`}>
+                    <CheckIcon />
+                </div>
+
+                {/* Image */}
+                <div className="cc-image-wrap">
+                    <img src={imageUrl} alt={title} />
+                    <div className="cc-image-overlay" />
+                    <div className="cc-badge-row">
+                        <span className="cc-badge">
+                            <MapIcon /> {distance}
                         </span>
-                    )}
+                        {isCompetitive && (
+                            <span className="cc-badge cc-badge-competitive">
+                                <TrophyIcon /> Competitive
+                            </span>
+                        )}
+                    </div>
                 </div>
-            </div>
 
-            {/* Content */}
-            <div style={{ padding: "20px 22px 22px", flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
-                <div>
-                    <p
-                        style={{
-                            fontSize: 10,
-                            fontWeight: 700,
-                            color: "#2d6a4f",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.1em",
-                            marginBottom: 4,
-                            margin: 0,
-                        }}
-                    >
-                        {subtitle}
-                    </p>
-                    <h3 style={{ fontSize: 18, fontWeight: 800, color: "#111", lineHeight: 1.2, margin: "4px 0 0" }}>
-                        {title}
-                    </h3>
-                </div>
-                <p style={{ fontSize: 13.5, color: "#555", lineHeight: 1.65, margin: 0, flex: 1 }}>
-                    {description}
-                </p>
-                {/* Bottom CTA hint */}
-                <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    marginTop: 4,
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: isSelected ? "#2d6a4f" : "#999",
-                    transition: "color 0.2s",
-                }}>
-                    {isSelected ? (
-                        <><CheckIcon /> Selected</>
-                    ) : (
-                        <>Tap to select</>
-                    )}
+                {/* Body */}
+                <div className="cc-body">
+                    <div>
+                        <p className="cc-subtitle">{subtitle}</p>
+                        <h3 className="cc-title">{title}</h3>
+                    </div>
+                    <p className="cc-desc">{description}</p>
+
+                    <div className="cc-footer">
+                        <span className={`cc-status ${isSelected ? "cc-status-active" : active ? "cc-status-active" : "cc-status-idle"}`}>
+                            {isSelected && <span className="cc-dot" />}
+                            {isSelected ? "Selected" : "Select circuit"}
+                        </span>
+                        <span className="cc-arrow">VIEW →</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

@@ -1,15 +1,83 @@
-
-
 import type { RiderDetails } from '../../types';
 import ErrorBanner from '../common/ErrorBanner';
 import { calculateAge } from '../../utils';
-import {
-    AiOutlineExperiment,
-    AiOutlineDown,
-    AiOutlineArrowLeft,
-    AiOutlineArrowRight
-} from 'react-icons/ai';
+import RegistrationStepLayout from './ui/RegistrationStepLayout';
 
+/* ── Inline icons ─────────────────────────────────────────────────────── */
+const ArrowLeft = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+    </svg>
+);
+const ArrowRight = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+    </svg>
+);
+const FlaskIcon = () => (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 3h6M9 3v7l-4 8h14l-4-8V3" />
+    </svg>
+);
+const ChevronDown = () => (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="6 9 12 15 18 9" />
+    </svg>
+);
+const SpinnerIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'rd4spin 0.8s linear infinite' }}>
+        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
+);
+
+/* ── Section header ───────────────────────────────────────────────────── */
+const SectionLabel = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
+    <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        paddingBottom: 14, marginBottom: 20,
+        borderBottom: '1px solid var(--rd4-divider)',
+    }}>
+        <div style={{
+            width: 28, height: 28,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            border: '1px solid var(--rd4-border-2)',
+            color: 'var(--rd4-primary-lt)',
+            clipPath: 'polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%)',
+        }}>{icon}</div>
+        <span style={{
+            fontFamily: "'Barlow Condensed', sans-serif",
+            fontSize: 10, fontWeight: 700,
+            letterSpacing: '0.22em', textTransform: 'uppercase',
+            color: 'var(--rd4-text-3)',
+        }}>{label}</span>
+    </div >
+);
+
+/* ── Field wrapper ────────────────────────────────────────────────────── */
+const Field = ({ label, required, error, hint, children }: {
+    label: string; required?: boolean; error?: string; hint?: React.ReactNode; children: React.ReactNode;
+}) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: 9, fontWeight: 700,
+                letterSpacing: '0.22em', textTransform: 'uppercase',
+                color: 'var(--rd4-text-3)',
+            }}>
+                {label}{required && <span style={{ color: '#f87171', marginLeft: 3 }}>*</span>}
+            </span>
+            {hint}
+        </div>
+        {children}
+        {error && (
+            <span style={{
+                fontSize: 11, fontWeight: 600, color: '#f87171',
+                fontFamily: "'Barlow', sans-serif",
+            }}>{error}</span>
+        )}
+    </div>
+);
 
 interface Step4RiderDetailsProps {
     data: RiderDetails;
@@ -22,302 +90,375 @@ interface Step4RiderDetailsProps {
 }
 
 const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: Step4RiderDetailsProps) => {
-    const handleInputChange = (field: keyof RiderDetails, value: string) => {
-        onChange({ ...data, [field]: value });
-    };
+    const set = (field: keyof RiderDetails, value: string) => onChange({ ...data, [field]: value });
+
+    const inputClass = (hasError: boolean) => `rd4-input${hasError ? ' rd4-input-error' : ''}`;
 
     return (
-        <div className="layout-content-container flex flex-col flex-1 w-full gap-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex flex-col gap-2">
-                    <h1 className="text-text-light dark:text-white tracking-tight text-[32px] md:text-4xl font-bold leading-tight">Rider Details</h1>
-                    <p className="text-text-muted-light dark:text-gray-400 text-base font-normal leading-normal max-w-2xl">
-                        Please provide your personal information to complete the registration.
-                    </p>
-                </div>
+        <RegistrationStepLayout
+            stepLabel="Step 3 of 4"
+            title="Rider Details"
+            subtitle="Provide your personal information to complete the registration."
+            headerRight={
                 <button
-                    onClick={() => {
-                        onChange({
-                            firstName: 'Jane',
-                            lastName: 'Doe',
-                            email: `jane.doe.${Math.floor(Math.random() * 1000)}@example.com`,
-                            phoneNumber: '0712345678',
-                            idNumber: '12345678',
-                            dob: '1995-05-15',
-                            gender: 'female',
-                            tshirtSize: 'M',
-                            emergencyContactName: 'John Smith',
-                            emergencyPhone: '0787654321'
-                        });
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all font-semibold text-sm w-fit"
                     type="button"
+                    className="rd4-test-btn"
+                    onClick={() => onChange({
+                        firstName: 'Jane', lastName: 'Doe',
+                        email: `jane.doe.${Math.floor(Math.random() * 1000)}@example.com`,
+                        phoneNumber: '0712345678', idNumber: '12345678',
+                        dob: '1995-05-15', gender: 'female',
+                        tshirtSize: 'M',
+                        emergencyContactName: 'John Smith', emergencyPhone: '0787654321',
+                    })}
                 >
-                    <AiOutlineExperiment className="text-lg" />
-                    Fill with Test Data
+                    <FlaskIcon /> Fill Test Data
                 </button>
-            </div>
+            }
+            footer={
+                <>
+                    <button type="button" className="rd4-back-btn" onClick={onBack} disabled={isSubmitting}>
+                        <ArrowLeft /> Back
+                    </button>
+
+                    <button type="button" className="rd4-cta-btn" onClick={onNext} disabled={isSubmitting}>
+                        <span className="rd4-cta-shimmer" />
+                        {isSubmitting ? (
+                            <><SpinnerIcon /><span>Saving…</span></>
+                        ) : (
+                            <><span>Continue</span><ArrowRight /></>
+                        )}
+                    </button>
+                </>
+            }
+        >
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+
+                :root, [data-theme="dark"] {
+                    --rd4-bg:          #111111;
+                    --rd4-page-bg:     #0a0a0a;
+                    --rd4-border-1:    rgba(255,255,255,0.08);
+                    --rd4-border-2:    rgba(255,255,255,0.14);
+                    --rd4-divider:     rgba(255,255,255,0.07);
+                    --rd4-text-1:      #ffffff;
+                    --rd4-text-2:      rgba(255,255,255,0.60);
+                    --rd4-text-3:      rgba(255,255,255,0.35);
+                    --rd4-primary:     #2d6a2d;
+                    --rd4-primary-lt:  #4caf50;
+                    --rd4-accent:      #f59e0b;
+                    --rd4-input-bg:    #0d0d0d;
+                    --rd4-input-bd:    rgba(255,255,255,0.10);
+                    --rd4-input-focus: #4caf50;
+                    --rd4-input-err:   #f87171;
+                    --rd4-placeholder: rgba(255,255,255,0.22);
+                    --rd4-radio-bd:    rgba(255,255,255,0.20);
+                    --rd4-radio-sel:   #4caf50;
+                    --rd4-age-bg:      rgba(45,106,45,0.08);
+                    --rd4-age-bd:      rgba(45,106,45,0.25);
+                    --rd4-age-txt:     #4caf50;
+                    --rd4-btn-shadow:  rgba(45,106,45,0.38);
+                    --rd4-back-color:  rgba(255,255,255,0.50);
+                    --rd4-back-bd:     rgba(255,255,255,0.10);
+                    --rd4-back-hover:  #ffffff;
+                    --rd4-section-bg:  #0d0d0d;
+                    --rd4-test-bg:     rgba(45,106,45,0.07);
+                    --rd4-test-bd:     rgba(45,106,45,0.22);
+                    --rd4-test-txt:    #4caf50;
+                }
+                [data-theme="light"] {
+                    --rd4-bg:          #ffffff;
+                    --rd4-page-bg:     #ffffff;
+                    --rd4-border-1:    rgba(0,0,0,0.09);
+                    --rd4-border-2:    rgba(0,0,0,0.15);
+                    --rd4-divider:     rgba(0,0,0,0.07);
+                    --rd4-text-1:      #111111;
+                    --rd4-text-2:      rgba(20,20,20,0.60);
+                    --rd4-text-3:      rgba(20,20,20,0.42);
+                    --rd4-primary:     #245924;
+                    --rd4-primary-lt:  #2d6a2d;
+                    --rd4-accent:      #d97706;
+                    --rd4-input-bg:    #ffffff;
+                    --rd4-input-bd:    rgba(0,0,0,0.12);
+                    --rd4-input-focus: #2d6a2d;
+                    --rd4-input-err:   #ef4444;
+                    --rd4-placeholder: rgba(20,20,20,0.28);
+                    --rd4-radio-bd:    rgba(0,0,0,0.22);
+                    --rd4-radio-sel:   #245924;
+                    --rd4-age-bg:      rgba(36,89,36,0.07);
+                    --rd4-age-bd:      rgba(36,89,36,0.22);
+                    --rd4-age-txt:     #245924;
+                    --rd4-btn-shadow:  rgba(36,89,36,0.28);
+                    --rd4-back-color:  rgba(20,20,20,0.50);
+                    --rd4-back-bd:     rgba(0,0,0,0.12);
+                    --rd4-back-hover:  #111111;
+                    --rd4-section-bg:  #fafaf8;
+                    --rd4-test-bg:     rgba(36,89,36,0.06);
+                    --rd4-test-bd:     rgba(36,89,36,0.18);
+                    --rd4-test-txt:    #245924;
+                }
+
+                @keyframes rd4spin { to { transform: rotate(360deg); } }
+
+                /* ── Inputs ── */
+                .rd4-input {
+                    width: 100%;
+                    background: var(--rd4-input-bg);
+                    border: 1px solid var(--rd4-input-bd);
+                    color: var(--rd4-text-1);
+                    padding: 10px 14px;
+                    font-family: 'Barlow', sans-serif;
+                    font-size: 13.5px; font-weight: 500;
+                    outline: none;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                    appearance: none;
+                    box-sizing: border-box;
+                }
+                .rd4-input::placeholder { color: var(--rd4-placeholder); }
+                .rd4-input:focus {
+                    border-color: var(--rd4-input-focus);
+                    box-shadow: 0 0 0 3px rgba(76,175,80,0.12);
+                }
+                .rd4-input:disabled { opacity: 0.45; cursor: not-allowed; }
+                .rd4-input-error { border-color: var(--rd4-input-err) !important; }
+                .rd4-input-error:focus { box-shadow: 0 0 0 3px rgba(248,113,113,0.12) !important; }
+
+                /* select arrow */
+                .rd4-select-wrap { position: relative; }
+                .rd4-select-wrap .rd4-chevron {
+                    position: absolute; right: 12px; top: 50%;
+                    transform: translateY(-50%); pointer-events: none;
+                    color: var(--rd4-text-3);
+                }
+
+                /* ── Section card ── */
+                .rd4-card {
+                    background: var(--rd4-section-bg);
+                    border: 1px solid var(--rd4-border-1);
+                    padding: 28px 28px 24px;
+                    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+                    transition: background 0.3s;
+                }
+
+                /* ── Grid ── */
+                .rd4-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px 24px;
+                }
+                @media (max-width: 640px) { .rd4-grid { grid-template-columns: 1fr; } }
+
+                /* ── Radio buttons ── */
+                .rd4-radio-group { display: flex; gap: 16px; align-items: center; height: 42px; }
+                .rd4-radio-label {
+                    display: flex; align-items: center; gap: 8px;
+                    cursor: pointer;
+                    font-family: 'Barlow', sans-serif;
+                    font-size: 13.5px; font-weight: 600;
+                    color: var(--rd4-text-2);
+                    transition: color 0.2s;
+                    user-select: none;
+                }
+                .rd4-radio-label.rd4-radio-checked { color: var(--rd4-primary-lt); }
+                .rd4-radio-outer {
+                    width: 18px; height: 18px; flex-shrink: 0;
+                    border: 2px solid var(--rd4-radio-bd);
+                    border-radius: 50%;
+                    display: flex; align-items: center; justify-content: center;
+                    transition: border-color 0.2s;
+                }
+                .rd4-radio-label.rd4-radio-checked .rd4-radio-outer { border-color: var(--rd4-radio-sel); }
+                .rd4-radio-inner {
+                    width: 8px; height: 8px; border-radius: 50%;
+                    background: var(--rd4-radio-sel);
+                    transform: scale(0); transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+                }
+                .rd4-radio-label.rd4-radio-checked .rd4-radio-inner { transform: scale(1); }
+
+                /* ── Test data pill ── */
+                .rd4-test-btn {
+                    display: inline-flex; align-items: center; gap: 7px;
+                    padding: 8px 16px;
+                    background: var(--rd4-test-bg);
+                    border: 1px solid var(--rd4-test-bd);
+                    color: var(--rd4-test-txt);
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 10px; font-weight: 700;
+                    letter-spacing: 0.2em; text-transform: uppercase;
+                    cursor: pointer;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                    transition: background 0.2s, border-color 0.2s;
+                    flex-shrink: 0;
+                }
+                .rd4-test-btn:hover { background: rgba(45,106,45,0.14); border-color: rgba(45,106,45,0.38); }
+
+                /* ── Age badge ── */
+                .rd4-age-badge {
+                    display: inline-flex; align-items: center;
+                    padding: 2px 10px;
+                    background: var(--rd4-age-bg);
+                    border: 1px solid var(--rd4-age-bd);
+                    color: var(--rd4-age-txt);
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 9px; font-weight: 700;
+                    letter-spacing: 0.2em; text-transform: uppercase;
+                    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+                }
+
+                /* ── Footer buttons ── */
+                .rd4-back-btn {
+                    display: inline-flex; align-items: center; gap: 8px;
+                    padding: 12px 22px;
+                    background: transparent;
+                    color: var(--rd4-back-color);
+                    border: 1px solid var(--rd4-back-bd);
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.85rem; font-weight: 700;
+                    letter-spacing: 0.14em; text-transform: uppercase;
+                    cursor: pointer;
+                    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+                    transition: color 0.2s, border-color 0.2s;
+                }
+                .rd4-back-btn:hover:not(:disabled) { color: var(--rd4-back-hover); border-color: var(--rd4-border-2); }
+                .rd4-back-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+                .rd4-cta-btn {
+                    position: relative;
+                    display: inline-flex; align-items: center; gap: 10px;
+                    padding: 13px 36px;
+                    background: var(--rd4-primary); color: #ffffff;
+                    border: 2px solid var(--rd4-primary);
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.9rem; font-weight: 800;
+                    letter-spacing: 0.14em; text-transform: uppercase;
+                    cursor: pointer; overflow: hidden;
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+                    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
+                    min-width: 180px; justify-content: center;
+                }
+                .rd4-cta-btn:hover:not(:disabled) {
+                    transform: translateY(-2px);
+                    box-shadow: 0 12px 32px var(--rd4-btn-shadow);
+                    background: var(--rd4-primary-lt); border-color: var(--rd4-primary-lt);
+                }
+                .rd4-cta-btn:active:not(:disabled) { transform: translateY(0); }
+                .rd4-cta-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+                .rd4-cta-shimmer {
+                    position: absolute; top: 0; left: -80%;
+                    width: 60%; height: 100%;
+                    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.35) 50%, transparent 80%);
+                    transform: skewX(-20deg); pointer-events: none;
+                }
+                .rd4-cta-btn:hover:not(:disabled) .rd4-cta-shimmer {
+                    left: 140%;
+                    transition: left 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+                }
+            `}</style>
 
             <ErrorBanner errors={formErrors} />
 
-            <form className="flex flex-col gap-8" onSubmit={(e) => e.preventDefault()}>
-                <div className="bg-white dark:bg-[#2a2418] rounded-3xl border border-neutral-100 dark:border-neutral-800 p-6 md:p-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                        <label className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                First Name <span className="text-red-500">*</span>
-                            </span>
-                            <div className="relative">
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors.firstName
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    placeholder="Jane"
-                                    type="text"
-                                    value={data.firstName}
-                                    onChange={(e) => handleInputChange('firstName', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            {errors.firstName && <span className="text-red-500 text-xs font-medium">{errors.firstName}</span>}
-                        </label>
-                        <label className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                Last Name <span className="text-red-500">*</span>
-                            </span>
-                            <div className="relative">
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors.lastName
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    placeholder="Doe"
-                                    type="text"
-                                    value={data.lastName}
-                                    onChange={(e) => handleInputChange('lastName', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            {errors.lastName && <span className="text-red-500 text-xs font-medium">{errors.lastName}</span>}
-                        </label>
-                        <label className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                Email Address <span className="text-red-500">*</span>
-                            </span>
-                            <div className="relative">
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors.email
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    placeholder="jane.doe@example.com"
-                                    type="email"
-                                    value={data.email}
-                                    onChange={(e) => handleInputChange('email', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            {errors.email && <span className="text-red-500 text-xs font-medium">{errors.email}</span>}
-                        </label>
-                        <label className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                Phone Number <span className="text-red-500">*</span>
-                            </span>
-                            <div className="relative">
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors.phoneNumber
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    placeholder="0712 345 678"
-                                    type="tel"
-                                    value={data.phoneNumber}
-                                    onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            {errors.phoneNumber && <span className="text-red-500 text-xs font-medium">{errors.phoneNumber}</span>}
-                        </label>
-                        <label className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                National ID / Passport <span className="text-red-500">*</span>
-                            </span>
-                            <div className="relative">
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors.idNumber
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    placeholder="12345678"
-                                    type="text"
-                                    value={data.idNumber}
-                                    onChange={(e) => handleInputChange('idNumber', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            {errors.idNumber && <span className="text-red-500 text-xs font-medium">{errors.idNumber}</span>}
-                        </label>
-                        <label className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
-                                <span>Date of Birth <span className="text-red-500">*</span></span>
-                                {data.dob && (
-                                    <span className="text-primary normal-case font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
-                                        {calculateAge(data.dob)} years old
-                                    </span>
-                                )}
-                            </span>
-                            <div className="relative">
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors.dob
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    type="date"
-                                    value={data.dob}
-                                    onChange={(e) => handleInputChange('dob', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            {errors.dob && <span className="text-red-500 text-xs font-medium">{errors.dob}</span>}
-                        </label>
-                        <div className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                Gender <span className="text-red-500">*</span>
-                            </span>
-                            <div className="flex gap-6 items-center h-[42px] px-1">
-                                <label className="flex items-center gap-2 cursor-pointer group">
-                                    <div className="relative flex items-center justify-center">
-                                        <input
-                                            className="peer sr-only"
-                                            name="gender"
-                                            type="radio"
-                                            value="male"
-                                            checked={data.gender === 'male'}
-                                            onChange={() => handleInputChange('gender', 'male')}
-                                            disabled={isSubmitting}
-                                        />
-                                        <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
-                                    </div>
-                                    <span className={`text-sm font-medium transition-colors ${data.gender === 'male' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>Male</span>
-                                </label>
-                                <label className="flex items-center gap-2 cursor-pointer group">
-                                    <div className="relative flex items-center justify-center">
-                                        <input
-                                            className="peer sr-only"
-                                            name="gender"
-                                            type="radio"
-                                            value="female"
-                                            checked={data.gender === 'female'}
-                                            onChange={() => handleInputChange('gender', 'female')}
-                                            disabled={isSubmitting}
-                                        />
-                                        <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
-                                    </div>
-                                    <span className={`text-sm font-medium transition-colors ${data.gender === 'female' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>Female</span>
-                                </label>
-                            </div>
-                            {errors.gender && <span className="text-red-500 text-xs font-medium">{errors.gender}</span>}
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                T-shirt Size <span className="text-red-500">*</span>
-                            </span>
-                            <div className="relative">
-                                <select
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all appearance-none cursor-pointer ${errors.tshirtSize
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    value={data.tshirtSize}
-                                    onChange={(e) => handleInputChange('tshirtSize', e.target.value)}
-                                    disabled={isSubmitting}
-                                >
-                                    <option value="">Select Size</option>
-                                    <option value="S">Small (S)</option>
-                                    <option value="M">Medium (M)</option>
-                                    <option value="L">Large (L)</option>
-                                    <option value="XL">Extra Large (XL)</option>
-                                    <option value="XXL">Double Extra Large (XXL)</option>
-                                </select>
-                                <AiOutlineDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
-                            </div>
-                            {errors.tshirtSize && <span className="text-red-500 text-xs font-medium">{errors.tshirtSize}</span>}
-                        </div>
+            <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-                        <label className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                Emergency Contact Name <span className="text-red-500">*</span>
-                            </span>
-                            <div className="relative">
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors.emergencyContactName
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    placeholder="Emergency Contact Name"
-                                    type="text"
-                                    value={data.emergencyContactName}
-                                    onChange={(e) => handleInputChange('emergencyContactName', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            {errors.emergencyContactName && <span className="text-red-500 text-xs font-medium">{errors.emergencyContactName}</span>}
-                        </label>
-
-                        <label className="flex flex-col gap-2">
-                            <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                Emergency Contact Phone <span className="text-red-500">*</span>
-                            </span>
-                            <div className="relative">
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors.emergencyPhone
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    placeholder="07XX XXX XXX"
-                                    type="tel"
-                                    value={data.emergencyPhone}
-                                    onChange={(e) => handleInputChange('emergencyPhone', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            {errors.emergencyPhone && <span className="text-red-500 text-xs font-medium">{errors.emergencyPhone}</span>}
-                        </label>
+                {/* ── Personal Information ── */}
+                <div className="rd4-card">
+                    <SectionLabel
+                        label="Personal Information"
+                        icon={
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+                            </svg>
+                        }
+                    />
+                    <div className="rd4-grid">
+                        <Field label="First Name" required error={errors.firstName}>
+                            <input className={inputClass(!!errors.firstName)} placeholder="Jane" type="text"
+                                value={data.firstName} onChange={e => set('firstName', e.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Last Name" required error={errors.lastName}>
+                            <input className={inputClass(!!errors.lastName)} placeholder="Doe" type="text"
+                                value={data.lastName} onChange={e => set('lastName', e.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Email Address" required error={errors.email}>
+                            <input className={inputClass(!!errors.email)} placeholder="jane.doe@example.com" type="email"
+                                value={data.email} onChange={e => set('email', e.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Phone Number" required error={errors.phoneNumber}>
+                            <input className={inputClass(!!errors.phoneNumber)} placeholder="0712 345 678" type="tel"
+                                value={data.phoneNumber} onChange={e => set('phoneNumber', e.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="National ID / Passport" required error={errors.idNumber}>
+                            <input className={inputClass(!!errors.idNumber)} placeholder="12345678" type="text"
+                                value={data.idNumber} onChange={e => set('idNumber', e.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field
+                            label="Date of Birth" required error={errors.dob}
+                            hint={data.dob ? (
+                                <span className="rd4-age-badge">{calculateAge(data.dob)} yrs old</span>
+                            ) : undefined}
+                        >
+                            <input className={inputClass(!!errors.dob)} type="date"
+                                value={data.dob} onChange={e => set('dob', e.target.value)} disabled={isSubmitting} />
+                        </Field>
                     </div>
                 </div>
 
-                <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-[#e6e0d4] dark:border-[#2d332d]">
-                    <button
-                        onClick={onBack}
-                        className="flex items-center justify-center h-12 px-6 rounded-lg text-gray-500 hover:text-[#1c170d] dark:text-gray-400 dark:hover:text-white font-bold transition-colors cursor-pointer"
-                        type="button"
-                        disabled={isSubmitting}
-                    >
-                        <AiOutlineArrowLeft className="mr-2 text-sm" />
-                        Back
-                    </button>
-                    <button
-                        onClick={onNext}
-                        className="flex min-w-[200px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-primary-dark active:bg-primary/80 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-primary/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
-                        type="button"
-                        disabled={isSubmitting}
-                    >
-                        {isSubmitting ? (
-                            <div className="flex items-center gap-3">
-                                <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                <span>Saving Draft...</span>
+                {/* ── Preferences ── */}
+                <div className="rd4-card">
+                    <SectionLabel
+                        label="Preferences & Safety"
+                        icon={
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                        }
+                    />
+                    <div className="rd4-grid">
+                        <Field label="Gender" required error={errors.gender}>
+                            <div className="rd4-radio-group">
+                                {(['male', 'female'] as const).map(g => (
+                                    <label
+                                        key={g}
+                                        className={`rd4-radio-label${data.gender === g ? ' rd4-radio-checked' : ''}`}
+                                        onClick={() => !isSubmitting && set('gender', g)}
+                                    >
+                                        <div className="rd4-radio-outer">
+                                            <div className="rd4-radio-inner" />
+                                        </div>
+                                        {g.charAt(0).toUpperCase() + g.slice(1)}
+                                    </label>
+                                ))}
                             </div>
-                        ) : (
-                            <>
-                                <span className="truncate">Continue</span>
-                                <AiOutlineArrowRight className="ml-2 text-xl" />
-                            </>
-                        )}
-                    </button>
+                        </Field>
+                        <Field label="T-Shirt Size" required error={errors.tshirtSize}>
+                            <div className="rd4-select-wrap">
+                                <select
+                                    className={inputClass(!!errors.tshirtSize)}
+                                    value={data.tshirtSize}
+                                    onChange={e => set('tshirtSize', e.target.value)}
+                                    disabled={isSubmitting}
+                                >
+                                    <option value="">Select size</option>
+                                    {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
+                                        <option key={s} value={s}>{s === 'S' ? 'Small (S)' : s === 'M' ? 'Medium (M)' : s === 'L' ? 'Large (L)' : s === 'XL' ? 'Extra Large (XL)' : 'Double XL (XXL)'}</option>
+                                    ))}
+                                </select>
+                                <span className="rd4-chevron"><ChevronDown /></span>
+                            </div>
+                        </Field>
+                        <Field label="Emergency Contact Name" required error={errors.emergencyContactName}>
+                            <input className={inputClass(!!errors.emergencyContactName)} placeholder="Full name" type="text"
+                                value={data.emergencyContactName} onChange={e => set('emergencyContactName', e.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Emergency Contact Phone" required error={errors.emergencyPhone}>
+                            <input className={inputClass(!!errors.emergencyPhone)} placeholder="07XX XXX XXX" type="tel"
+                                value={data.emergencyPhone} onChange={e => set('emergencyPhone', e.target.value)} disabled={isSubmitting} />
+                        </Field>
+                    </div>
                 </div>
             </form>
-        </div>
+        </RegistrationStepLayout>
     );
 };
+
 export default Step4RiderDetails;

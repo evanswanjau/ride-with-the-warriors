@@ -1,0 +1,430 @@
+/* ══════════════════════════════════════════════════════════
+   home.css  — HomePage page-specific styles
+   Shared theme vars and utilities come from pages.css
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Page-specific CSS variables ─────────────────────────── */
+:root,
+[data-theme="dark"] {
+    --page-bg: #030712;
+    --raised-bg: #111111;
+    --mid-bg: rgb(10, 10, 10);
+
+    /* Text */
+    --text-1: #ffffff;
+    --text-2: rgba(255, 255, 255, 0.60);
+    --text-3: rgba(255, 255, 255, 0.38);
+
+    /* Borders */
+    --border-1: rgba(255, 255, 255, 0.08);
+    --border-2: rgba(255, 255, 255, 0.14);
+
+    /* Stat strip */
+    --stat-bg: #111111;
+
+    /* Circuit cards */
+    --circuit-bg: #0a0a0a;
+
+    /* About accent panel */
+    --about-accent-bg: rgba(255, 255, 255, 0.03);
+
+    /* CTA cards */
+    --cta-card-bg: rgba(255, 255, 255, 0.04);
+
+    /* Testimonials */
+    --t-section-bg: #0a0a0a;
+    --t-mask-color: #0a0a0a;
+    --t-card-bg: #141414;
+    --t-card-border: rgba(255, 255, 255, 0.07);
+    --t-card-hover: var(--color-primary);
+    --t-text: rgba(255, 255, 255, 0.60);
+    --t-name: #ffffff;
+    --t-meta: rgba(255, 255, 255, 0.36);
+    --t-avatar-bg: rgba(45, 106, 45, 0.14);
+    --t-avatar-bd: rgba(45, 106, 45, 0.28);
+    --t-avatar-txt: #4caf50;
+    --t-badge-bg: rgba(45, 106, 45, 0.10);
+    --t-badge-bd: rgba(45, 106, 45, 0.25);
+    --t-badge-txt: #4caf50;
+}
+
+[data-theme="light"] {
+    --page-bg: #f5f2eb;
+    --raised-bg: #edeae2;
+    --mid-bg: #ebe8df;
+
+    --text-1: #111111;
+    --text-2: rgba(20, 20, 20, 0.62);
+    --text-3: rgba(20, 20, 20, 0.42);
+
+    --border-1: rgba(0, 0, 0, 0.09);
+    --border-2: rgba(0, 0, 0, 0.16);
+
+    --stat-bg: #edeae2;
+    --circuit-bg: #ffffff;
+    --about-accent-bg: rgba(0, 0, 0, 0.025);
+    --cta-card-bg: rgba(0, 0, 0, 0.04);
+
+    --t-section-bg: #edeae2;
+    --t-mask-color: #edeae2;
+    --t-card-bg: #ffffff;
+    --t-card-border: rgba(0, 0, 0, 0.09);
+    --t-card-hover: var(--color-primary);
+    --t-text: rgba(20, 20, 20, 0.62);
+    --t-name: #111111;
+    --t-meta: rgba(20, 20, 20, 0.44);
+    --t-avatar-bg: rgba(36, 89, 36, 0.09);
+    --t-avatar-bd: rgba(36, 89, 36, 0.22);
+    --t-avatar-txt: #245924;
+    --t-badge-bg: rgba(36, 89, 36, 0.07);
+    --t-badge-bd: rgba(36, 89, 36, 0.2);
+    --t-badge-txt: #245924;
+}
+
+/* ── Base ── */
+.rwtw-page {
+    font-family: 'Barlow', sans-serif;
+    background: var(--page-bg);
+    color: var(--text-1);
+    transition: background 0.3s, color 0.3s;
+}
+
+/* ── Section label / Display heading ── */
+.section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-primary-light);
+}
+
+.display-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.03em;
+    line-height: 0.95;
+}
+
+/* ── Ticker ── */
+.ticker-wrap {
+    overflow: hidden;
+    background: var(--color-primary);
+}
+
+.ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker 22s linear infinite;
+}
+
+.ticker-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes ticker {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* ── Grid line ── */
+.grid-line {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.04);
+    pointer-events: none;
+}
+
+/* ── Image hover frame ── */
+.img-hover-frame {
+    position: relative;
+    overflow: hidden;
+}
+
+.img-hover-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--color-primary);
+    transform: scale(1.08);
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+}
+
+.img-hover-frame:hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.img-hover-frame img {
+    transition: transform 0.5s ease;
+}
+
+.img-hover-frame:hover img {
+    transform: scale(1.04);
+}
+
+/* ── CTA diagonal stripe ── */
+.cta-band {
+    background: repeating-linear-gradient(-45deg, transparent, transparent 20px,
+            rgba(255, 255, 255, 0.012) 20px, rgba(255, 255, 255, 0.012) 40px);
+}
+
+[data-theme="light"] .cta-band {
+    background: repeating-linear-gradient(-45deg, transparent, transparent 20px,
+            rgba(0, 0, 0, 0.016) 20px, rgba(0, 0, 0, 0.016) 40px);
+}
+
+/* ── Circuit cards ── */
+.circuit-card {
+    position: relative;
+    overflow: hidden;
+    background: var(--circuit-bg) !important;
+    border-color: var(--border-1) !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+}
+
+.circuit-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+    border-color: var(--color-primary) !important;
+}
+
+.circuit-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(45, 106, 45, 0.06));
+    pointer-events: none;
+}
+
+.circuit-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4.5rem;
+    line-height: 1;
+    color: rgba(45, 106, 45, 0.13);
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    pointer-events: none;
+    transition: color 0.3s;
+}
+
+.circuit-card:hover .circuit-number {
+    color: rgba(45, 106, 45, 0.28);
+}
+
+.circuit-card .circuit-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.06) 50%, transparent 80%);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+.circuit-card:hover .circuit-shimmer {
+    left: 150%;
+    transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ── Stat card ── */
+.stat-card {
+    position: relative;
+    border-left: 3px solid var(--color-primary);
+    padding: 16px 24px;
+    transition: border-color 0.2s;
+}
+
+.stat-card:hover {
+    border-color: var(--color-accent);
+}
+
+/* ════════════════════════════════════
+   TESTIMONIALS CAROUSEL
+   ════════════════════════════════════ */
+.t-section {
+    background: var(--t-section-bg);
+    padding: 96px 0;
+    overflow: hidden;
+    transition: background 0.3s;
+}
+
+.t-header {
+    max-width: 1280px;
+    margin: 0 auto 52px;
+    padding: 0 48px;
+}
+
+.t-heading {
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    color: var(--text-1);
+}
+
+/* Fade-out mask on left & right edges */
+.t-mask {
+    position: relative;
+    overflow: hidden;
+}
+
+.t-mask::before,
+.t-mask::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 160px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.t-mask::before {
+    left: 0;
+    background: linear-gradient(to right, var(--t-mask-color) 0%, transparent 100%);
+}
+
+.t-mask::after {
+    right: 0;
+    background: linear-gradient(to left, var(--t-mask-color) 0%, transparent 100%);
+}
+
+/* Scrolling track */
+.t-track {
+    display: flex;
+    gap: 14px;
+    width: max-content;
+    padding: 6px 0;
+}
+
+.t-track-left {
+    animation: tLeft 36s linear infinite;
+}
+
+.t-track-right {
+    animation: tRight 40s linear infinite;
+}
+
+.t-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes tLeft {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes tRight {
+    from {
+        transform: translateX(-50%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Card */
+.t-card {
+    background: var(--t-card-bg);
+    border: 1px solid var(--t-card-border);
+    width: 300px;
+    flex-shrink: 0;
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    cursor: default;
+}
+
+.t-card:hover {
+    border-color: var(--t-card-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.t-stars {
+    color: var(--color-accent);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+}
+
+.t-text {
+    font-size: 0.85rem;
+    line-height: 1.74;
+    color: var(--t-text);
+    font-style: italic;
+    flex: 1;
+}
+
+.t-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 14px;
+    border-top: 1px solid var(--t-card-border);
+}
+
+.t-avatar {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    background: var(--t-avatar-bg);
+    border: 1px solid var(--t-avatar-bd);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem;
+    color: var(--t-avatar-txt);
+    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+}
+
+.t-author {
+    flex: 1;
+    min-width: 0;
+}
+
+.t-name {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--t-name);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.t-meta {
+    font-size: 0.68rem;
+    color: var(--t-meta);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.t-badge {
+    flex-shrink: 0;
+    padding: 3px 9px;
+    background: var(--t-badge-bg);
+    border: 1px solid var(--t-badge-bd);
+    color: var(--t-badge-txt);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}

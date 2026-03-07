@@ -1,0 +1,360 @@
+/* ══════════════════════════════════════════════════════════
+   faqs.css  — FAQs page-specific styles
+   Shared theme vars and utilities come from pages.css
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Page-specific CSS variables ─────────────────────────── */
+:root,
+[data-theme="dark"] {
+    --faq-q-default: rgba(255, 255, 255, 0.82);
+    --faq-q-open: #ffffff;
+    --faq-icon-bg: rgba(255, 255, 255, 0.07);
+    --faq-icon-color: rgba(255, 255, 255, 0.45);
+    --prize-bg: #141414;
+    --prize-border: rgba(255, 255, 255, 0.07);
+    --cta-bg: #111111;
+}
+
+[data-theme="light"] {
+    --faq-q-default: rgba(20, 20, 20, 0.80);
+    --faq-q-open: #111111;
+    --faq-icon-bg: rgba(0, 0, 0, 0.06);
+    --faq-icon-color: rgba(20, 20, 20, 0.45);
+    --prize-bg: #ffffff;
+    --prize-border: rgba(0, 0, 0, 0.09);
+    --cta-bg: #edeae2;
+}
+
+/* ── Raffle callout banner ───────────────────────────────── */
+.raffle-callout {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.04) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+
+.raffle-callout-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+    font-size: 1.2rem;
+}
+
+.raffle-callout-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    color: var(--color-accent);
+    line-height: 1;
+}
+
+.raffle-callout-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(245, 158, 11, 0.6);
+}
+
+.raffle-callout-text {
+    font-size: 0.85rem;
+    color: var(--p-text-2);
+    line-height: 1.5;
+}
+
+/* ── Prize grid ──────────────────────────────────────────── */
+.prize-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    margin-bottom: 32px;
+}
+
+@media (min-width: 640px) {
+    .prize-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.prize-card {
+    background: var(--prize-bg);
+    border: 1px solid var(--prize-border);
+    padding: 22px 18px;
+    text-align: center;
+    transition: border-color 0.25s, transform 0.25s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    position: relative;
+}
+
+.prize-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-3px);
+}
+
+.prize-card:first-child {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), transparent);
+    border-color: rgba(245, 158, 11, 0.22);
+}
+
+.prize-card:first-child:hover {
+    border-color: var(--color-accent);
+}
+
+.prize-tier {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 10px;
+}
+
+.prize-emoji {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.prize-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    color: var(--p-text-1);
+    margin-bottom: 4px;
+}
+
+.prize-desc {
+    font-size: 0.72rem;
+    color: var(--p-text-3);
+    line-height: 1.5;
+}
+
+/* ── FAQ category block ──────────────────────────────────── */
+.faq-category {
+    margin-bottom: 8px;
+}
+
+.faq-category-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 24px 28px;
+    margin-bottom: 0;
+    background: var(--p-raised);
+    border: 1px solid var(--p-border);
+    border-bottom: none;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+    transition: background 0.3s;
+}
+
+.faq-category-header--raffle {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.07), rgba(245, 158, 11, 0.03));
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+.faq-cat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    background: rgba(45, 106, 45, 0.1);
+    border: 1px solid rgba(45, 106, 45, 0.22);
+    color: var(--color-primary-light);
+}
+
+.faq-cat-label--raffle {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.25);
+    color: var(--color-accent);
+}
+
+.faq-cat-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.55rem;
+    color: var(--p-text-1);
+    letter-spacing: 0.03em;
+    line-height: 1;
+}
+
+.faq-cat-title--raffle {
+    color: var(--color-accent);
+}
+
+.faq-cat-count {
+    margin-left: auto;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--p-text-3);
+}
+
+/* ── FAQ list & items ────────────────────────────────────── */
+.faq-list {
+    background: var(--p-card);
+    border: 1px solid var(--p-border);
+    transition: background 0.3s;
+}
+
+.faq-list--raffle {
+    border-color: rgba(245, 158, 11, 0.15);
+}
+
+.faq-item {
+    border-bottom: 1px solid var(--p-border);
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-list--raffle .faq-item {
+    border-color: rgba(245, 158, 11, 0.1);
+}
+
+.faq-trigger {
+    width: 100%;
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.faq-trigger:hover {
+    background: rgba(255, 255, 255, 0.025);
+}
+
+[data-theme="light"] .faq-trigger:hover {
+    background: rgba(0, 0, 0, 0.025);
+}
+
+.faq-question {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--faq-q-default);
+    transition: color 0.2s;
+    line-height: 1.5;
+}
+
+.faq-question--open {
+    color: var(--color-primary-light);
+}
+
+.faq-list--raffle .faq-question--open {
+    color: var(--color-accent);
+}
+
+.faq-icon-box {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border: 1px solid var(--p-border-2);
+    background: var(--faq-icon-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--faq-icon-color);
+    font-size: 0.85rem;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+}
+
+.faq-icon-box--open {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+}
+
+.faq-list--raffle .faq-icon-box--open {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #111;
+}
+
+.faq-body {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, padding 0.3s ease;
+    padding: 0 28px;
+}
+
+.faq-body--open {
+    max-height: 500px;
+    opacity: 1;
+    padding: 0 28px 24px;
+}
+
+.faq-answer {
+    font-size: 0.9rem;
+    color: var(--p-text-2);
+    line-height: 1.78;
+}
+
+/* ── CTA section ─────────────────────────────────────────── */
+.faqs-cta {
+    margin-top: 72px;
+    background: var(--cta-bg);
+    border: 1px solid var(--p-border);
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+    transition: background 0.3s;
+}
+
+@media (min-width: 640px) {
+    .faqs-cta {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.faqs-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(45, 106, 45, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.faqs-cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    letter-spacing: 0.03em;
+    line-height: 0.95;
+    color: var(--p-text-1);
+    margin-bottom: 12px;
+}
+
+.faqs-cta-text {
+    font-size: 0.9rem;
+    color: var(--p-text-2);
+    line-height: 1.7;
+    max-width: 360px;
+}

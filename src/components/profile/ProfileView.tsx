@@ -18,9 +18,7 @@ import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import { CIRCUITS } from '../../constants';
 import logo from '../../assets/images/logo.png';
-
 import { calculateAge, getCategoryColor, getContrastText } from '../../utils';
-
 
 interface ProfileViewProps {
     registration: any;
@@ -37,137 +35,60 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
     const categoryColor = getCategoryColor(registration.id);
     const contrastText = getContrastText(categoryColor);
 
-
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    };
+    const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const formatPaymentTimestamp = (raw: any) => {
         if (!raw) return '';
         const d = raw.toString();
         if (d.length === 14) {
-            const dt = new Date(
-                `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}T${d.slice(8, 10)}:${d.slice(10, 12)}:${d.slice(12, 14)}`
-            );
-            const ord = (n: number) => {
-                const s = ['th', 'st', 'nd', 'rd'] as const;
-                const v = n % 100;
-                // @ts-ignore - index safety not critical for display
-                return n + (s[(v - 20) % 10] || s[v] || s[0]);
-            };
-            const day = ord(dt.getDate());
-            const mon = dt.toLocaleDateString('en-GB', { month: 'short' });
-            const yr = dt.getFullYear();
-            const time = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-            return `${day} ${mon} ${yr}, ${time}`;
+            const dt = new Date(`${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}T${d.slice(8, 10)}:${d.slice(10, 12)}:${d.slice(12, 14)}`);
+            const ord = (n: number) => { const s = ['th', 'st', 'nd', 'rd'] as const; const v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
+            return `${ord(dt.getDate())} ${dt.toLocaleDateString('en-GB', { month: 'short' })} ${dt.getFullYear()}, ${dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
         }
         return d;
     };
 
     const handleDownloadPDF = async () => {
         const ticketElement = document.getElementById('ticket-container');
-        if (!ticketElement) {
-            console.error('Ticket container not found');
-            return;
-        }
-
+        if (!ticketElement) return;
         try {
-            // Step 1: Capture as high-res PNG (2x for sharpness)
-            const dataUrl = await toPng(ticketElement, {
-                cacheBust: true,
-                pixelRatio: 2,
-                backgroundColor: '#ffffff',
-            });
-
-            // Step 2: Create PDF (A4 Portrait)
+            const dataUrl = await toPng(ticketElement, { cacheBust: true, pixelRatio: 2, backgroundColor: '#ffffff' });
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pageWidth = pdf.internal.pageSize.getWidth();
-
-            // Step 3: Calculate dimensions to maintain aspect ratio
             const margin = 10;
             const imgWidth = pageWidth - (margin * 2);
-
-            // Get original dimensions from dataUrl to calculate aspect ratio
             const img = new Image();
             img.src = dataUrl;
-            await new Promise((resolve) => {
-                img.onload = resolve;
-            });
-
+            await new Promise(resolve => { img.onload = resolve; });
             const imgHeight = (img.height * imgWidth) / img.width;
-
-            // Step 4: Add image to PDF
             pdf.addImage(dataUrl, 'PNG', margin, margin, imgWidth, imgHeight);
-
-            // Step 5: Save
             pdf.save(`RideWithWarriors_Ticket_${registration.id}_${registration.firstName}_${registration.lastName}.pdf`);
-        } catch (error) {
-            console.error('Error generating PDF:', error);
-        }
+        } catch (error) { console.error('Error generating PDF:', error); }
     };
 
-
-
     const handleShare = async () => {
-        const shareData = {
-            title: 'Ride with the Warriors Registration',
-            text: `View my registration for ${circuit.title} - ${registration.id}`,
-            url: window.location.href,
-        };
-
+        const shareData = { title: 'Ride with the Warriors Registration', text: `View my registration for ${circuit.title} - ${registration.id}`, url: window.location.href };
         try {
-            if (navigator.share) {
-                await navigator.share(shareData);
-            } else {
-                await navigator.clipboard.writeText(window.location.href);
-                setCopySuccess(true);
-                setTimeout(() => setCopySuccess(false), 2000);
-            }
-        } catch (err) {
-            console.error('Error sharing:', err);
-        }
+            if (navigator.share) { await navigator.share(shareData); }
+            else { await navigator.clipboard.writeText(window.location.href); setCopySuccess(true); setTimeout(() => setCopySuccess(false), 2000); }
+        } catch (err) { console.error('Error sharing:', err); }
     };
 
     const getParticipantInfo = () => {
-        // Robust payload parsing
         let payloadObj = registration.payload;
-        if (typeof payloadObj === 'string') {
-            try {
-                payloadObj = JSON.parse(payloadObj);
-            } catch (e) {
-                payloadObj = null;
-            }
-        }
-
-        // Deep fallback logic
+        if (typeof payloadObj === 'string') { try { payloadObj = JSON.parse(payloadObj); } catch { payloadObj = null; } }
         const riderDetails = payloadObj?.riderDetails || payloadObj;
         const teamDetails = payloadObj?.teamDetails;
         const familyDetails = payloadObj?.familyDetails;
-
-        // Try to find the specific member if it's a team/family
         let specificMember = null;
         if (registration.type === 'team' && teamDetails?.members) {
-            specificMember = teamDetails.members.find((m: any) =>
-                m.idNumber === registration.idNumber ||
-                (m.firstName === registration.firstName && m.lastName === registration.lastName)
-            );
+            specificMember = teamDetails.members.find((m: any) => m.idNumber === registration.idNumber || (m.firstName === registration.firstName && m.lastName === registration.lastName));
         } else if (registration.type === 'family' && familyDetails?.riders) {
-            // Check all categories
             for (const cat of ['cubs', 'champs', 'tigers']) {
-                const found = familyDetails.riders[cat]?.find((r: any) =>
-                    r.firstName === registration.firstName && r.lastName === registration.lastName
-                );
-                if (found) {
-                    specificMember = found;
-                    break;
-                }
+                const found = familyDetails.riders[cat]?.find((r: any) => r.firstName === registration.firstName && r.lastName === registration.lastName);
+                if (found) { specificMember = found; break; }
             }
         }
-
         const info = {
             name: `${registration.firstName} ${registration.lastName}`,
             email: registration.email || riderDetails?.email || specificMember?.email || 'N/A',
@@ -178,7 +99,6 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
             subtitle: '',
             details: [] as any[]
         };
-
         if (registration.type === 'individual') {
             info.details = [
                 { label: 'ID/Passport', value: registration.idNumber || riderDetails?.idNumber },
@@ -202,469 +122,819 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                 { label: 'Gender', value: registration.gender || specificMember?.gender }
             ];
         }
-
         return info;
     };
 
     const info = getParticipantInfo();
+    const isPaid = registration.status === 'PAID' || registration.status === 'CONFIRMED';
 
     return (
         <div className="selection:bg-primary selection:text-white font-sans print:p-0 print:bg-white">
-            <style>
-                {`
-                    @media print {
-                        @page {
-                            size: auto;
-                            margin: 10mm;
-                        }
-                        nav, footer, .no-print, button {
-                            display: none !important;
-                        }
-                        body {
-                            background: white !important;
-                            -webkit-print-color-adjust: exact !important;
-                            print-color-adjust: exact !important;
-                        }
-                        .print-container {
-                            width: 100% !important;
-                            max-width: none !important;
-                            padding: 0 !important;
-                            margin: 0 !important;
-                        }
-                        .ticket-card {
-                            border: 1px solid #e5e5e5 !important;
-                            box-shadow: none !important;
-                            break-inside: avoid;
-                            page-break-inside: avoid;
-                            display: flex !important;
-                            flex-direction: row !important;
-                            min-height: auto !important;
-                        }
-                        .lg\\:flex-row {
-                            flex-direction: row !important;
-                        }
-                        .lg\\:w-3 {
-                            width: 12px !important;
-                        }
-                        .lg\\:w-80 {
-                            width: 320px !important;
-                        }
-                        .lg\\:block {
-                            display: block !important;
-                        }
-                        .hidden.lg\\:block {
-                            display: block !important;
-                        }
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+                :root, [data-theme="dark"] {
+                    --color-primary: #2d6a2d;
+                    --color-primary-dark: #1e4d1e;
+                    --color-primary-light: #4caf50;
+                    --pv-bg:          #0a0a0a;
+                    --pv-card:        #141414;
+                    --pv-card-alt:    #0e0e0e;
+                    --pv-border:      rgba(255,255,255,0.07);
+                    --pv-border-2:    rgba(255,255,255,0.13);
+                    --pv-text-1:      #ffffff;
+                    --pv-text-2:      rgba(255,255,255,0.58);
+                    --pv-text-3:      rgba(255,255,255,0.32);
+                    --pv-divider:     rgba(255,255,255,0.05);
+                    --pv-raised:      #111111;
+                    --pv-input-bg:    #0a0a0a;
+                    /* status */
+                    --pv-paid-bg:     rgba(45,106,45,0.08);
+                    --pv-paid-bd:     rgba(45,106,45,0.22);
+                    --pv-paid-text:   #4caf50;
+                    --pv-pending-bg:  rgba(245,158,11,0.08);
+                    --pv-pending-bd:  rgba(245,158,11,0.22);
+                    --pv-pending-text:#f59e0b;
+                    --pv-fail-bg:     rgba(220,38,38,0.08);
+                    --pv-fail-bd:     rgba(220,38,38,0.22);
+                    --pv-fail-text:   #ef4444;
+                    /* ticket (always light for PDF) */
+                    --tk-bg:          #ffffff;
+                    --tk-alt:         #f8f8f8;
+                    --tk-border:      #e5e5e5;
+                    --tk-text-1:      #111111;
+                    --tk-text-2:      #555555;
+                    --tk-text-3:      #999999;
+                    --tk-divider:     #eeeeee;
+                }
+                [data-theme="light"] {
+                    --color-primary: #245924;
+                    --color-primary-dark: #1a421a;
+                    --color-primary-light: #2d6a2d;
+                    --pv-bg:          #f5f2eb;
+                    --pv-card:        #ffffff;
+                    --pv-card-alt:    #f9f7f3;
+                    --pv-border:      rgba(0,0,0,0.09);
+                    --pv-border-2:    rgba(0,0,0,0.15);
+                    --pv-text-1:      #111111;
+                    --pv-text-2:      rgba(20,20,20,0.60);
+                    --pv-text-3:      rgba(20,20,20,0.38);
+                    --pv-divider:     rgba(0,0,0,0.05);
+                    --pv-raised:      #edeae2;
+                    --pv-input-bg:    #f9f7f3;
+                    --pv-paid-bg:     rgba(36,89,36,0.07);
+                    --pv-paid-bd:     rgba(36,89,36,0.18);
+                    --pv-paid-text:   #245924;
+                    --pv-pending-bg:  rgba(180,120,0,0.07);
+                    --pv-pending-bd:  rgba(180,120,0,0.18);
+                    --pv-pending-text:#92400e;
+                    --pv-fail-bg:     rgba(185,28,28,0.06);
+                    --pv-fail-bd:     rgba(185,28,28,0.18);
+                    --pv-fail-text:   #b91c1c;
+                }
+
+                .pv-page {
+                    font-family: 'Barlow', sans-serif;
+                    background: var(--pv-bg);
+                    color: var(--pv-text-1);
+                    min-height: 100vh;
+                    transition: background 0.3s, color 0.3s;
+                }
+                .pv-inner { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
+
+                /* ── Shared label system ── */
+                .pv-label-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+                .pv-label-line { height: 1px; width: 32px; background: var(--color-primary); flex-shrink: 0; }
+                .pv-eyebrow {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.62rem; font-weight: 700;
+                    letter-spacing: 0.26em; text-transform: uppercase;
+                    color: var(--color-primary-light);
+                }
+                .pv-micro {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.62rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--pv-text-3);
+                }
+
+                /* ── Topbar ── */
+                .pv-topbar {
+                    display: flex; flex-direction: column; gap: 16px;
+                    margin-bottom: 28px;
+                }
+                @media (min-width: 640px) {
+                    .pv-topbar { flex-direction: row; align-items: center; justify-content: space-between; }
+                }
+
+                .pv-back-btn {
+                    display: inline-flex; align-items: center; gap: 8px;
+                    background: none; border: none; cursor: pointer;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.75rem; font-weight: 700;
+                    letter-spacing: 0.16em; text-transform: uppercase;
+                    color: var(--pv-text-3);
+                    transition: color 0.2s;
+                    padding: 0;
+                }
+                .pv-back-btn:hover { color: var(--color-primary-light); }
+                .pv-back-btn svg { transition: transform 0.2s; }
+                .pv-back-btn:hover svg { transform: translateX(-3px); }
+
+                .pv-topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+                /* ghost action button */
+                .pv-action-btn {
+                    position: relative; overflow: hidden;
+                    display: inline-flex; align-items: center; gap: 7px;
+                    padding: 10px 18px;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.72rem; font-weight: 800;
+                    letter-spacing: 0.15em; text-transform: uppercase;
+                    border: none; cursor: pointer;
+                    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+                }
+                .pv-action-btn::before {
+                    content: ''; position: absolute; top: 0; left: -80%;
+                    width: 60%; height: 100%;
+                    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.4) 50%, transparent 80%);
+                    transform: skewX(-20deg); pointer-events: none;
+                }
+                .pv-action-btn:hover::before { left: 140%; transition: left 0.5s cubic-bezier(0.25,0.46,0.45,0.94); }
+                .pv-action-btn:hover { transform: translateY(-2px); }
+                .pv-action-btn.ghost {
+                    background: var(--pv-card);
+                    border: 1px solid var(--pv-border-2);
+                    color: var(--pv-text-2);
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+                }
+                .pv-action-btn.ghost:hover { border-color: var(--color-primary); color: var(--color-primary-light); }
+                .pv-action-btn.primary {
+                    background: var(--color-primary); color: #fff;
+                }
+                .pv-action-btn.primary:hover { box-shadow: 0 8px 24px rgba(45,106,45,0.35); background: var(--color-primary-dark); }
+
+                /* ── TICKET CARD (always light for PDF readability) ── */
+                #ticket-container {
+                    background: var(--tk-bg);
+                    border: 1px solid var(--tk-border);
+                    overflow: hidden;
+                    display: flex; flex-direction: column;
+                    position: relative;
+                    margin-bottom: 16px;
+                }
+                @media (min-width: 768px) {
+                    #ticket-container { flex-direction: row; }
+                }
+                /* chamfer only on the outer corners */
+                #ticket-container { clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%); }
+
+                /* Main left area */
+                .tk-main {
+                    flex: 3;
+                    padding: 36px 40px;
+                    display: flex; flex-direction: column; justify-content: space-between;
+                    border-bottom: 1px solid var(--tk-border);
+                }
+                @media (min-width: 768px) {
+                    .tk-main { border-bottom: none; border-right: 1px solid var(--tk-border); }
+                }
+                @media (max-width: 640px) { .tk-main { padding: 24px 22px; } }
+
+                .tk-top-row {
+                    display: flex; flex-direction: column; gap: 16px;
+                    margin-bottom: 28px;
+                }
+                @media (min-width: 640px) {
+                    .tk-top-row { flex-direction: row; align-items: flex-start; justify-content: space-between; }
+                }
+
+                .tk-logo-group { display: flex; align-items: center; gap: 12px; }
+                .tk-logo-box {
+                    width: 40px; height: 40px; flex-shrink: 0; overflow: hidden;
+                    display: flex; align-items: center; justify-content: center;
+                    background: var(--tk-alt);
+                    border: 1px solid var(--tk-border);
+                    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+                }
+                .tk-logo-box img { width: 28px; height: 28px; object-fit: contain; }
+                .tk-logo-title {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 1rem; font-weight: 900;
+                    letter-spacing: 0.08em; text-transform: uppercase;
+                    color: var(--tk-text-1); line-height: 1.1;
+                }
+                .tk-logo-sub {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.58rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--tk-text-3); margin-top: 3px;
+                }
+
+                .tk-pass-id-block { text-align: right; }
+                .tk-pass-id-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.58rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--tk-text-3); margin-bottom: 4px;
+                }
+                .tk-pass-id {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700;
+                    color: var(--tk-text-1); line-height: 1;
+                }
+
+                .tk-name-block { margin-bottom: 20px; }
+                .tk-name-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.58rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--tk-text-3); margin-bottom: 6px;
+                }
+                .tk-name {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: clamp(2.4rem, 6vw, 3.8rem);
+                    letter-spacing: 0.03em; line-height: 0.9;
+                    color: var(--tk-text-1); text-transform: uppercase;
+                }
+                .tk-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+                .tk-badge {
+                    padding: 4px 12px;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.6rem; font-weight: 800;
+                    letter-spacing: 0.18em; text-transform: uppercase;
+                    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+                }
+                .tk-badge-neutral {
+                    background: var(--tk-alt);
+                    border: 1px solid var(--tk-border);
+                    color: var(--tk-text-2);
+                }
+
+                /* event meta strip */
+                .tk-meta-strip {
+                    padding-top: 20px;
+                    border-top: 1px solid var(--tk-border);
+                    display: flex; flex-wrap: wrap; gap: 0;
+                }
+                .tk-meta-cell {
+                    flex: 1; min-width: 110px;
+                    padding: 12px 0;
+                    border-right: 1px solid var(--tk-border);
+                    padding-right: 20px;
+                }
+                .tk-meta-cell:last-child { border-right: none; }
+                .tk-meta-cell:not(:first-child) { padding-left: 20px; }
+                .tk-meta-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.58rem; font-weight: 700;
+                    letter-spacing: 0.2em; text-transform: uppercase;
+                    color: var(--tk-text-3); margin-bottom: 5px;
+                }
+                .tk-meta-value {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.85rem; font-weight: 800;
+                    letter-spacing: 0.06em; text-transform: uppercase;
+                    color: var(--tk-text-1);
+                }
+
+                /* QR sidebar */
+                .tk-sidebar {
+                    width: 100%;
+                    padding: 28px 32px;
+                    background: var(--tk-alt);
+                    display: flex; flex-direction: column;
+                    align-items: center; justify-content: space-between; gap: 20px;
+                }
+                @media (min-width: 768px) { .tk-sidebar { width: 260px; flex-shrink: 0; } }
+
+                .tk-status {
+                    display: flex; align-items: center; justify-content: center; gap: 8px;
+                    padding: 9px 20px; width: 100%;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.72rem; font-weight: 800;
+                    letter-spacing: 0.18em; text-transform: uppercase;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+                }
+                .tk-status.paid { background: rgba(45,106,45,0.1); border: 1px solid rgba(45,106,45,0.25); color: #1e4d1e; }
+                .tk-status.pending { background: rgba(180,120,0,0.08); border: 1px solid rgba(180,120,0,0.22); color: #92400e; }
+
+                .tk-qr-box {
+                    padding: 12px; background: #fff;
+                    border: 1px solid var(--tk-border);
+                    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+                }
+
+                /* accent bottom bar */
+                .tk-accent-bar {
+                    position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
+                }
+
+                /* ── Details card ── */
+                .pv-details-card {
+                    background: var(--pv-card);
+                    border: 1px solid var(--pv-border);
+                    padding: 44px 40px;
+                    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+                    margin-bottom: 16px;
+                }
+                @media (max-width: 640px) { .pv-details-card { padding: 28px 22px; } }
+
+                .pv-details-grid {
+                    display: grid; grid-template-columns: 1fr;
+                    gap: 44px;
+                }
+                @media (min-width: 768px) {
+                    .pv-details-grid { grid-template-columns: 1fr 1fr; }
+                }
+
+                .pv-section-title {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.6rem; letter-spacing: 0.03em;
+                    color: var(--pv-text-1); margin-bottom: 24px;
+                }
+                .pv-col-divider {
+                    display: none;
+                }
+                @media (min-width: 768px) {
+                    .pv-col-divider {
+                        display: block;
+                        position: absolute; top: 0; left: 0; bottom: 0;
+                        width: 1px; background: var(--pv-border);
                     }
-                `}
-            </style>
+                }
 
-            <div className="max-w-5xl mx-auto print-container">
-                {/* Navigation & Actions */}
-                <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 no-print">
-                    <button
-                        onClick={onBack}
-                        className="flex items-center gap-2 text-neutral-500 hover:text-primary transition-all group"
-                    >
-                        <AiOutlineArrowLeft className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="text-sm font-black uppercase tracking-widest leading-none pt-0.5">Back to Search</span>
-                    </button>
+                .pv-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+                .pv-field { }
+                .pv-field-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.62rem; font-weight: 700;
+                    letter-spacing: 0.2em; text-transform: uppercase;
+                    color: var(--pv-text-3); margin-bottom: 5px;
+                }
+                .pv-field-value { font-size: 0.9rem; font-weight: 600; color: var(--pv-text-1); word-break: break-all; }
+                .pv-field-value.accent { color: var(--color-primary-light); }
+                .pv-field-value.mono { font-family: 'JetBrains Mono', monospace; }
+                .pv-field-value.large { font-size: 1.1rem; font-weight: 800; color: var(--color-primary-light); }
+                .pv-rule { border: none; border-top: 1px solid var(--pv-divider); margin: 24px 0; }
 
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={handleShare}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-neutral-200 rounded-xl hover:bg-neutral-50 transition-all font-black uppercase tracking-widest text-[10px]"
-                        >
-                            {copySuccess ? <AiOutlineCheck className="text-lg" /> : <AiOutlineShareAlt className="text-lg" />}
-                            {copySuccess ? 'Copied!' : 'Share'}
+                /* line items */
+                .pv-line-item {
+                    display: flex; align-items: center; justify-content: space-between;
+                    padding: 12px 0;
+                    border-bottom: 1px solid var(--pv-divider);
+                    font-size: 0.88rem; color: var(--pv-text-2);
+                }
+                .pv-line-item:last-child { border-bottom: none; }
+                .pv-line-item span:last-child { font-weight: 700; color: var(--pv-text-1); }
+                .pv-total-row {
+                    display: flex; align-items: center; justify-content: space-between;
+                    padding-top: 16px; margin-top: 4px;
+                    border-top: 1px solid var(--pv-border-2);
+                }
+                .pv-total-label {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.3rem; letter-spacing: 0.03em; color: var(--pv-text-1);
+                }
+                .pv-total-value {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.8rem; letter-spacing: 0.02em; color: var(--color-primary-light);
+                }
+
+                /* payment card */
+                .pv-payment-card {
+                    margin-top: 20px;
+                    padding: 20px 22px;
+                    border: 1px solid var(--pv-border);
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+                }
+                .pv-payment-card.paid { background: var(--pv-paid-bg); border-color: var(--pv-paid-bd); }
+                .pv-payment-card.pending { background: var(--pv-pending-bg); border-color: var(--pv-pending-bd); }
+                .pv-payment-card.failed { background: var(--pv-fail-bg); border-color: var(--pv-fail-bd); }
+
+                .pv-payment-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+                .pv-payment-icon {
+                    width: 32px; height: 32px; flex-shrink: 0;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 0.9rem; color: #fff;
+                    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+                }
+                .pv-payment-icon.paid { background: var(--color-primary); }
+                .pv-payment-icon.pending { background: #d97706; }
+                .pv-payment-icon.failed { background: #dc2626; }
+                .pv-payment-status-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.68rem; font-weight: 800;
+                    letter-spacing: 0.2em; text-transform: uppercase;
+                }
+                .pv-payment-status-label.paid { color: var(--pv-paid-text); }
+                .pv-payment-status-label.pending { color: var(--pv-pending-text); }
+                .pv-payment-status-label.failed { color: var(--pv-fail-text); }
+
+                .pv-pay-btn {
+                    position: relative; overflow: hidden;
+                    display: flex; align-items: center; justify-content: center; gap: 8px;
+                    width: 100%; padding: 13px;
+                    background: var(--color-primary); color: #fff;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.78rem; font-weight: 800;
+                    letter-spacing: 0.16em; text-transform: uppercase;
+                    border: none; cursor: pointer; margin-top: 16px;
+                    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+                }
+                .pv-pay-btn::before {
+                    content: ''; position: absolute; top: 0; left: -80%;
+                    width: 60%; height: 100%;
+                    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.42) 50%, transparent 80%);
+                    transform: skewX(-20deg); pointer-events: none;
+                }
+                .pv-pay-btn:hover::before { left: 140%; transition: left 0.5s cubic-bezier(0.25,0.46,0.45,0.94); }
+                .pv-pay-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(45,106,45,0.35); background: var(--color-primary-dark); }
+
+                .pv-no-payment {
+                    margin-top: 20px; padding: 20px;
+                    background: var(--pv-raised);
+                    border: 1px solid var(--pv-border);
+                    display: flex; flex-direction: column; align-items: center; gap: 14px;
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+                }
+
+                /* ── Team roster ── */
+                .pv-roster-card {
+                    background: var(--pv-card);
+                    border: 1px solid var(--pv-border);
+                    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+                    overflow: hidden;
+                    margin-bottom: 16px;
+                }
+                .pv-roster-toggle {
+                    display: flex; align-items: center; justify-content: space-between;
+                    padding: 28px 32px;
+                    background: none; border: none; cursor: pointer; width: 100%;
+                    transition: background 0.2s;
+                }
+                .pv-roster-toggle:hover { background: var(--pv-raised); }
+                .pv-roster-toggle-left { display: flex; align-items: center; gap: 20px; }
+                .pv-roster-icon {
+                    width: 52px; height: 52px; flex-shrink: 0;
+                    background: rgba(45,106,45,0.1);
+                    border: 1px solid rgba(45,106,45,0.2);
+                    display: flex; align-items: center; justify-content: center;
+                    color: var(--color-primary-light); font-size: 1.4rem;
+                    transition: background 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                }
+                .pv-roster-toggle:hover .pv-roster-icon { background: rgba(45,106,45,0.18); }
+                .pv-roster-title {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.5rem; letter-spacing: 0.03em;
+                    color: var(--pv-text-1); line-height: 1;
+                }
+                .pv-roster-sub { font-size: 0.78rem; color: var(--pv-text-3); margin-top: 2px; font-weight: 600; }
+                .pv-roster-chevron {
+                    width: 40px; height: 40px; flex-shrink: 0;
+                    border: 1px solid var(--pv-border);
+                    display: flex; align-items: center; justify-content: center;
+                    color: var(--pv-text-3);
+                    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+                }
+
+                .pv-roster-grid {
+                    display: grid; grid-template-columns: 1fr;
+                    gap: 2px; padding: 2px;
+                    border-top: 1px solid var(--pv-border);
+                }
+                @media (min-width: 640px) { .pv-roster-grid { grid-template-columns: repeat(2, 1fr); } }
+                @media (min-width: 1024px) { .pv-roster-grid { grid-template-columns: repeat(3, 1fr); } }
+
+                .pv-member-card {
+                    background: var(--pv-card-alt);
+                    padding: 22px 24px;
+                    transition: background 0.2s, border-color 0.2s;
+                    border: 1px solid transparent;
+                }
+                .pv-member-card:hover { background: var(--pv-card); border-color: var(--color-primary); }
+
+                .pv-member-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+                .pv-member-avatar {
+                    width: 44px; height: 44px; flex-shrink: 0;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 1.1rem;
+                    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+                }
+                .pv-member-avatar.captain { background: var(--color-primary); color: #fff; }
+                .pv-member-avatar.regular { background: var(--pv-raised); border: 1px solid var(--pv-border); color: var(--pv-text-3); }
+
+                .pv-member-name { font-size: 0.9rem; font-weight: 800; color: var(--pv-text-1); text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.1; }
+                .pv-member-regid { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--color-primary-light); margin-top: 2px; }
+
+                .pv-member-meta {
+                    display: grid; grid-template-columns: repeat(3, 1fr);
+                    gap: 12px; padding-top: 14px;
+                    border-top: 1px solid var(--pv-border);
+                }
+                .pv-member-meta-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pv-text-3); margin-bottom: 3px; font-family: 'Barlow Condensed', sans-serif; }
+                .pv-member-meta-value { font-size: 0.8rem; font-weight: 700; color: var(--pv-text-2); text-transform: uppercase; }
+
+                @media print {
+                    @page { size: auto; margin: 10mm; }
+                    nav, footer, .no-print, button { display: none !important; }
+                    body { background: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    .pv-page { background: white !important; }
+                    #ticket-container { flex-direction: row !important; }
+                    .tk-sidebar { width: 260px !important; display: flex !important; }
+                }
+            `}</style>
+
+            <div className="pv-page">
+                <div className="pv-inner">
+
+                    {/* ── Top bar ── */}
+                    <div className="pv-topbar no-print">
+                        <button onClick={onBack} className="pv-back-btn">
+                            <AiOutlineArrowLeft />
+                            Back to Search
                         </button>
-                        <button
-                            onClick={handleDownloadPDF}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-primary-dark transition-all font-black uppercase tracking-widest text-[10px]"
-                        >
-                            <AiOutlineDownload className="text-lg" />
-                            Download PDF
-                        </button>
-                    </div>
-                </div>
-
-                {/* Ticket Container - Redesigned for Rectangular Boarding Pass Aesthetic */}
-                {/* Simple Ticket Card */}
-                <div id="ticket-container" className="relative max-w-6xl mx-auto flex flex-col lg:flex-row bg-white rounded-3xl overflow-hidden border border-neutral-200">
-
-                    {/* Main Content Area */}
-                    <div className="flex-[3] p-6 lg:p-8 flex flex-col justify-between">
-                        <div>
-                            <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-xl overflow-hidden flex items-center justify-center">
-                                        <img
-                                            src={logo}
-                                            alt="Ride With The Warriors"
-                                            className="h-10 w-10 object-contain"
-                                        />
-                                    </div>
-                                    <div>
-                                        <h2 className="text-lg md:text-xl font-black text-neutral-900 tracking-tight leading-snug uppercase">
-                                            RIDE WITH THE WARRIORS
-                                        </h2>
-                                        <p className="text-[10px] font-bold text-neutral-400 tracking-wide mt-1 uppercase">
-                                            Official participant pass 2026
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
-                                        Pass ID
-                                    </p>
-                                    <p className="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
-                                        {registration.id}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="mb-8">
-                                <p className="text-[10px] font-bold text-neutral-400 tracking-wide mb-2 uppercase">
-                                    Participant name
-                                </p>
-                                <h1 className="text-3xl md:text-5xl font-black text-neutral-900 uppercase tracking-tighter truncate leading-tight">
-                                    {registration.firstName} {registration.lastName}
-                                </h1>
-
-                                <div className="mt-4 flex flex-wrap gap-2">
-                                    <span
-                                        className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm"
-                                        style={{ backgroundColor: categoryColor, color: contrastText }}
-                                    >
-                                        Category: {registration.category || 'Rider'}
-                                    </span>
-                                    <span className="px-4 py-1.5 rounded-full bg-neutral-100 text-neutral-600 text-[10px] font-black uppercase tracking-widest">
-                                        Type: {registration.type}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Event Details Row */}
-                        <div className="pt-6 border-t border-neutral-100">
-                            <div className="flex flex-wrap items-start justify-between gap-y-3 text-left">
-                                <div className="flex flex-col min-w-[120px] flex-1">
-                                    <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
-                                        Circuit
-                                    </p>
-                                    <p className="text-sm font-black text-neutral-900 uppercase leading-tight">
-                                        {circuit.title}
-                                    </p>
-                                </div>
-                                <div className="flex flex-col min-w-[120px] flex-1">
-                                    <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
-                                        Distance
-                                    </p>
-                                    <p className="text-sm font-black text-neutral-900 uppercase leading-tight">
-                                        {circuit.distance}
-                                    </p>
-                                </div>
-                                <div className="flex flex-col min-w-[120px] flex-1">
-                                    <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
-                                        Date
-                                    </p>
-                                    <p className="text-sm font-black text-neutral-900 uppercase leading-tight">
-                                        {circuit.date}
-                                    </p>
-                                </div>
-                                <div className="flex flex-col min-w-[120px] flex-1">
-                                    <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">
-                                        Start Time
-                                    </p>
-                                    <p className="text-sm font-black text-neutral-900 uppercase leading-tight">
-                                        {circuit.time}
-                                    </p>
-                                </div>
-                            </div>
+                        <div className="pv-topbar-actions">
+                            <button onClick={handleShare} className="pv-action-btn ghost">
+                                {copySuccess ? <AiOutlineCheck /> : <AiOutlineShareAlt />}
+                                {copySuccess ? 'Copied!' : 'Share'}
+                            </button>
+                            <button onClick={handleDownloadPDF} className="pv-action-btn primary">
+                                <AiOutlineDownload />
+                                Download PDF
+                            </button>
                         </div>
                     </div>
 
-                    {/* Simple Sidebar Divider (Mobile: Horizontal, Desktop: Vertical) */}
-                    <div className="h-px lg:h-auto lg:w-px bg-neutral-100 mx-6 lg:mx-0 lg:my-8" />
+                    {/* ── Ticket ── */}
+                    <div id="ticket-container">
+                        {/* Main area */}
+                        <div className="tk-main">
+                            <div>
+                                {/* Logo + Pass ID */}
+                                <div className="tk-top-row">
+                                    <div className="tk-logo-group">
+                                        <div className="tk-logo-box">
+                                            <img src={logo} alt="RWTW" />
+                                        </div>
+                                        <div>
+                                            <div className="tk-logo-title">Ride With The Warriors</div>
+                                            <div className="tk-logo-sub">Official Participant Pass 2026</div>
+                                        </div>
+                                    </div>
+                                    <div className="tk-pass-id-block">
+                                        <div className="tk-pass-id-label">Pass ID</div>
+                                        <div className="tk-pass-id">{registration.id}</div>
+                                    </div>
+                                </div>
 
-                    {/* QR & Status Section */}
-                    <div className="w-full lg:w-72 p-6 lg:p-8 flex flex-col items-center justify-between bg-neutral-50/50">
-                        <div className="w-full text-center lg:text-left mb-6">
-                            <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-3 text-center">Security Status</p>
-                            <div className={`py-3 px-4 rounded-2xl flex items-center justify-center gap-2 border font-black uppercase tracking-widest text-xs ${registration.status === 'PAID' || registration.status === 'CONFIRMED'
-                                ? 'bg-green-50 border-green-100 text-green-600'
-                                : 'bg-amber-50 border-amber-100 text-amber-600'
-                                }`}>
-                                {registration.status === 'PAID' || registration.status === 'CONFIRMED' ? <AiOutlineCheckCircle className="text-lg" /> : <AiOutlineHourglass className="text-lg" />}
-                                {registration.status}
+                                {/* Name + badges */}
+                                <div className="tk-name-block">
+                                    <div className="tk-name-label">Participant Name</div>
+                                    <div className="tk-name">{registration.firstName} {registration.lastName}</div>
+                                    <div className="tk-badges">
+                                        <span className="tk-badge" style={{ backgroundColor: categoryColor, color: contrastText }}>
+                                            Category: {registration.category || 'Rider'}
+                                        </span>
+                                        <span className="tk-badge tk-badge-neutral">Type: {registration.type}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Event meta strip */}
+                            <div className="tk-meta-strip">
+                                {[
+                                    { label: 'Circuit', value: circuit.title },
+                                    { label: 'Distance', value: circuit.distance },
+                                    { label: 'Date', value: circuit.date },
+                                    { label: 'Start Time', value: circuit.time },
+                                ].map((m, i) => (
+                                    <div key={i} className="tk-meta-cell">
+                                        <div className="tk-meta-label">{m.label}</div>
+                                        <div className="tk-meta-value">{m.value}</div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-center gap-4">
-                            <div id="qr-code-canvas" className="p-3 bg-white rounded-2xl border border-neutral-100">
+                        {/* QR sidebar */}
+                        <div className="tk-sidebar">
+                            <div style={{ width: '100%' }}>
+                                <div className="tk-pass-id-label" style={{ textAlign: 'center', marginBottom: 10 }}>Security Status</div>
+                                <div className={`tk-status ${isPaid ? 'paid' : 'pending'}`}>
+                                    {isPaid ? <AiOutlineCheckCircle /> : <AiOutlineHourglass />}
+                                    {registration.status}
+                                </div>
+                            </div>
+
+                            <div className="tk-qr-box">
                                 <QRCodeCanvas
                                     value={`${window.location.host === 'localhost:5173' || window.location.host.includes('vercel.app') ? window.location.origin : 'https://ridewiththewarriors.com'}/profile/${registration.id}`}
-                                    size={160}
-                                    level="H"
-                                    includeMargin={true}
-                                    imageSettings={{
-                                        src: logo,
-                                        height: 32,
-                                        width: 32,
-                                        excavate: true
-                                    }}
+                                    size={160} level="H" includeMargin={true}
+                                    imageSettings={{ src: logo, height: 32, width: 32, excavate: true }}
                                 />
                             </div>
                         </div>
+
+                        {/* Accent bar */}
+                        <div className="tk-accent-bar" style={{ backgroundColor: categoryColor }} />
                     </div>
 
-                    {/* Color Accent Border - Bottom */}
-                    <div
-                        className="absolute bottom-0 left-0 w-full h-1"
-                        style={{ backgroundColor: categoryColor }}
-                    />
-                </div>
+                    {/* ── Details card ── */}
+                    <div className="pv-details-card no-print">
+                        <div className="pv-details-grid">
+                            {/* Contact info */}
+                            <div>
+                                <div className="pv-label-row">
+                                    <div className="pv-label-line" />
+                                    <span className="pv-eyebrow">Contact Information</span>
+                                </div>
+                                <div className="pv-section-title">Rider Details</div>
 
-                {/* Additional Details (Collapsible Roster for Teams) */}
-                {/* Single Combined Details Card */}
-                <div className="mt-8 bg-white rounded-[2rem] p-8 border border-neutral-200 no-print">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        {/* Left Side: Contact details */}
-                        <div>
-                            <h3 className="text-lg font-black text-neutral-900 tracking-tight mb-6 uppercase">
-                                Contact information
-                            </h3>
-                            <div className="space-y-6">
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div>
-                                        <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
-                                            Email address
-                                        </p>
-                                        <p className="text-neutral-900 font-medium break-all">{info.email}</p>
+                                <div className="pv-field-grid">
+                                    <div className="pv-field">
+                                        <div className="pv-field-label">Email Address</div>
+                                        <div className="pv-field-value" style={{ fontSize: '0.82rem' }}>{info.email}</div>
                                     </div>
-                                    <div>
-                                        <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
-                                            Primary phone
-                                        </p>
-                                        <p className="text-neutral-900 font-medium">{info.phone}</p>
+                                    <div className="pv-field">
+                                        <div className="pv-field-label">Primary Phone</div>
+                                        <div className="pv-field-value">{info.phone}</div>
                                     </div>
                                 </div>
 
-                                <div className="pt-4 border-t border-neutral-100 grid grid-cols-2 gap-6">
-                                    <div>
-                                        <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
-                                            T‑shirt size
-                                        </p>
-                                        <p className="text-primary font-bold text-lg">{info.tshirtSize}</p>
+                                <hr className="pv-rule" />
+
+                                <div className="pv-field-grid">
+                                    <div className="pv-field">
+                                        <div className="pv-field-label">T-Shirt Size</div>
+                                        <div className="pv-field-value large">{info.tshirtSize}</div>
                                     </div>
                                     {info.details.map((detail, idx) => (
-                                        <div key={idx}>
-                                            <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
-                                                {detail.label}
-                                            </p>
-                                            <p className="text-neutral-900 font-medium capitalize">{detail.value}</p>
+                                        <div key={idx} className="pv-field">
+                                            <div className="pv-field-label">{detail.label}</div>
+                                            <div className="pv-field-value" style={{ textTransform: 'capitalize' }}>{detail.value}</div>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="pt-4 grid grid-cols-2 gap-6 border-t border-neutral-100">
-                                    <div>
-                                        <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
-                                            Emergency contact
-                                        </p>
-                                        <p className="text-neutral-900 font-medium">{info.emergencyContact}</p>
+                                <hr className="pv-rule" />
+
+                                <div className="pv-field-grid">
+                                    <div className="pv-field">
+                                        <div className="pv-field-label">Emergency Contact</div>
+                                        <div className="pv-field-value">{info.emergencyContact}</div>
                                     </div>
-                                    <div>
-                                        <p className="text-[10px] font-bold tracking-wide text-neutral-400 mb-1 uppercase">
-                                            Emergency phone
-                                        </p>
-                                        <p className="text-primary font-bold font-mono">{info.emergencyPhone}</p>
+                                    <div className="pv-field">
+                                        <div className="pv-field-label">Emergency Phone</div>
+                                        <div className="pv-field-value accent mono">{info.emergencyPhone}</div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Right Side / Vertical Follow: Transaction summary */}
-                        <div className="md:border-l md:border-neutral-100 md:pl-12 pt-12 md:pt-0 border-t md:border-t-0 mt-12 md:mt-0 pt-12 md:pt-0">
-                            <h3 className="text-lg font-black text-neutral-900 tracking-tight mb-6 uppercase">
-                                Transaction summary
-                            </h3>
-                            <div className="space-y-4">
-                                {pricing?.lineItems?.map((item: any, idx: number) => (
-                                    <div key={idx} className="flex justify-between items-center py-2 border-b border-neutral-50 last:border-0">
-                                        <span className="text-sm text-neutral-500 font-medium font-bold">{item.label}</span>
-                                        <span className="text-sm font-black text-neutral-900 leading-none">KES {item.amount.toLocaleString()}</span>
+                            {/* Transaction summary */}
+                            <div style={{ position: 'relative', paddingLeft: 0 }}>
+                                <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 1, background: 'var(--pv-border)' }} className="hidden md:block" />
+                                <div style={{ paddingLeft: 0 }} className="md:pl-10">
+                                    <div className="pv-label-row">
+                                        <div className="pv-label-line" />
+                                        <span className="pv-eyebrow">Transaction Summary</span>
                                     </div>
-                                ))}
-                                <div className="mt-4 pt-4 flex justify-between items-center border-t border-neutral-100">
-                                    <span className="text-lg font-black text-neutral-900 uppercase tracking-tighter">Total Price</span>
-                                    <span className="text-2xl font-black text-primary">KES {pricing?.totalAmount?.toLocaleString() || 0}</span>
-                                </div>
+                                    <div className="pv-section-title">Payment Record</div>
 
-                                {/* Payment Card */}
-                                {registration.latestPayment ? (
-                                    <div className={`mt-6 p-4 rounded-2xl border ${registration.latestPayment.status === 'PAID'
-                                        ? 'bg-primary/10 border-primary/20'
-                                        : registration.latestPayment.status === 'FAILED'
-                                            ? 'bg-red-50 dark:bg-red-900/10 border-red-100 dark:border-red-800/50'
-                                            : 'bg-amber-50 dark:bg-amber-900/10 border-amber-100 dark:border-amber-800/50'
-                                        }`}>
-                                        {/* Header */}
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className={`size-8 rounded-full flex items-center justify-center text-white ${registration.latestPayment.status === 'PAID' ? 'bg-primary' :
-                                                registration.latestPayment.status === 'FAILED' ? 'bg-red-500' : 'bg-amber-500'
-                                                }`}>
-                                                <AiOutlineCreditCard className="text-sm" />
-                                            </div>
-                                            <p className={`text-[10px] font-black uppercase tracking-widest ${registration.latestPayment.status === 'PAID' ? 'text-primary-dark' :
-                                                registration.latestPayment.status === 'FAILED' ? 'text-red-700 dark:text-red-400' : 'text-amber-700 dark:text-amber-400'
-                                                }`}>
-                                                {registration.latestPayment.status === 'PAID' ? 'Payment Confirmed' :
-                                                    registration.latestPayment.status === 'FAILED' ? 'Payment Failed' : 'Payment Pending'}
-                                            </p>
+                                    {pricing?.lineItems?.map((item: any, idx: number) => (
+                                        <div key={idx} className="pv-line-item">
+                                            <span>{item.label}</span>
+                                            <span>KES {item.amount.toLocaleString()}</span>
                                         </div>
+                                    ))}
 
-                                        {/* Receipt fields */}
-                                        <div className="grid grid-cols-2 gap-3">
-                                            {registration.latestPayment.mpesaReceiptNumber && (
-                                                <div className="col-span-2">
-                                                    <p className="text-[9px] text-neutral-400 font-bold mb-0.5 uppercase">
-                                                        Transaction code
-                                                    </p>
-                                                    <p className="text-sm font-mono font-black text-neutral-900 dark:text-neutral-100 tracking-wider">
-                                                        {registration.latestPayment.mpesaReceiptNumber}
-                                                    </p>
+                                    <div className="pv-total-row">
+                                        <span className="pv-total-label">Total Price</span>
+                                        <span className="pv-total-value">KES {pricing?.totalAmount?.toLocaleString() || 0}</span>
+                                    </div>
+
+                                    {/* Payment card */}
+                                    {registration.latestPayment ? (() => {
+                                        const st = registration.latestPayment.status;
+                                        const cls = st === 'PAID' ? 'paid' : st === 'FAILED' ? 'failed' : 'pending';
+                                        const label = st === 'PAID' ? 'Payment Confirmed' : st === 'FAILED' ? 'Payment Failed' : 'Payment Pending';
+                                        return (
+                                            <div className={`pv-payment-card ${cls}`}>
+                                                <div className="pv-payment-header">
+                                                    <div className={`pv-payment-icon ${cls}`}><AiOutlineCreditCard /></div>
+                                                    <span className={`pv-payment-status-label ${cls}`}>{label}</span>
                                                 </div>
-                                            )}
-                                            {registration.latestPayment.transactionDate && (
-                                                <div>
-                                                    <p className="text-[9px] text-neutral-400 font-bold mb-0.5 uppercase">
-                                                        Payment timestamp
-                                                    </p>
-                                                    <p className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
-                                                        {formatPaymentTimestamp(registration.latestPayment.transactionDate)}
-                                                    </p>
+                                                <div className="pv-field-grid">
+                                                    {registration.latestPayment.mpesaReceiptNumber && (
+                                                        <div className="pv-field" style={{ gridColumn: '1 / -1' }}>
+                                                            <div className="pv-field-label">Transaction Code</div>
+                                                            <div className="pv-field-value mono">{registration.latestPayment.mpesaReceiptNumber}</div>
+                                                        </div>
+                                                    )}
+                                                    {registration.latestPayment.transactionDate && (
+                                                        <div className="pv-field">
+                                                            <div className="pv-field-label">Payment Timestamp</div>
+                                                            <div className="pv-field-value" style={{ fontSize: '0.8rem' }}>{formatPaymentTimestamp(registration.latestPayment.transactionDate)}</div>
+                                                        </div>
+                                                    )}
+                                                    <div className="pv-field">
+                                                        <div className="pv-field-label">Amount</div>
+                                                        <div className="pv-field-value accent">KES {(registration.latestPayment.amount || 0).toLocaleString()}</div>
+                                                    </div>
+                                                    {registration.latestPayment.phone && (
+                                                        <div className="pv-field">
+                                                            <div className="pv-field-label">Phone</div>
+                                                            <div className="pv-field-value mono" style={{ fontSize: '0.8rem' }}>{registration.latestPayment.phone}</div>
+                                                        </div>
+                                                    )}
+                                                    {st === 'FAILED' && registration.latestPayment.failureReason && (
+                                                        <div className="pv-field" style={{ gridColumn: '1 / -1' }}>
+                                                            <div className="pv-field-label" style={{ color: 'var(--pv-fail-text)' }}>Reason</div>
+                                                            <div className="pv-field-value" style={{ color: 'var(--pv-fail-text)', fontSize: '0.82rem' }}>{registration.latestPayment.failureReason}</div>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
-                                            <div>
-                                                <p className="text-[9px] text-neutral-400 font-bold mb-0.5 uppercase">Amount</p>
-                                                <p className="text-sm font-black text-primary">KES {(registration.latestPayment.amount || 0).toLocaleString()}</p>
+                                                {st !== 'PAID' && !isPaid && (
+                                                    <button onClick={() => navigate(`/payment/${registration.id}`, { state: { amount: registration.totalAmount || pricing?.totalAmount || registration.latestPayment.amount || 0, email: registration.email || '', phoneNumber: registration.phoneNumber || registration.latestPayment.phone || '' } })} className="pv-pay-btn">
+                                                        <AiOutlineCreditCard />
+                                                        {st === 'FAILED' ? 'Retry Payment' : 'Complete Payment'}
+                                                    </button>
+                                                )}
                                             </div>
-                                            {registration.latestPayment.phone && (
-                                                <div>
-                                                    <p className="text-[9px] text-neutral-400 font-bold mb-0.5 uppercase">Phone</p>
-                                                    <p className="text-xs font-mono font-bold text-neutral-700 dark:text-neutral-300">{registration.latestPayment.phone}</p>
-                                                </div>
-                                            )}
-                                            {registration.latestPayment.status === 'FAILED' && registration.latestPayment.failureReason && (
-                                                <div className="col-span-2">
-                                                    <p className="text-[9px] text-red-500 font-bold mb-0.5 uppercase">Reason</p>
-                                                    <p className="text-xs text-red-600 dark:text-red-400">{registration.latestPayment.failureReason}</p>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Retry / Pay Now button — shown when not yet PAID */}
-                                        {registration.latestPayment.status !== 'PAID' && registration.status !== 'PAID' && registration.status !== 'CONFIRMED' && (
-                                            <button
-                                                onClick={() => navigate(`/payment/${registration.id}`, {
-                                                    state: {
-                                                        amount: registration.totalAmount || registration.pricing?.totalAmount || registration.latestPayment.amount || 0,
-                                                        email: registration.email || '',
-                                                        phoneNumber: registration.phoneNumber || registration.latestPayment.phone || ''
-                                                    }
-                                                })}
-                                                className="mt-4 flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-white text-xs font-black uppercase tracking-widest hover:bg-primary-dark transition-all"
-                                            >
-                                                <AiOutlineCreditCard />
-                                                {registration.latestPayment.status === 'FAILED' ? 'Retry Payment' : 'Complete Payment'}
+                                        );
+                                    })() : (!isPaid ? (
+                                        <div className="pv-no-payment">
+                                            <span className="pv-micro">No payment recorded yet</span>
+                                            <button onClick={() => navigate(`/payment/${registration.id}`, { state: { amount: registration.totalAmount || pricing?.totalAmount || 0, email: registration.email || '', phoneNumber: registration.phoneNumber || '' } })} className="pv-pay-btn" style={{ marginTop: 0 }}>
+                                                <AiOutlineCreditCard /> Pay Now
                                             </button>
-                                        )}
-                                    </div>
-                                ) : (registration.status !== 'PAID' && registration.status !== 'CONFIRMED') ? (
-                                    <div className="mt-6 p-4 rounded-2xl border border-neutral-100 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50 flex flex-col items-center gap-3">
-                                        <p className="text-[10px] font-black text-neutral-400 tracking-wide">No payment recorded yet</p>
-                                        <button
-                                            onClick={() => navigate(`/payment/${registration.id}`, {
-                                                state: {
-                                                    amount: registration.totalAmount || registration.pricing?.totalAmount || 0,
-                                                    email: registration.email || '',
-                                                    phoneNumber: registration.phoneNumber || ''
-                                                }
-                                            })}
-                                            className="flex items-center gap-2 w-full py-3 rounded-xl bg-primary text-white text-xs font-black uppercase tracking-widest hover:bg-primary-dark transition-all justify-center"
-                                        >
-                                            <AiOutlineCreditCard />
-                                            Pay Now
-                                        </button>
-                                    </div>
-                                ) : null}
+                                        </div>
+                                    ) : null)}
 
-                                <p className="text-[10px] text-neutral-400 font-bold tracking-wide text-center mt-6">
-                                    Registered on {formatDate(registration.createdAt)}
-                                </p>
+                                    <p className="pv-micro" style={{ textAlign: 'center', marginTop: 20 }}>
+                                        Registered on {formatDate(registration.createdAt)}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {registration.type === 'team' && (
-                    <div className="mt-8 print:mt-12 no-print">
+                    {/* ── Team Roster ── */}
+                    {registration.type === 'team' && (
                         <div className="no-print">
-                            <button
-                                onClick={() => setShowAllMembers(!showAllMembers)}
-                                className="w-full p-8 bg-white rounded-[2rem] border border-neutral-200 text-left hover:bg-neutral-50 transition-colors flex items-center justify-between group"
-                            >
-                                <div className="flex items-center gap-6">
-                                    <div className="size-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                                        <AiOutlineTeam className="text-3xl" />
+                            <div className="pv-roster-card">
+                                <button className="pv-roster-toggle" onClick={() => setShowAllMembers(!showAllMembers)}>
+                                    <div className="pv-roster-toggle-left">
+                                        <div className="pv-roster-icon"><AiOutlineTeam /></div>
+                                        <div>
+                                            <div className="pv-roster-title">Team Roster</div>
+                                            <div className="pv-roster-sub">{payload.teamDetails.members.length} Registered Riders</div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h3 className="text-xl font-black text-neutral-900 uppercase tracking-tighter mb-1">Team Roster</h3>
-                                        <p className="text-sm text-neutral-400 font-black uppercase tracking-widest">{payload.teamDetails.members.length} Registered Riders</p>
+                                    <div className="pv-roster-chevron">
+                                        <AiOutlineDown style={{ transition: 'transform 0.3s', transform: showAllMembers ? 'rotate(180deg)' : 'rotate(0deg)' }} />
                                     </div>
-                                </div>
-                                <div className="size-12 rounded-full border border-neutral-200 flex items-center justify-center text-neutral-900">
-                                    <AiOutlineDown className="transition-transform duration-300" style={{ transform: showAllMembers ? 'rotate(180deg)' : 'rotate(0deg)' }} />
-                                </div>
-                            </button>
-                        </div>
+                                </button>
 
-                        {(showAllMembers || true) && (
-                            <div className={`${showAllMembers ? '' : 'hidden print:grid'} mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-4 duration-500 print:grid print:gap-4 print:mt-8`}>
-                                {payload.teamDetails.members.map((member: any, idx: number) => (
-                                    <div key={idx} className="bg-white rounded-2xl p-6 border border-neutral-200 hover:border-primary/30 transition-colors">
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <div className={`size-12 rounded-xl flex items-center justify-center ${member.isCaptain ? 'bg-primary text-white' : 'bg-neutral-100 text-neutral-400'}`}>
-                                                {member.isCaptain ? <AiOutlineStar /> : <AiOutlineUser />}
+                                {showAllMembers && (
+                                    <div className="pv-roster-grid">
+                                        {payload.teamDetails.members.map((member: any, idx: number) => (
+                                            <div key={idx} className="pv-member-card">
+                                                <div className="pv-member-top">
+                                                    <div className={`pv-member-avatar ${member.isCaptain ? 'captain' : 'regular'}`}>
+                                                        {member.isCaptain ? <AiOutlineStar /> : <AiOutlineUser />}
+                                                    </div>
+                                                    <div>
+                                                        <div className="pv-member-name">{member.firstName} {member.lastName}</div>
+                                                        <div className="pv-member-regid">{member.regId || `${registration.id}-${idx + 1}`}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="pv-member-meta">
+                                                    <div>
+                                                        <div className="pv-member-meta-label">Gender</div>
+                                                        <div className="pv-member-meta-value">{member.gender}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div className="pv-member-meta-label">Age</div>
+                                                        <div className="pv-member-meta-value">{calculateAge(member.dob)} yrs</div>
+                                                    </div>
+                                                    <div>
+                                                        <div className="pv-member-meta-label">T-shirt</div>
+                                                        <div className="pv-member-meta-value">{member.tshirtSize}</div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h4 className="font-black text-neutral-900 uppercase tracking-tighter leading-tight">
-                                                    {member.firstName} {member.lastName}
-                                                </h4>
-                                                <p className="text-[10px] font-black text-primary uppercase tracking-widest">{member.regId || 'PENDING'}</p>
-                                            </div>
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4 pt-4 border-t border-neutral-100">
-                                            <div>
-                                                <p className="text-[8px] font-black text-neutral-400 uppercase tracking-widest mb-1">Gender</p>
-                                                <p className="text-xs font-bold text-neutral-900 uppercase">{member.gender}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-[8px] font-black text-neutral-400 uppercase tracking-widest mb-1">Age</p>
-                                                <p className="text-xs font-bold text-neutral-900 leading-none">{calculateAge(member.dob)} YRS</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-[8px] font-black text-neutral-400 uppercase tracking-widest mb-1">T-shirt</p>
-                                                <p className="text-xs font-bold text-neutral-900 leading-none">{member.tshirtSize}</p>
-                                            </div>
-                                        </div>
+                                        ))}
                                     </div>
-                                ))}
+                                )}
                             </div>
-                        )}
-                    </div>
-                )}
+                        </div>
+                    )}
+
+                </div>
             </div>
         </div>
     );

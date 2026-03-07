@@ -4,23 +4,29 @@ import ErrorBanner from '../common/ErrorBanner';
 import { calculateAge } from '../../utils';
 
 
-import {
-    AiOutlineExperiment,
-    AiOutlineUser,
-    AiOutlineDelete,
-    AiOutlinePlusCircle,
-    AiOutlineSafety,
-    AiOutlineInfoCircle,
-    AiOutlineArrowLeft,
-    AiOutlineArrowRight,
-    AiOutlineDown
-} from 'react-icons/ai';
-import {
-    MdPedalBike,
-    MdDirectionsBike,
-    MdPersonOff,
-    MdWoman
-} from 'react-icons/md';
+import RegistrationStepLayout from './ui/RegistrationStepLayout';
+import { MdPedalBike, MdDirectionsBike } from 'react-icons/md';
+
+const ArrowLeft = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
+    </svg>
+);
+const ArrowRight = () => (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+    </svg>
+);
+const PlusIcon = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+);
+const TrashIcon = () => (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" />
+    </svg>
+);
 
 interface FamilyRegistrationFlowProps {
     data: FamilyDetails;
@@ -32,7 +38,7 @@ interface FamilyRegistrationFlowProps {
     isSubmitting: boolean;
 }
 
-const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: FamilyRegistrationFlowProps) => {
+const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, isSubmitting }: FamilyRegistrationFlowProps) => {
     const categories = [
         { id: 'cubs', title: 'Cubs (Ages 4-8)', icon: MdPedalBike },
         { id: 'champs', title: 'Champs (Ages 9-13)', icon: MdDirectionsBike }
@@ -119,196 +125,272 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
     };
 
     return (
-        <div className="layout-content-container flex flex-col flex-1 w-full gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Header Section */}
-            <div className="flex flex-wrap justify-between gap-3 px-4">
-                <div className="flex min-w-72 flex-col gap-3">
-                    <h1 className="text-text-light dark:text-white tracking-tight text-[32px] md:text-4xl font-bold leading-tight">
-                        Who's riding today?
-                    </h1>
-                    <p className="text-text-muted-light dark:text-gray-400 text-base font-normal leading-normal max-w-2xl">
-                        Register your little warriors for their specific age groups. You can add multiple riders across different categories.
-                    </p>
-                </div>
-                <div className="flex items-center">
-                    <button
-                        onClick={() => {
-                            onChange({
-                                guardian: {
-                                    firstName: 'Jane',
+        <RegistrationStepLayout
+            stepLabel="Step 3 of 4"
+            title="Family Warriors"
+            subtitle="Register your little champions for their specific age groups. Strength lies in numbers."
+            headerRight={
+                <button
+                    onClick={() => {
+                        onChange({
+                            guardian: {
+                                firstName: 'Jane',
+                                lastName: 'Doe',
+                                fullName: 'Jane Doe',
+                                dob: '1985-06-20',
+                                email: `jane.doe.${Math.floor(Math.random() * 1000)}@example.com`,
+                                phoneNumber: '0712345678',
+                                idNumber: '12345678',
+                                gender: 'female',
+                                participation: 'mom',
+                                tshirtSize: 'M',
+                                relationship: 'Mother',
+                                emergencyPhone: '0788990011',
+                                emergencyContactName: 'John Doe'
+                            },
+                            riders: {
+                                cubs: [{
+                                    id: Math.random().toString(36).substr(2, 9),
+                                    firstName: 'Leo',
                                     lastName: 'Doe',
-                                    fullName: 'Jane Doe',
-                                    dob: '1985-06-20',
-                                    email: `jane.doe.${Math.floor(Math.random() * 1000)}@example.com`,
-                                    phoneNumber: '0712345678',
-                                    idNumber: '12345678',
+                                    dob: '2020-01-01',
+                                    gender: 'male',
+                                    tshirtSize: 'S',
+                                    idNumber: '',
+                                    emergencyContactName: '',
+                                    emergencyPhone: ''
+                                }],
+                                champs: [{
+                                    id: Math.random().toString(36).substr(2, 9),
+                                    firstName: 'Maya',
+                                    lastName: 'Doe',
+                                    dob: '2015-01-01',
                                     gender: 'female',
-                                    participation: 'mom',
-                                    tshirtSize: 'M',
-                                    relationship: 'Mother',
-                                    emergencyPhone: '0788990011',
-                                    emergencyContactName: 'John Doe'
-                                },
-                                riders: {
-                                    cubs: [{
-                                        id: Math.random().toString(36).substr(2, 9),
-                                        firstName: 'Little',
+                                    tshirtSize: 'L',
+                                    idNumber: '',
+                                    emergencyContactName: '',
+                                    emergencyPhone: ''
+                                }],
+                                tigers: [
+                                    {
+                                        id: 'mom-rider-id',
+                                        firstName: 'Jane',
                                         lastName: 'Doe',
-                                        dob: '2020-01-01',
-                                        gender: 'male',
-                                        tshirtSize: 'S',
-                                        idNumber: '',
-                                        emergencyContactName: '',
-                                        emergencyPhone: ''
-                                    }],
-                                    champs: [{
-                                        id: Math.random().toString(36).substr(2, 9),
-                                        firstName: 'Big',
-                                        lastName: 'Doe',
-                                        dob: '2015-01-01',
+                                        dob: '1985-06-20',
+                                        idNumber: '12345678',
                                         gender: 'female',
-                                        tshirtSize: 'L',
-                                        idNumber: '',
+                                        tshirtSize: 'M',
                                         emergencyContactName: '',
-                                        emergencyPhone: ''
-                                    }],
-                                    tigers: [
-                                        {
-                                            id: 'mom-rider-id',
-                                            firstName: 'Jane',
-                                            lastName: 'Doe',
-                                            dob: '1985-06-20',
-                                            idNumber: '12345678',
-                                            gender: 'female',
-                                            tshirtSize: 'M',
-                                            emergencyContactName: '',
-                                            emergencyPhone: '0712345678'
-                                        }
-                                    ]
-                                }
-                            });
-                        }}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-all font-semibold text-sm w-fit h-fit"
-                        type="button"
-                    >
-                        <AiOutlineExperiment className="text-lg" />
-                        Fill with Test Data
+                                        emergencyPhone: '0712345678'
+                                    }
+                                ]
+                            }
+                        });
+                    }}
+                    style={{
+                        padding: '6px 12px',
+                        background: 'rgba(76,175,80,0.1)',
+                        border: '1px solid rgba(76,175,80,0.2)',
+                        color: '#4caf50',
+                        fontFamily: "'Barlow Condensed', sans-serif",
+                        fontSize: '9px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase',
+                        clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%)',
+                        cursor: 'pointer'
+                    }}
+                    type="button"
+                >
+                    Quick Test Data
+                </button>
+            }
+            footer={
+                <>
+                    <button className="fam-back-btn" onClick={onBack} type="button" disabled={isSubmitting}>
+                        <ArrowLeft /> <span>Back</span>
                     </button>
-                </div>
-            </div>
 
-            <div className="px-4">
+                    <button className="fam-next-btn" onClick={onNext} type="button" disabled={isSubmitting}>
+                        <span>{isSubmitting ? 'Processing...' : 'Next: Review'}</span>
+                        <ArrowRight />
+                    </button>
+                </>
+            }
+        >
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+
+                :root, [data-theme="dark"] {
+                    --fam-border:     rgba(255,255,255,0.08);
+                    --fam-input-bg:   #0d0d0d;
+                    --fam-raised-bg:  #111111;
+                    --fam-text-1:     #ffffff;
+                    --fam-text-2:     rgba(255,255,255,0.60);
+                    --fam-text-3:     rgba(255,255,255,0.35);
+                    --fam-primary:    #2d6a2d;
+                    --fam-primary-lt: #4caf50;
+                    --fam-accent:     #f59e0b;
+                    --fam-divider:    rgba(255,255,255,0.07);
+                    --fam-card-bg:    #0d0d0d;
+                }
+                [data-theme="light"] {
+                    --fam-border:     rgba(0,0,0,0.09);
+                    --fam-input-bg:   #ffffff;
+                    --fam-raised-bg:  #f8f8f8;
+                    --fam-text-1:     #111111;
+                    --fam-text-2:     rgba(20,20,20,0.60);
+                    --fam-text-3:     rgba(20,20,20,0.42);
+                    --fam-primary:    #245924;
+                    --fam-primary-lt: #2d6a2d;
+                    --fam-accent:     #d97706;
+                    --fam-divider:    rgba(0,0,0,0.07);
+                    --fam-card-bg:    #ffffff;
+                }
+
+
+
+                .fam-tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--fam-divider); margin-bottom: 8px; }
+                .fam-tab {
+                    flex: 1; padding: 12px;
+                    background: transparent; border: none; border-bottom: 2px solid transparent;
+                    font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700;
+                    color: var(--fam-text-3); text-transform: uppercase; letter-spacing: 0.15em;
+                    cursor: pointer; transition: all 0.2s;
+                }
+                .fam-tab.active { color: var(--fam-primary-lt); border-bottom-color: var(--fam-primary-lt); }
+
+                .fam-rider-card {
+                    background: var(--fam-card-bg); border: 1px solid var(--fam-border);
+                    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+                    margin-bottom: 20px;
+                }
+                .fam-card-head {
+                    padding: 14px 20px; background: var(--fam-raised-bg); border-bottom: 1px solid var(--fam-divider);
+                    display: flex; justify-content: space-between; align-items: center;
+                }
+                .fam-field-label {
+                    display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase; color: var(--fam-text-3); margin-bottom: 6px;
+                }
+                .fam-input {
+                    width: 100%; padding: 10px 14px; background: var(--fam-input-bg);
+                    border: 1px solid var(--fam-border); color: var(--fam-text-1);
+                    font-size: 14px; font-weight: 600; outline: none; transition: border-color 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                }
+                .fam-input:focus { border-color: var(--fam-primary-lt); }
+
+                .fam-add-btn {
+                    width: 100%; padding: 20px; border: 2px dashed var(--fam-border); background: transparent;
+                    color: var(--fam-text-3); font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700;
+                    text-transform: uppercase; letter-spacing: 0.2em; cursor: pointer; transition: all 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+                    display: flex; align-items: center; justify-content: center; gap: 10px;
+                }
+                .fam-add-btn:hover { border-color: var(--fam-primary-lt); color: var(--fam-primary-lt); background: rgba(76,175,80,0.02); }
+
+                .fam-delete-btn {
+                    display: flex; align-items: center; gap: 6px; padding: 5px 12px;
+                    background: rgba(239,68,68,0.1); color: #ef4444; border: none;
+                    font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700;
+                    text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer;
+                    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+                }
+
+                .fam-next-btn {
+                    position: relative; overflow: hidden;
+                    display: inline-flex; align-items: center; gap: 10px; padding: 13px 32px;
+                    background: var(--fam-primary); color: #fff; border: 2px solid var(--fam-primary);
+                    font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 800;
+                    letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+                    transition: all 0.2s;
+                }
+                .fam-next-btn:hover { background: var(--fam-primary-lt); border-color: var(--fam-primary-lt); transform: translateY(-2px); }
+
+                .fam-back-btn {
+                    display: inline-flex; align-items: center; gap: 8px; padding: 11px 24px;
+                    background: transparent; color: var(--fam-text-3); border: 1px solid var(--fam-border);
+                    font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; font-weight: 700;
+                    letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
+                    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+                    transition: all 0.2s;
+                }
+                .fam-back-btn:hover { color: var(--fam-text-1); border-color: var(--fam-text-2); }
+            `}</style>
+
+            <div className="flex flex-col gap-10 w-full" style={{ fontFamily: "'Barlow', sans-serif" }}>
                 <ErrorBanner errors={formErrors} />
-            </div>
 
-            {/* Category Tabs */}
-            <div className="px-4">
-                <div className="flex flex-col sm:flex-row border-b border-[#e6e0d4] dark:border-[#2d332d] sm:justify-between gap-2 sm:gap-0">
+                {/* Tabs */}
+                <div className="fam-tabs">
                     {categories.map((cat) => (
                         <button
                             key={cat.id}
                             onClick={() => setActiveCategory(cat.id)}
-                            className={`group flex flex-col items-center justify-center border-b-[3px] pb-[13px] pt-4 flex-1 transition-all ${activeCategory === cat.id
-                                ? 'border-primary text-text-light dark:text-white bg-white dark:bg-[#2a2418] sm:bg-transparent rounded-t-lg sm:rounded-none'
-                                : 'border-transparent text-text-muted-light dark:text-gray-400 hover:border-border-light dark:hover:border-white/20'
-                                }`}
+                            className={`fam-tab${activeCategory === cat.id ? ' active' : ''}`}
                             disabled={isSubmitting}
                         >
-                            <cat.icon className={`mb-2 text-[28px] ${activeCategory === cat.id ? 'text-primary' : 'opacity-50'}`} />
-                            <p className="text-sm font-bold leading-normal tracking-[0.015em]">{cat.title}</p>
+                            {cat.title}
                         </button>
                     ))}
                 </div>
-            </div>
 
-            {/* Rider List */}
-            <div className="px-4 flex flex-col gap-8">
-                {data.riders[activeCategory].map((rider: JuniorRider, index: number) => (
-                    <div key={rider.id} className="bg-white dark:bg-[#2a2418] rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-sm overflow-hidden transform transition-all hover:shadow-md">
-                        <div className="bg-primary/5 dark:bg-white/5 p-6 border-b border-neutral-100 dark:border-neutral-800 flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                                <AiOutlineUser className="text-primary text-xl" />
-                                <h3 className="text-text-light dark:text-white text-lg font-bold leading-tight">
-                                    {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1, -1)} Rider {index + 1}
-                                </h3>
+                {/* Rider List */}
+                <div className="flex flex-col gap-4">
+                    {data.riders[activeCategory].map((rider: JuniorRider, index: number) => (
+                        <div key={rider.id} className="fam-rider-card">
+                            <div className="fam-card-head">
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <div style={{ width: 6, height: 6, background: 'var(--fam-primary-lt)', borderRadius: '50%' }} />
+                                    <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--fam-text-2)' }}>
+                                        {activeCategory.slice(0, -1)} Rider #{index + 1}
+                                    </span>
+                                </div>
+                                <button className="fam-delete-btn" onClick={() => removeRider(activeCategory, rider.id)} type="button">
+                                    <TrashIcon /> Delete
+                                </button>
                             </div>
-                            <button
-                                onClick={() => removeRider(activeCategory, rider.id)}
-                                className="text-xs text-red-500 hover:text-red-700 font-bold flex items-center gap-1 transition-colors bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-full"
-                                disabled={isSubmitting}
-                            >
-                                <AiOutlineDelete className="text-[16px]" /> Delete
-                            </button>
-                        </div>
-                        <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                    First Name <span className="text-red-500">*</span>
-                                </span>
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors[`${rider.id}.firstName`]
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    placeholder="e.g. Leo"
-                                    type="text"
-                                    value={rider.firstName}
-                                    onChange={(e) => updateRider(activeCategory, rider.id, 'firstName', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                                {errors[`${rider.id}.firstName`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.firstName`]}</span>}
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                    Last Name <span className="text-red-500">*</span>
-                                </span>
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors[`${rider.id}.lastName`]
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    placeholder="e.g. Walker"
-                                    type="text"
-                                    value={rider.lastName}
-                                    onChange={(e) => updateRider(activeCategory, rider.id, 'lastName', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                                {errors[`${rider.id}.lastName`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.lastName`]}</span>}
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
-                                    <span>Date of Birth <span className="text-red-500">*</span></span>
+                            <div style={{ padding: '24px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+                                <div>
+                                    <label className="fam-field-label">First Name *</label>
+                                    <input
+                                        className="fam-input"
+                                        type="text"
+                                        value={rider.firstName}
+                                        onChange={(e) => updateRider(activeCategory, rider.id, 'firstName', e.target.value)}
+                                        placeholder="e.g. Leo"
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="fam-field-label">Last Name *</label>
+                                    <input
+                                        className="fam-input"
+                                        type="text"
+                                        value={rider.lastName}
+                                        onChange={(e) => updateRider(activeCategory, rider.id, 'lastName', e.target.value)}
+                                        placeholder="e.g. Walker"
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="fam-field-label">Date of Birth *</label>
+                                    <input
+                                        className="fam-input"
+                                        type="date"
+                                        value={rider.dob}
+                                        onChange={(e) => updateRider(activeCategory, rider.id, 'dob', e.target.value)}
+                                        disabled={isSubmitting}
+                                    />
                                     {rider.dob && (
-                                        <span className="text-primary normal-case font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
-                                            {calculateAge(rider.dob)} years old
-                                        </span>
+                                        <div style={{ marginTop: 6, fontSize: '10px', color: 'var(--fam-primary-lt)', fontWeight: 700 }}>
+                                            {calculateAge(rider.dob)} YEARS OLD
+                                        </div>
                                     )}
-                                </span>
-                                <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors[`${rider.id}.dob`]
-                                        ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500'
-                                        : 'border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary'
-                                        }`}
-                                    type="date"
-                                    value={rider.dob}
-                                    onChange={(e) => updateRider(activeCategory, rider.id, 'dob', e.target.value)}
-                                    disabled={isSubmitting}
-                                />
-                                <p className="text-[10px] font-bold text-text-muted-light dark:text-gray-500 uppercase tracking-widest mt-1">
-                                    {activeCategory === 'cubs' ? 'Age Range: 4-8 Years' : 'Age Range: 9-13 Years'}
-                                </p>
-                                {errors[`${rider.id}.dob`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.dob`]}</span>}
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                    T-shirt Size <span className="text-red-500">*</span>
-                                </span>
-                                <div className="relative">
+                                </div>
+                                <div>
+                                    <label className="fam-field-label">T-Shirt Size *</label>
                                     <select
-                                        className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all appearance-none cursor-pointer ${errors[`${rider.id}.tshirtSize`]
-                                            ? 'border-red-500 focus:border-red-500'
-                                            : 'border-gray-300 dark:border-gray-700 focus:border-primary'
-                                            }`}
+                                        className="fam-input"
                                         value={rider.tshirtSize}
                                         onChange={(e) => updateRider(activeCategory, rider.id, 'tshirtSize', e.target.value)}
                                         disabled={isSubmitting}
@@ -322,304 +404,200 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, errors, formEr
                                         <option value="S_ADULT">Adult S</option>
                                         <option value="M_ADULT">Adult M</option>
                                     </select>
-                                    <AiOutlineDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
                                 </div>
-                                {errors[`${rider.id}.tshirtSize`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.tshirtSize`]}</span>}
-                            </div>
-
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">
-                                    Gender <span className="text-red-500">*</span>
-                                </span>
-                                <div className="flex gap-6 items-center h-[42px] px-1">
-                                    <label className="flex items-center gap-2 cursor-pointer group">
-                                        <div className="relative flex items-center justify-center">
-                                            <input
-                                                className="peer sr-only"
-                                                name={`gender_${rider.id}`}
-                                                type="radio"
-                                                value="male"
-                                                checked={rider.gender === 'male'}
-                                                onChange={() => updateRider(activeCategory, rider.id, 'gender', 'male')}
-                                                disabled={isSubmitting}
-                                            />
-                                            <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
-                                        </div>
-                                        <span className={`text-sm font-medium transition-colors ${rider.gender === 'male' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>Male</span>
-                                    </label>
-                                    <label className="flex items-center gap-2 cursor-pointer group">
-                                        <div className="relative flex items-center justify-center">
-                                            <input
-                                                className="peer sr-only"
-                                                name={`gender_${rider.id}`}
-                                                type="radio"
-                                                value="female"
-                                                checked={rider.gender === 'female'}
-                                                onChange={() => updateRider(activeCategory, rider.id, 'gender', 'female')}
-                                                disabled={isSubmitting}
-                                            />
-                                            <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
-                                        </div>
-                                        <span className={`text-sm font-medium transition-colors ${rider.gender === 'female' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>Female</span>
-                                    </label>
+                                <div>
+                                    <label className="fam-field-label">Gender *</label>
+                                    <div style={{ display: 'flex', gap: '20px', height: '42px', alignItems: 'center' }}>
+                                        {['male', 'female'].map(g => (
+                                            <label key={g} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                                <input
+                                                    type="radio"
+                                                    name={`rider_gender_${rider.id}`}
+                                                    checked={rider.gender === g}
+                                                    onChange={() => updateRider(activeCategory, rider.id, 'gender', g)}
+                                                    style={{ accentColor: 'var(--fam-primary-lt)' }}
+                                                    disabled={isSubmitting}
+                                                />
+                                                <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--fam-text-2)', textTransform: 'capitalize' }}>{g}</span>
+                                            </label>
+                                        ))}
+                                    </div>
                                 </div>
-                                {errors[`${rider.id}.gender`] && <span className="text-red-500 text-xs font-medium">{errors[`${rider.id}.gender`]}</span>}
                             </div>
-
-
                         </div>
-                    </div>
-                ))}
+                    ))}
 
-                <button
-                    onClick={() => addRider(activeCategory)}
-                    className="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-border-light dark:border-gray-600 rounded-xl text-text-muted-light dark:text-gray-400 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={isSubmitting || (activeCategory === 'tigers' && data.riders.tigers.length >= 1)}
-                >
-                    <AiOutlinePlusCircle className="group-hover:scale-110 transition-transform" />
-                    <span className="font-bold">
-                        {activeCategory === 'tigers' && data.riders.tigers.length >= 1
-                            ? 'Only one Parent can be added'
-                            : `${data.riders[activeCategory].length === 0 ? 'Add a' : 'Add Another'} ${activeCategory === 'tigers' ? 'Parent' : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1, -1)}`
-                        }
-                    </span>
-                </button>
-
-                <div className="h-px w-full bg-border-light dark:bg-white/10 my-2"></div>
+                    <button
+                        className="fam-add-btn"
+                        onClick={() => addRider(activeCategory)}
+                        disabled={isSubmitting || (activeCategory === 'tigers' && data.riders.tigers.length >= 1)}
+                        type="button"
+                    >
+                        <PlusIcon />
+                        <span>Add Another {activeCategory.slice(0, -1)}</span>
+                    </button>
+                </div>
 
                 {/* Guardian Section */}
-                <div className="flex flex-col gap-6">
-                    <div className="flex items-center gap-2 px-1">
-                        <AiOutlineSafety className="text-primary text-2xl" />
-                        <h3 className="text-text-light dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">Guardian Information</h3>
-                        <span className="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide border border-red-100 dark:bg-red-900/40 dark:border-red-800">Required</span>
+                <div style={{ marginTop: 24 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                        <div style={{ height: 1, width: 32, background: 'var(--fam-primary)' }} />
+                        <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', color: 'var(--fam-text-1)', letterSpacing: '0.04em', margin: 0 }}>Guardian Details</h3>
                     </div>
-                    <div className="bg-white dark:bg-[#2a2418] p-8 rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-sm relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">First Name <span className="text-red-500">*</span></span>
+
+                    <div style={{ background: 'var(--fam-raised-bg)', padding: '32px', border: '1px solid var(--fam-border)', clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+                            <div>
+                                <label className="fam-field-label">First Name *</label>
                                 <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.firstName'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
-                                    placeholder="Jane"
+                                    className="fam-input"
                                     type="text"
                                     value={data.guardian.firstName}
                                     onChange={(e) => updateGuardian('firstName', e.target.value)}
+                                    placeholder="Jane"
                                     disabled={isSubmitting}
                                 />
-                                {errors['guardian.firstName'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.firstName']}</span>}
                             </div>
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Last Name <span className="text-red-500">*</span></span>
+                            <div>
+                                <label className="fam-field-label">Last Name *</label>
                                 <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.lastName'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
-                                    placeholder="Doe"
+                                    className="fam-input"
                                     type="text"
                                     value={data.guardian.lastName}
                                     onChange={(e) => updateGuardian('lastName', e.target.value)}
+                                    placeholder="Doe"
                                     disabled={isSubmitting}
                                 />
-                                {errors['guardian.lastName'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.lastName']}</span>}
                             </div>
-
-
-
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Email Address <span className="text-red-500">*</span></span>
+                            <div>
+                                <label className="fam-field-label">Email Address *</label>
                                 <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.email'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
-                                    placeholder="email@example.com"
+                                    className="fam-input"
                                     type="email"
                                     value={data.guardian.email}
                                     onChange={(e) => updateGuardian('email', e.target.value)}
+                                    placeholder="email@example.com"
                                     disabled={isSubmitting}
                                 />
-                                {errors['guardian.email'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.email']}</span>}
                             </div>
-
-                            <div className="flex flex-col gap-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Phone Number <span className="text-red-500">*</span></span>
+                            <div>
+                                <label className="fam-field-label">Phone Number *</label>
                                 <input
-                                    className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.phoneNumber'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
-                                    placeholder="+254 7XX XXX XXX"
+                                    className="fam-input"
                                     type="tel"
                                     value={data.guardian.phoneNumber}
                                     onChange={(e) => updateGuardian('phoneNumber', e.target.value)}
+                                    placeholder="+254 7XX XXX XXX"
                                     disabled={isSubmitting}
                                 />
-                                {errors['guardian.phoneNumber'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.phoneNumber']}</span>}
+                            </div>
+                            <div style={{ gridColumn: '1 / -1' }}>
+                                <label className="fam-field-label">Relationship *</label>
+                                <select
+                                    className="fam-input"
+                                    value={data.guardian.relationship}
+                                    onChange={(e) => updateGuardian('relationship', e.target.value)}
+                                    disabled={isSubmitting}
+                                >
+                                    <option value="" disabled>Select relationship</option>
+                                    <option value="parent">Parent</option>
+                                    <option value="legal_guardian">Legal Guardian</option>
+                                    <option value="other">Other</option>
+                                </select>
                             </div>
 
-                            <div className="flex flex-col gap-2 md:col-span-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Participating in the ride? <span className="text-red-500">*</span></span>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div style={{ gridColumn: '1 / -1' }}>
+                                <label className="fam-field-label">Participating in the ride? *</label>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginTop: 8 }}>
                                     {[
-                                        { id: 'none', label: 'Not riding', icon: MdPersonOff },
-                                        { id: 'mom', label: 'Riding as a Parent (5km)', icon: MdWoman },
-                                        { id: 'other', label: 'Riding in another circuit', icon: MdDirectionsBike }
+                                        { id: 'none', label: 'Not riding' },
+                                        { id: 'mom', label: 'Riding as Parent (5km)' },
+                                        { id: 'other', label: 'Riding other circuit' }
                                     ].map((opt) => (
-                                        <label key={opt.id} className={`flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${data.guardian.participation === opt.id ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-gray-200 dark:border-gray-700 hover:bg-neutral-50 dark:hover:bg-neutral-800'}`}>
-                                            <input
-                                                type="radio"
-                                                name="participation"
-                                                className="peer sr-only"
-                                                checked={data.guardian.participation === opt.id}
-                                                onChange={() => updateGuardian('participation', opt.id)}
-                                            />
-                                            <div className={`size-8 rounded-lg flex items-center justify-center ${data.guardian.participation === opt.id ? 'bg-primary text-white' : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400'}`}>
-                                                <opt.icon className="text-[20px]" />
-                                            </div>
-                                            <span className={`text-sm font-bold ${data.guardian.participation === opt.id ? 'text-text-light dark:text-white' : 'text-text-muted-light dark:text-gray-400'}`}>{opt.label}</span>
-                                        </label>
+                                        <button
+                                            key={opt.id}
+                                            type="button"
+                                            onClick={() => updateGuardian('participation', opt.id)}
+                                            style={{
+                                                padding: '14px',
+                                                background: data.guardian.participation === opt.id ? 'var(--fam-primary)' : 'var(--fam-input-bg)',
+                                                border: '1px solid',
+                                                borderColor: data.guardian.participation === opt.id ? 'var(--fam-primary)' : 'var(--fam-border)',
+                                                color: data.guardian.participation === opt.id ? '#fff' : 'var(--fam-text-2)',
+                                                fontFamily: "'Barlow Condensed', sans-serif", fontSize: '11px', fontWeight: 700,
+                                                letterSpacing: '0.1em', textTransform: 'uppercase',
+                                                clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)',
+                                                cursor: 'pointer', transition: 'all 0.2s'
+                                            }}
+                                        >
+                                            {opt.label}
+                                        </button>
                                     ))}
                                 </div>
                             </div>
 
                             {data.guardian.participation === 'mom' && (
                                 <>
-                                    <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">ID / Passport Number <span className="text-red-500">*</span></span>
+                                    <div>
+                                        <label className="fam-field-label">ID / Passport *</label>
                                         <input
-                                            className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.idNumber'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
-                                            placeholder="12345678"
+                                            className="fam-input"
                                             type="text"
                                             value={data.guardian.idNumber}
                                             onChange={(e) => updateGuardian('idNumber', e.target.value)}
+                                            placeholder="12345678"
                                             disabled={isSubmitting}
                                         />
-                                        {errors['guardian.idNumber'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.idNumber']}</span>}
                                     </div>
-
-                                    <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
-                                            <span>Date of Birth (Parent) <span className="text-red-500">*</span></span>
-                                            {data.guardian.dob && (
-                                                <span className="text-primary normal-case font-bold bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">
-                                                    {calculateAge(data.guardian.dob)} years old
-                                                </span>
-                                            )}
-                                        </span>
+                                    <div>
+                                        <label className="fam-field-label">Date of Birth *</label>
                                         <input
-                                            className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all placeholder:text-gray-400 ${errors['guardian.dob'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
+                                            className="fam-input"
                                             type="date"
                                             value={data.guardian.dob}
                                             onChange={(e) => updateGuardian('dob', e.target.value)}
                                             disabled={isSubmitting}
                                         />
-                                        {errors['guardian.dob'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.dob']}</span>}
                                     </div>
-
-                                    <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Gender <span className="text-red-500">*</span></span>
-                                        <div className="flex gap-6 items-center h-[42px] px-1">
-                                            <label className="flex items-center gap-2 cursor-pointer group">
-                                                <input
-                                                    className="peer sr-only"
-                                                    name="guardian_gender"
-                                                    type="radio"
-                                                    value="male"
-                                                    checked={data.guardian.gender === 'male'}
-                                                    onChange={() => updateGuardian('gender', 'male')}
-                                                    disabled={isSubmitting}
-                                                />
-                                                <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
-                                                <span className={`text-sm font-medium transition-colors ${data.guardian.gender === 'male' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>Male</span>
-                                            </label>
-                                            <label className="flex items-center gap-2 cursor-pointer group">
-                                                <input
-                                                    className="peer sr-only"
-                                                    name="guardian_gender"
-                                                    type="radio"
-                                                    value="female"
-                                                    checked={data.guardian.gender === 'female'}
-                                                    onChange={() => updateGuardian('gender', 'female')}
-                                                    disabled={isSubmitting}
-                                                />
-                                                <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 peer-checked:border-primary peer-checked:border-[5px] transition-all"></div>
-                                                <span className={`text-sm font-medium transition-colors ${data.guardian.gender === 'female' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>Female</span>
-                                            </label>
-                                        </div>
-                                        {errors['guardian.gender'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.gender']}</span>}
+                                    <div>
+                                        <label className="fam-field-label">T-Shirt Size *</label>
+                                        <select
+                                            className="fam-input"
+                                            value={data.guardian.tshirtSize}
+                                            onChange={(e) => updateGuardian('tshirtSize', e.target.value)}
+                                            disabled={isSubmitting}
+                                        >
+                                            <option value="">Select Size</option>
+                                            <option value="S">Small (S)</option>
+                                            <option value="M">Medium (M)</option>
+                                            <option value="L">Large (L)</option>
+                                            <option value="XL">Extra Large (XL)</option>
+                                        </select>
                                     </div>
-
-                                    <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                                        <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">T-shirt Size (Parent) <span className="text-red-500">*</span></span>
-                                        <div className="relative">
-                                            <select
-                                                className={`w-full rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 py-2.5 text-sm outline-none transition-all appearance-none cursor-pointer ${errors['guardian.tshirtSize'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
-                                                value={data.guardian.tshirtSize}
-                                                onChange={(e) => updateGuardian('tshirtSize', e.target.value)}
-                                                disabled={isSubmitting}
-                                            >
-                                                <option value="">Select Size</option>
-                                                <option value="S">Small (S)</option>
-                                                <option value="M">Medium (M)</option>
-                                                <option value="L">Large (L)</option>
-                                                <option value="XL">Extra Large (XL)</option>
-                                                <option value="XXL">Double Extra Large (XXL)</option>
-                                            </select>
-                                            <AiOutlineDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
+                                    <div>
+                                        <label className="fam-field-label">Gender *</label>
+                                        <div style={{ display: 'flex', gap: '20px', height: '42px', alignItems: 'center' }}>
+                                            {['male', 'female'].map(g => (
+                                                <label key={g} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                                    <input
+                                                        type="radio"
+                                                        name="guardian_gender"
+                                                        checked={data.guardian.gender === g}
+                                                        onChange={() => updateGuardian('gender', g)}
+                                                        style={{ accentColor: 'var(--fam-primary-lt)' }}
+                                                    />
+                                                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--fam-text-2)', textTransform: 'capitalize' }}>{g}</span>
+                                                </label>
+                                            ))}
                                         </div>
-                                        {errors['guardian.tshirtSize'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.tshirtSize']}</span>}
                                     </div>
                                 </>
                             )}
-                            <div className="flex flex-col gap-2 md:col-span-2">
-                                <span className="text-text-light dark:text-text-dark text-[10px] font-semibold uppercase tracking-wider">Relationship <span className="text-red-500">*</span></span>
-                                <div className="relative">
-                                    <select
-                                        className={`w-full h-[42px] rounded-lg border bg-white dark:bg-gray-900 text-text-light dark:text-white px-4 appearance-none outline-none transition-all cursor-pointer text-sm ${errors['guardian.relationship'] ? 'border-red-500 focus:border-red-500' : 'border-gray-300 dark:border-gray-700 focus:border-primary'}`}
-                                        value={data.guardian.relationship}
-                                        onChange={(e) => updateGuardian('relationship', e.target.value)}
-                                        disabled={isSubmitting}
-                                    >
-                                        <option value="" disabled>Select relationship</option>
-                                        <option value="parent">Parent</option>
-                                        <option value="legal_guardian">Legal Guardian</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                    <AiOutlineDown className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" />
-                                </div>
-                                {errors['guardian.relationship'] && <span className="text-red-500 text-xs font-medium">{errors['guardian.relationship']}</span>}
-                            </div>
                         </div>
                     </div>
-                    <p className="text-sm text-text-muted-light dark:text-gray-400 px-1">
-                        <AiOutlineInfoCircle className="align-middle text-[18px] mr-1" />
-                        This guardian will be the primary contact for all registered children during the event.
-                    </p>
-                </div>
-
-                {/* Footer Buttons */}
-                <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-[#e6e0d4] dark:border-[#2d332d]">
-                    <button
-                        onClick={onBack}
-                        className="flex items-center justify-center h-12 px-6 rounded-lg text-gray-500 hover:text-[#1c170d] dark:text-gray-400 dark:hover:text-white font-bold transition-colors cursor-pointer"
-                        disabled={isSubmitting}
-                    >
-                        <AiOutlineArrowLeft className="mr-2 text-sm" />
-                        Back
-                    </button>
-                    <button
-                        onClick={onNext}
-                        className="flex min-w-[200px] items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-primary hover:bg-primary-dark active:bg-primary/80 text-white text-base font-bold leading-normal tracking-[0.015em] shadow-lg shadow-primary/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
-                        disabled={isSubmitting}
-                    >
-                        {isSubmitting ? (
-                            <div className="flex items-center gap-3">
-                                <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                <span>Saving Draft...</span>
-                            </div>
-                        ) : (
-                            <>
-                                <span className="truncate">Next: Review</span>
-                                <AiOutlineArrowRight className="ml-2 text-xl" />
-                            </>
-                        )}
-                    </button>
                 </div>
             </div>
-        </div >
+        </RegistrationStepLayout>
     );
 };
 

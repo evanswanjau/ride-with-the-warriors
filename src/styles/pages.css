@@ -1,0 +1,321 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   pages.css — Shared design system for all public-facing pages
+   Imported once in main.tsx. Pages only add component-specific overrides.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Google Fonts ─────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap');
+
+/* ── Theme: Dark (default) ────────────────────────────────────────────── */
+:root,
+[data-theme="dark"] {
+    /* Primary brand colors - fall back to index.css where possible */
+    --color-primary: var(--primary-color, #2d6a2d);
+    --color-primary-dark: var(--primary-dark-color, #1e4d1e);
+    --color-primary-light: #4caf50;
+    --color-accent: #f59e0b;
+
+    /* Surfaces */
+    --p-bg: #0a0a0a;
+    --p-raised: #111111;
+    --p-card: #141414;
+
+    /* Borders */
+    --p-border: rgba(255, 255, 255, 0.07);
+    --p-border-2: rgba(255, 255, 255, 0.13);
+
+    /* Text */
+    --p-text-1: #ffffff;
+    --p-text-2: rgba(255, 255, 255, 0.58);
+    --p-text-3: rgba(255, 255, 255, 0.33);
+
+    /* Inputs */
+    --p-input-bg: #0e0e0e;
+    --p-input-bd: rgba(255, 255, 255, 0.09);
+    --p-label: rgba(255, 255, 255, 0.55);
+    --p-placeholder: rgba(255, 255, 255, 0.22);
+}
+
+/* ── Theme: Light ────────────────────────────────────────────────────── */
+[data-theme="light"] {
+    /* Light mode brand overrides */
+    --color-primary: var(--primary-color, #245924);
+    --color-primary-dark: var(--primary-dark-color, #1a421a);
+    --color-primary-light: #2d6a2d;
+    --color-accent: #d97706;
+
+    /* Surfaces */
+    --p-bg: #f5f2eb;
+    --p-raised: #edeae2;
+    --p-card: #ffffff;
+
+    /* Borders */
+    --p-border: rgba(0, 0, 0, 0.09);
+    --p-border-2: rgba(0, 0, 0, 0.15);
+
+    /* Text */
+    --p-text-1: #111111;
+    --p-text-2: rgba(20, 20, 20, 0.60);
+    --p-text-3: rgba(20, 20, 20, 0.38);
+
+    /* Inputs */
+    --p-input-bg: #f9f7f3;
+    --p-input-bd: rgba(0, 0, 0, 0.11);
+    --p-label: rgba(20, 20, 20, 0.60);
+    --p-placeholder: rgba(20, 20, 20, 0.28);
+}
+
+/* ── Base Page Layout ────────────────────────────────────────────────── */
+.page {
+    font-family: 'Barlow', sans-serif;
+    background: var(--p-bg);
+    color: var(--p-text-1);
+    min-height: 100vh;
+    padding: 96px 48px 80px;
+    transition: background 0.3s, color 0.3s;
+}
+
+@media (max-width: 640px) {
+    .page {
+        padding: 80px 20px 60px;
+    }
+}
+
+.page-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-inner--narrow {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.page-section {
+    margin-bottom: 96px;
+}
+
+/* ── Label Row (eyebrow + decorative line) ───────────────────────────── */
+.page-label-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.page-label-row--center {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.page-label-line {
+    height: 1px;
+    width: 44px;
+    background: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.page-label-line--short {
+    height: 1px;
+    width: 36px;
+    background: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.page-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-primary-light);
+}
+
+/* ── Display / Heading Typography ───────────────────────────────────── */
+.page-display {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.03em;
+    line-height: 0.92;
+    color: var(--p-text-1);
+}
+
+.page-title {
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    margin-bottom: 20px;
+}
+
+.page-heading {
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    margin-bottom: 24px;
+}
+
+.page-accent {
+    color: var(--color-primary-light);
+}
+
+/* ── Body & Subtitle Text ────────────────────────────────────────────── */
+.page-body {
+    font-size: 0.97rem;
+    font-weight: 300;
+    line-height: 1.78;
+    color: var(--p-text-2);
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--p-text-2);
+    max-width: 480px;
+}
+
+.page-subtitle--center {
+    font-size: 1.05rem;
+    color: var(--p-text-2);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.75;
+}
+
+/* ── Chamfered corners (clip-path) ───────────────────────────────────── */
+.clip-sm {
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+
+.clip-md {
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+}
+
+.clip-lg {
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+}
+
+.clip-xl {
+    clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%);
+}
+
+.clip-sym {
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+}
+
+/* ── Shimmer Button ──────────────────────────────────────────────────── */
+/*
+   Usage:
+     <Link className="shimmer-btn shimmer-btn--primary">…</Link>
+     <Link className="shimmer-btn shimmer-btn--amber">…</Link>
+     <Link className="shimmer-btn shimmer-btn--ghost">…</Link>
+*/
+.shimmer-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 36px;
+    background: var(--btn-bg, var(--color-primary));
+    color: var(--btn-color, #fff);
+    border: var(--btn-border, none);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    white-space: nowrap;
+}
+
+/* sweep animation */
+.shimmer-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.42) 50%, transparent 80%);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+.shimmer-btn:hover::before {
+    left: 140%;
+    transition: left 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.shimmer-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px var(--btn-shadow, rgba(0, 0, 0, 0.2));
+}
+
+.shimmer-btn:active {
+    transform: translateY(0);
+}
+
+/* Variants */
+.shimmer-btn--primary {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.shimmer-btn--primary:hover {
+    box-shadow: 0 12px 32px rgba(45, 106, 45, 0.38);
+}
+
+.shimmer-btn--amber {
+    background: #f59e0b;
+    color: #111;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+.shimmer-btn--amber:hover {
+    background: #fbbf24;
+    box-shadow: 0 16px 40px rgba(245, 158, 11, 0.35);
+}
+
+.shimmer-btn--ghost {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.shimmer-btn--ghost:hover {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+/* ── Shared animations ───────────────────────────────────────────────── */
+@keyframes pageSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pageGlowPulse {
+
+    0%,
+    100% {
+        text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+    }
+
+    50% {
+        text-shadow: 0 0 50px rgba(245, 158, 11, 0.7), 0 0 80px rgba(245, 158, 11, 0.3);
+    }
+}
+
+@keyframes pagePulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}

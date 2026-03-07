@@ -4,9 +4,7 @@ import blitzImage from "../../assets/images/blitz.jpeg";
 import intermediateImage from "../../assets/images/recon.jpeg";
 import corporateImage from "../../assets/images/corporate.jpeg";
 import familyImage from "../../assets/images/family.jpeg";
-import { AiOutlineArrowRight } from "react-icons/ai";
 import RegistrationStepLayout from "./ui/RegistrationStepLayout";
-import { PrimaryButton } from "./ui/Buttons";
 
 const CIRCUIT_IMAGES: Record<string, string> = {
     blitz: blitzImage,
@@ -22,40 +20,263 @@ interface Step2ChooseCircuitProps {
 }
 
 const Step2ChooseCircuit = ({ selectedCircuit, onSelect, onNext }: Step2ChooseCircuitProps) => {
+    const selected = CIRCUITS.find(c => c.id === selectedCircuit);
+
     return (
         <RegistrationStepLayout
+            stepLabel="Step 1 of 4"
             title="Choose Your Circuit"
             subtitle="Select the course that matches your pace and ambition."
             footer={(
                 <>
-                    <div />
-                    <PrimaryButton
+                    {/* Selected circuit summary */}
+                    <div className="s2-selected-summary">
+                        {selected ? (
+                            <>
+                                <div className="s2-summary-dot" />
+                                <span className="s2-summary-label">Selected:</span>
+                                <span className="s2-summary-value">{selected.title}</span>
+                                <span className="s2-summary-dist">{selected.distance}</span>
+                            </>
+                        ) : (
+                            <span className="s2-summary-none">No circuit selected</span>
+                        )}
+                    </div>
+
+                    {/* CTA button */}
+                    <button
+                        className={`s2-cta-btn${!selectedCircuit ? " s2-cta-disabled" : ""}`}
                         onClick={onNext}
                         disabled={!selectedCircuit}
-                        className="min-w-[200px]"
                         type="button"
                     >
-                        <span className="truncate">Continue to Registration</span>
-                        <AiOutlineArrowRight className="ml-2 text-xl" />
-                    </PrimaryButton>
+                        <span className="s2-cta-shimmer" />
+                        <span>Continue to Registration</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
                 </>
             )}
         >
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 mb-4">
-                {CIRCUITS.map((circuit) => (
-                    <CircuitCard
-                        key={circuit.id}
-                        id={circuit.id}
-                        title={circuit.title}
-                        distance={circuit.distance}
-                        subtitle={circuit.subtitle}
-                        description={circuit.description}
-                        imageUrl={CIRCUIT_IMAGES[circuit.id] ?? circuit.imageUrl ?? ""}
-                        isSelected={selectedCircuit === circuit.id}
-                        onSelect={onSelect}
-                        isCompetitive={circuit.isCompetitive}
-                    />
-                ))}
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+
+                :root, [data-theme="dark"] {
+                    --s2-page-bg:       #0a0a0a;
+                    --s2-raised-bg:     #111111;
+                    --s2-text-1:        #ffffff;
+                    --s2-text-2:        rgba(255,255,255,0.55);
+                    --s2-text-3:        rgba(255,255,255,0.32);
+                    --s2-border-1:      rgba(255,255,255,0.08);
+                    --s2-border-2:      rgba(255,255,255,0.14);
+                    --s2-primary:       #2d6a2d;
+                    --s2-primary-lt:    #4caf50;
+                    --s2-accent:        #f59e0b;
+                    --s2-btn-shadow:    rgba(45,106,45,0.38);
+                    --s2-header-bg:     #0d0d0d;
+                    --s2-none-color:    rgba(255,255,255,0.28);
+                    --s2-summary-bg:    rgba(255,255,255,0.04);
+                    --s2-summary-bd:    rgba(255,255,255,0.09);
+                }
+                [data-theme="light"] {
+                    --s2-page-bg:       #ffffff;
+                    --s2-raised-bg:     #f8f8f8;
+                    --s2-text-1:        #111111;
+                    --s2-text-2:        rgba(20,20,20,0.60);
+                    --s2-text-3:        rgba(20,20,20,0.40);
+                    --s2-border-1:      rgba(0,0,0,0.09);
+                    --s2-border-2:      rgba(0,0,0,0.15);
+                    --s2-primary:       #245924;
+                    --s2-primary-lt:    #2d6a2d;
+                    --s2-accent:        #d97706;
+                    --s2-btn-shadow:    rgba(36,89,36,0.28);
+                    --s2-header-bg:     #f0f0f0;
+                    --s2-none-color:    rgba(20,20,20,0.30);
+                    --s2-summary-bg:    rgba(0,0,0,0.03);
+                    --s2-summary-bd:    rgba(0,0,0,0.08);
+                }
+
+                /* ── Page wrapper ── */
+                .s2-wrapper {
+                    font-family: 'Barlow', sans-serif;
+                }
+
+                /* ── Header pill / info strip ── */
+                .s2-info-strip {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 28px;
+                    padding: 0 2px;
+                }
+                .s2-strip-pill {
+                    display: inline-flex; align-items: center; gap: 7px;
+                    padding: 6px 14px;
+                    border: 1px solid var(--s2-border-1);
+                    background: var(--s2-summary-bg);
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 10px; font-weight: 700;
+                    letter-spacing: 0.2em; text-transform: uppercase;
+                    color: var(--s2-text-3);
+                    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+                }
+                .s2-strip-pill-accent {
+                    color: var(--s2-primary-lt);
+                    border-color: rgba(45,106,45,0.2);
+                    background: rgba(45,106,45,0.06);
+                }
+                .s2-strip-dot {
+                    width: 5px; height: 5px; border-radius: 50%;
+                    background: var(--s2-primary-lt);
+                    animation: s2pulse 2s ease-in-out infinite;
+                }
+                @keyframes s2pulse {
+                    0%,100% { opacity:1; transform:scale(1); }
+                    50%     { opacity:0.4; transform:scale(0.65); }
+                }
+                .s2-strip-divider {
+                    width: 1px; height: 20px;
+                    background: var(--s2-border-1);
+                    flex-shrink: 0;
+                }
+
+                /* ── Grid ── */
+                .s2-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 16px;
+                    margin-bottom: 8px;
+                }
+                @media (max-width: 700px) {
+                    .s2-grid { grid-template-columns: 1fr; }
+                }
+
+                /* ── Comparison hint bar ── */
+                .s2-hint-bar {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 14px 20px;
+                    margin-top: 20px;
+                    border: 1px solid var(--s2-border-1);
+                    background: var(--s2-summary-bg);
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+                }
+                .s2-hint-icon {
+                    width: 28px; height: 28px; flex-shrink: 0;
+                    display: flex; align-items: center; justify-content: center;
+                    border: 1px solid var(--s2-border-2);
+                    color: var(--s2-primary-lt);
+                    font-size: 13px;
+                    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+                }
+                .s2-hint-text {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 11px; font-weight: 600;
+                    letter-spacing: 0.1em; text-transform: uppercase;
+                    color: var(--s2-text-3);
+                }
+                .s2-hint-circuits {
+                    display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto;
+                }
+                .s2-hint-tag {
+                    padding: 2px 10px;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 9px; font-weight: 700;
+                    letter-spacing: 0.16em; text-transform: uppercase;
+                    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%);
+                }
+
+                /* ── Footer: selected summary ── */
+                .s2-selected-summary {
+                    display: flex; align-items: center; gap: 8px;
+                    font-family: 'Barlow Condensed', sans-serif;
+                }
+                .s2-summary-dot {
+                    width: 6px; height: 6px; border-radius: 50%;
+                    background: var(--s2-primary-lt);
+                    flex-shrink: 0;
+                    animation: s2pulse 1.8s ease-in-out infinite;
+                }
+                .s2-summary-label {
+                    font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+                    color: var(--s2-text-3);
+                }
+                .s2-summary-value {
+                    font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+                    color: var(--s2-text-1);
+                }
+                .s2-summary-dist {
+                    font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+                    color: var(--s2-primary-lt);
+                    padding: 2px 8px;
+                    border: 1px solid rgba(45,106,45,0.28);
+                    background: rgba(45,106,45,0.08);
+                    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%);
+                }
+                .s2-summary-none {
+                    font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+                    color: var(--s2-none-color);
+                }
+
+                /* ── CTA button ── */
+                .s2-cta-btn {
+                    position: relative;
+                    display: inline-flex; align-items: center; gap: 10px;
+                    padding: 13px 32px;
+                    background: var(--s2-primary);
+                    color: #ffffff;
+                    border: 2px solid var(--s2-primary);
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.9rem; font-weight: 800;
+                    letter-spacing: 0.14em; text-transform: uppercase;
+                    cursor: pointer; overflow: hidden;
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+                    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
+                    min-width: 220px; justify-content: center;
+                }
+                .s2-cta-btn:hover:not(.s2-cta-disabled) {
+                    transform: translateY(-2px);
+                    box-shadow: 0 12px 32px var(--s2-btn-shadow);
+                    background: var(--s2-primary-lt);
+                    border-color: var(--s2-primary-lt);
+                }
+                .s2-cta-btn:active:not(.s2-cta-disabled) { transform: translateY(0); }
+                .s2-cta-disabled {
+                    opacity: 0.38; cursor: not-allowed;
+                }
+                .s2-cta-shimmer {
+                    position: absolute; top: 0; left: -80%;
+                    width: 60%; height: 100%;
+                    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.35) 50%, transparent 80%);
+                    transform: skewX(-20deg); pointer-events: none;
+                }
+                .s2-cta-btn:hover:not(.s2-cta-disabled) .s2-cta-shimmer {
+                    left: 140%;
+                    transition: left 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+                }
+            `}</style>
+
+            <div className="s2-wrapper">
+                {/* ── Circuit grid ── */}
+                <div className="s2-grid">
+                    {CIRCUITS.map((circuit) => (
+                        <CircuitCard
+                            key={circuit.id}
+                            id={circuit.id}
+                            title={circuit.title}
+                            distance={circuit.distance}
+                            subtitle={circuit.subtitle}
+                            description={circuit.description}
+                            imageUrl={CIRCUIT_IMAGES[circuit.id] ?? circuit.imageUrl ?? ""}
+                            isSelected={selectedCircuit === circuit.id}
+                            onSelect={onSelect}
+                            isCompetitive={circuit.isCompetitive}
+                        />
+                    ))}
+                </div>
             </div>
         </RegistrationStepLayout>
     );

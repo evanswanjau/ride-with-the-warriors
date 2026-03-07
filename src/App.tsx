@@ -1,13 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
 import { RegistrationProvider } from './context/RegistrationContext';
 import Layout from './components/layout/Layout';
-import HomePage from './components/base/HomePage';
-import AboutUs from './components/base/AboutUs';
+import HomePage from './pages/HomePage';
+import AboutUs from './pages/AboutUs';
 import Participants from './components/base/Participants';
 import Sponsors from './components/base/Sponsors';
-import ContactUs from './components/base/ContactUs';
-import Gallery from './components/base/Gallery';
-import Faqs from './components/base/Faqs';
+import ContactUs from './pages/ContactUs';
+import Gallery from './pages/Gallery';
+import Faqs from './pages/Faqs';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import RegisterPage from './pages/RegisterPage';
@@ -35,9 +35,9 @@ const App = () => {
         <Route path="/about" element={<Layout isFullWidth><AboutUs /></Layout>} />
         <Route path="/participants" element={<Layout><Participants /></Layout>} />
         <Route path="/sponsors" element={<Layout><Sponsors /></Layout>} />
-        <Route path="/contact" element={<Layout><ContactUs /></Layout>} />
-        <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
-        <Route path="/faqs" element={<Layout><Faqs /></Layout>} />
+        <Route path="/contact" element={<Layout isFullWidth><ContactUs /></Layout>} />
+        <Route path="/gallery" element={<Layout isFullWidth><Gallery /></Layout>} />
+        <Route path="/faqs" element={<Layout isFullWidth><Faqs /></Layout>} />
 
         {/* Registration Flow */}
         <Route path="/register/step/:stepId" element={<RegisterPage />} />
