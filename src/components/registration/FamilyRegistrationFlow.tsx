@@ -1,3 +1,4 @@
+import '../../styles/registration/FamilyRegistrationFlow.css';
 import { useState } from 'react';
 import type { FamilyDetails, JuniorRider } from '../../types';
 import ErrorBanner from '../common/ErrorBanner';
@@ -215,107 +216,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                 </>
             }
         >
-            <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;800&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
-
-                :root, [data-theme="dark"] {
-                    --fam-border:     rgba(255,255,255,0.08);
-                    --fam-input-bg:   #0d0d0d;
-                    --fam-raised-bg:  #111111;
-                    --fam-text-1:     #ffffff;
-                    --fam-text-2:     rgba(255,255,255,0.60);
-                    --fam-text-3:     rgba(255,255,255,0.35);
-                    --fam-primary:    #2d6a2d;
-                    --fam-primary-lt: #4caf50;
-                    --fam-accent:     #f59e0b;
-                    --fam-divider:    rgba(255,255,255,0.07);
-                    --fam-card-bg:    #0d0d0d;
-                }
-                [data-theme="light"] {
-                    --fam-border:     rgba(0,0,0,0.09);
-                    --fam-input-bg:   #ffffff;
-                    --fam-raised-bg:  #f8f8f8;
-                    --fam-text-1:     #111111;
-                    --fam-text-2:     rgba(20,20,20,0.60);
-                    --fam-text-3:     rgba(20,20,20,0.42);
-                    --fam-primary:    #245924;
-                    --fam-primary-lt: #2d6a2d;
-                    --fam-accent:     #d97706;
-                    --fam-divider:    rgba(0,0,0,0.07);
-                    --fam-card-bg:    #ffffff;
-                }
-
-
-
-                .fam-tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--fam-divider); margin-bottom: 8px; }
-                .fam-tab {
-                    flex: 1; padding: 12px;
-                    background: transparent; border: none; border-bottom: 2px solid transparent;
-                    font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700;
-                    color: var(--fam-text-3); text-transform: uppercase; letter-spacing: 0.15em;
-                    cursor: pointer; transition: all 0.2s;
-                }
-                .fam-tab.active { color: var(--fam-primary-lt); border-bottom-color: var(--fam-primary-lt); }
-
-                .fam-rider-card {
-                    background: var(--fam-card-bg); border: 1px solid var(--fam-border);
-                    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
-                    margin-bottom: 20px;
-                }
-                .fam-card-head {
-                    padding: 14px 20px; background: var(--fam-raised-bg); border-bottom: 1px solid var(--fam-divider);
-                    display: flex; justify-content: space-between; align-items: center;
-                }
-                .fam-field-label {
-                    display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700;
-                    letter-spacing: 0.22em; text-transform: uppercase; color: var(--fam-text-3); margin-bottom: 6px;
-                }
-                .fam-input {
-                    width: 100%; padding: 10px 14px; background: var(--fam-input-bg);
-                    border: 1px solid var(--fam-border); color: var(--fam-text-1);
-                    font-size: 14px; font-weight: 600; outline: none; transition: border-color 0.2s;
-                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
-                }
-                .fam-input:focus { border-color: var(--fam-primary-lt); }
-
-                .fam-add-btn {
-                    width: 100%; padding: 20px; border: 2px dashed var(--fam-border); background: transparent;
-                    color: var(--fam-text-3); font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700;
-                    text-transform: uppercase; letter-spacing: 0.2em; cursor: pointer; transition: all 0.2s;
-                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
-                    display: flex; align-items: center; justify-content: center; gap: 10px;
-                }
-                .fam-add-btn:hover { border-color: var(--fam-primary-lt); color: var(--fam-primary-lt); background: rgba(76,175,80,0.02); }
-
-                .fam-delete-btn {
-                    display: flex; align-items: center; gap: 6px; padding: 5px 12px;
-                    background: rgba(239,68,68,0.1); color: #ef4444; border: none;
-                    font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700;
-                    text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer;
-                    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
-                }
-
-                .fam-next-btn {
-                    position: relative; overflow: hidden;
-                    display: inline-flex; align-items: center; gap: 10px; padding: 13px 32px;
-                    background: var(--fam-primary); color: #fff; border: 2px solid var(--fam-primary);
-                    font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 800;
-                    letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
-                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-                    transition: all 0.2s;
-                }
-                .fam-next-btn:hover { background: var(--fam-primary-lt); border-color: var(--fam-primary-lt); transform: translateY(-2px); }
-
-                .fam-back-btn {
-                    display: inline-flex; align-items: center; gap: 8px; padding: 11px 24px;
-                    background: transparent; color: var(--fam-text-3); border: 1px solid var(--fam-border);
-                    font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; font-weight: 700;
-                    letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
-                    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-                    transition: all 0.2s;
-                }
-                .fam-back-btn:hover { color: var(--fam-text-1); border-color: var(--fam-text-2); }
-            `}</style>
+            
 
             <div className="flex flex-col gap-10 w-full" style={{ fontFamily: "'Barlow', sans-serif" }}>
                 <ErrorBanner errors={formErrors} />
