@@ -19,9 +19,6 @@ import {
     AiOutlineDownload,
     AiOutlinePrinter,
     AiOutlineDashboard,
-    AiOutlineCalendar,
-    AiOutlineInfoCircle,
-    AiOutlineArrowUp,
     AiOutlineHistory
 } from 'react-icons/ai';
 import {
@@ -36,8 +33,7 @@ import {
     Bar,
     Cell,
     PieChart,
-    Pie,
-    Legend
+    Pie
 } from 'recharts';
 import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
