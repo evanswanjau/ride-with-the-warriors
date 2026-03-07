@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import {
+    AiOutlineCheckCircle,
     AiOutlineArrowLeft,
     AiOutlineMobile,
+    AiOutlineUser,
     AiOutlineEnvironment,
-    AiOutlineCalendar,
+    AiOutlineWarning,
 } from 'react-icons/ai';
 import { API_BASE_URL } from '../../config';
 
 interface RafflePaymentPageProps {
     ticketId: string;
     ticketIds: string[];
+    firstName: string;
+    lastName: string;
     email: string;
     phoneNumber?: string;
     amount: number;
@@ -26,21 +30,20 @@ function formatKenyanPhone(raw: string): string {
     return phone;
 }
 
-
-const RafflePaymentPage = ({ ticketId, ticketIds, amount, phoneNumber: prefilledPhone, onBack, onSuccess }: RafflePaymentPageProps) => {
-    const [mpesaPhone, setMpesaPhone] = useState(prefilledPhone ? formatKenyanPhone(prefilledPhone) : '');
+const RafflePaymentPage = ({ ticketId, ticketIds, firstName, lastName, amount, phoneNumber: prefilledPhone, onBack, onSuccess }: RafflePaymentPageProps) => {
     const [isProcessing, setIsProcessing] = useState(false);
-    const [paymentStatus, setPaymentStatus] = useState<'initial' | 'pending' | 'error'>('initial');
+    const [mpesaPhone, setMpesaPhone] = useState(prefilledPhone ? formatKenyanPhone(prefilledPhone) : '');
     const [error, setError] = useState<string | null>(null);
+    const [paymentStatus, setPaymentStatus] = useState<'initial' | 'pending' | 'error'>('initial');
 
     const startPolling = (id: string) => {
         let attempts = 0;
-        const maxAttempts = 20; // 20 × 3s = 60s
+        const maxAttempts = 20;
 
         const poll = async () => {
             if (attempts >= maxAttempts) {
                 setPaymentStatus('error');
-                setError('Payment confirmation timed out. If you paid, please contact support with your Raffle Code.');
+                setError('Payment confirmation timed out. If you have paid, please contact support with your Raffle Code.');
                 return;
             }
             try {
@@ -48,218 +51,558 @@ const RafflePaymentPage = ({ ticketId, ticketIds, amount, phoneNumber: prefilled
                 if (res.ok) {
                     const data = await res.json();
                     const t = data.ticket;
-                    if (t?.status === 'PAID') { onSuccess(); return; }
+                    if (t?.status === 'PAID' || t?.status === 'CONFIRMED') { onSuccess(); return; }
                     if (t?.paymentFailed === true) {
+                        const reason = t?.paymentFailureReason || 'Payment was not completed.';
                         setPaymentStatus('error');
-                        setError('Payment was not completed. Please try again.');
+                        setError(`Payment failed: ${reason}. Please try again.`);
                         return;
                     }
                 }
-            } catch { /* ignore polling errors */ }
+            } catch (err) { console.error('Polling error:', err); }
             attempts++;
             setTimeout(poll, 3000);
         };
         poll();
     };
 
-    const handleSendPrompt = async () => {
+    const handleConfirm = async () => {
         const formatted = formatKenyanPhone(mpesaPhone);
         if (!formatted || formatted.length < 12) {
-            setError('Please enter a valid Kenyan phone number (e.g. 0712345678)');
+            setError('Please enter a valid Kenyan phone number (e.g. 0712345678 or 254712345678)');
             return;
         }
         setIsProcessing(true);
         setError(null);
         try {
-            const res = await fetch(`${API_BASE_URL}/raffle/pay/stk-push`, {
+            const response = await fetch(`${API_BASE_URL}/raffle/pay/stk-push`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ticketIds, phoneNumber: formatted }),
             });
-            const data = await res.json();
-            if (res.ok && data.success) {
+            const data = await response.json();
+            if (response.ok && data.success) {
                 setPaymentStatus('pending');
                 setIsProcessing(false);
                 startPolling(ticketId);
             } else {
-                setError(data.error?.message || data.message || 'Failed to send M-Pesa prompt. Please try again.');
+                setError(data.message || 'STK Push failed. Please try again.');
                 setIsProcessing(false);
             }
         } catch {
-            setError('Connection error. Please check your internet and try again.');
+            setError('Connection error. Please try again.');
             setIsProcessing(false);
         }
     };
 
     const handleRetry = () => { setPaymentStatus('initial'); setError(null); };
 
+    const isPending = paymentStatus === 'pending';
+    const isError = paymentStatus === 'error';
+
     return (
-        <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 py-12 px-4 font-sans text-neutral-900 dark:text-neutral-100">
-            <div className="max-w-4xl mx-auto">
-                {/* Header */}
-                <div className="text-center mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div className="inline-flex items-center justify-center size-16 rounded-2xl bg-amber-400/10 mb-4">
-                        <span className="text-4xl">🎟️</span>
-                    </div>
-                    <h1 className="text-4xl font-black text-neutral-900 dark:text-white mb-4">
-                        Complete Your Entry
-                    </h1>
+        <>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
-                    {/* Summary card */}
-                    <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-700 rounded-2xl px-6 py-4 shadow-sm mt-2">
-                        <div className="flex items-center gap-2">
-                            <AiOutlineCalendar className="text-amber-500 text-lg shrink-0" />
-                            <div className="text-left">
-                                <p className="text-[10px] uppercase tracking-widest font-bold text-neutral-400">Event</p>
-                                <p className="font-black text-neutral-900 dark:text-white leading-none">RWTW 2026</p>
-                            </div>
-                        </div>
-                        <div className="hidden sm:block h-8 w-px bg-neutral-100 dark:bg-neutral-700" />
-                        <div className="flex items-center gap-2">
-                            <AiOutlineEnvironment className="text-amber-500 text-lg shrink-0" />
-                            <div className="text-left">
-                                <p className="text-[10px] uppercase tracking-widest font-bold text-neutral-400">Type</p>
-                                <p className="font-black text-neutral-900 dark:text-white leading-none">Raffle Ticket</p>
-                            </div>
-                        </div>
-                        <div className="hidden sm:block h-8 w-px bg-neutral-100 dark:bg-neutral-700" />
-                        <div className="text-left">
-                            <p className="text-[10px] uppercase tracking-widest font-bold text-neutral-400">Amount</p>
-                            <p className="font-black text-amber-500 text-lg leading-none">KES {amount.toLocaleString()}</p>
-                        </div>
-                    </div>
-                    <p className="text-xs text-neutral-400 mt-3 font-mono">
-                        RAFFLE CODE: <span className="font-black text-amber-500">{ticketId}</span>
-                    </p>
-                </div>
+                :root, [data-theme="dark"] {
+                    --color-primary: #2d6a2d;
+                    --color-primary-dark: #1e4d1e;
+                    --color-primary-light: #4caf50;
+                    --py-bg:         #0a0a0a;
+                    --py-raised:     #111111;
+                    --py-card:       #141414;
+                    --py-card-alt:   #0e0e0e;
+                    --py-border:     rgba(255,255,255,0.07);
+                    --py-border-2:   rgba(255,255,255,0.13);
+                    --py-text-1:     #ffffff;
+                    --py-text-2:     rgba(255,255,255,0.58);
+                    --py-text-3:     rgba(255,255,255,0.32);
+                    --py-input-bg:   #0a0a0a;
+                    --py-input-bd:   rgba(255,255,255,0.09);
+                    --py-divider:    rgba(255,255,255,0.05);
+                    --py-step-bg:    rgba(45,106,45,0.10);
+                    --py-pending-bg: rgba(45,106,45,0.06);
+                    --py-error-bg:   rgba(220,38,38,0.06);
+                    --py-error-bd:   rgba(220,38,38,0.25);
+                }
+                [data-theme="light"] {
+                    --color-primary: #245924;
+                    --color-primary-dark: #1a421a;
+                    --color-primary-light: #2d6a2d;
+                    --py-bg:         #f5f2eb;
+                    --py-raised:     #edeae2;
+                    --py-card:       #ffffff;
+                    --py-card-alt:   #f9f7f3;
+                    --py-border:     rgba(0,0,0,0.09);
+                    --py-border-2:   rgba(0,0,0,0.15);
+                    --py-text-1:     #111111;
+                    --py-text-2:     rgba(20,20,20,0.60);
+                    --py-text-3:     rgba(20,20,20,0.38);
+                    --py-input-bg:   #f9f7f3;
+                    --py-input-bd:   rgba(0,0,0,0.11);
+                    --py-divider:    rgba(0,0,0,0.06);
+                    --py-step-bg:    rgba(36,89,36,0.08);
+                    --py-pending-bg: rgba(36,89,36,0.05);
+                    --py-error-bg:   rgba(220,38,38,0.04);
+                    --py-error-bd:   rgba(220,38,38,0.2);
+                }
 
-                {/* Main card */}
-                <div className="max-w-5xl mx-auto">
-                    <div className="bg-white dark:bg-neutral-800 rounded-[40px] shadow-2xl border border-neutral-100 dark:border-neutral-700 overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-700">
-                        <div className="grid grid-cols-1 md:grid-cols-2">
-                            {/* Left: M-Pesa prompt */}
-                            <div className="p-8 md:p-12 bg-neutral-50 dark:bg-neutral-900/50 border-b md:border-b-0 md:border-r border-neutral-100 dark:border-neutral-700">
-                                <div className="space-y-8">
-                                    <div className="flex items-center gap-3">
-                                        <div className="size-12 rounded-2xl bg-[#3fbb2d] flex items-center justify-center shadow-lg shadow-[#3fbb2d]/20">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/M-PESA_LOGO-01.svg" alt="M-Pesa" className="h-6 invert brightness-0" />
-                                        </div>
-                                        <div>
-                                            <h2 className="text-xl font-black text-neutral-900 dark:text-white">M-Pesa Prompt</h2>
-                                            <p className="text-[10px] uppercase tracking-widest font-bold text-neutral-400">
-                                                {paymentStatus === 'pending' ? 'Waiting for PIN' : 'Instant Payment'}
-                                            </p>
+                .py-page {
+                    font-family: 'Barlow', sans-serif;
+                    background: var(--py-bg);
+                    color: var(--py-text-1);
+                    min-height: 100vh;
+                    padding: 64px 24px 80px;
+                    transition: background 0.3s, color 0.3s;
+                }
+                .py-inner { max-width: 960px; margin: 0 auto; }
+
+                .py-label-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+                .py-label-line { height: 1px; width: 36px; background: var(--color-primary); flex-shrink: 0; }
+                .py-eyebrow {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.65rem; font-weight: 700;
+                    letter-spacing: 0.28em; text-transform: uppercase;
+                    color: var(--color-primary-light);
+                }
+
+                .py-header { text-align: center; margin-bottom: 52px; }
+                .py-header-icon {
+                    width: 60px; height: 60px; margin: 0 auto 20px;
+                    border: 1px solid rgba(45,106,45,0.3);
+                    background: rgba(45,106,45,0.08);
+                    display: flex; align-items: center; justify-content: center;
+                    color: var(--color-primary-light); font-size: 1.8rem;
+                    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+                }
+                .py-header-title {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: clamp(2.5rem, 6vw, 4rem);
+                    letter-spacing: 0.03em; line-height: 0.95;
+                    color: var(--py-text-1); margin-bottom: 24px;
+                }
+                .py-header-title span { color: var(--color-primary-light); }
+
+                .py-summary {
+                    display: inline-flex; flex-wrap: wrap;
+                    align-items: center; justify-content: center; gap: 0;
+                    background: var(--py-card);
+                    border: 1px solid var(--py-border);
+                    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+                    overflow: hidden;
+                }
+                .py-summary-cell {
+                    display: flex; align-items: center; gap: 12px;
+                    padding: 18px 28px;
+                    border-right: 1px solid var(--py-border);
+                }
+                .py-summary-cell:last-child { border-right: none; }
+                @media (max-width: 640px) {
+                    .py-summary { flex-direction: column; width: 100%; }
+                    .py-summary-cell { border-right: none; border-bottom: 1px solid var(--py-border); width: 100%; }
+                    .py-summary-cell:last-child { border-bottom: none; }
+                }
+                .py-summary-icon { color: var(--color-primary-light); font-size: 1.1rem; flex-shrink: 0; }
+                .py-summary-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.6rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--py-text-3); margin-bottom: 3px;
+                }
+                .py-summary-value { font-size: 0.9rem; font-weight: 700; color: var(--py-text-1); }
+                .py-summary-amount { color: var(--color-primary-light); font-size: 1.1rem; }
+
+                .py-reg-id {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 0.72rem; color: var(--py-text-3); margin-top: 14px;
+                    display: flex; align-items: center; justify-content: center; gap: 6px;
+                }
+                .py-reg-id span { color: var(--color-primary-light); font-weight: 700; }
+
+                .py-panel {
+                    background: var(--py-card);
+                    border: 1px solid var(--py-border);
+                    overflow: hidden;
+                    clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%);
+                    display: grid; grid-template-columns: 1fr;
+                }
+                @media (min-width: 768px) {
+                    .py-panel { grid-template-columns: 1fr 1fr; }
+                }
+
+                .py-left {
+                    background: var(--py-card-alt);
+                    border-right: 1px solid var(--py-border);
+                    padding: 44px 40px;
+                    display: flex; flex-direction: column; gap: 32px;
+                }
+                @media (max-width: 640px) { .py-left { padding: 28px 24px; } }
+
+                .py-mpesa-header { display: flex; align-items: center; gap: 14px; }
+                .py-mpesa-logo-box {
+                    width: 48px; height: 48px; flex-shrink: 0;
+                    background: var(--color-primary);
+                    display: flex; align-items: center; justify-content: center;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                }
+                .py-mpesa-logo-box img { height: 22px; filter: brightness(0) invert(1); }
+                .py-mpesa-title {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.6rem; letter-spacing: 0.03em;
+                    color: var(--py-text-1); line-height: 1;
+                }
+                .py-mpesa-sub {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.62rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--py-text-3); margin-top: 3px;
+                }
+
+                .py-input-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.68rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--py-text-3); margin-bottom: 8px; display: block;
+                }
+                .py-phone-input {
+                    width: 100%;
+                    background: var(--py-input-bg);
+                    border: 1px solid var(--py-input-bd);
+                    padding: 14px 18px;
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 1.05rem; font-weight: 700;
+                    color: var(--py-text-1);
+                    outline: none;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                }
+                .py-phone-input::placeholder { font-family: 'Barlow', sans-serif; font-weight: 400; font-size: 0.85rem; color: var(--py-text-3); }
+                .py-phone-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(45,106,45,0.12); }
+                .py-input-hint { font-size: 0.72rem; color: var(--py-text-3); margin-top: 6px; }
+
+                .py-error {
+                    display: flex; align-items: flex-start; gap: 10px;
+                    background: var(--py-error-bg);
+                    border: 1px solid var(--py-error-bd);
+                    padding: 12px 16px;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                }
+                .py-error-icon { color: #ef4444; font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+                .py-error-text { font-size: 0.82rem; color: #ef4444; line-height: 1.5; }
+
+                .py-pending-box {
+                    background: var(--py-pending-bg);
+                    border: 1px solid rgba(45,106,45,0.2);
+                    padding: 32px 28px;
+                    display: flex; flex-direction: column; align-items: center; gap: 20px;
+                    text-align: center;
+                    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+                }
+                .py-pending-spinner {
+                    width: 56px; height: 56px;
+                    border: 3px solid rgba(45,106,45,0.2);
+                    border-top-color: var(--color-primary-light);
+                    border-radius: 50%;
+                    animation: pySpin 0.8s linear infinite;
+                }
+                @keyframes pySpin { to { transform: rotate(360deg); } }
+                .py-pending-title {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.6rem; letter-spacing: 0.03em;
+                    color: var(--py-text-1);
+                }
+                .py-pending-body { font-size: 0.88rem; color: var(--py-text-2); line-height: 1.65; }
+                .py-pending-body strong { color: var(--color-primary-light); font-weight: 700; }
+
+                .py-back-link {
+                    display: inline-flex; align-items: center; gap: 8px;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.75rem; font-weight: 700;
+                    letter-spacing: 0.14em; text-transform: uppercase;
+                    color: var(--py-text-3); background: none; border: none; cursor: pointer;
+                    transition: color 0.2s;
+                }
+                .py-back-link:hover { color: var(--color-primary-light); }
+                .py-back-link svg { transition: transform 0.2s; }
+                .py-back-link:hover svg { transform: translateX(-3px); }
+
+                .py-right {
+                    padding: 44px 40px;
+                    display: flex; flex-direction: column; justify-content: space-between; gap: 32px;
+                }
+                @media (max-width: 640px) { .py-right { padding: 28px 24px; } }
+
+                .py-steps { display: flex; flex-direction: column; gap: 0; }
+                .py-step {
+                    display: flex; align-items: flex-start; gap: 16px;
+                    padding: 18px 0;
+                    border-bottom: 1px solid var(--py-divider);
+                }
+                .py-step:first-child { border-top: 1px solid var(--py-divider); }
+                .py-step-num {
+                    width: 28px; height: 28px; flex-shrink: 0;
+                    background: var(--py-step-bg);
+                    border: 1px solid rgba(45,106,45,0.2);
+                    display: flex; align-items: center; justify-content: center;
+                    font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem;
+                    color: var(--color-primary-light);
+                    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+                }
+                .py-step-text { font-size: 0.88rem; color: var(--py-text-2); line-height: 1.65; padding-top: 3px; }
+
+                .py-amount-box {
+                    background: var(--py-raised);
+                    border: 1px solid var(--py-border);
+                    padding: 22px 24px;
+                    display: flex; align-items: center; justify-content: space-between;
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+                }
+                .py-amount-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.65rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--py-text-3);
+                }
+                .py-amount-value {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 2.2rem; letter-spacing: 0.02em;
+                    color: var(--color-primary-light);
+                }
+
+                .py-submit {
+                    position: relative; overflow: hidden;
+                    width: 100%;
+                    display: flex; align-items: center; justify-content: center; gap: 10px;
+                    padding: 17px 32px;
+                    background: var(--color-primary); color: #fff;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.92rem; font-weight: 800;
+                    letter-spacing: 0.15em; text-transform: uppercase;
+                    border: none; cursor: pointer;
+                    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+                }
+                .py-submit::before {
+                    content: ''; position: absolute; top: 0; left: -80%;
+                    width: 60%; height: 100%;
+                    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.42) 50%, transparent 80%);
+                    transform: skewX(-20deg); pointer-events: none;
+                }
+                .py-submit:hover:not(:disabled)::before { left: 140%; transition: left 0.55s cubic-bezier(0.25,0.46,0.45,0.94); }
+                .py-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(45,106,45,0.38); background: var(--color-primary-dark); }
+                .py-submit:active:not(:disabled) { transform: translateY(0); }
+                .py-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+                .py-submit.error { background: #b91c1c; }
+                .py-submit.error:hover:not(:disabled) { background: #991b1b; box-shadow: 0 12px 32px rgba(185,28,28,0.35); }
+
+                .py-btn-spinner {
+                    width: 16px; height: 16px;
+                    border: 2px solid rgba(255,255,255,0.3);
+                    border-top-color: #fff; border-radius: 50%;
+                    animation: pySpin 0.7s linear infinite;
+                }
+
+                .py-awaiting {
+                    display: flex; align-items: center; justify-content: center; gap: 10px;
+                    padding: 14px 0;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.78rem; font-weight: 700;
+                    letter-spacing: 0.18em; text-transform: uppercase;
+                    color: var(--color-primary-light);
+                }
+                .py-awaiting-dot {
+                    width: 6px; height: 6px; background: currentColor;
+                    animation: pyBounce 1s ease-in-out infinite;
+                }
+                .py-awaiting-dot:nth-child(2) { animation-delay: 0.15s; }
+                .py-awaiting-dot:nth-child(3) { animation-delay: 0.3s; }
+                @keyframes pyBounce {
+                    0%,100% { transform: translateY(0); opacity: 1; }
+                    50%      { transform: translateY(-4px); opacity: 0.4; }
+                }
+                .py-retry-btn {
+                    width: 100%; padding: 13px;
+                    background: none; border: 1px solid var(--py-border);
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.75rem; font-weight: 700;
+                    letter-spacing: 0.16em; text-transform: uppercase;
+                    color: var(--py-text-3); cursor: pointer;
+                    transition: border-color 0.2s, color 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+                }
+                .py-retry-btn:hover { border-color: var(--color-primary); color: var(--color-primary-light); }
+            `}</style>
+
+            <div className="py-page">
+                <div className="py-inner">
+                    <div className="py-header">
+                        <div className="py-label-row" style={{ justifyContent: 'center' }}>
+                            <div className="py-label-line" />
+                            <span className="py-eyebrow">Payment Processing</span>
+                            <div className="py-label-line" />
+                        </div>
+
+                        <div className="py-header-icon">
+                            <AiOutlineCheckCircle />
+                        </div>
+
+                        <h1 className="py-header-title">
+                            Complete  <span>Payment!</span>
+                        </h1>
+
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <div className="py-summary">
+                                <div className="py-summary-cell">
+                                    <AiOutlineUser className="py-summary-icon" />
+                                    <div>
+                                        <div className="py-summary-label">Registrant</div>
+                                        <div className="py-summary-value">{firstName} {lastName}</div>
+                                    </div>
+                                </div>
+                                <div className="py-summary-cell">
+                                    <AiOutlineEnvironment className="py-summary-icon" />
+                                    <div>
+                                        <div className="py-summary-label">Category</div>
+                                        <div className="py-summary-value">Raffle Ticket</div>
+                                    </div>
+                                </div>
+                                <div className="py-summary-cell">
+                                    <div>
+                                        <div className="py-summary-label">Amount Due</div>
+                                        <div className="py-summary-value py-summary-amount">
+                                            KES {amount.toLocaleString()}
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                    {paymentStatus === 'initial' || paymentStatus === 'error' ? (
-                                        <>
-                                            <div className="p-6 rounded-3xl bg-white dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-700 shadow-sm">
-                                                <p className="text-sm text-neutral-600 dark:text-neutral-400 font-medium">
-                                                    Enter your M-Pesa number below and we'll send a payment prompt to your phone.
-                                                </p>
-                                            </div>
+                        <div className="py-reg-id">
+                            {ticketIds.length > 1 ? 'RAFFLE CODES:' : 'RAFFLE CODE:'} <span>{ticketIds.join(', ')}</span>
+                        </div>
+                    </div>
 
-                                            <div className="space-y-2">
-                                                <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest">M-Pesa Phone Number</p>
-                                                <input
-                                                    type="tel"
-                                                    value={mpesaPhone}
-                                                    onChange={e => setMpesaPhone(e.target.value)}
-                                                    placeholder="07XX XXX XXX or 254XXXXXXXXX"
-                                                    className="w-full p-4 rounded-2xl bg-white dark:bg-neutral-800 border-2 border-neutral-100 dark:border-neutral-700 focus:border-amber-400 outline-none transition-all font-mono font-black text-lg placeholder:font-sans placeholder:font-normal placeholder:text-neutral-300"
-                                                />
-                                                {error && (
-                                                    <p className="text-xs font-bold text-red-500 animate-in fade-in slide-in-from-top-1">{error}</p>
-                                                )}
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div className="p-8 rounded-[32px] bg-amber-500/5 border-2 border-amber-500/20 flex flex-col items-center text-center space-y-6 animate-pulse">
-                                            <div className="size-20 rounded-full bg-amber-400 flex items-center justify-center">
-                                                <div className="size-10 border-4 border-white border-t-transparent animate-spin rounded-full" />
-                                            </div>
-                                            <div>
-                                                <h3 className="text-xl font-black text-neutral-900 dark:text-white mb-2">Prompt Sent!</h3>
-                                                <p className="text-neutral-600 dark:text-neutral-400 font-bold leading-relaxed">
-                                                    Check your phone and enter your <span className="text-amber-500">M-Pesa PIN</span> to complete payment.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <div className="hidden md:block pt-4">
-                                        <button onClick={onBack} className="py-4 text-sm font-bold text-neutral-400 hover:text-primary transition-colors flex items-center gap-2 group">
-                                            <AiOutlineArrowLeft className="text-sm group-hover:-translate-x-1 transition-transform" />
-                                            Change Details
-                                        </button>
+                    <div className="py-panel">
+                        <div className="py-left">
+                            <div className="py-mpesa-header">
+                                <div className="py-mpesa-logo-box">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/M-PESA_LOGO-01.svg" alt="M-Pesa" />
+                                </div>
+                                <div>
+                                    <div className="py-mpesa-title">M-Pesa Prompt</div>
+                                    <div className="py-mpesa-sub">
+                                        {isPending ? 'Waiting for PIN entry' : 'Instant mobile payment'}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Right: Steps + CTA */}
-                            <div className="p-8 md:p-12 flex flex-col justify-between">
-                                <div className="space-y-6">
+                            {!isPending ? (
+                                <div>
+                                    <label className="py-input-label">M-Pesa Phone Number</label>
+                                    <input
+                                        type="tel"
+                                        value={mpesaPhone}
+                                        onChange={e => setMpesaPhone(e.target.value)}
+                                        placeholder="07XX XXX XXX  or  254XXXXXXXXX"
+                                        className="py-phone-input"
+                                    />
+                                    <p className="py-input-hint">Accepts 07XX, +254, or 254 format</p>
+
+                                    {error && (
+                                        <div className="py-error" style={{ marginTop: 14 }}>
+                                            <AiOutlineWarning className="py-error-icon" />
+                                            <span className="py-error-text">{error}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="py-pending-box">
+                                    <div className="py-pending-spinner" />
+                                    <div className="py-pending-title">Prompt Sent!</div>
+                                    <p className="py-pending-body">
+                                        Check your phone and enter your{' '}
+                                        <strong>M-Pesa PIN</strong> to complete the payment.
+                                        This page will update automatically.
+                                    </p>
+                                </div>
+                            )}
+
+                            <div className="hidden md:block">
+                                <button onClick={onBack} className="py-back-link">
+                                    <AiOutlineArrowLeft />
+                                    Change Details
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="py-right">
+                            <div>
+                                <div className="py-label-row" style={{ marginBottom: 20 }}>
+                                    <div className="py-label-line" />
+                                    <span className="py-eyebrow">How It Works</span>
+                                </div>
+                                <div className="py-steps">
                                     {[
-                                        'Enter your phone number and click "Send Prompt".',
-                                        'Check your phone for the M-Pesa prompt and enter your PIN.',
-                                        'Wait here — your raffle ticket will be confirmed automatically.',
-                                    ].map((step, i) => (
-                                        <div key={i} className="flex items-start gap-4">
-                                            <span className="size-6 shrink-0 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-[10px]">
-                                                {i + 1}
-                                            </span>
-                                            <p className="text-sm text-neutral-600 dark:text-neutral-400 font-medium">{step}</p>
+                                        'Enter your phone number below and tap Send Prompt.',
+                                        'Check your phone for the prompt and enter your PIN.',
+                                        'Stay on this page for your payment confirmation.',
+                                    ].map((text, i) => (
+                                        <div key={i} className="py-step">
+                                            <div className="py-step-num">{i + 1}</div>
+                                            <p className="py-step-text">{text}</p>
                                         </div>
                                     ))}
-
                                 </div>
+                            </div>
 
-                                <div className="pt-10 space-y-4">
-                                    {paymentStatus === 'pending' ? (
-                                        <div className="space-y-4">
-                                            <div className="flex items-center justify-center gap-3 py-4 text-amber-500 font-black animate-pulse">
-                                                {[0, 150, 300].map(delay => (
-                                                    <div key={delay} className="size-2 bg-current rounded-full animate-bounce" style={{ animationDelay: `${delay}ms` }} />
-                                                ))}
-                                                <span>AWAITING CONFIRMATION...</span>
-                                            </div>
-                                            <button onClick={handleRetry} className="w-full py-4 text-sm font-bold text-neutral-400 hover:text-primary transition-colors border-t border-neutral-100 dark:border-neutral-700">
-                                                Didn't get the prompt? Retry
-                                            </button>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                <div className="py-amount-box">
+                                    <div>
+                                        <div className="py-amount-label">Total Due</div>
+                                        <div className="py-amount-value">
+                                            KES {amount.toLocaleString()}
                                         </div>
-                                    ) : (
-                                        <>
-                                            <button
-                                                onClick={handleSendPrompt}
-                                                disabled={isProcessing}
-                                                className="w-full py-5 rounded-[24px] bg-amber-400 text-neutral-900 font-black text-lg shadow-xl hover:bg-amber-500 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-                                            >
-                                                {isProcessing ? (
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="size-5 border-4 border-neutral-900/30 border-t-neutral-900 animate-spin rounded-full" />
-                                                        <span>SENDING...</span>
-                                                    </div>
-                                                ) : (
-                                                    <>
-                                                        <span>{paymentStatus === 'error' ? 'RETRY SEND PROMPT' : 'SEND PROMPT'}</span>
-                                                        <AiOutlineMobile className="font-bold" />
-                                                    </>
-                                                )}
-                                            </button>
-                                            <button onClick={onBack} className="md:hidden w-full py-2 text-sm font-bold text-neutral-400 hover:text-primary transition-colors flex items-center justify-center gap-2">
-                                                <AiOutlineArrowLeft className="text-sm" />
-                                                Back to Review
-                                            </button>
-                                        </>
-                                    )}
+                                    </div>
+                                    <div style={{ textAlign: 'right' }}>
+                                        <div className="py-amount-label">Via</div>
+                                        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontSize: '0.85rem', color: 'var(--py-text-2)', letterSpacing: '0.1em' }}>M-PESA STK</div>
+                                    </div>
                                 </div>
+
+                                {isPending ? (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                        <div className="py-awaiting">
+                                            <div className="py-awaiting-dot" />
+                                            <div className="py-awaiting-dot" />
+                                            <div className="py-awaiting-dot" />
+                                            Awaiting Confirmation
+                                        </div>
+                                        <button onClick={handleRetry} className="py-retry-btn">
+                                            Didn't receive prompt? Retry
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={handleConfirm}
+                                        disabled={isProcessing}
+                                        className={`py-submit${isError ? ' error' : ''}`}
+                                    >
+                                        {isProcessing ? (
+                                            <><div className="py-btn-spinner" /><span>Sending Prompt…</span></>
+                                        ) : isError ? (
+                                            <><span>Retry Send Prompt</span><AiOutlineMobile /></>
+                                        ) : (
+                                            <><span>Send M-Pesa Prompt</span><AiOutlineMobile /></>
+                                        )}
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

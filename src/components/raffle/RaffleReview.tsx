@@ -1,4 +1,28 @@
-import { AiOutlineArrowLeft, AiOutlineCheckCircle, AiOutlineMail, AiOutlinePhone, AiOutlineUser, AiOutlineShopping } from 'react-icons/ai';
+import { AiOutlineArrowLeft, AiOutlineCheckCircle, AiOutlineUser, AiOutlineShopping, AiOutlineCheck } from 'react-icons/ai';
+import RegistrationStepLayout from '../registration/ui/RegistrationStepLayout';
+
+/* ── Inline Design Components ────────────────────────────────────────── */
+const Detail = ({ label, value }: { label: string; value: React.ReactNode }) => (
+    <div className="flex flex-col gap-1">
+        <span className="font-['Barlow_Condensed'] text-[9px] font-bold uppercase tracking-[0.22em] text-rs-text-3">
+            {label}
+        </span>
+        <span className="font-['Barlow'] text-sm font-bold text-rs-text-1 leading-tight">
+            {value}
+        </span>
+    </div>
+);
+
+const SectionHead = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
+    <div className="flex items-center gap-2.5 pb-3 mb-4 border-b border-rs-divider">
+        <div className="w-7 h-7 flex items-center justify-center border border-rs-border-2 text-primary [clip-path:polygon(0_0,calc(100%-5_px)_0,100%_5px,100%_100%,0_100%)]">
+            {icon}
+        </div>
+        <span className="font-['Barlow_Condensed'] text-[10px] font-bold uppercase tracking-[0.22em] text-rs-text-3">
+            {label}
+        </span>
+    </div>
+);
 
 interface RaffleReviewProps {
     data: {
@@ -18,121 +42,102 @@ interface RaffleReviewProps {
 }
 
 const RaffleReview = ({ data, onBack, onSubmit, isSubmitting, error }: RaffleReviewProps) => {
+    const Footer = (
+        <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-4">
+            <button
+                onClick={onBack}
+                disabled={isSubmitting}
+                className="flex items-center gap-2 text-rs-text-3 hover:text-primary transition-colors font-bold text-xs uppercase tracking-widest"
+                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+            >
+                <AiOutlineArrowLeft />
+                Go Back
+            </button>
+
+            <button
+                onClick={onSubmit}
+                disabled={isSubmitting}
+                className="group relative flex items-center justify-center gap-3 bg-neutral-900 dark:bg-amber-400 text-white dark:text-neutral-900 px-10 py-4 font-black transition-all hover:gap-5 disabled:opacity-50"
+                type="button"
+                style={{
+                    fontFamily: "'Barlow Condensed', sans-serif",
+                    letterSpacing: '0.15em',
+                    clipPath: 'polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15% 100%, 0 calc(100% - 15px))'
+                }}
+            >
+                {isSubmitting ? (
+                    <>
+                        <div className="w-5 h-5 border-2 border-white/20 dark:border-neutral-900/20 border-t-white dark:border-t-neutral-900 animate-spin rounded-full" />
+                        PROCESSING...
+                    </>
+                ) : (
+                    <>
+                        CONFIRM & PAY
+                        <AiOutlineCheckCircle className="text-xl" />
+                    </>
+                )}
+            </button>
+        </div>
+    );
+
     return (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="text-center mb-8">
-                <h2 className="text-2xl font-black text-neutral-900 dark:text-white mb-2">Review Your Entry</h2>
-                <p className="text-neutral-500 dark:text-neutral-400 text-sm">
-                    Almost there! Double-check your details before proceeding to payment.
-                </p>
-            </div>
+        <RegistrationStepLayout
+            stepLabel="REVIEW"
+            title="CONFIRM ENTRY"
+            subtitle="Almost there! Double-check your details before proceeding to payment."
+            footer={Footer}
+        >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* Left Side: Summary Card */}
+                <div className="lg:col-span-12">
+                    <div className="bg-rs-input-bg border border-rs-border-1 p-6 md:p-8 relative overflow-hidden [clip-path:polygon(0_0,calc(100%-24px)_0,100%_24px,100%_100%,0_100%)]">
+                        {/* Background Accent */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 -mr-16 -mt-16 rounded-full blur-3xl" />
 
-            <div className="bg-white dark:bg-neutral-800 rounded-3xl shadow-xl overflow-hidden border border-neutral-100 dark:border-neutral-700">
-                {/* Summary Header */}
-                <div className="bg-amber-50 dark:bg-amber-900/20 px-6 py-4 border-b border-amber-100 dark:border-amber-900/30 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <AiOutlineShopping className="text-amber-500 text-xl" />
-                        <span className="text-sm font-black text-neutral-900 dark:text-white uppercase tracking-wider">Order Summary ({data.quantity} {parseInt(data.quantity) === 1 ? 'Ticket' : 'Tickets'})</span>
-                    </div>
-                    <span className="text-lg font-black text-amber-600 dark:text-amber-400">KES {(parseInt(data.quantity) * 1000).toLocaleString()}</span>
-                </div>
-
-                <div className="p-6 space-y-6">
-                    {/* Participant Info */}
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                            <div className="size-10 rounded-xl bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center shrink-0">
-                                <AiOutlineUser className="text-primary text-xl" />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] mb-0.5">Full Name</p>
-                                <p className="text-sm font-bold text-neutral-900 dark:text-white">{data.firstName} {data.lastName}</p>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                            <div className="size-10 rounded-xl bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center shrink-0">
-                                <AiOutlineMail className="text-primary text-xl" />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] mb-0.5">Email Address</p>
-                                <p className="text-sm font-bold text-neutral-900 dark:text-white">{data.email}</p>
-                            </div>
-                        </div>
-
-                        {data.phoneNumber && (
-                            <div className="flex items-center gap-4">
-                                <div className="size-10 rounded-xl bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center shrink-0">
-                                    <AiOutlinePhone className="text-primary text-xl" />
-                                </div>
-                                <div>
-                                    <p className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] mb-0.5">Phone Number</p>
-                                    <p className="text-sm font-bold text-neutral-900 dark:text-white">{data.phoneNumber}</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+                            {/* Personal Info */}
+                            <div className="md:col-span-2">
+                                <SectionHead icon={<AiOutlineUser />} label="PARTICIPANT" />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <Detail label="Full Name" value={`${data.firstName} ${data.lastName}`} />
+                                    <Detail label="Gender" value={<span className="capitalize">{data.gender}</span>} />
+                                    <Detail label="ID / Passport" value={data.idNumber} />
+                                    <Detail label="Email" value={data.email} />
+                                    {data.phoneNumber && <Detail label="Phone" value={data.phoneNumber} />}
                                 </div>
                             </div>
-                        )}
 
-                        <div className="flex items-center gap-4">
-                            <div className="size-10 rounded-xl bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center shrink-0">
-                                <AiOutlineCheckCircle className="text-primary text-xl" />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] mb-0.5">National ID / Passport</p>
-                                <p className="text-sm font-bold text-neutral-900 dark:text-white">{data.idNumber}</p>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                            <div className="size-10 rounded-xl bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center shrink-0">
-                                <AiOutlineUser className="text-primary text-xl" />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] mb-0.5">Gender</p>
-                                <p className="text-sm font-bold text-neutral-900 dark:text-white capitalize">{data.gender}</p>
+                            {/* Ticket Info */}
+                            <div className="md:col-span-2">
+                                <SectionHead icon={<AiOutlineShopping />} label="RAFFLE TICKETS" />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <Detail
+                                        label="Quantity"
+                                        value={<div className="flex items-center gap-2 text-primary">
+                                            <AiOutlineCheck className="text-sm" />
+                                            {data.quantity} {parseInt(data.quantity) === 1 ? 'Ticket' : 'Tickets'}
+                                        </div>}
+                                    />
+                                    <Detail
+                                        label="Total Price"
+                                        value={<span className="text-lg font-black text-primary">
+                                            KES {(parseInt(data.quantity) * 1000).toLocaleString()}
+                                        </span>}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
             {error && (
-                <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl text-red-600 dark:text-red-400 text-sm font-medium animate-in fade-in slide-in-from-top-1">
+                <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold uppercase tracking-widest text-center" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
                     {error}
                 </div>
             )}
-
-            <div className="mt-8 flex flex-col gap-4">
-                <button
-                    onClick={onSubmit}
-                    disabled={isSubmitting}
-                    className="w-full h-16 rounded-[24px] bg-neutral-900 dark:bg-amber-400 text-white dark:text-neutral-900 font-black text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {isSubmitting ? (
-                        <>
-                            <div className="size-5 border-4 border-white/20 dark:border-neutral-900/20 border-t-white dark:border-t-neutral-900 animate-spin rounded-full" />
-                            <span>Processing...</span>
-                        </>
-                    ) : (
-                        <>
-                            <span>Proceed to Payment</span>
-                            <AiOutlineCheckCircle className="text-xl" />
-                        </>
-                    )}
-                </button>
-
-                <button
-                    onClick={onBack}
-                    disabled={isSubmitting}
-                    className="w-full py-4 text-sm font-bold text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors flex items-center justify-center gap-2"
-                >
-                    <AiOutlineArrowLeft />
-                    <span>Go Back & Edit</span>
-                </button>
-            </div>
-        </div>
+        </RegistrationStepLayout>
     );
 };
 
 export default RaffleReview;
-

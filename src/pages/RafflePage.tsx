@@ -3,9 +3,9 @@ import { useNavigate, useParams, Navigate, useLocation } from 'react-router-dom'
 import Layout from '../components/layout/Layout';
 import RaffleDetailsForm from '../components/raffle/RaffleDetailsForm';
 import RaffleReview from '../components/raffle/RaffleReview';
+import ProgressBar from '../components/layout/ProgressBar';
 import { API_BASE_URL } from '../config';
 
-const STEPS = ['YOUR DETAILS', 'CONFIRM'];
 
 const RafflePage = () => {
     const { stepId } = useParams();
@@ -98,42 +98,14 @@ const RafflePage = () => {
 
     if (step < 1 || step > 2) return <Navigate to="/raffle/step/1" replace />;
 
-    const progressPercent = ((step - 1) / (STEPS.length - 1)) * 100;
-
     return (
         <Layout maxWidth="max-w-5xl">
-            {/* Progress Bar */}
-            <div className="flex flex-col gap-3 pb-8 w-full">
-                <div className="flex gap-6 justify-between items-center">
-                    <p className="text-text-light dark:text-text-dark text-base font-bold uppercase tracking-wide">
-                        {step === 1 ? 'YOUR DETAILS' : 'CONFIRM'}
-                    </p>
-                    <span className="text-text-muted-light dark:text-text-muted-dark text-sm font-medium">
-                        {Math.round(progressPercent)}% COMPLETE
-                    </span>
-                </div>
-                <div className="w-full h-2.5 bg-border-light dark:bg-border-dark rounded-full overflow-hidden">
-                    <div
-                        className="h-full rounded-full bg-amber-400 transition-all duration-500 ease-out"
-                        style={{ width: step === 1 ? '0%' : '100%' }}
-                    />
-                </div>
-                <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider pt-2 px-1">
-                    {STEPS.map((label, idx) => {
-                        const s = idx + 1;
-                        const isCurrent = s === step;
-                        const isDone = s < step;
-                        return (
-                            <span
-                                key={label}
-                                className={`transition-all ${isCurrent ? 'text-amber-500' : isDone ? 'text-text-light dark:text-text-dark' : 'text-text-muted-light dark:text-text-muted-dark'}`}
-                            >
-                                {label}
-                            </span>
-                        );
-                    })}
-                </div>
-            </div>
+            <ProgressBar
+                currentStep={step}
+                stepTitle={step === 1 ? 'DETAILS' : 'REVIEW'}
+                labels={['DETAILS', 'REVIEW']}
+                onStepClick={(s: number) => navigate(`/raffle/step/${s}`)}
+            />
 
             {/* Step Content */}
             {step === 1 && (

@@ -6,16 +6,11 @@ import {
     AiOutlineArrowLeft,
     AiOutlineCheck,
     AiOutlineShareAlt,
-    AiOutlineSafety,
     AiOutlineHourglass,
     AiOutlineCheckCircle,
-    AiOutlineContacts,
-    AiOutlineFileText,
     AiOutlineDownload,
-    AiOutlineMail,
-    AiOutlinePhone,
-    AiOutlineUser
 } from 'react-icons/ai';
+import logo from '../../assets/images/logo.png';
 
 interface RaffleTicketViewProps {
     ticket: {
@@ -35,7 +30,7 @@ interface RaffleTicketViewProps {
 const RaffleTicketView = ({ ticket, onBack }: RaffleTicketViewProps) => {
     const [copySuccess, setCopySuccess] = useState(false);
     const eventDate = '05 July 2026';
-    const eventLocation = 'Ulinzi Sports Complex, Nairobi';
+    const isPaid = ticket.status === 'PAID' || ticket.status === 'CONFIRMED';
 
     const handleDownloadPDF = async () => {
         const ticketElement = document.getElementById('raffle-ticket-container');
@@ -87,194 +82,399 @@ const RaffleTicketView = ({ ticket, onBack }: RaffleTicketViewProps) => {
 
     return (
         <div className="selection:bg-primary selection:text-white font-sans print:p-0 print:bg-white animate-in fade-in duration-500">
-            <div className="max-w-5xl mx-auto">
-                {/* Navigation & Actions */}
-                <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 no-print">
-                    <button
-                        onClick={onBack}
-                        className="flex items-center gap-2 text-neutral-500 hover:text-primary transition-all group"
-                    >
-                        <AiOutlineArrowLeft className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="text-sm font-black uppercase tracking-widest leading-none pt-0.5">Back to Search</span>
-                    </button>
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
+                :root, [data-theme="dark"] {
+                    --pv-bg:          #0a0a0a;
+                    --pv-card:        #141414;
+                    --pv-border:      rgba(255,255,255,0.07);
+                    --pv-border-2:    rgba(255,255,255,0.13);
+                    --pv-text-1:      #ffffff;
+                    --pv-text-2:      rgba(255,255,255,0.58);
+                    --pv-text-3:      rgba(255,255,255,0.32);
+                    --pv-divider:     rgba(255,255,255,0.05);
+                    --tk-bg:          #ffffff;
+                    --tk-alt:         #f8f8f8;
+                    --tk-border:      #e5e5e5;
+                    --tk-text-1:      #111111;
+                    --tk-text-3:      #999999;
+                }
+                [data-theme="light"] {
+                    --pv-bg:          #f5f2eb;
+                    --pv-card:        #ffffff;
+                    --pv-border:      rgba(0,0,0,0.09);
+                    --pv-border-2:    rgba(0,0,0,0.15);
+                    --pv-text-1:      #111111;
+                    --pv-text-2:      rgba(20,20,20,0.60);
+                    --pv-text-3:      rgba(20,20,20,0.38);
+                    --pv-divider:     rgba(0,0,0,0.05);
+                }
+
+                .pv-label-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+                .pv-label-line { height: 1px; width: 32px; background: var(--color-primary); flex-shrink: 0; }
+                .pv-eyebrow {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.62rem; font-weight: 700;
+                    letter-spacing: 0.26em; text-transform: uppercase;
+                    color: var(--color-primary-light);
+                }
+
+                .pv-topbar {
+                    display: flex; flex-direction: column; gap: 16px;
+                    margin-bottom: 28px;
+                }
+                @media (min-width: 640px) {
+                    .pv-topbar { flex-direction: row; align-items: center; justify-content: space-between; }
+                }
+
+                .pv-back-btn {
+                    display: inline-flex; align-items: center; gap: 8px;
+                    background: none; border: none; cursor: pointer;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.75rem; font-weight: 700;
+                    letter-spacing: 0.16em; text-transform: uppercase;
+                    color: var(--pv-text-3);
+                    transition: color 0.2s;
+                }
+                .pv-back-btn:hover { color: var(--color-primary-light); }
+
+                .pv-action-btn {
+                    position: relative; overflow: hidden;
+                    display: inline-flex; align-items: center; gap: 7px;
+                    padding: 10px 18px;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.72rem; font-weight: 800;
+                    letter-spacing: 0.15em; text-transform: uppercase;
+                    border: none; cursor: pointer;
+                    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+                }
+                .pv-action-btn.ghost {
+                    background: var(--pv-card);
+                    border: 1px solid var(--pv-border-2);
+                    color: var(--pv-text-2);
+                }
+                .pv-action-btn.ghost:hover { border-color: var(--color-primary); color: var(--color-primary-light); }
+                .pv-action-btn.primary {
+                    background: var(--color-primary); color: #fff;
+                }
+                .pv-action-btn.primary:hover { box-shadow: 0 8px 24px rgba(45,106,45,0.35); background: var(--color-primary-dark); }
+
+                #raffle-ticket-container {
+                    background: var(--tk-bg);
+                    border: 1px solid var(--tk-border);
+                    overflow: hidden;
+                    display: flex; flex-direction: column;
+                    position: relative;
+                    margin-bottom: 16px;
+                    clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%);
+                }
+                @media (min-width: 1024px) {
+                    #raffle-ticket-container { flex-direction: row; }
+                }
+
+                .tk-main {
+                    flex: 3;
+                    padding: 36px 40px;
+                    display: flex; flex-direction: column; justify-content: space-between;
+                    border-bottom: 1px solid var(--tk-border);
+                }
+                @media (min-width: 1024px) {
+                    .tk-main { border-bottom: none; border-right: 1px solid var(--tk-border); }
+                }
+
+                .tk-logo-group { display: flex; align-items: center; gap: 12px; }
+                .tk-logo-box {
+                    width: 40px; height: 40px; flex-shrink: 0; overflow: hidden;
+                    display: flex; align-items: center; justify-content: center;
+                    background: var(--tk-alt);
+                    border: 1px solid var(--tk-border);
+                    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+                }
+                .tk-logo-box img { width: 28px; height: 28px; object-fit: contain; }
+                .tk-logo-title {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 1rem; font-weight: 900;
+                    letter-spacing: 0.08em; text-transform: uppercase;
+                    color: var(--tk-text-1); line-height: 1.1;
+                }
+                .tk-logo-sub {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.58rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--tk-text-3); margin-top: 3px;
+                }
+
+                .tk-pass-id-block { text-align: right; }
+                .tk-pass-id-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.58rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--tk-text-3); margin-bottom: 4px;
+                }
+                .tk-pass-id {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700;
+                    color: var(--tk-text-1); line-height: 1;
+                }
+
+                .tk-name-block { margin-bottom: 20px; }
+                .tk-name-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.58rem; font-weight: 700;
+                    letter-spacing: 0.22em; text-transform: uppercase;
+                    color: var(--tk-text-3); margin-bottom: 6px;
+                }
+                .tk-name {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: clamp(2.4rem, 6vw, 3.8rem);
+                    letter-spacing: 0.03em; line-height: 0.9;
+                    color: var(--tk-text-1); text-transform: uppercase;
+                }
+                .tk-badge {
+                    display: inline-block; margin-top: 12px;
+                    padding: 4px 12px;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.6rem; font-weight: 800;
+                    letter-spacing: 0.18em; text-transform: uppercase;
+                    background: var(--color-primary); color: #fff;
+                    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+                }
+
+                .tk-meta-strip {
+                    padding-top: 20px;
+                    border-top: 1px solid var(--tk-border);
+                    display: flex; flex-wrap: wrap; gap: 0;
+                }
+                .tk-meta-cell {
+                    flex: 1; min-width: 110px;
+                    padding: 12px 0;
+                    border-right: 1px solid var(--tk-border);
+                    padding-right: 20px;
+                }
+                .tk-meta-cell:last-child { border-right: none; }
+                .tk-meta-cell:not(:first-child) { padding-left: 20px; }
+                .tk-meta-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.58rem; font-weight: 700;
+                    letter-spacing: 0.2em; text-transform: uppercase;
+                    color: var(--tk-text-3); margin-bottom: 5px;
+                }
+                .tk-meta-value {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.85rem; font-weight: 800;
+                    letter-spacing: 0.06em; text-transform: uppercase;
+                    color: var(--tk-text-1);
+                }
+
+                .tk-sidebar {
+                    width: 100%;
+                    padding: 28px 32px;
+                    background: var(--tk-alt);
+                    display: flex; flex-direction: column;
+                    align-items: center; justify-content: space-between; gap: 20px;
+                }
+                @media (min-width: 1024px) { .tk-sidebar { width: 260px; flex-shrink: 0; } }
+
+                .tk-status {
+                    display: flex; align-items: center; justify-content: center; gap: 8px;
+                    padding: 9px 20px; width: 100%;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.72rem; font-weight: 800;
+                    letter-spacing: 0.18em; text-transform: uppercase;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+                }
+                .tk-status.paid { background: rgba(45,106,45,0.1); border: 1px solid rgba(45,106,45,0.25); color: #1e4d1e; }
+                .tk-status.pending { background: rgba(180,120,0,0.08); border: 1px solid rgba(180,120,0,0.22); color: #92400e; }
+
+                .tk-qr-box {
+                    padding: 12px; background: #fff;
+                    border: 1px solid var(--tk-border);
+                    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+                }
+
+                .pv-details-card {
+                    background: var(--pv-card);
+                    border: 1px solid var(--pv-border);
+                    padding: 44px 40px;
+                    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+                    margin-top: 32px;
+                }
+
+                .pv-section-title {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.6rem; letter-spacing: 0.03em;
+                    color: var(--pv-text-1); margin-bottom: 24px;
+                }
+
+                .pv-field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+                .pv-field-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.62rem; font-weight: 700;
+                    letter-spacing: 0.2em; text-transform: uppercase;
+                    color: var(--pv-text-3); margin-bottom: 5px;
+                }
+                .pv-field-value { font-size: 0.9rem; font-weight: 600; color: var(--pv-text-1); word-break: break-all; }
+                .pv-field-value.accent { color: var(--color-primary-light); }
+                .pv-field-value.mono { font-family: 'JetBrains Mono', monospace; }
+
+                .pv-line-item {
+                    display: flex; align-items: center; justify-content: space-between;
+                    padding: 12px 0;
+                    border-bottom: 1px solid var(--pv-divider);
+                    font-size: 0.88rem; color: var(--pv-text-2);
+                }
+                .pv-total-row {
+                    display: flex; align-items: center; justify-content: space-between;
+                    padding-top: 16px; margin-top: 4px;
+                    border-top: 1px solid var(--pv-border-2);
+                }
+                .pv-total-label {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.3rem; letter-spacing: 0.03em; color: var(--pv-text-1);
+                }
+                .pv-total-value {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.8rem; letter-spacing: 0.02em; color: var(--color-primary-light);
+                }
+
+                @media print {
+                    nav, footer, .no-print, button { display: none !important; }
+                    body { background: white !important; }
+                    #raffle-ticket-container { flex-direction: row !important; }
+                }
+            `}</style>
+
+            <div className="max-w-5xl mx-auto px-4 py-8">
+                {/* Top bar */}
+                <div className="pv-topbar no-print">
+                    <button onClick={onBack} className="pv-back-btn">
+                        <AiOutlineArrowLeft />
+                        Back to Search
+                    </button>
                     <div className="flex items-center gap-3">
-                        <button
-                            onClick={handleShare}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-neutral-200 rounded-xl hover:bg-neutral-50 transition-all font-black uppercase tracking-widest text-[10px]"
-                        >
-                            {copySuccess ? <AiOutlineCheck className="text-lg" /> : <AiOutlineShareAlt className="text-lg" />}
+                        <button onClick={handleShare} className="pv-action-btn ghost">
+                            {copySuccess ? <AiOutlineCheck /> : <AiOutlineShareAlt />}
                             {copySuccess ? 'Copied!' : 'Share'}
                         </button>
-                        <button
-                            onClick={handleDownloadPDF}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-primary-dark transition-all font-black uppercase tracking-widest text-[10px]"
-                        >
-                            <AiOutlineDownload className="text-lg" />
+                        <button onClick={handleDownloadPDF} className="pv-action-btn primary">
+                            <AiOutlineDownload />
                             Download PDF
                         </button>
                     </div>
                 </div>
 
-                {/* Ticket Card - Rectangular Boarding Pass Aesthetic */}
-                <div id="raffle-ticket-container" className="relative flex flex-col lg:flex-row bg-white rounded-3xl overflow-hidden border border-neutral-200 shadow-xl">
-                    {/* Color Accent Border */}
-                    <div className="w-full lg:w-3 h-2 lg:h-auto bg-primary" />
-
-                    {/* Main Content Area */}
-                    <div className="flex-[3] p-6 lg:p-8 flex flex-col justify-between">
+                {/* Ticket */}
+                <div id="raffle-ticket-container">
+                    <div className="tk-main">
                         <div>
-                            <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
-                                <div className="flex items-center gap-3">
-                                    <div className="size-10 bg-neutral-900 rounded-xl flex items-center justify-center">
-                                        <AiOutlineSafety className="text-white text-xl" />
+                            <div className="tk-top-row flex justify-between items-start">
+                                <div className="tk-logo-group">
+                                    <div className="tk-logo-box">
+                                        <img src={logo} alt="RWTW" />
                                     </div>
                                     <div>
-                                        <h2 className="text-lg font-black text-neutral-900 uppercase tracking-tighter leading-none">
-                                            Ride with <span className="text-primary">Warriors</span>
-                                        </h2>
-                                        <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mt-1">Official Raffle Pass 2026</p>
+                                        <div className="tk-logo-title">Ride With The Warriors</div>
+                                        <div className="tk-logo-sub">Official Raffle Pass 2026</div>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Ticket ID</p>
-                                    <p className="text-lg font-mono font-black text-neutral-900 tracking-tight">{ticket.id}</p>
+                                <div className="tk-pass-id-block">
+                                    <div className="tk-pass-id-label">Ticket ID</div>
+                                    <div className="tk-pass-id">{ticket.id}</div>
                                 </div>
                             </div>
 
-                            <div className="mb-8">
-                                <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2">Participant Name</p>
-                                <h1 className="text-3xl md:text-5xl font-black text-neutral-900 uppercase tracking-tighter truncate leading-tight">
-                                    {ticket.firstName} {ticket.lastName}
-                                </h1>
-
-                                <div className="mt-4 flex flex-wrap gap-2">
-                                    <span className="px-4 py-1.5 rounded-full bg-primary text-white text-[10px] font-black uppercase tracking-widest shadow-sm">
-                                        RAFFLE ENTRY
-                                    </span>
-                                    <span className="px-4 py-1.5 rounded-full bg-neutral-100 text-neutral-600 text-[10px] font-black uppercase tracking-widest">
-                                        PRICE: KES 1,000
-                                    </span>
-                                </div>
+                            <div className="tk-name-block mt-8">
+                                <div className="tk-name-label">Participant Name</div>
+                                <div className="tk-name">{ticket.firstName} {ticket.lastName}</div>
+                                <div className="tk-badge">Raffle Entry Pass</div>
                             </div>
                         </div>
 
-                        {/* Event Details Row */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 border-t border-neutral-100">
-                            <div>
-                                <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Date</p>
-                                <p className="text-sm font-black text-neutral-900 uppercase leading-tight">{eventDate}</p>
-                            </div>
-                            <div className="col-span-1 md:col-span-3">
-                                <p className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest mb-1">Location</p>
-                                <p className="text-sm font-black text-neutral-900 uppercase leading-tight">{eventLocation}</p>
-                            </div>
+                        <div className="tk-meta-strip">
+                            {[
+                                { label: 'Event Date', value: eventDate },
+                                { label: 'Location', value: 'Ulinzi Sports Complex' },
+                                { label: 'Price', value: 'KES 1,000' },
+                                { label: 'Entry Type', value: 'Raffle' },
+                            ].map((m, i) => (
+                                <div key={i} className="tk-meta-cell">
+                                    <div className="tk-meta-label">{m.label}</div>
+                                    <div className="tk-meta-value">{m.value}</div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Divider */}
-                    <div className="h-px lg:h-auto lg:w-px bg-neutral-100 mx-6 lg:mx-0 lg:my-8" />
-
-                    {/* QR & Status Section */}
-                    <div className="w-full lg:w-72 p-6 lg:p-8 flex flex-col items-center justify-between bg-neutral-50/50">
-                        <div className="w-full text-center lg:text-left mb-6">
-                            <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-3 text-center">Status</p>
-                            <div className={`py-3 px-4 rounded-2xl flex items-center justify-center gap-2 border font-black uppercase tracking-widest text-xs ${ticket.status === 'PAID'
-                                ? 'bg-primary/10 border-primary/20 text-primary-dark'
-                                : 'bg-amber-50 border-amber-100 text-amber-600'
-                                }`}>
-                                {ticket.status === 'PAID' ? <AiOutlineCheckCircle className="text-lg" /> : <AiOutlineHourglass className="text-lg" />}
+                    <div className="tk-sidebar">
+                        <div className="w-full">
+                            <div className="tk-pass-id-label text-center mb-2">Security Status</div>
+                            <div className={`tk-status ${isPaid ? 'paid' : 'pending'}`}>
+                                {isPaid ? <AiOutlineCheckCircle /> : <AiOutlineHourglass />}
                                 {ticket.status}
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="p-3 bg-white rounded-2xl border border-neutral-100">
-                                <QRCodeCanvas
-                                    value={`${window.location.origin}/raffle/profile/${ticket.id}`}
-                                    size={120}
-                                    level="H"
-                                    includeMargin={true}
-                                />
-                            </div>
+                        <div className="tk-qr-box">
+                            <QRCodeCanvas
+                                value={`${window.location.origin}/raffle/profile/${ticket.id}`}
+                                size={140} level="H" includeMargin={true}
+                            />
                         </div>
                     </div>
                 </div>
 
-                {/* Additional Details */}
-                <div className="mt-8 bg-white rounded-[2rem] p-8 border border-neutral-200 no-print">
+                {/* Details card */}
+                <div className="pv-details-card no-print">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        {/* Contact Information */}
                         <div>
-                            <h3 className="text-lg font-black text-neutral-900 uppercase tracking-tighter mb-6 flex items-center gap-3">
-                                <AiOutlineContacts className="text-primary" />
-                                Contact Information
-                            </h3>
-                            <div className="space-y-6">
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-neutral-50 flex items-center justify-center shrink-0">
-                                            <AiOutlineMail className="text-primary" />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Email Address</p>
-                                            <p className="text-neutral-900 font-medium break-all">{ticket.email}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-neutral-50 flex items-center justify-center shrink-0">
-                                            <AiOutlinePhone className="text-primary" />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Primary Phone</p>
-                                            <p className="text-neutral-900 font-medium">{ticket.phoneNumber || 'N/A'}</p>
-                                        </div>
-                                    </div>
+                            <div className="pv-label-row">
+                                <div className="pv-label-line" />
+                                <span className="pv-eyebrow">Contact Information</span>
+                            </div>
+                            <div className="pv-section-title">Participant Details</div>
+
+                            <div className="pv-field-grid">
+                                <div className="pv-field">
+                                    <div className="pv-field-label">Email Address</div>
+                                    <div className="pv-field-value text-xs">{ticket.email}</div>
                                 </div>
-                                <div className="pt-4 border-t border-neutral-100 grid grid-cols-2 gap-6">
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-neutral-50 flex items-center justify-center shrink-0">
-                                            <AiOutlineSafety className="text-primary" />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">National ID / Passport</p>
-                                            <p className="text-neutral-900 font-medium uppercase">{ticket.idNumber || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-8 h-8 rounded-lg bg-neutral-50 flex items-center justify-center shrink-0">
-                                            <AiOutlineUser className="text-primary" />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Gender</p>
-                                            <p className="text-neutral-900 font-medium capitalize">{ticket.gender || 'N/A'}</p>
-                                        </div>
-                                    </div>
+                                <div className="pv-field">
+                                    <div className="pv-field-label">Primary Phone</div>
+                                    <div className="pv-field-value">{ticket.phoneNumber || 'N/A'}</div>
+                                </div>
+                                <div className="pv-field">
+                                    <div className="pv-field-label">National ID / Passport</div>
+                                    <div className="pv-field-value mono uppercase">{ticket.idNumber}</div>
+                                </div>
+                                <div className="pv-field">
+                                    <div className="pv-field-label">Gender</div>
+                                    <div className="pv-field-value capitalize">{ticket.gender}</div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Transaction Summary */}
-                        <div className="md:border-l md:border-neutral-100 md:pl-12 pt-12 md:pt-0 border-t md:border-t-0 mt-12 md:mt-0 pt-12 md:pt-0">
-                            <h3 className="text-lg font-black text-neutral-900 uppercase tracking-tighter mb-6 flex items-center gap-3">
-                                <AiOutlineFileText className="text-primary" />
-                                Transaction Summary
-                            </h3>
-                            <div className="space-y-4">
-                                <div className="flex justify-between items-center py-2 border-b border-neutral-50 last:border-0">
-                                    <span className="text-sm text-neutral-500 font-bold">Raffle Entry Fee</span>
-                                    <span className="text-sm font-black text-neutral-900 leading-none">KES 1,000</span>
-                                </div>
-                                <div className="mt-4 pt-4 flex justify-between items-center border-t border-neutral-100">
-                                    <span className="text-lg font-black text-neutral-900 uppercase tracking-tighter">Total Price</span>
-                                    <span className="text-2xl font-black text-primary">KES 1,000</span>
-                                </div>
-                                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest text-center mt-6">
-                                    Purchased on {new Date(ticket.createdAt).toLocaleDateString('en-GB', {
-                                        day: 'numeric', month: 'long', year: 'numeric'
-                                    })}
-                                </p>
+                        <div className="md:border-l md:border-neutral-800 md:pl-12 dark:md:border-neutral-800 md:border-neutral-200">
+                            <div className="pv-label-row">
+                                <div className="pv-label-line" />
+                                <span className="pv-eyebrow">Transaction</span>
                             </div>
+                            <div className="pv-section-title">Summary</div>
+
+                            <div className="pv-line-item">
+                                <span>Raffle Entry Fee</span>
+                                <span>KES 1,000</span>
+                            </div>
+                            <div className="pv-total-row">
+                                <div className="pv-total-label">Total Amount</div>
+                                <div className="pv-total-value">KES 1,000</div>
+                            </div>
+                            <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest text-center mt-6">
+                                Purchased on {new Date(ticket.createdAt).toLocaleDateString('en-GB', {
+                                    day: 'numeric', month: 'long', year: 'numeric'
+                                })}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -282,5 +482,6 @@ const RaffleTicketView = ({ ticket, onBack }: RaffleTicketViewProps) => {
         </div>
     );
 };
+
 
 export default RaffleTicketView;
