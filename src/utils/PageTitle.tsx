@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
-const BRAND_NAME = 'Ride With The Warriors';
+const BRAND_NAME = 'Ride With The Warriors 2026';
 
 const metaMap: Record<string, { title: string, description: string }> = {
     '/': { title: 'Home', description: 'Join Ride With The Warriors 2026, a premier multi-national cycling event. Experience the Blitz, Recon, Corporate Challenge, and Family Fun circuits.' },
@@ -24,39 +24,43 @@ const PageTitle = () => {
     let title = BRAND_NAME;
     let description = 'A premier multi-national cycling event uniting civilians and soldiers — riding with honour, supporting the widows of our fallen heroes.';
 
-    // Exact matches
-    if (metaMap[path]) {
-        title = `${metaMap[path].title} | ${BRAND_NAME}`;
+    // Home page — brand name only
+    if (path === '/') {
+        description = metaMap['/'].description;
+    }
+    // Exact route match — page title only, no brand suffix
+    else if (metaMap[path]) {
+        title = metaMap[path].title;
         description = metaMap[path].description;
     }
     // Dynamic routes
     else if (path.startsWith('/register/step/')) {
         const step = path.split('/').pop();
-        title = `Register - Step ${step} | ${BRAND_NAME}`;
+        title = `Register – Step ${step}`;
         description = 'Register for Ride With The Warriors 2026.';
     }
     else if (path.startsWith('/raffle/step/')) {
         const step = path.split('/').pop();
-        title = `Raffle - Step ${step} | ${BRAND_NAME}`;
-        description = 'Enter the Grand Raffle and support the cause.';
+        title = `Raffle – Step ${step}`;
+        description = 'Enter the Grand Raffle and win amazing prizes.';
     }
     else if (path.startsWith('/payment/')) {
-        title = `Payment | ${BRAND_NAME}`;
+        title = 'Payment';
     }
     else if (path.startsWith('/success/')) {
-        title = `Registration Successful | ${BRAND_NAME}`;
+        title = 'Registration Successful';
     }
     else if (path.startsWith('/profile/')) {
-        title = `Participant Profile | ${BRAND_NAME}`;
+        title = 'Participant Profile';
     }
     else if (path.startsWith('/raffle/payment/')) {
-        title = `Raffle Payment | ${BRAND_NAME}`;
+        title = 'Raffle Payment';
     }
     else if (path.startsWith('/raffle/success/')) {
-        title = `Raffle Success | ${BRAND_NAME}`;
+        title = 'Raffle Success';
     }
     else if (path.startsWith('/raffle/profile/')) {
-        title = `Raffle Ticket | ${BRAND_NAME}`;
+        title = 'Raffle Ticket';
     }
 
     return (
