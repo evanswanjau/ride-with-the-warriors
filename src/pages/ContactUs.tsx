@@ -14,13 +14,37 @@ const ContactUs = () => {
     const [formData, setFormData] = useState({
         name: '', email: '', phone: '', subject: '', message: ''
     });
-    const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+    const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        window.location.href = `mailto:ridesupport@airbornefraternity.org?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`)}`;
-        setStatus('success');
-        setTimeout(() => setStatus('idle'), 3000);
+        setStatus('submitting');
+        setErrorMessage('');
+
+        try {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1';
+            const res = await fetch(`${API_URL}/enquiry`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to send message');
+            }
+
+            setStatus('success');
+            setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+            setTimeout(() => setStatus('idle'), 5000);
+        } catch (error) {
+            console.error('Contact form error:', error);
+            setStatus('error');
+            setErrorMessage(error instanceof Error ? error.message : 'An error occurred. Please try again.');
+            setTimeout(() => setStatus('idle'), 5000);
+        }
     };
 
     const contactCards = [
@@ -139,12 +163,18 @@ const ContactUs = () => {
                                     </div>
 
                                     <div>
-                                        <button type="submit" disabled={status !== 'idle'}
+                                        <button type="submit" disabled={status === 'submitting'}
                                             className={`shimmer-btn shimmer-btn--primary w-full ${status}`}>
                                             {status === 'idle' && <><span>Send Message</span><AiOutlineSend /></>}
                                             {status === 'submitting' && <><div className="ct-spinner" /><span>Sending…</span></>}
                                             {status === 'success' && <><AiOutlineCheckCircle style={{ fontSize: '1.1rem' }} /><span>Sent Successfully!</span></>}
+                                            {status === 'error' && <><span>Error Sending</span></>}
                                         </button>
+                                        {status === 'error' && errorMessage && (
+                                            <p style={{ color: 'var(--color-primary-light)', fontSize: '0.85rem', marginTop: '8px', textAlign: 'center' }}>
+                                                {errorMessage}
+                                            </p>
+                                        )}
                                     </div>
                                 </form>
                             </div>

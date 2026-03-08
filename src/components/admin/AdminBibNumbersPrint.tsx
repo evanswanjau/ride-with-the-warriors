@@ -73,7 +73,7 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
                             </span>
                             <div className="bg-white p-2 rounded-xl border border-neutral-200 transform -translate-y-4">
                                 <QRCodeCanvas
-                                    value={`https://ridewiththewarriors.com/profile/${reg.id}`}
+                                    value={`https://airbornefraternity.org/profile/${reg.id}`}
                                     size={80}
                                     level="H"
                                 />

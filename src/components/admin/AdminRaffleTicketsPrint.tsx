@@ -81,7 +81,7 @@ const AdminRaffleTicketsPrint = ({ tickets }: AdminRaffleTicketsPrintProps) => {
                                 </div>
                                 <div className="shrink-0 bg-white p-0.5 border border-neutral-100 rounded">
                                     <QRCodeCanvas
-                                        value={`https://ridewiththewarriors.com/raffle/profile/${ticket.id}`}
+                                        value={`https://airbornefraternity.org/raffle/profile/${ticket.id}`}
                                         size={40}
                                         level="H"
                                     />

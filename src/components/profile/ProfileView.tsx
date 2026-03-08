@@ -732,7 +732,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
 
                             <div className="tk-qr-box">
                                 <QRCodeCanvas
-                                    value={`${window.location.host === 'localhost:5173' || window.location.host.includes('vercel.app') ? window.location.origin : 'https://ridewiththewarriors.com'}/profile/${registration.id}`}
+                                    value={`${window.location.host === 'localhost:5173' || window.location.host.includes('vercel.app') ? window.location.origin : 'https://airbornefraternity.org'}/profile/${registration.id}`}
                                     size={160} level="H" includeMargin={true}
                                     imageSettings={{ src: logo, height: 32, width: 32, excavate: true }}
                                 />
