@@ -15,6 +15,8 @@ import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import AdminRaffleTicketsPrint from './AdminRaffleTicketsPrint';
 import AdminBibNumbersPrint from './AdminBibNumbersPrint';
+import AdminBibVisual from './AdminBibVisual';
+import AdminRaffleVisual from './AdminRaffleVisual';
 import logo from '../../assets/logos/logo.png';
 import { CIRCUITS } from '../../constants';
 import { API_BASE_URL } from '../../config';
@@ -28,7 +30,7 @@ interface AdminDashboardProps {
 
 
 const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
-    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle';
+    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs';
     const [activeView, setActiveView] = useState<ViewType>('overview');
     const [dashboardData, setDashboardData] = useState<any>(null);
     const [registrations, setRegistrations] = useState<any[]>([]);
@@ -49,7 +51,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [raffleFilter, setRaffleFilter] = useState({ status: '', search: '' });
     const [rafflePagination, setRafflePagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
     const [isPrintingRaffle, setIsPrintingRaffle] = useState(false);
+    const [allRaffleTicketsForPrint, setAllRaffleTicketsForPrint] = useState<any[]>([]);
     const [isPrintingBibs, setIsPrintingBibs] = useState(false);
+    const [allRegsForPrint, setAllRegsForPrint] = useState<any[]>([]);
+    const [printProgress, setPrintProgress] = useState<number>(0);
+    const [sortBy, setSortBy] = useState<string>('id'); // 'id', 'name', 'category'
 
     const dm = isDarkMode;
 
@@ -57,7 +63,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     useEffect(() => { fetchPricingCategories(); }, []);
     useEffect(() => {
         if (activeView === 'overview' || activeView === 'analytics') fetchDashboardStats();
-        else if (activeView === 'registrations') fetchData();
+        else if (activeView === 'registrations' || activeView === 'bibs') fetchData();
         else if (activeView === 'pricing') fetchPricingCategories();
         else if (activeView === 'payments') fetchPayments();
         else if (activeView === 'raffle') fetchRaffleTickets();
@@ -132,26 +138,124 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     };
 
     const handleDownloadRaffleTickets = async () => {
-        if (!raffleTickets.length) return;
         try {
-            setIsPrintingRaffle(true); await new Promise(r => setTimeout(r, 1000));
-            const container = document.getElementById('raffle-print-container'); if (!container) return;
-            const pages = container.querySelectorAll('.raffle-print-page'); const pdf = new jsPDF('p', 'mm', 'a4');
-            for (let i = 0; i < pages.length; i++) { if (i > 0) pdf.addPage(); const url = await toPng(pages[i] as HTMLElement, { pixelRatio: 2, backgroundColor: '#ffffff' }); pdf.addImage(url, 'PNG', 0, 0, 210, 297); }
-            pdf.save(`RWTW_Raffle_Tickets_Batch_${rafflePagination.page}.pdf`);
-        } catch { alert('Failed to generate PDF'); } finally { setIsPrintingRaffle(false); }
+            setError(null);
+            setIsPrintingRaffle(true);
+            setPrintProgress(0);
+
+            // Fetch all raffle tickets matching filter (ignoring pagination)
+            const q = new URLSearchParams({ limit: '5000', ...raffleFilter });
+            const r = await fetch(`${API_BASE_URL}/admin/raffle?${q}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (!r.ok) throw new Error('Failed to fetch raffle tickets for printing');
+            const d = await r.json();
+            const list = d.tickets || [];
+            if (!list.length) {
+                alert('No tickets found to print.');
+                setIsPrintingRaffle(false);
+                return;
+            }
+
+            setAllRaffleTicketsForPrint(list);
+
+            // Wait for render
+            await new Promise(r => setTimeout(r, 2000));
+
+            const container = document.getElementById('raffle-print-container');
+            if (!container) throw new Error('Ready container not found');
+
+            const pages = container.querySelectorAll('.raffle-print-page');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+
+            for (let i = 0; i < pages.length; i++) {
+                if (i > 0) pdf.addPage();
+                const url = await toPng(pages[i] as HTMLElement, {
+                    pixelRatio: 1.5,
+                    backgroundColor: '#ffffff'
+                });
+                pdf.addImage(url, 'PNG', 0, 0, 210, 297);
+                setPrintProgress(Math.round(((i + 1) / pages.length) * 100));
+            }
+
+            pdf.save(`RWTW_Raffle_Tickets_All_${new Date().toISOString().split('T')[0]}.pdf`);
+        } catch (e: any) {
+            console.error(e);
+            alert(e.message || 'Failed to generate PDF');
+        } finally {
+            setIsPrintingRaffle(false);
+            setPrintProgress(0);
+            setAllRaffleTicketsForPrint([]);
+        }
     };
     const handleDownloadBibNumbers = async () => {
-        if (!registrations.length) return;
         try {
-            setIsPrintingBibs(true); await new Promise(r => setTimeout(r, 1000));
-            const container = document.getElementById('bib-print-container'); if (!container) return;
-            const pages = container.querySelectorAll('.bib-page'); const pdf = new jsPDF('l', 'mm', 'a5');
-            for (let i = 0; i < pages.length; i++) { if (i > 0) pdf.addPage(); const url = await toPng(pages[i] as HTMLElement, { pixelRatio: 2, backgroundColor: '#ffffff' }); pdf.addImage(url, 'PNG', 0, 0, 210, 148.5); }
-            pdf.save(`RWTW_Bib_Numbers_Batch_${pagination.page}.pdf`);
-        } catch { alert('Failed to generate PDF'); } finally { setIsPrintingBibs(false); }
+            setError(null);
+            setIsPrintingBibs(true);
+
+            // Fetch all registrations matching current filter (ignoring pagination)
+            const q = new URLSearchParams({ limit: '5000', ...filter }); // Limit to 5000 to be safe
+            const r = await fetch(`${API_BASE_URL}/admin/registrations?${q}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (!r.ok) throw new Error('Failed to fetch registrations for printing');
+            const d = await r.json();
+            const list = d.registrations || [];
+            if (!list.length) {
+                alert('No registrations found to print.');
+                setIsPrintingBibs(false);
+                return;
+            }
+
+            setAllRegsForPrint(list);
+            setPrintProgress(0);
+
+            // Wait for render
+            await new Promise(r => setTimeout(r, 2500));
+
+            const container = document.getElementById('bib-print-container');
+            if (!container) throw new Error('Ready container not found');
+
+            const pages = container.querySelectorAll('.bib-a4-page');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+
+            for (let i = 0; i < pages.length; i++) {
+                if (i > 0) pdf.addPage();
+                const url = await toPng(pages[i] as HTMLElement, {
+                    pixelRatio: 1.5, // Slightly lower for bulk to avoid OOM
+                    backgroundColor: '#ffffff'
+                });
+                pdf.addImage(url, 'PNG', 0, 0, 210, 297);
+                setPrintProgress(Math.round(((i + 1) / pages.length) * 100));
+            }
+
+            pdf.save(`RWTW_Bib_Numbers_All_${new Date().toISOString().split('T')[0]}.pdf`);
+        } catch (e: any) {
+            console.error(e);
+            alert(e.message || 'Failed to generate PDF');
+        } finally {
+            setIsPrintingBibs(false);
+            setPrintProgress(0);
+            setAllRegsForPrint([]);
+        }
     };
-    const getBibRegistrationData = () => registrations.map(reg => ({ id: reg.id, firstName: reg.firstName, lastName: reg.lastName, category: reg.category, hexColor: pricingCategories.find(c => c.categoryName === reg.category && c.circuitId === reg.circuitId)?.hexColor || '#000000', circuitId: reg.circuitId }));
+    const getBibRegistrationData = (regsToUse: any[] = registrations) => {
+        const data = regsToUse.map(reg => ({
+            id: reg.id,
+            firstName: reg.firstName,
+            lastName: reg.lastName,
+            category: reg.category,
+            hexColor: pricingCategories.find(c => c.categoryName === reg.category && c.circuitId === reg.circuitId)?.hexColor || '#000000',
+            circuitId: reg.circuitId
+        }));
+
+        // Client-side sorting
+        return [...data].sort((a, b) => {
+            if (sortBy === 'category') return a.category.localeCompare(b.category);
+            if (sortBy === 'name') return `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`);
+            return a.id.localeCompare(b.id);
+        });
+    };
     const groupedCategories = pricingCategories.reduce((acc, cat) => { if (!acc[cat.circuitId]) acc[cat.circuitId] = []; acc[cat.circuitId].push(cat); return acc; }, {} as Record<string, any[]>);
 
     // ─── Derived stats from API ───────────────────────────────────────────────
@@ -174,6 +278,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         { id: 'registrations', label: 'Registrations', icon: AiOutlineTeam },
         { id: 'payments', label: 'Payments', icon: AiOutlineDollar },
         { id: 'raffle', label: 'Raffle', icon: AiOutlineStar },
+        { id: 'bibs', label: 'Bibs', icon: AiOutlinePrinter },
         { id: 'pricing', label: 'Pricing', icon: AiOutlineTable },
     ];
 
@@ -993,58 +1098,134 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         {/* ══════════════════════════════════════════════ RAFFLE ══ */}
                         {activeView === 'raffle' && (
                             <>
-                                <div>
-                                    <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Lucky Draw</span></div>
-                                    <div className="ad-page-title">Raffle Tickets</div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
+                                    <div>
+                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Raffle System</span></div>
+                                        <div className="ad-page-title">Digital Tickets (3 per row)</div>
+                                    </div>
+                                    <div style={{ marginBottom: 24 }}>
+                                        <button className="ad-hbtn ad-hbtn-primary" onClick={handleDownloadRaffleTickets} disabled={isPrintingRaffle}>
+                                            <AiOutlineDownload /> {isPrintingRaffle ? `Generating... ${printProgress}%` : 'Generate Tickets (A4 PDF)'}
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="ad-panel">
-                                    <div className="ad-filters">
-                                        <div className="ad-filter-group" style={{ flex: 1, minWidth: 200 }}>
+
+                                <div className="ad-panel" style={{ padding: '0 24px' }}>
+                                    <div className="ad-filters" style={{ borderBottom: 'none' }}>
+                                        <div className="ad-filter-group" style={{ flex: 1 }}>
                                             <label className="ad-filter-label">Search</label>
                                             <div className="ad-search-wrap">
                                                 <AiOutlineSearch className="ad-search-icon" />
-                                                <input className="ad-input" type="text" value={raffleFilter.search} onChange={e => setRaffleFilter({ ...raffleFilter, search: e.target.value })} placeholder="Ticket ID, name, email…" />
+                                                <input className="ad-input" type="text" value={raffleFilter.search} onChange={e => setRaffleFilter({ ...raffleFilter, search: e.target.value })} placeholder="Ticket code or name…" />
                                             </div>
                                         </div>
                                         <div className="ad-filter-group">
                                             <label className="ad-filter-label">Status</label>
                                             <select className="ad-select" value={raffleFilter.status} onChange={e => setRaffleFilter({ ...raffleFilter, status: e.target.value })}>
-                                                <option value="">All</option><option value="UNPAID">Unpaid</option><option value="PAID">Paid</option>
+                                                <option value="">All</option><option value="PAID">Paid</option><option value="UNPAID">Unpaid</option>
                                             </select>
                                         </div>
-                                        <div className="ad-filter-group" style={{ justifyContent: 'flex-end' }}>
-                                            <label className="ad-filter-label">&nbsp;</label>
-                                            <button className="ad-hbtn ad-hbtn-primary" onClick={handleDownloadRaffleTickets} disabled={isPrintingRaffle}>
-                                                <AiOutlineDownload /> {isPrintingRaffle ? 'Generating…' : 'Download PDF (A4)'}
-                                            </button>
+                                    </div>
+
+                                    {loading && raffleTickets.length === 0 ? (
+                                        <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>Loading tickets…</div>
+                                    ) : raffleTickets.length === 0 ? (
+                                        <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>No raffle tickets found matching filters.</div>
+                                    ) : (
+                                        <div className="ad-table-wrap">
+                                            <table className="ad-table">
+                                                <thead><tr>{['Ticket ID', 'Name', 'Email', 'Phone', 'Status', 'Created', 'Link'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                <tbody>
+                                                    {raffleTickets.map((t: any) => (
+                                                        <tr key={t.id} className="ad-tr">
+                                                            <td className="ad-td ad-mono">{t.id}</td>
+                                                            <td className="ad-td">{cap(t.firstName)} {cap(t.lastName)}</td>
+                                                            <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.email || '—'}</td>
+                                                            <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.phoneNumber || '—'}</td>
+                                                            <td className="ad-td"><span className={`ad-badge ${t.status === 'PAID' ? 'ad-badge-paid' : 'ad-badge-unpaid'}`}>{t.status}</span></td>
+                                                            <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{formatDate(t.createdAt)}</td>
+                                                            <td className="ad-td"><a href={`/raffle/profile/${t.id}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a></td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    </div>
-                                    <div className="ad-table-wrap">
-                                        <table className="ad-table">
-                                            <thead><tr>{['Ticket ID', 'Name', 'Email', 'Phone', 'Status', 'Created', 'Link'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
-                                            <tbody>
-                                                {loading && raffleTickets.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>Loading…</td></tr>
-                                                    : raffleTickets.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>No raffle tickets found.</td></tr>
-                                                        : raffleTickets.map((t: any) => (
-                                                            <tr key={t.id} className="ad-tr">
-                                                                <td className="ad-td ad-mono">{t.id}</td>
-                                                                <td className="ad-td">{cap(t.firstName)} {cap(t.lastName)}</td>
-                                                                <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.email || '—'}</td>
-                                                                <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.phoneNumber || '—'}</td>
-                                                                <td className="ad-td"><span className={`ad-badge ${t.status === 'PAID' ? 'ad-badge-paid' : 'ad-badge-unpaid'}`}>{t.status}</span></td>
-                                                                <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{formatDate(t.createdAt)}</td>
-                                                                <td className="ad-td"><a href={`/raffle/profile/${t.id}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a></td>
-                                                            </tr>
-                                                        ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div className="ad-pagination">
+                                    )}
+
+                                    <div className="ad-pagination" style={{ marginTop: 20 }}>
                                         <span className="ad-page-info">Showing {(rafflePagination.page - 1) * rafflePagination.limit + 1}–{Math.min(rafflePagination.page * rafflePagination.limit, rafflePagination.total)} of {rafflePagination.total}</span>
                                         <div className="ad-page-btns">
                                             <button className="ad-page-btn" onClick={() => setRafflePagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={rafflePagination.page === 1}><AiOutlineLeft /> Prev</button>
                                             <span className="ad-page-cur">Page {rafflePagination.page} / {rafflePagination.pages}</span>
-                                            <button className="ad-page-btn" onClick={() => setRafflePagination(p => ({ ...p, page: Math.min(p.pages, p.page + 1) }))} disabled={rafflePagination.page === rafflePagination.pages}>Next <AiOutlineRight /></button>
+                                            <button className="ad-page-btn" onClick={() => setRafflePagination(p => ({ ...p, page: Math.min(rafflePagination.pages, p.page + 1) }))} disabled={rafflePagination.page === rafflePagination.pages}>Next <AiOutlineRight /></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                        {/* ══════════════════════════════════════════════════ BIBS ══ */}
+                        {activeView === 'bibs' && (
+                            <>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
+                                    <div>
+                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Participant IDs</span></div>
+                                        <div className="ad-page-title">Visual Bibs (A4 Pairs)</div>
+                                    </div>
+                                    <div style={{ marginBottom: 24 }}>
+                                        <button className="ad-hbtn ad-hbtn-primary" onClick={handleDownloadBibNumbers} disabled={isPrintingBibs}>
+                                            <AiOutlineDownload /> {isPrintingBibs ? `Generating... ${printProgress}%` : 'Generate Bibs (A4 PDF)'}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="ad-panel" style={{ padding: '0 24px' }}>
+                                    <div className="ad-filters" style={{ borderBottom: 'none' }}>
+                                        <div className="ad-filter-group" style={{ flex: 1 }}>
+                                            <label className="ad-filter-label">Search</label>
+                                            <div className="ad-search-wrap">
+                                                <AiOutlineSearch className="ad-search-icon" />
+                                                <input className="ad-input" type="text" value={filter.search} onChange={e => setFilter({ ...filter, search: e.target.value })} placeholder="Name, team or ID…" />
+                                            </div>
+                                        </div>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Circuit</label>
+                                            <select className="ad-select" value={filter.circuitId} onChange={e => setFilter({ ...filter, circuitId: e.target.value, category: '' })}>
+                                                <option value="">All Circuits</option>
+                                                {CIRCUITS.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Category</label>
+                                            <select className="ad-select" value={filter.category} onChange={e => setFilter({ ...filter, category: e.target.value })}>
+                                                <option value="">All Categories</option>
+                                                {(filter.circuitId ? pricingCategories.filter(c => c.circuitId === filter.circuitId) : pricingCategories)
+                                                    .map(c => <option key={c.id} value={c.categoryName}>{c.categoryName}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Sort By</label>
+                                            <select className="ad-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+                                                <option value="id">Bib Number</option>
+                                                <option value="category">Category</option>
+                                                <option value="name">Name</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {loading && registrations.length === 0 ? (
+                                        <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>Loading bibs…</div>
+                                    ) : registrations.length === 0 ? (
+                                        <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>No registrations found matching filters.</div>
+                                    ) : (
+                                        <AdminBibVisual registrations={getBibRegistrationData()} />
+                                    )}
+
+                                    <div className="ad-pagination" style={{ marginTop: 20 }}>
+                                        <span className="ad-page-info">Showing {registrations.length} visual bibs</span>
+                                        <div className="ad-page-btns">
+                                            <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={pagination.page === 1}><AiOutlineLeft /> Prev</button>
+                                            <span className="ad-page-cur">Page {pagination.page} / {pagination.pages}</span>
+                                            <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.min(pagination.pages, p.page + 1) }))} disabled={pagination.page === pagination.pages}>Next <AiOutlineRight /></button>
                                         </div>
                                     </div>
                                 </div>
@@ -1129,10 +1310,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     </>
                 )}
 
-                {/* Hidden print containers */}
-                <div style={{ position: 'absolute', visibility: 'hidden', overflow: 'hidden', height: 0, width: 0, pointerEvents: 'none' }}>
-                    {isPrintingRaffle && <AdminRaffleTicketsPrint tickets={raffleTickets} />}
-                    {isPrintingBibs && <AdminBibNumbersPrint registrations={getBibRegistrationData()} />}
+                {/* Hidden print containers - kept off-screen for PDF capture */}
+                <div style={{ position: 'fixed', left: '-10000mm', top: 0, pointerEvents: 'none', zIndex: -1000 }}>
+                    {isPrintingRaffle && <AdminRaffleTicketsPrint tickets={allRaffleTicketsForPrint.length > 0 ? allRaffleTicketsForPrint : raffleTickets} />}
+                    {isPrintingBibs && <AdminBibNumbersPrint registrations={getBibRegistrationData(allRegsForPrint.length > 0 ? allRegsForPrint : registrations)} />}
                 </div>
             </div>
         </>

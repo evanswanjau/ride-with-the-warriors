@@ -1,4 +1,3 @@
-import { QRCodeCanvas } from 'qrcode.react';
 import logo from '../../assets/logos/logo.png';
 
 interface RaffleTicket {
@@ -15,34 +14,124 @@ interface AdminRaffleTicketsPrintProps {
 
 const AdminRaffleTicketsPrint = ({ tickets }: AdminRaffleTicketsPrintProps) => {
     return (
-        <div id="raffle-print-container" className="bg-white p-0 w-[210mm] min-h-[297mm]">
+        <div id="raffle-print-container" style={{ background: '#fff', width: '210mm' }}>
             <style>
                 {`
-                @media screen {
-                    #raffle-print-container {
-                        margin: 0 auto;
-                        border: 1px solid #ddd;
-                    }
-                }
                 .raffle-print-page {
-                    page-break-after: always;
                     width: 210mm;
                     height: 297mm;
-                    padding: 10mm;
                     display: grid;
                     grid-template-columns: repeat(3, 1fr);
-                    grid-auto-rows: min-content;
-                    gap: 15px;
+                    grid-template-rows: repeat(5, 1fr);
+                    background: #ffffff;
+                    position: relative;
+                    margin: 0;
+                    padding: 8mm;
+                    gap: 0;
+                    box-sizing: border-box;
+                    page-break-after: always;
                 }
                 .raffle-ticket-card {
-                    height: 60mm;
-                    border: 1px dashed #ccc;
-                    padding: 3mm;
+                    height: 56.2mm; /* Exact 1/5 of A4 height minus padding */
+                    width: 100%;
+                    border: 0.2pt dashed #000;
                     display: flex;
                     flex-direction: column;
-                    justify-content: space-between;
-                    background: white;
+                    background: #ffffff;
+                    padding: 5mm;
+                    box-sizing: border-box;
+                    position: relative;
                     overflow: hidden;
+                }
+                .ticket-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 3mm;
+                    border-bottom: 1.5pt solid #000;
+                    padding-bottom: 2mm;
+                    margin-bottom: 3mm;
+                }
+                .ticket-logo {
+                    height: 10mm;
+                    width: auto;
+                }
+                .ticket-title-wrap {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .ticket-title-main {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 14px;
+                    font-weight: 900;
+                    line-height: 1;
+                    color: #000;
+                    text-transform: uppercase;
+                    letter-spacing: 0.02em;
+                }
+                .ticket-title-sub {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 8px;
+                    font-weight: 700;
+                    color: #333;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                }
+                .ticket-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1mm;
+                }
+                .ticket-no-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 10px;
+                    font-weight: 800;
+                    color: #666;
+                    text-transform: uppercase;
+                    letter-spacing: 0.2em;
+                }
+                .ticket-no-val {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 48px;
+                    font-weight: 950;
+                    color: #000;
+                    line-height: 0.8;
+                    margin: 1mm 0;
+                }
+                .ticket-name {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 18px;
+                    font-weight: 800;
+                    color: #000;
+                    text-transform: uppercase;
+                    text-align: center;
+                    max-width: 100%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .ticket-footer-strip {
+                    margin-top: auto;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    font-family: 'Barlow Condensed', sans-serif;
+                }
+                .ticket-event-tag {
+                    font-size: 9px;
+                    font-weight: 900;
+                    color: #fff;
+                    background: #000;
+                    padding: 1px 4px;
+                    text-transform: uppercase;
+                }
+                .ticket-date-tag {
+                    font-size: 9px;
+                    font-weight: 700;
+                    color: #000;
+                    text-transform: uppercase;
                 }
                 `}
             </style>
@@ -52,40 +141,23 @@ const AdminRaffleTicketsPrint = ({ tickets }: AdminRaffleTicketsPrintProps) => {
                 <div key={pageIdx} className="raffle-print-page">
                     {tickets.slice(pageIdx * 15, (pageIdx + 1) * 15).map((ticket) => (
                         <div key={ticket.id} className="raffle-ticket-card">
-                            <div className="flex justify-between items-start">
-                                <img src={logo} alt="Logo" className="h-6 w-auto object-contain" />
-                                <div className="text-right">
-                                    <p className="text-[6px] font-bold text-neutral-400 uppercase tracking-widest">ID</p>
-                                    <p className="text-sm font-black text-neutral-900 tracking-tighter leading-none">{ticket.id}</p>
+                            <div className="ticket-header">
+                                <img src={logo} alt="Logo" className="ticket-logo" />
+                                <div className="ticket-title-wrap">
+                                    <div className="ticket-title-main">Ride With The Warriors</div>
+                                    <div className="ticket-title-sub">KDF &bull; Airborne Fraternity</div>
                                 </div>
                             </div>
 
-                            <div className="flex-1 flex flex-col justify-center items-center text-center my-1">
-                                <p className="text-[6px] font-bold text-neutral-400 uppercase tracking-widest mb-0.5">Ticket ID</p>
-                                <p className="text-xl font-black text-neutral-900 leading-none">
-                                    {ticket.id}
-                                </p>
+                            <div className="ticket-content">
+                                <div className="ticket-no-label">Raffle Ticket No.</div>
+                                <div className="ticket-no-val">{ticket.id}</div>
+                                <div className="ticket-name">{ticket.firstName} {ticket.lastName}</div>
                             </div>
 
-                            <div className="flex items-end justify-between border-t border-neutral-100 pt-1">
-                                <div className="flex-1 min-w-0 pr-1">
-                                    <p className="text-[6px] font-bold text-neutral-400 uppercase tracking-widest mb-0.5">Name</p>
-                                    <p className="text-[8px] font-black text-neutral-900 uppercase truncate leading-tight">
-                                        {ticket.firstName} {ticket.lastName}
-                                    </p>
-                                    <div className="mt-1">
-                                        <span className="bg-primary/10 text-primary text-[6px] font-black px-1 py-0.5 rounded uppercase">
-                                            Raffle Entry
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="shrink-0 bg-white p-0.5 border border-neutral-100 rounded">
-                                    <QRCodeCanvas
-                                        value={`https://airbornefraternity.org/raffle/profile/${ticket.id}`}
-                                        size={40}
-                                        level="H"
-                                    />
-                                </div>
+                            <div className="ticket-footer-strip">
+                                <div className="ticket-event-tag">Official Entry 2026</div>
+                                <div className="ticket-date-tag">Draw Date: 05 JUL 2026</div>
                             </div>
                         </div>
                     ))}
