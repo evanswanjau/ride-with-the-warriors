@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import {
     AiOutlineTable, AiOutlineSun, AiOutlineMoon, AiOutlineTeam,
@@ -30,7 +31,9 @@ interface AdminDashboardProps {
 
 const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs';
-    const [activeView, setActiveView] = useState<ViewType>('overview');
+    const { "*": viewParam } = useParams();
+    const navigate = useNavigate();
+    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
     const [dashboardData, setDashboardData] = useState<any>(null);
     const [registrations, setRegistrations] = useState<any[]>([]);
     const [pricingCategories, setPricingCategories] = useState<any[]>([]);
@@ -275,9 +278,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         { id: 'overview', label: 'Overview', icon: AiOutlineDashboard },
         { id: 'analytics', label: 'Analytics', icon: AiOutlineBarChart },
         { id: 'registrations', label: 'Registrations', icon: AiOutlineTeam },
+        { id: 'raffle', label: 'Raffle', icon: AiOutlineHistory },
         { id: 'payments', label: 'Payments', icon: AiOutlineDollar },
-        { id: 'raffle', label: 'Raffle', icon: AiOutlineStar },
-        { id: 'bibs', label: 'Bibs', icon: AiOutlinePrinter },
+        { id: 'bibs', label: 'Bibs', icon: AiOutlineStar },
         { id: 'pricing', label: 'Pricing', icon: AiOutlineTable },
     ];
 
@@ -542,7 +545,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     {/* ── Sidebar ── */}
                     <aside className="ad-sidebar">
                         {navItems.map(({ id, label, icon: Icon }) => (
-                            <button key={id} className={`ad-nav-btn${activeView === id ? ' active' : ''}`} onClick={() => setActiveView(id)}>
+                            <button key={id} className={`ad-nav-btn${activeView === id ? ' active' : ''}`} onClick={() => navigate(`/admin/${id === 'overview' ? '' : id}`)}>
                                 <Icon className="ad-nav-icon" /> {label}
                             </button>
                         ))}
@@ -564,7 +567,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                             <>
                                 <div>
                                     <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Command View</span></div>
-                                    <div className="ad-page-title">Mission Overview</div>
+                                    <div className="ad-page-title">Overview</div>
                                 </div>
 
                                 {/* KPIs */}
@@ -739,7 +742,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ad-red)', marginBottom: 4 }}>Stale Unpaid</div>
                                                 <div className="ad-stale-num">{staleUnpaid}</div>
                                                 <div className="ad-stale-desc">Entries stuck in UNPAID for over 48 hours. Consider automated follow-up email.</div>
-                                                <button className="ad-stale-btn" onClick={() => { setFilter({ ...filter, status: 'UNPAID' }); setActiveView('registrations'); }}>Review Now &rarr;</button>
+                                                <button className="ad-stale-btn" onClick={() => { setFilter({ ...filter, status: 'UNPAID' }); navigate('/admin/registrations'); }}>Review Now &rarr;</button>
                                             </div>
                                             <div className="ad-insight">
                                                 <strong>Raffle draw</strong> is scheduled for 05 Jul 2026. <strong>{rafflePaid} tickets sold</strong> — target is 300.
@@ -758,7 +761,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                             <>
                                 <div>
                                     <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Deep Dive</span></div>
-                                    <div className="ad-page-title">Granular Analytics</div>
+                                    <div className="ad-page-title">Analytics</div>
                                 </div>
 
                                 {/* Registrations + Payments dual line */}
@@ -1100,7 +1103,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
                                     <div>
                                         <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Raffle System</span></div>
-                                        <div className="ad-page-title">Digital Tickets (3 per row)</div>
+                                        <div className="ad-page-title">Raffle Tickets</div>
                                     </div>
                                     <div style={{ marginBottom: 24 }}>
                                         <button className="ad-hbtn ad-hbtn-primary" onClick={handleDownloadRaffleTickets} disabled={isPrintingRaffle}>
@@ -1109,7 +1112,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     </div>
                                 </div>
 
-                                <div className="ad-panel" style={{ padding: '0 24px' }}>
+                                <div className="ad-panel">
                                     <div className="ad-filters" style={{ borderBottom: 'none' }}>
                                         <div className="ad-filter-group" style={{ flex: 1 }}>
                                             <label className="ad-filter-label">Search</label>
@@ -1168,7 +1171,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
                                     <div>
                                         <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Participant IDs</span></div>
-                                        <div className="ad-page-title">Visual Bibs (A4 Pairs)</div>
+                                        <div className="ad-page-title">Bibs</div>
                                     </div>
                                     <div style={{ marginBottom: 24 }}>
                                         <button className="ad-hbtn ad-hbtn-primary" onClick={handleDownloadBibNumbers} disabled={isPrintingBibs}>
@@ -1177,7 +1180,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     </div>
                                 </div>
 
-                                <div className="ad-panel" style={{ padding: '0 24px' }}>
+                                <div className="ad-panel">
                                     <div className="ad-filters" style={{ borderBottom: 'none' }}>
                                         <div className="ad-filter-group" style={{ flex: 1 }}>
                                             <label className="ad-filter-label">Search</label>

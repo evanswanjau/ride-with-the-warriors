@@ -62,10 +62,26 @@ const PageTitle = () => {
     else if (path.startsWith('/raffle/profile/')) {
         title = 'Raffle Ticket';
     }
+    // Admin Routes
+    else if (path.startsWith('/admin')) {
+        const adminViews: Record<string, string> = {
+            'overview': 'Overview',
+            'analytics': 'Analytics',
+            'registrations': 'Registrations',
+            'bibs': 'Bibs',
+            'payments': 'Payments',
+            'raffle': 'Raffle',
+            'pricing': 'Pricing'
+        };
+        const view = path.split('/')[2] || 'overview';
+        title = `${adminViews[view] || 'Dashboard'}`;
+        description = 'Restricted access admin portal.';
+    }
 
     return (
         <Helmet>
             <title>{title}</title>
+            {path.startsWith('/admin') && <meta name="robots" content="noindex, nofollow" />}
             <meta name="description" content={description} />
             <meta property="og:title" content={title} />
             <meta property="og:description" content={description} />

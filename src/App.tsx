@@ -59,7 +59,7 @@ const App = () => {
         <Route path="/privacy-policy" element={<PrivacyPage />} />
 
         {/* Admin */}
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/*" element={<AdminPage />} />
       </Routes>
     </RegistrationProvider>
   );
