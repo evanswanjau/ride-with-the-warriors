@@ -1,22 +1,23 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineTeam, AiOutlineTrophy } from 'react-icons/ai';
+import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineTeam, AiOutlineTrophy, AiOutlineTags, AiOutlineArrowRight } from 'react-icons/ai';
 import heroImage from '../assets/images/hero.jpeg';
 import highlightImage1 from '../assets/images/296A0069-28-min.jpeg';
 import highlightImage2 from '../assets/images/296A0184-33-min.jpeg';
 import highlightImage3 from '../assets/images/296A0219-40-min.jpeg';
+import kdfLogo from '../assets/logos/kdf.png';
+import logo from '../assets/logos/logo.png';
 
-import RaffleHomeSection from '../components/base/RaffleHomeSection';
 import '../styles/home.css';
 
 
 /* ─── Testimonials Data ──────────────────────────────────────────────────── */
 const testimonials = [
-    { text: 'Crossing that finish line knowing every kilometre raised money for the widows — nothing else compares to that feeling.', name: 'Col. James Mwangi (Ret.)', role: 'Veteran Cyclist', circuit: '120KM Blitz', initials: 'JM' },
+    { text: 'Crossing that finish line knowing every kilometre raised money for the widows — nothing else compares to that feeling.', name: 'James Mwangi', role: 'Veteran Cyclist', circuit: '120KM Blitz', initials: 'JM' },
     { text: 'The organisation was flawless. Seeing active-duty soldiers and civilians riding together was genuinely moving.', name: 'Sarah Kamau', role: 'Competitive Cyclist, Nairobi', circuit: '60KM Recon', initials: 'SK' },
     { text: 'We entered as a corporate team of eight and finished as brothers. Back with double the team for 2026.', name: 'David Ochieng', role: 'Team Lead, Safaricom', circuit: '30KM Corporate', initials: 'DO' },
     { text: 'My daughter kept saying it was the best day of her life. We have already registered for the next edition.', name: 'Amina Hassan', role: 'Parent & Recreational Rider', circuit: '5KM Family Fun', initials: 'AH' },
-    { text: 'As a Paratrooper, this event sits close to the heart. The camaraderie on that course is something you only understand by being there.', name: 'Capt. Peter Njoroge', role: 'KDF Airborne Paratrooper', circuit: '120KM Blitz', initials: 'PN' },
+    { text: 'As a Paratrooper, this event sits close to the heart. The camaraderie on that course is something you only understand by being there.', name: 'Peter Njoroge', role: 'KDF Airborne Paratrooper', circuit: '120KM Blitz', initials: 'PN' },
     { text: 'Won a stunning mountain bike in the raffle. More importantly, I learned about the incredible work done for military families.', name: 'Grace Wambui', role: 'Raffle Winner, 2025', circuit: 'Grand Raffle', initials: 'GW' },
     { text: 'The 60KM route was punishing in the best way. Proper race-quality design — I have done many sportives and this held its own.', name: 'Brian Otieno', role: 'Amateur Racer', circuit: '60KM Recon', initials: 'BO' },
     { text: 'Never thought I would ride alongside soldiers. By kilometre 20 we were just riders, all chasing the same goal.', name: 'Linet Chebet', role: 'First-Time Participant', circuit: '30KM Corporate', initials: 'LC' },
@@ -143,7 +144,7 @@ const HomePage = () => {
                             </div>
                             <h1 className="display-heading text-[clamp(4rem,12vw,9rem)] text-white mb-2">
                                 Ride With<br />
-                                The <span style={{ color: 'var(--color-primary-light)' }}>Warriors</span>
+                                The <span style={{ color: 'var(--color-primary-light)' }}>Warriors</span> 2026
                             </h1>
                             <div className="flex flex-col md:flex-row md:items-end gap-10 mt-8">
                                 <p className="text-white/60 text-lg max-w-md leading-relaxed font-light">
@@ -153,7 +154,6 @@ const HomePage = () => {
                                 <div className="flex flex-wrap gap-4 md:ml-auto md:pb-1">
                                     <Link to="/register/step/1" className="shimmer-btn shimmer-btn--primary">Register to Cycle</Link>
                                     <Link to="/raffle/step/1" className="shimmer-btn shimmer-btn--amber">Buy Raffle Tickets</Link>
-                                    <Link to="/about" className="shimmer-btn shimmer-btn--ghost">Learn More</Link>
                                 </div>
                             </div>
                             <div className="mt-12 flex items-center gap-4">
@@ -204,12 +204,12 @@ const HomePage = () => {
                     <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
                         <div className="grid grid-cols-2 gap-3">
                             <div className="space-y-3 pt-10">
-                                <div className="img-hover-frame h-72 overflow-hidden"><img src={highlightImage1} alt="RWTW Cyclist" className="w-full h-full object-cover" /></div>
-                                <div className="img-hover-frame h-52 overflow-hidden"><img src={highlightImage3} alt="RWTW Action" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden"><img src={highlightImage1} alt="RWTW Cyclist" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden"><img src={highlightImage3} alt="RWTW Action" className="w-full h-full object-cover" /></div>
                             </div>
                             <div className="space-y-3">
-                                <div className="img-hover-frame h-52 overflow-hidden"><img src={highlightImage2} alt="RWTW Peloton" className="w-full h-full object-cover" /></div>
-                                <div className="img-hover-frame h-72 overflow-hidden"><img src={heroImage} alt="RWTW Landscape" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden"><img src={highlightImage2} alt="RWTW Peloton" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden"><img src={heroImage} alt="RWTW Landscape" className="w-full h-full object-cover" /></div>
                             </div>
                         </div>
 
@@ -267,7 +267,7 @@ const HomePage = () => {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {circuits.map((circuit, idx) => (
-                                <Link key={idx} to="/participants" className="circuit-card block p-8 border">
+                                <Link key={idx} to="/circuits" className="circuit-card block p-8 border">
                                     <div className="circuit-shimmer" />
                                     <div className="circuit-number">{circuit.number}</div>
                                     <div className="relative z-10">
@@ -284,13 +284,90 @@ const HomePage = () => {
                             ))}
                         </div>
                         <div className="mt-10 flex justify-end">
-                            <Link to="/participants" className="shimmer-btn shimmer-btn--primary">View All Categories</Link>
+                            <Link to="/circuits" className="shimmer-btn shimmer-btn--primary">View All Categories</Link>
                         </div>
                     </div>
                 </section>
 
-                {/* ── Raffle Section ───────────────────────────────────── */}
-                <RaffleHomeSection />
+
+
+
+
+                <section className="py-24 px-6 lg:px-12" style={{ fontFamily: "'Barlow', sans-serif", background: 'var(--page-bg)', transition: 'background 0.3s' }}>
+                    <div className="max-w-7xl mx-auto">
+                        <div className="flex flex-col md:flex-row md:items-end gap-6 mb-14">
+                            <div>
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="h-px w-12 bg-amber-500" />
+                                    <span className="font-['Barlow_Condensed'] text-[0.7rem] font-bold tracking-[0.25em] uppercase text-amber-600">The Grand Raffle 2026</span>
+                                </div>
+                                <h2 className="font-['Bebas_Neue'] tracking-[0.03em] leading-[0.95] text-[clamp(3rem,6vw,5rem)]" style={{ color: 'var(--text-1)' }}>
+                                    Win Big.<br />
+                                    <span className="text-amber-500">Give Back.</span>
+                                </h2>
+                            </div>
+                            <p className="max-w-xs leading-relaxed md:ml-auto md:text-right text-sm" style={{ color: 'var(--text-3)' }}>
+                                Every ticket supports the widows and families of fallen heroes — while putting you in the draw for incredible prizes.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-0 border"
+                            style={{ clipPath: 'polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 28px 100%, 0 calc(100% - 28px))', borderColor: 'var(--border-1)', background: 'var(--raised-bg)', transition: 'background 0.3s' }}>
+                            <div className="lg:col-span-3 p-10 md:p-14 flex flex-col justify-between">
+                                <div>
+                                    <p className="text-lg leading-relaxed mb-10 max-w-lg" style={{ color: 'var(--text-2)' }}>
+                                        Support the widows and families of our fallen heroes. Every ticket purchased
+                                        directly contributes to their welfare while giving you a chance to
+                                        <span className="font-semibold" style={{ color: 'var(--text-1)' }}> win incredible prizes</span>.
+                                    </p>
+                                    <div className="mb-12">
+                                        <div className="raffle-feature-light" style={{ borderColor: 'var(--border-1)' }}>
+                                            <div className="raffle-feature-icon-light"><AiOutlineTrophy /></div>
+                                            <div>
+                                                <h4 className="font-bold text-sm tracking-wide mb-1" style={{ color: 'var(--text-1)' }}>Elite Prizes</h4>
+                                                <p className="text-sm" style={{ color: 'var(--text-3)' }}>High-end mountain bikes, exclusive military experiences, and more.</p>
+                                            </div>
+                                        </div>
+                                        <div className="raffle-feature-light" style={{ borderColor: 'var(--border-1)' }}>
+                                            <div className="raffle-feature-icon-light"><AiOutlineTags /></div>
+                                            <div>
+                                                <h4 className="font-bold text-sm tracking-wide mb-1" style={{ color: 'var(--text-1)' }}>KSH 1,000 / Ticket</h4>
+                                                <p className="text-sm" style={{ color: 'var(--text-3)' }}>Buy as many as you want — more tickets means better odds.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <Link to="/raffle/step/1" className="raffle-cta-btn">
+                                        Get Your Tickets Now
+                                        <AiOutlineArrowRight className="text-lg" />
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="lg:col-span-2 raffle-ticket-visual-light min-h-[360px] flex flex-col items-center justify-center gap-8 p-12">
+                                <div className="font-['Barlow_Condensed'] text-[0.7rem] font-bold uppercase tracking-[0.3em] text-amber-600/80">Grand Raffle 2026</div>
+                                <div className="text-center">
+                                    <div className="font-['Bebas_Neue'] text-[5.5rem] text-amber-500 leading-none relative" style={{ textShadow: '0 0 40px rgba(245,158,11,0.6), 0 0 80px rgba(245,158,11,0.4), 0 0 10px rgba(245,158,11,0.8)' }}>
+                                        1,000
+                                    </div>
+                                    <div className="font-['Barlow_Condensed'] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-amber-600/70 mt-1">KSH per ticket</div>
+                                </div>
+                                <div className="w-full border-t border-dashed border-amber-500/30" />
+                                <div className="grid grid-cols-2 gap-0 w-full">
+                                    <div className="prize-stat-light text-center">
+                                        <div className="font-['Bebas_Neue'] text-3xl" style={{ color: 'var(--text-1)' }}>Multiple</div>
+                                        <div className="text-xs font-bold uppercase tracking-widest mt-1" style={{ color: 'var(--text-3)' }}>Prize Tiers</div>
+                                    </div>
+                                    <div className="prize-stat-light text-center">
+                                        <div className="font-['Bebas_Neue'] text-3xl" style={{ color: 'var(--text-1)' }}>∞</div>
+                                        <div className="text-xs font-bold uppercase tracking-widest mt-1" style={{ color: 'var(--text-3)' }}>Tickets / Person</div>
+                                    </div>
+                                </div>
+                                <div className="font-['Barlow_Condensed'] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-neutral-500">Draw: 05 July 2026</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 {/* ── Testimonials ─────────────────────────────────────── */}
                 <TestimonialsSection />
@@ -304,7 +381,7 @@ const HomePage = () => {
                     </div>
                     <div className="max-w-7xl mx-auto relative z-10">
                         <div className="flex flex-col lg:flex-row lg:items-center gap-12">
-                            <div className="flex-1">
+                            <div className="flex-none max-w-md">
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="h-px w-12 bg-[var(--color-accent)]" />
                                     <span className="section-label" style={{ color: 'var(--color-accent)' }}>Join The Movement</span>
@@ -321,7 +398,7 @@ const HomePage = () => {
                                 <div className="border p-8 flex-1" style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)', borderColor: 'var(--border-1)', background: 'var(--cta-card-bg)', transition: 'background 0.3s' }}>
                                     <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>For Cyclists</div>
                                     <div className="display-heading text-3xl mb-4" style={{ color: 'var(--text-1)' }}>Enter The Race</div>
-                                    <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>Four circuits. One mission. Choose your challenge.</p>
+                                    <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>Four circuits. One mission.  One Goal. Choose your challenge.</p>
                                     <Link to="/register/step/1" className="shimmer-btn shimmer-btn--primary w-full text-center">Register to Cycle</Link>
                                 </div>
                                 <div className="border p-8 flex-1" style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)', borderColor: 'var(--border-1)', background: 'var(--cta-card-bg)', transition: 'background 0.3s' }}>
@@ -332,6 +409,23 @@ const HomePage = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </section>
+
+                {/* ── Sponsors Carousel ── */}
+                <section className="py-12 px-6 overflow-hidden border-t border-b" style={{ borderColor: 'var(--border-1)', background: 'var(--raised-bg)', transition: 'background 0.3s' }}>
+                    <div className="max-w-7xl mx-auto mb-8 text-center flex flex-col items-center">
+                        <div className="h-px w-12 bg-[var(--color-primary)] mb-4" />
+                        <span className="section-label">Our Proud Sponsors</span>
+                    </div>
+                    {/* Placeholder Sponsor Images */}
+                    <div className="flex gap-8 items-center justify-center flex-wrap">
+                        <img src={kdfLogo} alt="KDF" className="h-16 w-auto object-contain rounded" />
+                        <img src={logo} alt="Airborne Fraternity" className="h-16 w-auto object-contain rounded" />
+                        {/* <div className="w-40 h-16 bg-neutral-300 dark:bg-neutral-800 rounded animate-pulse"></div>
+                        <div className="w-40 h-16 bg-neutral-300 dark:bg-neutral-800 rounded animate-pulse"></div>
+                        <div className="w-40 h-16 bg-neutral-300 dark:bg-neutral-800 rounded animate-pulse"></div>
+                        <div className="w-40 h-16 bg-neutral-300 dark:bg-neutral-800 rounded animate-pulse"></div> */}
                     </div>
                 </section>
 

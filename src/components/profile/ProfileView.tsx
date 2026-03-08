@@ -17,7 +17,7 @@ import {
 import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import { CIRCUITS } from '../../constants';
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/logos/logo.png';
 import { calculateAge, getCategoryColor, getContrastText } from '../../utils';
 
 interface ProfileViewProps {

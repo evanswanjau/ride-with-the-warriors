@@ -87,7 +87,7 @@ const Faqs = () => {
         <>
 
 
-            <div className="page" style={{ padding: '120px 0 80px' }}>
+            <div className="page" style={{ padding: '100px 0 80px' }}>
                 <div className="page-inner--narrow">
 
                     {/* ── Header ─────────────────────────────────────────── */}
@@ -97,9 +97,8 @@ const Faqs = () => {
                             <span className="page-eyebrow">Help Centre</span>
                             <div className="page-label-line--short" />
                         </div>
-                        <h1 className="page-display page-title">
-                            Frequently Asked<br />
-                            <span style={{ color: 'var(--color-primary-light)' }}>Questions.</span>
+                        <h1 className="page-display page-title" style={{ textAlign: 'center' }}>
+                            Frequently Asked <span style={{ color: 'var(--color-primary-light)' }}>Questions.</span>
                         </h1>
                         <p className="page-subtitle--center">
                             Everything you need to know about the 2026 Ride With The Warriors event.

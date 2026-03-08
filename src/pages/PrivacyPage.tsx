@@ -47,79 +47,54 @@ const PrivacyPage = () => {
 
             <div className="legal-page">
 
-                {/* ── Hero ── */}
-                <div className="legal-hero" style={{ background: 'var(--raised-bg)', transition: 'background 0.3s' }}>
-                    <div className="legal-hero-bg" />
-                    <div className="legal-hero-accent" />
-                    <div className="legal-hero-watermark">PRIVACY</div>
-
-                    <div className="max-w-4xl mx-auto relative z-10">
-                        <Link to="/" className="back-link" style={{ gap: '6px' }}>
-                            ← Back to Home
-                        </Link>
-
-                        <div style={{ marginTop: 32 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                                <div style={{ height: 1, width: 48, background: 'var(--color-primary)', flexShrink: 0 }} />
-                                <span className="section-label">KDF Airborne Fraternity · 2026 Edition</span>
+                {/* ── Header ── */}
+                <div className="page" style={{ padding: '100px 0 80px' }}>
+                    <div className="page-inner--narrow">
+                        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+                            <div className="page-label-row--center" style={{ marginBottom: 20 }}>
+                                <div className="page-label-line--short" />
+                                <span className="page-eyebrow">Legal</span>
+                                <div className="page-label-line--short" />
                             </div>
-                            <h1 className="display-heading" style={{ fontSize: 'clamp(3.5rem, 9vw, 7rem)', color: 'var(--text-1)' }}>
-                                Privacy <span style={{ color: 'var(--color-primary-light)' }}>Policy.</span>
-                            </h1>
-                            <p style={{ marginTop: 20, fontSize: '1rem', color: 'var(--text-2)', maxWidth: 520, lineHeight: 1.72 }}>
+                            <h1 className="page-display page-title" style={{ textAlign: 'center' }}>Privacy <span className="page-accent">Policy.</span></h1>
+                            <p className="page-subtitle--center">
                                 Your privacy is important to us. This policy explains how we handle your
                                 personal data during the registration and event process.
                             </p>
                         </div>
+                        {/* ── Content ── */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                            {sections.map((s) => (
+                                <div key={s.number} className="terms-section-card">
+                                    <div className="terms-number-col">
+                                        <span className="terms-number">{s.number}</span>
+                                        <div className="terms-number-line" />
+                                    </div>
+                                    <div>
+                                        <div className="terms-section-title">{s.title}</div>
+                                        <p className="terms-section-body">{s.body}</p>
+                                    </div>
+                                </div>
+                            ))}
 
-                        <div style={{ marginTop: 32, display: 'flex', flexWrap: 'wrap', gap: 24 }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                <span style={{ fontSize: '0.65rem', fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-3)' }}>Last Updated</span>
-                                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-2)' }}>July 2025</span>
+                            {/* Contact block */}
+                            <div style={{ marginTop: 24, padding: '36px', border: '1px solid var(--border-1)', background: 'var(--raised-bg)', clipPath: 'polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%)', display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <div style={{ height: 1, width: 36, background: 'var(--color-primary)', flexShrink: 0 }} />
+                                    <span className="section-label" style={{ color: 'var(--color-primary)' }}>Get In Touch</span>
+                                </div>
+                                <h2 className="display-heading" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--text-1)' }}>
+                                    Questions About <span style={{ color: 'var(--color-primary-light)' }}>Your Data?</span>
+                                </h2>
+                                <p style={{ fontSize: '0.9rem', color: 'var(--text-2)', lineHeight: 1.72, maxWidth: 480 }}>
+                                    Reach out to our data officer and we'll respond within 48 hours.
+                                </p>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 4 }}>
+                                    <Link to="/register/step/1" className="shimmer-btn shimmer-btn--primary">Register Now</Link>
+                                    <a href="mailto:info@ridewiththewarriors.com" className="shimmer-btn shimmer-btn--ghost">Contact Us</a>
+                                    <Link to="/terms-and-conditions" className="shimmer-btn shimmer-btn--ghost">Terms & Conditions →</Link>
+                                </div>
                             </div>
-                            <div style={{ width: 1, background: 'var(--border-2)' }} />
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                <span style={{ fontSize: '0.65rem', fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-3)' }}>Applies To</span>
-                                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-2)' }}>Ride With The Warriors 2026</span>
-                            </div>
-                            <div style={{ width: 1, background: 'var(--border-2)' }} />
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                <span style={{ fontSize: '0.65rem', fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-3)' }}>Sections</span>
-                                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-2)' }}>{sections.length} Articles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* ── Content ── */}
-                <div className="max-w-4xl mx-auto px-6 lg:px-12 py-20" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    {sections.map((s) => (
-                        <div key={s.number} className="legal-section-card">
-                            <div className="legal-section-number">{s.number}</div>
-                            <div className="legal-section-title">{s.title}</div>
-                            <p className="legal-section-body">{s.body}</p>
-                        </div>
-                    ))}
-
-                    {/* Contact block */}
-                    <div style={{ marginTop: 24, padding: '36px', border: '1px solid var(--border-1)', background: 'var(--raised-bg)', clipPath: 'polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%)', display: 'flex', flexDirection: 'column', gap: 16 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                            <div style={{ height: 1, width: 36, background: 'var(--color-primary)', flexShrink: 0 }} />
-                            <span className="section-label">Get In Touch</span>
-                        </div>
-                        <h2 className="display-heading" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', color: 'var(--text-1)' }}>
-                            Questions About <span style={{ color: 'var(--color-primary-light)' }}>Your Data?</span>
-                        </h2>
-                        <p style={{ fontSize: '0.9rem', color: 'var(--text-2)', lineHeight: 1.72, maxWidth: 480 }}>
-                            Reach out to our data officer and we'll respond within 48 hours.
-                        </p>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 4 }}>
-                            <a href="mailto:privacy@ridewiththewarriors.com" className="contact-pill">
-                                ✉ privacy@ridewiththewarriors.com
-                            </a>
-                            <Link to="/terms-and-conditions" className="shimmer-btn shimmer-btn--amber">
-                                View Terms & Conditions →
-                            </Link>
                         </div>
                     </div>
                 </div>

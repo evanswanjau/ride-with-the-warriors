@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/logos/logo.png';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -80,16 +80,16 @@ const Footer = () => {
                 /* ── Brand column ── */
                 .footer-brand { display: flex; flex-direction: column; gap: 20px; }
                 .footer-logo  { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-                .footer-logo img { height: 38px; width: auto; object-fit: contain; }
+                .footer-logo img { height: 50px; width: auto; object-fit: contain; }
                 .footer-logo-text {
                     font-family: 'Barlow Condensed', sans-serif;
-                    font-weight: 800; font-size: 0.9rem;
+                    font-weight: 800; font-size: 1.2rem;
                     letter-spacing: 0.1em; text-transform: uppercase;
                     line-height: 1.2; color: var(--f-logo-text);
                     transition: color 0.3s;
                 }
                 .footer-logo-sub {
-                    display: block; font-size: 0.6rem;
+                    display: block; font-size: 0.75rem;
                     letter-spacing: 0.22em; opacity: 0.5; margin-top: 1px;
                 }
                 .footer-tagline {
@@ -265,7 +265,7 @@ const Footer = () => {
                             <img src={logo} alt="RWTW" />
                             <span className="footer-logo-text">
                                 Ride With The Warriors
-                                <span className="footer-logo-sub">KDF Airborne Fraternity</span>
+                                <span className="footer-logo-sub">KDF • Airborne Fraternity</span>
                             </span>
                         </Link>
                         <p className="footer-tagline">
@@ -313,15 +313,14 @@ const Footer = () => {
                 {/* ── Bottom bar ── */}
                 <div className="footer-bottom">
                     <span className="footer-copy">© {currentYear} Ride With The Warriors. All rights reserved.</span>
-                    <div className="footer-legal">
+                    <div className="footer-legal" style={{ marginLeft: 'auto' }}>
                         {legalLinks.map((link, i) => (
-                            <>
-                                {i > 0 && <div key={`sep${i}`} className="footer-legal-sep" />}
-                                <Link key={link.path} to={link.path} className="footer-legal-link">{link.name}</Link>
-                            </>
+                            <span key={link.path} style={{ display: 'flex', alignItems: 'center' }}>
+                                {i > 0 && <div className="footer-legal-sep" />}
+                                <Link to={link.path} className="footer-legal-link">{link.name}</Link>
+                            </span>
                         ))}
                     </div>
-                    <span className="footer-made">KDF Airborne Fraternity · Est. 2025</span>
                 </div>
             </footer>
         </>

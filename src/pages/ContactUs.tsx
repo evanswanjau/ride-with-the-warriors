@@ -6,7 +6,8 @@ import {
     AiOutlineEnvironment,
     AiOutlineSend,
     AiOutlineCheckCircle,
-    AiOutlineClockCircle
+    AiOutlineClockCircle,
+    AiOutlineWhatsApp
 } from 'react-icons/ai';
 
 const ContactUs = () => {
@@ -17,17 +18,15 @@ const ContactUs = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setStatus('submitting');
-        setTimeout(() => {
-            setStatus('success');
-            setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-            setTimeout(() => setStatus('idle'), 5000);
-        }, 1500);
+        window.location.href = `mailto:ridesupport@airbornefraternity.org?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`)}`;
+        setStatus('success');
+        setTimeout(() => setStatus('idle'), 3000);
     };
 
     const contactCards = [
         { icon: <AiOutlineMail />, title: 'Email Us', detail: 'ridesupport@airbornefraternity.org', link: 'mailto:ridesupport@airbornefraternity.org', accentColor: 'rgba(59,130,246,0.7)' },
         { icon: <AiOutlinePhone />, title: 'Call Us', detail: '0703 752 118', link: 'tel:0703752118', accentColor: 'var(--color-primary-light)' },
+        { icon: <AiOutlineWhatsApp />, title: 'WhatsApp', detail: 'Chat with Support', link: 'https://wa.me/254703752118', accentColor: '#25D366' },
         { icon: <AiOutlineEnvironment />, title: 'Event Venue', detail: 'Ulinzi Sports Complex, Nairobi', link: 'https://maps.google.com', accentColor: 'rgba(249,115,22,0.8)' },
     ];
 

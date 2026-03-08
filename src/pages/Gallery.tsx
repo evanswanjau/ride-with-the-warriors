@@ -84,16 +84,7 @@ const Gallery = () => {
                         Relive the most intense moments from previous Ride With The Warriors events —
                         from epic climbs to muddy sprints.
                     </p>
-                    <div className="gallery-meta-row">
-                        <div className="gallery-count">
-                            <div className="gallery-count-dot" />
-                            {images.length} Photos
-                        </div>
-                        <div className="gallery-meta-line" />
-                        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gallery-text-3)' }}>
-                            2025 Edition
-                        </span>
-                    </div>
+
                 </div>
 
                 {/* ── Grid ───────────────────────────────────────────────── */}

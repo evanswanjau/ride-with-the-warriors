@@ -3,8 +3,7 @@ import { RegistrationProvider } from './context/RegistrationContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import AboutUs from './pages/AboutUs';
-import Participants from './components/base/Participants';
-import Sponsors from './components/base/Sponsors';
+import Circuits from './pages/Circuits';
 import ContactUs from './pages/ContactUs';
 import Gallery from './pages/Gallery';
 import Faqs from './pages/Faqs';
@@ -33,8 +32,7 @@ const App = () => {
         {/* Public Pages */}
         <Route path="/" element={<Layout isFullWidth><HomePage /></Layout>} />
         <Route path="/about" element={<Layout isFullWidth><AboutUs /></Layout>} />
-        <Route path="/participants" element={<Layout><Participants /></Layout>} />
-        <Route path="/sponsors" element={<Layout><Sponsors /></Layout>} />
+        <Route path="/circuits" element={<Layout isFullWidth><Circuits /></Layout>} />
         <Route path="/contact" element={<Layout isFullWidth><ContactUs /></Layout>} />
         <Route path="/gallery" element={<Layout isFullWidth><Gallery /></Layout>} />
         <Route path="/faqs" element={<Layout isFullWidth><Faqs /></Layout>} />

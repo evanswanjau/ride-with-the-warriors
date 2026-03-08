@@ -10,7 +10,7 @@ import {
     AiOutlineCheckCircle,
     AiOutlineDownload,
 } from 'react-icons/ai';
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/logos/logo.png';
 
 interface RaffleTicketViewProps {
     ticket: {

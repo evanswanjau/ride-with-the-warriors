@@ -280,13 +280,14 @@
 }
 
 .shimmer-btn--ghost {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: transparent;
+    color: var(--p-text-2);
+    border: 1px solid var(--p-border-2);
 }
 
 .shimmer-btn--ghost:hover {
-    background: rgba(255, 255, 255, 0.14);
+    background: var(--p-border);
+    color: var(--p-text-1);
 }
 
 /* ── Shared animations ───────────────────────────────────────────────── */

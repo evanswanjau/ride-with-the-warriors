@@ -39,7 +39,7 @@ import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import AdminRaffleTicketsPrint from './AdminRaffleTicketsPrint';
 import AdminBibNumbersPrint from './AdminBibNumbersPrint';
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/logos/logo.png';
 import { CIRCUITS } from '../../constants';
 import { API_BASE_URL } from '../../config';
 

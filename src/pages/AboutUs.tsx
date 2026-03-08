@@ -110,7 +110,7 @@ const AboutUs = () => {
                                 <p className="ab-body">
                                     The 2026 edition is scheduled for{' '}
                                     <strong style={{ color: 'var(--ab-text-1)', fontWeight: 700 }}>05 July 2026</strong>{' '}
-                                    at the Ulinzi Sports Complex (USCL) in Nairobi, set against Kenya's scenic terrain.
+                                    at the <strong style={{ color: 'var(--ab-text-1)', fontWeight: 700 }}>Ulinzi Sports Complex (USCL)</strong> in Nairobi, set against Kenya's scenic terrain.
                                 </p>
                             </div>
                             <div className="ab-event-meta">
@@ -210,14 +210,14 @@ const AboutUs = () => {
                             Ready to <span className="ab-accent">Ride?</span>
                         </h2>
                         <p className="ab-cta-body">
-                            Join hundreds of riders on July 5th, 2026 at the Ulinzi Sports Complex.
+                            Join hundreds of riders on July 5th, 2026 at the <strong style={{ color: '#fff', fontWeight: 700 }}>Ulinzi Sports Complex</strong>.
                             Whether you're a pro cyclist or bringing the family, there's a circuit for you.
                         </p>
                         <div className="ab-cta-btns">
                             <Link to="/register/step/1" className="shimmer-btn shimmer-btn--primary">
                                 Register for RWTW 2026 →
                             </Link>
-                            <Link to="/participants" className="shimmer-btn shimmer-btn--ghost">
+                            <Link to="/circuits" className="shimmer-btn shimmer-btn--ghost">
                                 Explore Circuits
                             </Link>
                         </div>

@@ -428,3 +428,122 @@
     text-transform: uppercase;
     white-space: nowrap;
 }
+
+/* ════════════════════════════════════
+   RAFFLE SECTION
+   ════════════════════════════════════ */
+
+.raffle-cta-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 40px;
+    background: #f59e0b;
+    color: #111;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+.raffle-cta-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.5) 50%, transparent 80%);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+.raffle-cta-btn:hover::before {
+    left: 140%;
+    transition: left 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.raffle-cta-btn:hover {
+    background: #fbbf24;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(245, 158, 11, 0.35);
+}
+
+.raffle-ticket-visual-light {
+    position: relative;
+    background: var(--raised-bg);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    overflow: hidden;
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+    transition: background 0.3s;
+}
+
+.raffle-ticket-visual-light::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 18px,
+            rgba(245, 158, 11, 0.06) 18px,
+            rgba(245, 158, 11, 0.06) 36px);
+    pointer-events: none;
+}
+
+.raffle-ticket-visual-light::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: 1px dashed rgba(245, 158, 11, 0.25);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.prize-stat-light {
+    border-left: 2px solid rgba(245, 158, 11, 0.5);
+    padding: 14px 20px;
+    transition: border-color 0.2s;
+}
+
+.prize-stat-light:hover {
+    border-color: #f59e0b;
+}
+
+.raffle-feature-light {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    transition: background 0.2s;
+}
+
+.raffle-feature-light:first-child {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.raffle-feature-icon-light {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d97706;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.raffle-feature-light:hover .raffle-feature-icon-light {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: #f59e0b;
+}

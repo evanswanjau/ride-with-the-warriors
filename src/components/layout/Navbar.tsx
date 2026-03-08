@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
-import logo from '../../assets/images/logo.png';
+import logoRegular from '../../assets/logos/logo.png';
+import logoWhite from '../../assets/logos/logo_white.png';
 
 /* ─── Theme toggle icon ──────────────────────────────────────────────────── */
 const SunIcon = () => (
@@ -32,6 +33,18 @@ const Navbar = () => {
 
     const isHome = location.pathname === '/';
     const isTransparent = isHome && !isScrolled && !isMenuOpen;
+
+    let currentLogo = logoWhite;
+    if (theme === 'light') {
+        if (isHome && !isScrolled && !isMenuOpen) {
+            currentLogo = logoWhite; // Visible on hero section
+        } else {
+            currentLogo = logoRegular; // Default light mode logo, and used on scroll
+        }
+    } else {
+        // Dark mode
+        currentLogo = logoWhite;
+    }
 
     /* Apply theme to root */
     useEffect(() => {
@@ -131,8 +144,8 @@ const Navbar = () => {
                 .nav-inner {
                     max-width: 1400px;
                     margin: 0 auto;
-                    padding: 0 40px;
-                    height: 64px;
+                    padding: 0 44px;
+                    height: 70px;
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
@@ -148,21 +161,21 @@ const Navbar = () => {
                     flex-shrink: 0;
                 }
                 .nav-logo img {
-                    height: 36px;
+                    height: 40px;
                     width: auto;
                     object-fit: contain;
                 }
                 .nav-logo-label {
                     font-family: 'Barlow Condensed', sans-serif;
                     font-weight: 800;
-                    font-size: 0.9rem;
+                    font-size: 1.2rem;
                     letter-spacing: 0.1em;
                     text-transform: uppercase;
                     line-height: 1.2;
                     transition: color 0.3s;
                 }
                 .nav-logo-sub {
-                    font-size: 0.6rem;
+                    font-size: 0.75rem;
                     letter-spacing: 0.2em;
                     opacity: 0.55;
                     display: block;
@@ -182,9 +195,9 @@ const Navbar = () => {
 
                 .nav-link {
                     position: relative;
-                    padding: 6px 14px;
+                    padding: 7px 15px;
                     font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 0.75rem;
+                    font-size: 1.05rem;
                     font-weight: 700;
                     letter-spacing: 0.18em;
                     text-transform: uppercase;
@@ -252,9 +265,9 @@ const Navbar = () => {
                     position: relative;
                     display: inline-flex;
                     align-items: center;
-                    padding: 8px 22px;
+                    padding: 9px 24px;
                     font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 0.72rem;
+                    font-size: 0.95rem;
                     font-weight: 800;
                     letter-spacing: 0.15em;
                     text-transform: uppercase;
@@ -448,10 +461,10 @@ const Navbar = () => {
                 <div className="nav-inner">
                     {/* Logo */}
                     <Link to="/" className="nav-logo">
-                        <img src={logo} alt="RWTW" />
+                        <img src={currentLogo} alt="RWTW" />
                         <span className="nav-logo-label hidden sm:block">
                             Ride With The Warriors
-                            <span className="nav-logo-sub">KDF Airborne Fraternity</span>
+                            <span className="nav-logo-sub">KDF • Airborne Fraternity</span>
                         </span>
                     </Link>
 
@@ -489,7 +502,7 @@ const Navbar = () => {
 
                         {/* CTAs */}
                         <Link to="/register/step/1" className="nav-cta green">Register</Link>
-                        <Link to="/raffle/step/1" className="nav-cta amber">Raffle</Link>
+                        <Link to="/raffle/step/1" className="nav-cta amber">Raffle Tickets</Link>
                     </div>
 
                     {/* Mobile controls */}
@@ -523,7 +536,7 @@ const Navbar = () => {
                 {/* Header */}
                 <div className="nav-mobile-header">
                     <Link to="/" className="nav-logo" onClick={() => setIsMenuOpen(false)}>
-                        <img src={logo} alt="RWTW" style={{ height: 32 }} />
+                        <img src={currentLogo} alt="RWTW" style={{ height: 32 }} />
                         <span className="nav-mobile-logo-text">RWTW</span>
                     </Link>
                     <button
