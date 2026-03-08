@@ -16,7 +16,6 @@ import { toPng } from 'html-to-image';
 import AdminRaffleTicketsPrint from './AdminRaffleTicketsPrint';
 import AdminBibNumbersPrint from './AdminBibNumbersPrint';
 import AdminBibVisual from './AdminBibVisual';
-import AdminRaffleVisual from './AdminRaffleVisual';
 import logo from '../../assets/logos/logo.png';
 import { CIRCUITS } from '../../constants';
 import { API_BASE_URL } from '../../config';
