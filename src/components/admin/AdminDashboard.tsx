@@ -248,7 +248,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             lastName: reg.lastName,
             category: reg.category,
             hexColor: pricingCategories.find(c => c.categoryName === reg.category && c.circuitId === reg.circuitId)?.hexColor || '#000000',
-            circuitId: reg.circuitId
+            circuitId: reg.circuitId,
+            teamName: reg.teamName,
+            type: reg.type
         }));
 
         // Client-side sorting

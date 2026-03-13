@@ -47,7 +47,6 @@ const AdminRaffleTicketsPrint = ({ tickets }: AdminRaffleTicketsPrintProps) => {
                     display: flex;
                     align-items: center;
                     gap: 3mm;
-                    border-bottom: 1.5pt solid #000;
                     padding-bottom: 2mm;
                     margin-bottom: 3mm;
                 }

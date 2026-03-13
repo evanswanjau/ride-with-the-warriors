@@ -8,6 +8,8 @@ interface BibRegistration {
     category: string;
     hexColor: string;
     circuitId: string;
+    teamName?: string;
+    type: string;
 }
 
 interface AdminBibVisualProps {
@@ -15,6 +17,15 @@ interface AdminBibVisualProps {
 }
 
 const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
+    const getDisplayCategory = (reg: BibRegistration) => {
+        if (reg.type === 'team') {
+            const team = reg.teamName || 'Team';
+            const displayTeam = team.length > 22 ? team.substring(0, 19) + '...' : team;
+            return `${displayTeam} - ${reg.circuitId}`;
+        }
+        return `${reg.circuitId} - ${reg.type}`;
+    };
+
     return (
         <div className="ad-bib-grid">
             <style>{`
@@ -37,7 +48,7 @@ const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
                     color: #000;
                 }
                 .ad-bib-band {
-                    height: 18%;
+                    height: 22%;
                     width: 100%;
                 }
                 .ad-bib-main {
@@ -74,7 +85,7 @@ const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
                     color: #666;
                 }
                 .ad-bib-footer {
-                    height: 18%;
+                    height: 22%;
                     width: 100%;
                     position: relative;
                     display: flex;
@@ -109,7 +120,7 @@ const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
                     <div className="ad-bib-main">
                         <div className="ad-bib-num">{reg.id}</div>
                         <div className="ad-bib-name">{reg.firstName} {reg.lastName}</div>
-                        <div className="ad-bib-cat">{reg.category}</div>
+                        <div className="ad-bib-cat">{getDisplayCategory(reg)}</div>
                     </div>
 
                     {/* Bottom Band / Footer */}

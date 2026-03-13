@@ -7,6 +7,8 @@ interface BibRegistration {
     category: string;
     hexColor: string;
     circuitId: string;
+    teamName?: string;
+    type: string;
 }
 
 interface AdminBibNumbersPrintProps {
@@ -14,6 +16,15 @@ interface AdminBibNumbersPrintProps {
 }
 
 const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
+    const getDisplayCategory = (reg: BibRegistration) => {
+        if (reg.type === 'team') {
+            const team = reg.teamName || 'Team';
+            const displayTeam = team.length > 25 ? team.substring(0, 22) + '...' : team;
+            return `${displayTeam} - ${reg.circuitId}`;
+        }
+        return `${reg.circuitId} - ${reg.type}`;
+    };
+
     return (
         <div id="bib-print-container" style={{ background: '#fff', width: '210mm' }}>
             <style>
@@ -45,7 +56,7 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
                     border-bottom: none;
                 }
                 .color-band {
-                    height: 28mm;
+                    height: 35mm;
                     width: 100%;
                 }
                 .bib-content {
@@ -83,7 +94,7 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
                     text-align: center;
                 }
                 .bib-footer {
-                    height: 28mm;
+                    height: 35mm;
                     width: 100%;
                     position: relative;
                     display: flex;
@@ -103,11 +114,10 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
                     background: #ffffff;
                     padding: 6px;
                     border-radius: 8px;
-                    margin-bottom: 20px;
+                    margin-bottom: 0;
                 }
                 `}
             </style>
-
             {/* Split registrations into pairs for A4 pages */}
             {Array.from({ length: Math.ceil(registrations.length / 2) }).map((_, pageIdx) => (
                 <div key={pageIdx} className="bib-a4-page">
@@ -120,7 +130,7 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
                             <div className="bib-content">
                                 <div className="bib-number">{reg.id}</div>
                                 <div className="bib-name">{reg.firstName} {reg.lastName}</div>
-                                <div className="bib-cat">{reg.category}</div>
+                                <div className="bib-cat">{getDisplayCategory(reg)}</div>
                             </div>
 
                             {/* Bottom Band */}
