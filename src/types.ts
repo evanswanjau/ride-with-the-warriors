@@ -9,6 +9,11 @@ export interface RiderDetails {
     tshirtSize: string;
     emergencyContactName: string;
     emergencyPhone: string;
+    isMilitary?: boolean;
+    serviceNumber?: string;
+    rank?: string;
+    service?: string;
+    unit?: string;
 }
 
 
@@ -51,6 +56,11 @@ export interface FamilyDetails {
         relationship: string;
         tshirtSize: string;
         participation: 'none' | 'mom' | 'other';
+        isMilitary?: boolean;
+        serviceNumber?: string;
+        rank?: string;
+        service?: string;
+        unit?: string;
     };
     riders: {
         [category: string]: JuniorRider[];

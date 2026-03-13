@@ -303,6 +303,21 @@ const Navbar = () => {
                 }
                 .nav-cta.amber:hover { box-shadow: 0 8px 20px rgba(245,158,11,0.35); }
 
+                .nav-cta.black-white {
+                    background: #111;
+                    color: #fff;
+                }
+                [data-theme="dark"] .nav-cta.black-white {
+                    background: #fff;
+                    color: #111;
+                }
+                .nav-cta.black-white:hover { 
+                    box-shadow: 0 8px 20px rgba(0,0,0,0.25); 
+                }
+                [data-theme="dark"] .nav-cta.black-white:hover {
+                    box-shadow: 0 8px 20px rgba(255,255,255,0.15);
+                }
+
                 /* ── Divider ── */
                 .nav-divider {
                     width: 1px; height: 22px;
@@ -411,6 +426,14 @@ const Navbar = () => {
                 }
                 .nav-mobile-cta.green { background: var(--color-primary, #2d6a2d); color: #fff; }
                 .nav-mobile-cta.amber { background: #f59e0b; color: #111; }
+                .nav-mobile-cta.black-white {
+                    background: #111;
+                    color: #fff;
+                }
+                [data-theme="dark"] .nav-mobile-cta.black-white {
+                    background: #fff;
+                    color: #111;
+                }
                 .nav-mobile-cta:active { transform: scale(0.98); }
 
                 /* ── Mobile logo text ── */
@@ -502,6 +525,7 @@ const Navbar = () => {
 
                         {/* CTAs */}
                         <Link to="/register/step/1" className="nav-cta green">Register</Link>
+                        <Link to="/military" className="nav-cta black-white">Military</Link>
                         <Link to="/raffle/step/1" className="nav-cta amber">Raffle Tickets</Link>
                     </div>
 
@@ -579,6 +603,13 @@ const Navbar = () => {
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Buy Raffle Tickets
+                    </Link>
+                    <Link
+                        to="/military"
+                        className="nav-mobile-cta black-white"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Military Registration
                     </Link>
                 </div>
             </div>

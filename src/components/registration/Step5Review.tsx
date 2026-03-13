@@ -11,6 +11,7 @@ import corporateIndividual from '../../assets/images/corporate-individual.jpeg';
 import corporateTeam from '../../assets/images/corporate-team.jpeg';
 import familyImage from '../../assets/images/family.jpeg';
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
+import { useRegistration } from '../../context/RegistrationContext';
 
 /* ── Icons ────────────────────────────────────────────────────────────── */
 const ArrowLeft = () => (
@@ -109,6 +110,7 @@ const Step5Review = ({
     pricingCategories = [],
     serverClassifications = [],
 }: Step5ReviewProps) => {
+    const { isMilitary } = useRegistration();
     const [termsAgreed, setTermsAgreed] = useState(false);
 
     const circuit = CIRCUITS.find(c => c.id === selectedCircuitId) || CIRCUITS[0];
@@ -138,20 +140,31 @@ const Step5Review = ({
     if (registrationType === 'individual') {
         const age = calculateAge(riderData.dob || '');
         const cls = serverClassifications?.length ? serverClassifications[0] : getClassification(pricingCategories, selectedCircuitId, 'individual', age);
-        totalCost = cls.price;
-        lineItems.push({ label: `${riderData.firstName} ${riderData.lastName}`, amount: cls.price, category: cls.category, regRange: registrationId ?? cls.regRange, color: cls.hexColor });
+        totalCost = isMilitary ? 0 : cls.price;
+        lineItems.push({ label: `${riderData.firstName} ${riderData.lastName}${isMilitary ? ' (Military)' : ''}`, amount: totalCost, category: cls.category, regRange: registrationId ?? cls.regRange, color: cls.hexColor });
     } else if (registrationType === 'team') {
         const cls = serverClassifications?.length ? serverClassifications[0] : getClassification(pricingCategories, selectedCircuitId, 'team');
-        totalCost = cls.price;
-        lineItems.push({ label: teamData.teamName, amount: cls.price, category: cls.category, regRange: registrationId ?? cls.regRange, color: cls.hexColor });
+        totalCost = isMilitary ? 0 : cls.price;
+        lineItems.push({ label: `${teamData.teamName}${isMilitary ? ' (Military Team)' : ''}`, amount: totalCost, category: cls.category, regRange: registrationId ?? cls.regRange, color: cls.hexColor });
     } else if (registrationType === 'family') {
         Object.entries(familyData.riders).forEach(([catId, riders]) => {
             if (!riders.length) return;
             const cls = serverClassifications?.find(c => (catId === 'cubs' && c.category === 'Cubs') || (catId === 'champs' && c.category === 'Champs') || (catId === 'tigers' && c.category === 'Parent'))
                 ?? getClassification(pricingCategories, 'family', 'family', null, catId);
-            const cost = riders.length * cls.price;
+            
+            let cost = riders.length * cls.price;
+            if (catId === 'tigers' && isMilitary) {
+                cost = Math.max(0, (riders.length - 1) * cls.price);
+            }
+            
             totalCost += cost;
-            lineItems.push({ label: `${cls.category} ×${riders.length}`, amount: cost, category: cls.category, regRange: registrationId ?? cls.regRange, color: cls.hexColor });
+            lineItems.push({ 
+                label: `${cls.category} ×${riders.length}${catId === 'tigers' && isMilitary ? ' (Military Member Free)' : ''}`, 
+                amount: cost, 
+                category: cls.category, 
+                regRange: registrationId ?? cls.regRange, 
+                color: cls.hexColor 
+            });
         });
     }
 
@@ -167,7 +180,14 @@ const Step5Review = ({
                     <Detail label="Gender" value={<span style={{ textTransform: 'capitalize' }}>{riderData.gender}</span>} />
                     <Detail label="Email" value={riderData.email} />
                     <Detail label="Phone" value={riderData.phoneNumber} />
-                    <Detail label="ID / Passport" value={riderData.idNumber} />
+                    <Detail label={isMilitary ? "Service Number" : "ID / Passport"} value={riderData.idNumber} />
+                    {isMilitary && (
+                        <>
+                            <Detail label="Rank" value={riderData.rank || '—'} />
+                            <Detail label="Service" value={riderData.service || '—'} />
+                            <Detail label="Unit / FMN" value={riderData.unit || '—'} />
+                        </>
+                    )}
                     <Detail label="Date of Birth" value={`${riderData.dob} · ${age} yrs`} />
                     <Detail label="T-Shirt Size" value={riderData.tshirtSize || '—'} />
                     <Detail label="Emergency Contact" value={`${riderData.emergencyContactName} · ${riderData.emergencyPhone}`} />
@@ -219,6 +239,15 @@ const Step5Review = ({
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
                         <Detail label="Guardian" value={`${familyData.guardian.firstName} ${familyData.guardian.lastName}`} />
                         <Detail label="Participation" value={familyData.guardian.participation === 'none' ? 'Not riding' : familyData.guardian.participation === 'mom' ? 'Parent (5km)' : 'Riding another circuit'} />
+                        {isMilitary && (
+                            <>
+                                <Detail label="Service Number" value={familyData.guardian.idNumber} />
+                                <Detail label="Rank" value={familyData.guardian.rank || '—'} />
+                                <Detail label="Service" value={familyData.guardian.service || '—'} />
+                                <Detail label="Unit / FMN" value={familyData.guardian.unit || '—'} />
+                            </>
+                        )}
+                        {!isMilitary && <Detail label="ID / Passport" value={familyData.guardian.idNumber} />}
                         <Detail label="Email" value={familyData.guardian.email} />
                         <Detail label="Emergency" value={familyData.guardian.emergencyPhone} />
                     </div>
@@ -415,7 +444,14 @@ const Step5Review = ({
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 14, width: '100%', marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--rs-divider)' }}>
                         <button type="button" className="rv5-cta-btn" onClick={onSubmit} disabled={isSubmitting || !termsAgreed}>
                             <span className="rv5-cta-shimmer" />
-                            {isSubmitting ? <><SpinnerIcon /><span>Processing…</span></> : <><span>Proceed to Payment</span><ArrowRight /></>}
+                            {isSubmitting ? (
+                                <><SpinnerIcon /><span>Processing…</span></>
+                            ) : (
+                                <>
+                                    <span>{totalCost === 0 ? 'Complete Registration' : 'Proceed to Payment'}</span>
+                                    <ArrowRight />
+                                </>
+                            )}
                         </button>
 
                         <button type="button" className="rv5-back-btn" onClick={onBack}>

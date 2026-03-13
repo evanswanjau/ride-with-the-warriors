@@ -25,6 +25,7 @@ const RegisterPage = () => {
         registrationId,
         pricingCategories,
         serverClassifications,
+        isMilitary,
         handleNext, handleBack, handleSubmit
     } = useRegistration();
 
@@ -82,12 +83,13 @@ const RegisterPage = () => {
         : step;
 
     const handleStepClick = (s: number) => {
+        let targetStep = s;
         if (isFamily) {
-            const targetStep = s === 1 ? 1 : s === 2 ? 3 : s === 3 ? 4 : s;
-            navigate(`/register/step/${targetStep}`);
-        } else {
-            navigate(`/register/step/${s}`);
+            targetStep = s === 1 ? 1 : s === 2 ? 3 : s === 3 ? 4 : s;
         }
+        
+        const prefix = isMilitary ? '/military' : '';
+        navigate(`${prefix}/register/step/${targetStep}`);
     };
 
     return (

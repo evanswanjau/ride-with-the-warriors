@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import type { RiderDetails, TeamDetails, FamilyDetails } from '../types';
 import { isValidKenyanPhone, isValidID, calculateAge } from '../utils';
 import { API_BASE_URL } from '../config';
@@ -24,6 +24,8 @@ interface RegistrationContextType {
     serverClassifications: any[];
     foundRegistration: any;
     setFoundRegistration: (val: any) => void;
+    isMilitary: boolean;
+    setIsMilitary: (val: boolean) => void;
 
     // Helpers/Handlers
     handleNext: (currentStep: number) => Promise<void>;
@@ -38,6 +40,7 @@ const RegistrationContext = createContext<RegistrationContextType | undefined>(u
 
 export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     // Basic State
     const [selectedCircuit, setSelectedCircuit] = useState('');
@@ -48,6 +51,19 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
     const [serverClassifications, setServerClassifications] = useState<any[]>([]);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [formErrors, setFormErrors] = useState<string[]>([]);
+    const [isMilitary, setIsMilitary] = useState(false);
+
+    // Sync isMilitary with URL
+    useEffect(() => {
+        setIsMilitary(location.pathname.startsWith('/military'));
+    }, [location.pathname]);
+
+    const getPath = (basePath: string) => {
+        if (isMilitary && !basePath.startsWith('/military')) {
+            return `/military${basePath}`;
+        }
+        return basePath;
+    };
 
     // Registration Data State
     const [riderDetails, setRiderDetails] = useState<RiderDetails>({
@@ -225,15 +241,15 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
         if (currentStep === 1) {
             if (selectedCircuit === 'family') {
                 setRegistrationType('family');
-                navigate('/register/step/3');
+                navigate(getPath('/register/step/3'));
                 return;
             }
-            navigate('/register/step/2');
+            navigate(getPath('/register/step/2'));
             return;
         }
 
         if (currentStep === 2) {
-            navigate('/register/step/3');
+            navigate(getPath('/register/step/3'));
             return;
         }
 
@@ -243,9 +259,9 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
             setIsSubmitting(true);
             try {
                 let payload: any;
-                if (registrationType === 'individual') payload = { riderDetails };
-                else if (registrationType === 'team') payload = { teamDetails };
-                else payload = { familyDetails };
+                if (registrationType === 'individual') payload = { riderDetails: { ...riderDetails, isMilitary } };
+                else if (registrationType === 'team') payload = { teamDetails: { ...teamDetails, isMilitary } };
+                else payload = { familyDetails: { ...familyDetails, guardian: { ...familyDetails.guardian, isMilitary } } };
 
                 const response = await fetch(`${API_BASE_URL}/registrations`, {
                     method: 'POST',
@@ -288,7 +304,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                 if (data.classifications) {
                     setServerClassifications(data.classifications);
                 }
-                navigate('/register/step/4');
+                navigate(getPath('/register/step/4'));
             } catch (error) {
                 console.error('Draft save error:', error);
                 setFormErrors(['Could not save draft. Please check your connection.']);
@@ -301,14 +317,14 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
     const handleBack = (currentStep: number) => {
         if (currentStep === 3) {
             if (selectedCircuit === 'family') {
-                navigate('/register/step/1');
+                navigate(getPath('/register/step/1'));
                 return;
             }
-            navigate('/register/step/2');
+            navigate(getPath('/register/step/2'));
             return;
         }
         if (currentStep > 1) {
-            navigate(`/register/step/${currentStep - 1}`);
+            navigate(getPath(`/register/step/${currentStep - 1}`));
         }
     };
 
@@ -318,9 +334,9 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
 
         try {
             let payload: any;
-            if (registrationType === 'individual') payload = { riderDetails };
-            else if (registrationType === 'team') payload = { teamDetails };
-            else payload = { familyDetails };
+            if (registrationType === 'individual') payload = { riderDetails: { ...riderDetails, isMilitary } };
+            else if (registrationType === 'team') payload = { teamDetails: { ...teamDetails, isMilitary } };
+            else payload = { familyDetails: { ...familyDetails, guardian: { ...familyDetails.guardian, isMilitary } } };
 
             const response = await fetch(`${API_BASE_URL}/registrations`, {
                 method: 'POST',
@@ -344,10 +360,14 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                 registrationType === 'team' ? teamDetails.members[0].phoneNumber :
                     familyDetails.guardian.emergencyPhone;
             const nextRegId = data.registrationId;
-
-            navigate(`/payment/${nextRegId}`, {
-                state: { amount: nextAmount, email: nextEmail, phoneNumber: nextPhone }
-            });
+            
+            if (nextAmount === 0) {
+                navigate(`/success/${nextRegId}`);
+            } else {
+                navigate(`/payment/${nextRegId}`, {
+                    state: { amount: nextAmount, email: nextEmail, phoneNumber: nextPhone }
+                });
+            }
         } catch (error) {
             console.error('Registration error:', error);
             setFormErrors([error instanceof Error ? error.message : 'An error occurred during registration']);
@@ -370,6 +390,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
             pricingCategories,
             serverClassifications,
             foundRegistration, setFoundRegistration,
+            isMilitary, setIsMilitary,
             handleNext, handleBack, handleSubmit, validateStep,
             hasInProgressRegistration
         }}>

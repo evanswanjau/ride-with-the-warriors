@@ -1,5 +1,6 @@
 import '../../styles/registration/Step4RiderDetails.css';
 import type { RiderDetails } from '../../types';
+import { useRegistration } from '../../context/RegistrationContext';
 import ErrorBanner from '../common/ErrorBanner';
 import { calculateAge } from '../../utils';
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
@@ -91,6 +92,7 @@ interface Step4RiderDetailsProps {
 }
 
 const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: Step4RiderDetailsProps) => {
+    const { isMilitary } = useRegistration();
     const set = (field: keyof RiderDetails, value: string) => onChange({ ...data, [field]: value });
 
     const inputClass = (hasError: boolean) => `rd4-input${hasError ? ' rd4-input-error' : ''}`;
@@ -111,6 +113,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                         dob: '1995-05-15', gender: 'female',
                         tshirtSize: 'M',
                         emergencyContactName: 'John Smith', emergencyPhone: '0787654321',
+                        isMilitary: isMilitary
                     })}
                 >
                     <FlaskIcon /> Fill Test Data
@@ -166,8 +169,8 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                             <input className={inputClass(!!errors.phoneNumber)} placeholder="0712 345 678" type="tel"
                                 value={data.phoneNumber} onChange={e => set('phoneNumber', e.target.value)} disabled={isSubmitting} />
                         </Field>
-                        <Field label="National ID / Passport" required error={errors.idNumber}>
-                            <input className={inputClass(!!errors.idNumber)} placeholder="12345678" type="text"
+                        <Field label={isMilitary ? "Service Number" : "National ID / Passport"} required error={errors.idNumber}>
+                            <input className={inputClass(!!errors.idNumber)} placeholder={isMilitary ? "123456" : "12345678"} type="text"
                                 value={data.idNumber} onChange={e => set('idNumber', e.target.value)} disabled={isSubmitting} />
                         </Field>
                         <Field
@@ -179,6 +182,35 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                             <input className={inputClass(!!errors.dob)} type="date"
                                 value={data.dob} onChange={e => set('dob', e.target.value)} disabled={isSubmitting} />
                         </Field>
+
+                        {isMilitary && (
+                            <>
+                                <Field label="Rank" required error={errors.rank}>
+                                    <input className={inputClass(!!errors.rank)} placeholder="e.g. Sgt" type="text"
+                                        value={data.rank || ''} onChange={e => set('rank', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                                <Field label="Service" required error={errors.service}>
+                                    <div className="rd4-select-wrap">
+                                        <select
+                                            className={inputClass(!!errors.service)}
+                                            value={data.service || ''}
+                                            onChange={e => set('service', e.target.value)}
+                                            disabled={isSubmitting}
+                                        >
+                                            <option value="">Select service</option>
+                                            <option value="KA">Kenya Army (KA)</option>
+                                            <option value="KAF">Kenya Air Force (KAF)</option>
+                                            <option value="KN">Kenya Navy (KN)</option>
+                                        </select>
+                                        <span className="rd4-chevron"><ChevronDown /></span>
+                                    </div>
+                                </Field>
+                                <Field label="Unit / FMN" required error={errors.unit}>
+                                    <input className={inputClass(!!errors.unit)} placeholder="e.g. 1st Battalion" type="text"
+                                        value={data.unit || ''} onChange={e => set('unit', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                            </>
+                        )}
                     </div>
                 </div>
 

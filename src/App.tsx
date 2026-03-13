@@ -1,5 +1,6 @@
-import { Routes, Route } from 'react-router-dom';
-import { RegistrationProvider } from './context/RegistrationContext';
+import React from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import { RegistrationProvider, useRegistration } from './context/RegistrationContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import AboutUs from './pages/AboutUs';
@@ -23,6 +24,16 @@ import RafflePaymentPageRoute from './pages/RafflePaymentPageRoute';
 import ScrollToTop from './utils/ScrollToTop';
 import PageTitle from './utils/PageTitle';
 
+const MilitaryRedirect = () => {
+  const { setIsMilitary } = useRegistration();
+  const navigate = useNavigate();
+  React.useEffect(() => {
+    setIsMilitary(true);
+    navigate('/military/register/step/1', { replace: true });
+  }, [setIsMilitary, navigate]);
+  return null;
+};
+
 const App = () => {
   return (
     <RegistrationProvider>
@@ -31,6 +42,7 @@ const App = () => {
       <Routes>
         {/* Public Pages */}
         <Route path="/" element={<Layout isFullWidth><HomePage /></Layout>} />
+        <Route path="/military" element={<MilitaryRedirect />} />
         <Route path="/about" element={<Layout isFullWidth><AboutUs /></Layout>} />
         <Route path="/circuits" element={<Layout isFullWidth><Circuits /></Layout>} />
         <Route path="/contact" element={<Layout isFullWidth><ContactUs /></Layout>} />
@@ -39,6 +51,7 @@ const App = () => {
 
         {/* Registration Flow */}
         <Route path="/register/step/:stepId" element={<RegisterPage />} />
+        <Route path="/military/register/step/:stepId" element={<RegisterPage />} />
 
         {/* Payment & Success */}
         <Route path="/payment/:regId" element={<PaymentPage />} />

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { FamilyDetails, JuniorRider } from '../../types';
 import ErrorBanner from '../common/ErrorBanner';
 import { calculateAge } from '../../utils';
-
+import { useRegistration } from '../../context/RegistrationContext';
 
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
 import { MdPedalBike, MdDirectionsBike } from 'react-icons/md';
@@ -40,6 +40,7 @@ interface FamilyRegistrationFlowProps {
 }
 
 const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, isSubmitting }: FamilyRegistrationFlowProps) => {
+    const { isMilitary } = useRegistration();
     const categories = [
         { id: 'cubs', title: 'Cubs (Ages 4-8)', icon: MdPedalBike },
         { id: 'champs', title: 'Champs (Ages 9-13)', icon: MdDirectionsBike }
@@ -147,7 +148,8 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                 tshirtSize: 'M',
                                 relationship: 'Mother',
                                 emergencyPhone: '0788990011',
-                                emergencyContactName: 'John Doe'
+                                emergencyContactName: 'John Doe',
+                                isMilitary: isMilitary
                             },
                             riders: {
                                 cubs: [{
@@ -440,16 +442,56 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                             {data.guardian.participation === 'mom' && (
                                 <>
                                     <div>
-                                        <label className="fam-field-label">ID / Passport *</label>
+                                        <label className="fam-field-label">{isMilitary ? "Service Number" : "ID / Passport"} *</label>
                                         <input
                                             className="fam-input"
                                             type="text"
                                             value={data.guardian.idNumber}
                                             onChange={(e) => updateGuardian('idNumber', e.target.value)}
-                                            placeholder="12345678"
+                                            placeholder={isMilitary ? "123456" : "12345678"}
                                             disabled={isSubmitting}
                                         />
                                     </div>
+                                    {isMilitary && (
+                                        <>
+                                            <div>
+                                                <label className="fam-field-label">Rank *</label>
+                                                <input
+                                                    className="fam-input"
+                                                    type="text"
+                                                    value={data.guardian.rank || ''}
+                                                    onChange={(e) => updateGuardian('rank', e.target.value)}
+                                                    placeholder="e.g. Sgt"
+                                                    disabled={isSubmitting}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="fam-field-label">Service *</label>
+                                                <select
+                                                    className="fam-input"
+                                                    value={data.guardian.service || ''}
+                                                    onChange={(e) => updateGuardian('service', e.target.value)}
+                                                    disabled={isSubmitting}
+                                                >
+                                                    <option value="">Select Service</option>
+                                                    <option value="KA">Kenya Army (KA)</option>
+                                                    <option value="KAF">Kenya Air Force (KAF)</option>
+                                                    <option value="KN">Kenya Navy (KN)</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="fam-field-label">Unit / FMN *</label>
+                                                <input
+                                                    className="fam-input"
+                                                    type="text"
+                                                    value={data.guardian.unit || ''}
+                                                    onChange={(e) => updateGuardian('unit', e.target.value)}
+                                                    placeholder="e.g. 1st Battalion"
+                                                    disabled={isSubmitting}
+                                                />
+                                            </div>
+                                        </>
+                                    )}
                                     <div>
                                         <label className="fam-field-label">Date of Birth *</label>
                                         <input
