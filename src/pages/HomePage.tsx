@@ -7,6 +7,10 @@ import highlightImage2 from '../assets/images/296A0184-33-min.jpeg';
 import highlightImage3 from '../assets/images/296A0219-40-min.jpeg';
 import kdfLogo from '../assets/logos/kdf.png';
 import logo from '../assets/logos/logo.png';
+import coop from '../assets/logos/coop.webp';
+import dtb from '../assets/logos/dtb.png';
+import qatar from '../assets/logos/qatar.png';
+import gigamsys from '../assets/logos/gigamsys.png';
 
 import '../styles/home.css';
 
@@ -419,13 +423,13 @@ const HomePage = () => {
                         <span className="section-label">Our Proud Sponsors</span>
                     </div>
                     {/* Placeholder Sponsor Images */}
-                    <div className="flex gap-8 items-center justify-center flex-wrap">
+                    <div className="flex gap-32 items-center justify-center flex-wrap">
                         <img src={kdfLogo} alt="KDF" className="h-16 w-auto object-contain rounded" />
+                        <img src={qatar} alt="Qatar" className="h-16 w-auto object-contain rounded" />
                         <img src={logo} alt="Airborne Fraternity" className="h-16 w-auto object-contain rounded" />
-                        {/* <div className="w-40 h-16 bg-neutral-300 dark:bg-neutral-800 rounded animate-pulse"></div>
-                        <div className="w-40 h-16 bg-neutral-300 dark:bg-neutral-800 rounded animate-pulse"></div>
-                        <div className="w-40 h-16 bg-neutral-300 dark:bg-neutral-800 rounded animate-pulse"></div>
-                        <div className="w-40 h-16 bg-neutral-300 dark:bg-neutral-800 rounded animate-pulse"></div> */}
+                        <img src={coop} alt="Coop" className="h-16 w-auto object-contain rounded" />
+                        <img src={dtb} alt="DTB" className="h-16 w-auto object-contain rounded" />
+                        <img src={gigamsys} alt="GigamSys" className="h-16 w-auto object-contain rounded" />
                     </div>
                 </section>
 

@@ -40,7 +40,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [filter, setFilter] = useState({ circuitId: '', type: '', status: '', category: '', search: '' });
+    const [filter, setFilter] = useState({ circuitId: '', type: '', status: '', category: '', search: '', isMilitary: '' });
     const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0, pages: 1 });
     const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('adminTheme') === 'dark');
     const [selectedRegistration, setSelectedRegistration] = useState<any>(null);
@@ -709,6 +709,26 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div className="ad-panel" style={{ display: 'none' }}>
+                                        <div className="ad-panel-head"><div className="ad-panel-title">Military vs Civilian</div></div>
+                                        <div className="ad-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                                            {(d?.demographics?.militaryBreakdown || []).map((m: any) => (
+                                                <div key={m.label}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                                                        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ad-t3)' }}>{m.label}</span>
+                                                        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1rem', color: 'var(--ad-t1)' }}>{m.count}</span>
+                                                    </div>
+                                                    <div className="ad-gender-bar-wrap">
+                                                        <div className="ad-gender-bar" style={{ width: `${m.pct}%`, background: m.color }} />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            <div className="ad-insight" style={{ marginTop: 8 }}>
+                                                <strong>Military participation at {d?.demographics?.militaryBreakdown?.find((m: any) => m.label === 'Military')?.pct || 0}%</strong> of confirmed entries.
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Activity + Stale alert */}
@@ -958,6 +978,14 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <option value="CANCELLED">Cancelled</option>
                                             </select>
                                         </div>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Military Status</label>
+                                            <select className="ad-select" value={filter.isMilitary} onChange={e => setFilter({ ...filter, isMilitary: e.target.value })}>
+                                                <option value="">All</option>
+                                                <option value="true">Military Only</option>
+                                                <option value="false">Civilian Only</option>
+                                            </select>
+                                        </div>
                                     </div>
 
                                     {/* Table */}
@@ -981,6 +1009,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                         <td className="ad-td">
                                                             <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{cap(reg.firstName)} {cap(reg.lastName)}</div>
                                                             {reg.teamName && <div style={{ fontSize: '0.72rem', color: 'var(--ad-t3)', fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 2 }}>Team: {reg.teamName}</div>}
+                                                            {reg.isMilitary && <div style={{ fontSize: '0.65rem', color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 2 }}>[Military]</div>}
                                                         </td>
                                                         <td className="ad-td">
                                                             <div style={{ fontWeight: 700, color: 'var(--ad-t1)', fontSize: '0.8rem' }}>{reg.category || 'Rider'}</div>
@@ -1289,6 +1318,13 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 {[
                                     { label: 'Pass ID', val: selectedRegistration.id, mono: true },
                                     { label: 'Name', val: `${cap(selectedRegistration.firstName)} ${cap(selectedRegistration.lastName)}` },
+                                    { label: 'Military Status', val: selectedRegistration.isMilitary ? 'Yes' : 'No' },
+                                    ...(selectedRegistration.isMilitary ? [
+                                        { label: 'Service No.', val: selectedRegistration.serviceNumber || '—', mono: true },
+                                        { label: 'Rank', val: selectedRegistration.rank || '—' },
+                                        { label: 'Service', val: selectedRegistration.service || '—' },
+                                        { label: 'Unit', val: selectedRegistration.unit || '—' },
+                                    ] : []),
                                     { label: 'Team', val: selectedRegistration.teamName || '—' },
                                     { label: 'Circuit', val: CIRCUITS.find(c => c.id === selectedRegistration.circuitId)?.title || selectedRegistration.circuitId },
                                     { label: 'Category', val: selectedRegistration.category || '—' },
