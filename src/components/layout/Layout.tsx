@@ -3,16 +3,18 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 
 const useTheme = () => {
-    const [theme, setTheme] = useState<'dark' | 'light'>(() =>
-        document.documentElement.getAttribute('data-theme') === 'dark' ||
-            document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-    );
+    const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+        if (typeof window === 'undefined') return 'dark';
+        const saved = localStorage.getItem('rwtw-theme');
+        if (saved === 'dark' || saved === 'light') return saved;
+        return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    });
     useEffect(() => {
-        const observer = new MutationObserver(() =>
-            setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ||
-                document.documentElement.classList.contains('dark') ? 'dark' : 'light')
-        );
-        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+        const observer = new MutationObserver(() => {
+            const current = document.documentElement.getAttribute('data-theme');
+            if (current === 'dark' || current === 'light') setTheme(current);
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
         return () => observer.disconnect();
     }, []);
     return theme;
