@@ -3,6 +3,7 @@ import type { TeamDetails, TeamMember } from '../../types';
 import ErrorBanner from '../common/ErrorBanner';
 import { calculateAge } from '../../utils';
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
+import { useRegistration } from '../../context/RegistrationContext';
 
 /* ── Icons ────────────────────────────────────────────────────────────── */
 const ArrowLeft = () => (
@@ -87,6 +88,7 @@ const MemberCard = ({ member, index, errors, isSubmitting, onUpdate, onRemove }:
     onUpdate: (id: string, field: keyof TeamMember, value: string) => void;
     onRemove: (id: string) => void;
 }) => {
+    const { isMilitary } = useRegistration();
     const e = (f: string) => errors[`${member.id}.${f}`];
     const inp = (hasErr: boolean) => `td4-input${hasErr ? ' td4-input-error' : ''}`;
     const set = (f: keyof TeamMember, v: string) => onUpdate(member.id, f, v);
@@ -135,43 +137,109 @@ const MemberCard = ({ member, index, errors, isSubmitting, onUpdate, onRemove }:
 
             {/* Fields */}
             <div className="td4-member-body td4-grid">
-                <Field label="First Name" required error={e('firstName')}>
-                    <input className={inp(!!e('firstName'))} placeholder="Jane" type="text"
-                        value={member.firstName} onChange={ev => set('firstName', ev.target.value)} disabled={isSubmitting} />
-                </Field>
-                <Field label="Last Name" required error={e('lastName')}>
-                    <input className={inp(!!e('lastName'))} placeholder="Doe" type="text"
-                        value={member.lastName} onChange={ev => set('lastName', ev.target.value)} disabled={isSubmitting} />
-                </Field>
-                <Field label="Email Address" required error={e('email')}>
-                    <input className={inp(!!e('email'))} placeholder="jane.doe@example.com" type="email"
-                        value={member.email} onChange={ev => set('email', ev.target.value)} disabled={isSubmitting} />
-                </Field>
-                <Field label="Phone Number" required error={e('phoneNumber')}>
-                    <input className={inp(!!e('phoneNumber'))} placeholder="0712 345 678" type="tel"
-                        value={member.phoneNumber} onChange={ev => set('phoneNumber', ev.target.value)} disabled={isSubmitting} />
-                </Field>
-                <Field label="National ID / Passport" required error={e('idNumber')}>
-                    <input className={inp(!!e('idNumber'))} placeholder="12345678" type="text"
-                        value={member.idNumber} onChange={ev => set('idNumber', ev.target.value)} disabled={isSubmitting} />
-                </Field>
-                <Field
-                    label="Date of Birth" required error={e('dob')}
-                    hint={member.dob ? (
-                        <span style={{
-                            display: 'inline-flex', alignItems: 'center',
-                            padding: '2px 10px',
-                            background: 'var(--td4-age-bg)', border: '1px solid var(--td4-age-bd)',
-                            color: 'var(--td4-age-txt)',
-                            fontFamily: "'Barlow Condensed', sans-serif",
-                            fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase',
-                            clipPath: 'polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%)',
-                        }}>{calculateAge(member.dob)} yrs</span>
-                    ) : undefined}
-                >
-                    <input className={inp(!!e('dob'))} type="date"
-                        value={member.dob} onChange={ev => set('dob', ev.target.value)} disabled={isSubmitting} />
-                </Field>
+                {isMilitary ? (
+                    <>
+                        <div style={{ gridColumn: '1 / -1' }}>
+                            <Field label="Service" required error={e('service')}>
+                                <div style={{ position: 'relative' }}>
+                                    <select className={inp(!!e('service'))}
+                                        value={member.service || ''} onChange={ev => set('service', ev.target.value)} disabled={isSubmitting}>
+                                        <option value="">Select service</option>
+                                        <option value="KA">Kenya Army (KA)</option>
+                                        <option value="KAF">Kenya Air Force (KAF)</option>
+                                        <option value="KN">Kenya Navy (KN)</option>
+                                    </select>
+                                    <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--td4-text-3)' }}><ChevronDown /></span>
+                                </div>
+                            </Field>
+                        </div>
+                        <Field label="Service Number" required error={e('idNumber')}>
+                            <input className={inp(!!e('idNumber'))} placeholder="123456" type="text"
+                                value={member.idNumber} onChange={ev => set('idNumber', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Rank" required error={e('rank')}>
+                            <input className={inp(!!e('rank'))} placeholder="e.g. Sgt" type="text"
+                                value={member.rank || ''} onChange={ev => set('rank', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="First Name" required error={e('firstName')}>
+                            <input className={inp(!!e('firstName'))} placeholder="Jane" type="text"
+                                value={member.firstName} onChange={ev => set('firstName', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Last Name" required error={e('lastName')}>
+                            <input className={inp(!!e('lastName'))} placeholder="Doe" type="text"
+                                value={member.lastName} onChange={ev => set('lastName', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Unit / FMN" required error={e('unit')}>
+                            <input className={inp(!!e('unit'))} placeholder="e.g. 1st Battalion" type="text"
+                                value={member.unit || ''} onChange={ev => set('unit', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field
+                            label="Date of Birth" required error={e('dob')}
+                            hint={member.dob ? (
+                                <span style={{
+                                    display: 'inline-flex', alignItems: 'center',
+                                    padding: '2px 10px',
+                                    background: 'var(--td4-age-bg)', border: '1px solid var(--td4-age-bd)',
+                                    color: 'var(--td4-age-txt)',
+                                    fontFamily: "'Barlow Condensed', sans-serif",
+                                    fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase',
+                                    clipPath: 'polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%)',
+                                }}>{calculateAge(member.dob)} yrs</span>
+                            ) : undefined}
+                        >
+                            <input className={inp(!!e('dob'))} type="date"
+                                value={member.dob} onChange={ev => set('dob', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Email Address" required error={e('email')}>
+                            <input className={inp(!!e('email'))} placeholder="jane.doe@example.com" type="email"
+                                value={member.email} onChange={ev => set('email', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Phone Number" required error={e('phoneNumber')}>
+                            <input className={inp(!!e('phoneNumber'))} placeholder="0712 345 678" type="tel"
+                                value={member.phoneNumber} onChange={ev => set('phoneNumber', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                    </>
+                ) : (
+                    <>
+                        <Field label="First Name" required error={e('firstName')}>
+                            <input className={inp(!!e('firstName'))} placeholder="Jane" type="text"
+                                value={member.firstName} onChange={ev => set('firstName', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Last Name" required error={e('lastName')}>
+                            <input className={inp(!!e('lastName'))} placeholder="Doe" type="text"
+                                value={member.lastName} onChange={ev => set('lastName', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Email Address" required error={e('email')}>
+                            <input className={inp(!!e('email'))} placeholder="jane.doe@example.com" type="email"
+                                value={member.email} onChange={ev => set('email', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="Phone Number" required error={e('phoneNumber')}>
+                            <input className={inp(!!e('phoneNumber'))} placeholder="0712 345 678" type="tel"
+                                value={member.phoneNumber} onChange={ev => set('phoneNumber', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field label="National ID / Passport" required error={e('idNumber')}>
+                            <input className={inp(!!e('idNumber'))} placeholder="12345678" type="text"
+                                value={member.idNumber} onChange={ev => set('idNumber', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                        <Field
+                            label="Date of Birth" required error={e('dob')}
+                            hint={member.dob ? (
+                                <span style={{
+                                    display: 'inline-flex', alignItems: 'center',
+                                    padding: '2px 10px',
+                                    background: 'var(--td4-age-bg)', border: '1px solid var(--td4-age-bd)',
+                                    color: 'var(--td4-age-txt)',
+                                    fontFamily: "'Barlow Condensed', sans-serif",
+                                    fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase',
+                                    clipPath: 'polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%)',
+                                }}>{calculateAge(member.dob)} yrs</span>
+                            ) : undefined}
+                        >
+                            <input className={inp(!!e('dob'))} type="date"
+                                value={member.dob} onChange={ev => set('dob', ev.target.value)} disabled={isSubmitting} />
+                        </Field>
+                    </>
+                )}
                 <Field label="Gender" required error={e('gender')}>
                     <div style={{ display: 'flex', gap: 16, alignItems: 'center', height: 42 }}>
                         {(['male', 'female'] as const).map(g => (
@@ -243,6 +311,7 @@ interface Step4TeamDetailsProps {
 }
 
 const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: Step4TeamDetailsProps) => {
+    const { isMilitary } = useRegistration();
     const updateMember = (id: string, field: keyof TeamMember, value: string) =>
         onChange({ ...data, members: data.members.map(m => m.id === id ? { ...m, [field]: value } : m) });
 
@@ -288,6 +357,11 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
                                 tshirtSize: ['S', 'M', 'L', 'XL', 'M'][i],
                                 emergencyContactName: 'Emergency Contact', emergencyPhone: '0711223344',
                                 isCaptain: i === 0,
+                                ...(isMilitary ? {
+                                    service: ['KA', 'KAF', 'KN', 'KA', 'KAF'][i],
+                                    rank: ['Sgt', 'Cpl', 'Pte', 'Sgt', 'Cpl'][i],
+                                    unit: '1st Battalion'
+                                } : {})
                             })),
                         });
                     }}>

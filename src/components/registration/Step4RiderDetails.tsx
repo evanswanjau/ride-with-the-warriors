@@ -113,7 +113,12 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                         dob: '1995-05-15', gender: 'female',
                         tshirtSize: 'M',
                         emergencyContactName: 'John Smith', emergencyPhone: '0787654321',
-                        isMilitary: isMilitary
+                        isMilitary: isMilitary,
+                        ...(isMilitary ? {
+                            service: 'KA',
+                            rank: 'Sgt',
+                            unit: '1st Battalion'
+                        } : {})
                     })}
                 >
                     <FlaskIcon /> Fill Test Data
@@ -142,7 +147,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
 
             <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-                {/* ── Personal Information ── */}
+                {/* ── All Information In One Card ── */}
                 <div className="rd4-card">
                     <SectionLabel
                         label="Personal Information"
@@ -153,78 +158,95 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                         }
                     />
                     <div className="rd4-grid">
-                        <Field label="First Name" required error={errors.firstName}>
-                            <input className={inputClass(!!errors.firstName)} placeholder="Jane" type="text"
-                                value={data.firstName} onChange={e => set('firstName', e.target.value)} disabled={isSubmitting} />
-                        </Field>
-                        <Field label="Last Name" required error={errors.lastName}>
-                            <input className={inputClass(!!errors.lastName)} placeholder="Doe" type="text"
-                                value={data.lastName} onChange={e => set('lastName', e.target.value)} disabled={isSubmitting} />
-                        </Field>
-                        <Field label="Email Address" required error={errors.email}>
-                            <input className={inputClass(!!errors.email)} placeholder="jane.doe@example.com" type="email"
-                                value={data.email} onChange={e => set('email', e.target.value)} disabled={isSubmitting} />
-                        </Field>
-                        <Field label="Phone Number" required error={errors.phoneNumber}>
-                            <input className={inputClass(!!errors.phoneNumber)} placeholder="0712 345 678" type="tel"
-                                value={data.phoneNumber} onChange={e => set('phoneNumber', e.target.value)} disabled={isSubmitting} />
-                        </Field>
-                        <Field label={isMilitary ? "Service Number" : "National ID / Passport"} required error={errors.idNumber}>
-                            <input className={inputClass(!!errors.idNumber)} placeholder={isMilitary ? "123456" : "12345678"} type="text"
-                                value={data.idNumber} onChange={e => set('idNumber', e.target.value)} disabled={isSubmitting} />
-                        </Field>
-                        <Field
-                            label="Date of Birth" required error={errors.dob}
-                            hint={data.dob ? (
-                                <span className="rd4-age-badge">{calculateAge(data.dob)} yrs old</span>
-                            ) : undefined}
-                        >
-                            <input className={inputClass(!!errors.dob)} type="date"
-                                value={data.dob} onChange={e => set('dob', e.target.value)} disabled={isSubmitting} />
-                        </Field>
-
-                        {isMilitary && (
+                        {isMilitary ? (
                             <>
+                                <div style={{ gridColumn: '1 / -1' }}>
+                                    <Field label="Service" required error={errors.service}>
+                                        <div className="rd4-select-wrap">
+                                            <select
+                                                className={inputClass(!!errors.service)}
+                                                value={data.service || ''}
+                                                onChange={e => set('service', e.target.value)}
+                                                disabled={isSubmitting}
+                                            >
+                                                <option value="">Select service</option>
+                                                <option value="KA">Kenya Army (KA)</option>
+                                                <option value="KAF">Kenya Air Force (KAF)</option>
+                                                <option value="KN">Kenya Navy (KN)</option>
+                                            </select>
+                                            <span className="rd4-chevron"><ChevronDown /></span>
+                                        </div>
+                                    </Field>
+                                </div>
+                                <Field label="Service Number" required error={errors.idNumber}>
+                                    <input className={inputClass(!!errors.idNumber)} placeholder="123456" type="text"
+                                        value={data.idNumber} onChange={e => set('idNumber', e.target.value)} disabled={isSubmitting} />
+                                </Field>
                                 <Field label="Rank" required error={errors.rank}>
                                     <input className={inputClass(!!errors.rank)} placeholder="e.g. Sgt" type="text"
                                         value={data.rank || ''} onChange={e => set('rank', e.target.value)} disabled={isSubmitting} />
                                 </Field>
-                                <Field label="Service" required error={errors.service}>
-                                    <div className="rd4-select-wrap">
-                                        <select
-                                            className={inputClass(!!errors.service)}
-                                            value={data.service || ''}
-                                            onChange={e => set('service', e.target.value)}
-                                            disabled={isSubmitting}
-                                        >
-                                            <option value="">Select service</option>
-                                            <option value="KA">Kenya Army (KA)</option>
-                                            <option value="KAF">Kenya Air Force (KAF)</option>
-                                            <option value="KN">Kenya Navy (KN)</option>
-                                        </select>
-                                        <span className="rd4-chevron"><ChevronDown /></span>
-                                    </div>
+                                <Field label="First Name" required error={errors.firstName}>
+                                    <input className={inputClass(!!errors.firstName)} placeholder="Jane" type="text"
+                                        value={data.firstName} onChange={e => set('firstName', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                                <Field label="Last Name" required error={errors.lastName}>
+                                    <input className={inputClass(!!errors.lastName)} placeholder="Doe" type="text"
+                                        value={data.lastName} onChange={e => set('lastName', e.target.value)} disabled={isSubmitting} />
                                 </Field>
                                 <Field label="Unit / FMN" required error={errors.unit}>
                                     <input className={inputClass(!!errors.unit)} placeholder="e.g. 1st Battalion" type="text"
                                         value={data.unit || ''} onChange={e => set('unit', e.target.value)} disabled={isSubmitting} />
                                 </Field>
+                                <Field
+                                    label="Date of Birth" required error={errors.dob}
+                                    hint={data.dob ? <span className="rd4-age-badge">{calculateAge(data.dob)} yrs old</span> : undefined}
+                                >
+                                    <input className={inputClass(!!errors.dob)} type="date"
+                                        value={data.dob} onChange={e => set('dob', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                                <Field label="Email Address" required error={errors.email}>
+                                    <input className={inputClass(!!errors.email)} placeholder="jane.doe@example.com" type="email"
+                                        value={data.email} onChange={e => set('email', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                                <Field label="Phone Number" required error={errors.phoneNumber}>
+                                    <input className={inputClass(!!errors.phoneNumber)} placeholder="0712 345 678" type="tel"
+                                        value={data.phoneNumber} onChange={e => set('phoneNumber', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                            </>
+                        ) : (
+                            <>
+                                <Field label="First Name" required error={errors.firstName}>
+                                    <input className={inputClass(!!errors.firstName)} placeholder="Jane" type="text"
+                                        value={data.firstName} onChange={e => set('firstName', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                                <Field label="Last Name" required error={errors.lastName}>
+                                    <input className={inputClass(!!errors.lastName)} placeholder="Doe" type="text"
+                                        value={data.lastName} onChange={e => set('lastName', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                                <Field label="Email Address" required error={errors.email}>
+                                    <input className={inputClass(!!errors.email)} placeholder="jane.doe@example.com" type="email"
+                                        value={data.email} onChange={e => set('email', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                                <Field label="Phone Number" required error={errors.phoneNumber}>
+                                    <input className={inputClass(!!errors.phoneNumber)} placeholder="0712 345 678" type="tel"
+                                        value={data.phoneNumber} onChange={e => set('phoneNumber', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                                <Field label="National ID / Passport" required error={errors.idNumber}>
+                                    <input className={inputClass(!!errors.idNumber)} placeholder="12345678" type="text"
+                                        value={data.idNumber} onChange={e => set('idNumber', e.target.value)} disabled={isSubmitting} />
+                                </Field>
+                                <Field
+                                    label="Date of Birth" required error={errors.dob}
+                                    hint={data.dob ? <span className="rd4-age-badge">{calculateAge(data.dob)} yrs old</span> : undefined}
+                                >
+                                    <input className={inputClass(!!errors.dob)} type="date"
+                                        value={data.dob} onChange={e => set('dob', e.target.value)} disabled={isSubmitting} />
+                                </Field>
                             </>
                         )}
-                    </div>
-                </div>
 
-                {/* ── Preferences ── */}
-                <div className="rd4-card">
-                    <SectionLabel
-                        label="Preferences & Safety"
-                        icon={
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                            </svg>
-                        }
-                    />
-                    <div className="rd4-grid">
+                        {/* Merged Preferences (Gender, T-Shirt) and Emergency Contact */}
                         <Field label="Gender" required error={errors.gender}>
                             <div className="rd4-radio-group">
                                 {(['male', 'female'] as const).map(g => (

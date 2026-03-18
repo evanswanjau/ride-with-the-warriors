@@ -149,7 +149,12 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                 relationship: 'Mother',
                                 emergencyPhone: '0788990011',
                                 emergencyContactName: 'John Doe',
-                                isMilitary: isMilitary
+                                isMilitary: isMilitary,
+                                ...(isMilitary ? {
+                                    service: 'KA',
+                                    rank: 'Sgt',
+                                    unit: '1st Battalion'
+                                } : {})
                             },
                             riders: {
                                 cubs: [{
@@ -350,190 +355,339 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
 
                     <div style={{ background: 'var(--fam-raised-bg)', padding: '32px', border: '1px solid var(--fam-border)', clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)' }}>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
-                            <div>
-                                <label className="fam-field-label">First Name *</label>
-                                <input
-                                    className="fam-input"
-                                    type="text"
-                                    value={data.guardian.firstName}
-                                    onChange={(e) => updateGuardian('firstName', e.target.value)}
-                                    placeholder="Jane"
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            <div>
-                                <label className="fam-field-label">Last Name *</label>
-                                <input
-                                    className="fam-input"
-                                    type="text"
-                                    value={data.guardian.lastName}
-                                    onChange={(e) => updateGuardian('lastName', e.target.value)}
-                                    placeholder="Doe"
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            <div>
-                                <label className="fam-field-label">Email Address *</label>
-                                <input
-                                    className="fam-input"
-                                    type="email"
-                                    value={data.guardian.email}
-                                    onChange={(e) => updateGuardian('email', e.target.value)}
-                                    placeholder="email@example.com"
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            <div>
-                                <label className="fam-field-label">Phone Number *</label>
-                                <input
-                                    className="fam-input"
-                                    type="tel"
-                                    value={data.guardian.phoneNumber}
-                                    onChange={(e) => updateGuardian('phoneNumber', e.target.value)}
-                                    placeholder="+254 7XX XXX XXX"
-                                    disabled={isSubmitting}
-                                />
-                            </div>
-                            <div style={{ gridColumn: '1 / -1' }}>
-                                <label className="fam-field-label">Relationship *</label>
-                                <select
-                                    className="fam-input"
-                                    value={data.guardian.relationship}
-                                    onChange={(e) => updateGuardian('relationship', e.target.value)}
-                                    disabled={isSubmitting}
-                                >
-                                    <option value="" disabled>Select relationship</option>
-                                    <option value="parent">Parent</option>
-                                    <option value="legal_guardian">Legal Guardian</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-
-                            <div style={{ gridColumn: '1 / -1' }}>
-                                <label className="fam-field-label">Participating in the ride? *</label>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginTop: 8 }}>
-                                    {[
-                                        { id: 'none', label: 'Not riding' },
-                                        { id: 'mom', label: 'Riding as Parent (5km)' },
-                                        { id: 'other', label: 'Riding other circuit' }
-                                    ].map((opt) => (
-                                        <button
-                                            key={opt.id}
-                                            type="button"
-                                            onClick={() => updateGuardian('participation', opt.id)}
-                                            style={{
-                                                padding: '14px',
-                                                background: data.guardian.participation === opt.id ? 'var(--fam-primary)' : 'var(--fam-input-bg)',
-                                                border: '1px solid',
-                                                borderColor: data.guardian.participation === opt.id ? 'var(--fam-primary)' : 'var(--fam-border)',
-                                                color: data.guardian.participation === opt.id ? '#fff' : 'var(--fam-text-2)',
-                                                fontFamily: "'Barlow Condensed', sans-serif", fontSize: '11px', fontWeight: 700,
-                                                letterSpacing: '0.1em', textTransform: 'uppercase',
-                                                clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)',
-                                                cursor: 'pointer', transition: 'all 0.2s'
-                                            }}
-                                        >
-                                            {opt.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {data.guardian.participation === 'mom' && (
+                            {isMilitary ? (
                                 <>
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <label className="fam-field-label">Service *</label>
+                                        <select
+                                            className="fam-input"
+                                            value={data.guardian.service || ''}
+                                            onChange={(e) => updateGuardian('service', e.target.value)}
+                                            disabled={isSubmitting}
+                                        >
+                                            <option value="">Select Service</option>
+                                            <option value="KA">Kenya Army (KA)</option>
+                                            <option value="KAF">Kenya Air Force (KAF)</option>
+                                            <option value="KN">Kenya Navy (KN)</option>
+                                        </select>
+                                    </div>
                                     <div>
-                                        <label className="fam-field-label">{isMilitary ? "Service Number" : "ID / Passport"} *</label>
+                                        <label className="fam-field-label">Service Number *</label>
                                         <input
                                             className="fam-input"
                                             type="text"
                                             value={data.guardian.idNumber}
                                             onChange={(e) => updateGuardian('idNumber', e.target.value)}
-                                            placeholder={isMilitary ? "123456" : "12345678"}
+                                            placeholder="123456"
                                             disabled={isSubmitting}
                                         />
                                     </div>
-                                    {isMilitary && (
-                                        <>
-                                            <div>
-                                                <label className="fam-field-label">Rank *</label>
-                                                <input
-                                                    className="fam-input"
-                                                    type="text"
-                                                    value={data.guardian.rank || ''}
-                                                    onChange={(e) => updateGuardian('rank', e.target.value)}
-                                                    placeholder="e.g. Sgt"
-                                                    disabled={isSubmitting}
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="fam-field-label">Service *</label>
-                                                <select
-                                                    className="fam-input"
-                                                    value={data.guardian.service || ''}
-                                                    onChange={(e) => updateGuardian('service', e.target.value)}
-                                                    disabled={isSubmitting}
-                                                >
-                                                    <option value="">Select Service</option>
-                                                    <option value="KA">Kenya Army (KA)</option>
-                                                    <option value="KAF">Kenya Air Force (KAF)</option>
-                                                    <option value="KN">Kenya Navy (KN)</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label className="fam-field-label">Unit / FMN *</label>
-                                                <input
-                                                    className="fam-input"
-                                                    type="text"
-                                                    value={data.guardian.unit || ''}
-                                                    onChange={(e) => updateGuardian('unit', e.target.value)}
-                                                    placeholder="e.g. 1st Battalion"
-                                                    disabled={isSubmitting}
-                                                />
-                                            </div>
-                                        </>
-                                    )}
+                                    <div>
+                                        <label className="fam-field-label">Rank *</label>
+                                        <input
+                                            className="fam-input"
+                                            type="text"
+                                            value={data.guardian.rank || ''}
+                                            onChange={(e) => updateGuardian('rank', e.target.value)}
+                                            placeholder="e.g. Sgt"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="fam-field-label">First Name *</label>
+                                        <input
+                                            className="fam-input"
+                                            type="text"
+                                            value={data.guardian.firstName}
+                                            onChange={(e) => updateGuardian('firstName', e.target.value)}
+                                            placeholder="Jane"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="fam-field-label">Last Name *</label>
+                                        <input
+                                            className="fam-input"
+                                            type="text"
+                                            value={data.guardian.lastName}
+                                            onChange={(e) => updateGuardian('lastName', e.target.value)}
+                                            placeholder="Doe"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="fam-field-label">Unit / FMN *</label>
+                                        <input
+                                            className="fam-input"
+                                            type="text"
+                                            value={data.guardian.unit || ''}
+                                            onChange={(e) => updateGuardian('unit', e.target.value)}
+                                            placeholder="e.g. 1st Battalion"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
                                     <div>
                                         <label className="fam-field-label">Date of Birth *</label>
                                         <input
                                             className="fam-input"
                                             type="date"
-                                            value={data.guardian.dob}
+                                            value={data.guardian.dob || ''}
                                             onChange={(e) => updateGuardian('dob', e.target.value)}
                                             disabled={isSubmitting}
                                         />
                                     </div>
                                     <div>
-                                        <label className="fam-field-label">T-Shirt Size *</label>
-                                        <select
+                                        <label className="fam-field-label">Email Address *</label>
+                                        <input
                                             className="fam-input"
-                                            value={data.guardian.tshirtSize}
-                                            onChange={(e) => updateGuardian('tshirtSize', e.target.value)}
+                                            type="email"
+                                            value={data.guardian.email}
+                                            onChange={(e) => updateGuardian('email', e.target.value)}
+                                            placeholder="email@example.com"
                                             disabled={isSubmitting}
-                                        >
-                                            <option value="">Select Size</option>
-                                            <option value="S">Small (S)</option>
-                                            <option value="M">Medium (M)</option>
-                                            <option value="L">Large (L)</option>
-                                            <option value="XL">Extra Large (XL)</option>
-                                        </select>
+                                        />
                                     </div>
                                     <div>
-                                        <label className="fam-field-label">Gender *</label>
-                                        <div style={{ display: 'flex', gap: '20px', height: '42px', alignItems: 'center' }}>
-                                            {['male', 'female'].map(g => (
-                                                <label key={g} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-                                                    <input
-                                                        type="radio"
-                                                        name="guardian_gender"
-                                                        checked={data.guardian.gender === g}
-                                                        onChange={() => updateGuardian('gender', g)}
-                                                        style={{ accentColor: 'var(--fam-primary-lt)' }}
-                                                    />
-                                                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--fam-text-2)', textTransform: 'capitalize' }}>{g}</span>
-                                                </label>
+                                        <label className="fam-field-label">Phone Number *</label>
+                                        <input
+                                            className="fam-input"
+                                            type="tel"
+                                            value={data.guardian.phoneNumber}
+                                            onChange={(e) => updateGuardian('phoneNumber', e.target.value)}
+                                            placeholder="+254 7XX XXX XXX"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+
+                                    {/* Family Specific Fields */}
+                                    <div style={{ gridColumn: '1 / -1', marginTop: '12px', paddingTop: '24px', borderTop: '1px solid var(--fam-border)' }}>
+                                        <label className="fam-field-label">Relationship *</label>
+                                        <select
+                                            className="fam-input"
+                                            value={data.guardian.relationship}
+                                            onChange={(e) => updateGuardian('relationship', e.target.value)}
+                                            disabled={isSubmitting}
+                                        >
+                                            <option value="" disabled>Select relationship</option>
+                                            <option value="parent">Parent</option>
+                                            <option value="legal_guardian">Legal Guardian</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <label className="fam-field-label">Participating in the ride? *</label>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginTop: 8 }}>
+                                            {[
+                                                { id: 'none', label: 'Not riding' },
+                                                { id: 'mom', label: 'Riding as Parent (5km)' },
+                                                { id: 'other', label: 'Riding other circuit' }
+                                            ].map((opt) => (
+                                                <button
+                                                    key={opt.id}
+                                                    type="button"
+                                                    onClick={() => updateGuardian('participation', opt.id)}
+                                                    style={{
+                                                        padding: '14px',
+                                                        background: data.guardian.participation === opt.id ? 'var(--fam-primary)' : 'var(--fam-input-bg)',
+                                                        border: '1px solid',
+                                                        borderColor: data.guardian.participation === opt.id ? 'var(--fam-primary)' : 'var(--fam-border)',
+                                                        color: data.guardian.participation === opt.id ? '#fff' : 'var(--fam-text-2)',
+                                                        fontFamily: "'Barlow Condensed', sans-serif", fontSize: '11px', fontWeight: 700,
+                                                        letterSpacing: '0.1em', textTransform: 'uppercase',
+                                                        clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)',
+                                                        cursor: 'pointer', transition: 'all 0.2s'
+                                                    }}
+                                                >
+                                                    {opt.label}
+                                                </button>
                                             ))}
                                         </div>
                                     </div>
+                                    {data.guardian.participation === 'mom' && (
+                                        <>
+                                            <div>
+                                                <label className="fam-field-label">T-Shirt Size *</label>
+                                                <select
+                                                    className="fam-input"
+                                                    value={data.guardian.tshirtSize}
+                                                    onChange={(e) => updateGuardian('tshirtSize', e.target.value)}
+                                                    disabled={isSubmitting}
+                                                >
+                                                    <option value="">Select Size</option>
+                                                    <option value="S">Small (S)</option>
+                                                    <option value="M">Medium (M)</option>
+                                                    <option value="L">Large (L)</option>
+                                                    <option value="XL">Extra Large (XL)</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="fam-field-label">Gender *</label>
+                                                <div style={{ display: 'flex', gap: '20px', height: '42px', alignItems: 'center' }}>
+                                                    {['male', 'female'].map(g => (
+                                                        <label key={g} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                                            <input
+                                                                type="radio"
+                                                                name="guardian_gender_military"
+                                                                checked={data.guardian.gender === g}
+                                                                onChange={() => updateGuardian('gender', g)}
+                                                                style={{ accentColor: 'var(--fam-primary-lt)' }}
+                                                            />
+                                                            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--fam-text-2)', textTransform: 'capitalize' }}>{g}</span>
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <div>
+                                        <label className="fam-field-label">First Name *</label>
+                                        <input
+                                            className="fam-input"
+                                            type="text"
+                                            value={data.guardian.firstName}
+                                            onChange={(e) => updateGuardian('firstName', e.target.value)}
+                                            placeholder="Jane"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="fam-field-label">Last Name *</label>
+                                        <input
+                                            className="fam-input"
+                                            type="text"
+                                            value={data.guardian.lastName}
+                                            onChange={(e) => updateGuardian('lastName', e.target.value)}
+                                            placeholder="Doe"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="fam-field-label">Email Address *</label>
+                                        <input
+                                            className="fam-input"
+                                            type="email"
+                                            value={data.guardian.email}
+                                            onChange={(e) => updateGuardian('email', e.target.value)}
+                                            placeholder="email@example.com"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="fam-field-label">Phone Number *</label>
+                                        <input
+                                            className="fam-input"
+                                            type="tel"
+                                            value={data.guardian.phoneNumber}
+                                            onChange={(e) => updateGuardian('phoneNumber', e.target.value)}
+                                            placeholder="+254 7XX XXX XXX"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <label className="fam-field-label">Relationship *</label>
+                                        <select
+                                            className="fam-input"
+                                            value={data.guardian.relationship}
+                                            onChange={(e) => updateGuardian('relationship', e.target.value)}
+                                            disabled={isSubmitting}
+                                        >
+                                            <option value="" disabled>Select relationship</option>
+                                            <option value="parent">Parent</option>
+                                            <option value="legal_guardian">Legal Guardian</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+
+                                    <div style={{ gridColumn: '1 / -1' }}>
+                                        <label className="fam-field-label">Participating in the ride? *</label>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginTop: 8 }}>
+                                            {[
+                                                { id: 'none', label: 'Not riding' },
+                                                { id: 'mom', label: 'Riding as Parent (5km)' },
+                                                { id: 'other', label: 'Riding other circuit' }
+                                            ].map((opt) => (
+                                                <button
+                                                    key={opt.id}
+                                                    type="button"
+                                                    onClick={() => updateGuardian('participation', opt.id)}
+                                                    style={{
+                                                        padding: '14px',
+                                                        background: data.guardian.participation === opt.id ? 'var(--fam-primary)' : 'var(--fam-input-bg)',
+                                                        border: '1px solid',
+                                                        borderColor: data.guardian.participation === opt.id ? 'var(--fam-primary)' : 'var(--fam-border)',
+                                                        color: data.guardian.participation === opt.id ? '#fff' : 'var(--fam-text-2)',
+                                                        fontFamily: "'Barlow Condensed', sans-serif", fontSize: '11px', fontWeight: 700,
+                                                        letterSpacing: '0.1em', textTransform: 'uppercase',
+                                                        clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)',
+                                                        cursor: 'pointer', transition: 'all 0.2s'
+                                                    }}
+                                                >
+                                                    {opt.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {data.guardian.participation === 'mom' && (
+                                        <>
+                                            <div>
+                                                <label className="fam-field-label">ID / Passport *</label>
+                                                <input
+                                                    className="fam-input"
+                                                    type="text"
+                                                    value={data.guardian.idNumber}
+                                                    onChange={(e) => updateGuardian('idNumber', e.target.value)}
+                                                    placeholder="12345678"
+                                                    disabled={isSubmitting}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="fam-field-label">Date of Birth *</label>
+                                                <input
+                                                    className="fam-input"
+                                                    type="date"
+                                                    value={data.guardian.dob || ''}
+                                                    onChange={(e) => updateGuardian('dob', e.target.value)}
+                                                    disabled={isSubmitting}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="fam-field-label">T-Shirt Size *</label>
+                                                <select
+                                                    className="fam-input"
+                                                    value={data.guardian.tshirtSize}
+                                                    onChange={(e) => updateGuardian('tshirtSize', e.target.value)}
+                                                    disabled={isSubmitting}
+                                                >
+                                                    <option value="">Select Size</option>
+                                                    <option value="S">Small (S)</option>
+                                                    <option value="M">Medium (M)</option>
+                                                    <option value="L">Large (L)</option>
+                                                    <option value="XL">Extra Large (XL)</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="fam-field-label">Gender *</label>
+                                                <div style={{ display: 'flex', gap: '20px', height: '42px', alignItems: 'center' }}>
+                                                    {['male', 'female'].map(g => (
+                                                        <label key={g} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                                                            <input
+                                                                type="radio"
+                                                                name="guardian_gender"
+                                                                checked={data.guardian.gender === g}
+                                                                onChange={() => updateGuardian('gender', g)}
+                                                                style={{ accentColor: 'var(--fam-primary-lt)' }}
+                                                            />
+                                                            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--fam-text-2)', textTransform: 'capitalize' }}>{g}</span>
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
                                 </>
                             )}
                         </div>

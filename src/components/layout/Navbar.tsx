@@ -525,7 +525,6 @@ const Navbar = () => {
 
                         {/* CTAs */}
                         <Link to="/register/step/1" className="nav-cta green">Register</Link>
-                        <Link to="/military" className="nav-cta black-white">Military</Link>
                         <Link to="/raffle/step/1" className="nav-cta amber">Raffle Tickets</Link>
                     </div>
 
@@ -603,13 +602,6 @@ const Navbar = () => {
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Buy Raffle Tickets
-                    </Link>
-                    <Link
-                        to="/military"
-                        className="nav-mobile-cta black-white"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Military Registration
                     </Link>
                 </div>
             </div>

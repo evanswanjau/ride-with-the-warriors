@@ -129,8 +129,16 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                 else if (!/\S+@\S+\.\S/.test(riderDetails.email)) newErrors.email = 'Invalid email address';
                 if (!riderDetails.phoneNumber.trim()) newErrors.phoneNumber = 'Phone number is required';
                 else if (!isValidKenyanPhone(riderDetails.phoneNumber)) newErrors.phoneNumber = 'Invalid Kenyan phone number (e.g., 0712345678)';
-                if (!riderDetails.idNumber.trim()) newErrors.idNumber = 'ID/Passport is required';
-                else if (!isValidID(riderDetails.idNumber)) newErrors.idNumber = 'ID must be 8-10 digits only';
+                if (isMilitary) {
+                    if (!riderDetails.service) newErrors.service = 'Service is required';
+                    if (!riderDetails.rank?.trim()) newErrors.rank = 'Rank is required';
+                    if (!riderDetails.unit?.trim()) newErrors.unit = 'Unit/FMN is required';
+                    if (!riderDetails.idNumber.trim()) newErrors.idNumber = 'Service number is required';
+                    else if (!isValidID(riderDetails.idNumber)) newErrors.idNumber = 'Invalid service number';
+                } else {
+                    if (!riderDetails.idNumber.trim()) newErrors.idNumber = 'ID/Passport is required';
+                    else if (!isValidID(riderDetails.idNumber)) newErrors.idNumber = 'ID must be 8-10 digits only';
+                }
                 if (!riderDetails.dob) newErrors.dob = 'Date of birth is required';
                 else {
                     const age = calculateAge(riderDetails.dob);
@@ -155,8 +163,16 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                     else if (!/\S+@\S+\.\S/.test(member.email)) newErrors[`${member.id}.email`] = 'Invalid email';
                     if (!member.phoneNumber.trim()) newErrors[`${member.id}.phoneNumber`] = 'Required';
                     else if (!isValidKenyanPhone(member.phoneNumber)) newErrors[`${member.id}.phoneNumber`] = 'Invalid';
-                    if (!member.idNumber.trim()) newErrors[`${member.id}.idNumber`] = 'Required';
-                    else if (!isValidID(member.idNumber)) newErrors[`${member.id}.idNumber`] = '8-10 digits only';
+                    if (isMilitary) {
+                        if (!member.service) newErrors[`${member.id}.service`] = 'Required';
+                        if (!member.rank?.trim()) newErrors[`${member.id}.rank`] = 'Required';
+                        if (!member.unit?.trim()) newErrors[`${member.id}.unit`] = 'Required';
+                        if (!member.idNumber.trim()) newErrors[`${member.id}.idNumber`] = 'Required';
+                        else if (!isValidID(member.idNumber)) newErrors[`${member.id}.idNumber`] = 'Invalid';
+                    } else {
+                        if (!member.idNumber.trim()) newErrors[`${member.id}.idNumber`] = 'Required';
+                        else if (!isValidID(member.idNumber)) newErrors[`${member.id}.idNumber`] = '8-10 digits only';
+                    }
                     if (!member.dob) newErrors[`${member.id}.dob`] = 'Required';
                     else {
                         const age = calculateAge(member.dob);
@@ -192,7 +208,19 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                 if (!familyDetails.guardian.relationship) newErrors['guardian.relationship'] = 'Relationship is required';
                 if (!familyDetails.guardian.participation) newErrors['guardian.participation'] = 'Required';
 
+                if (isMilitary) {
+                    if (!familyDetails.guardian.service) newErrors['guardian.service'] = 'Required';
+                    if (!familyDetails.guardian.rank?.trim()) newErrors['guardian.rank'] = 'Required';
+                    if (!familyDetails.guardian.unit?.trim()) newErrors['guardian.unit'] = 'Required';
+                    if (!familyDetails.guardian.idNumber.trim()) newErrors['guardian.idNumber'] = 'Required';
+                    else if (!isValidID(familyDetails.guardian.idNumber)) newErrors['guardian.idNumber'] = 'Invalid';
+                }
+
                 if (familyDetails.guardian.participation === 'mom') {
+                    if (!isMilitary) {
+                        if (!familyDetails.guardian.idNumber.trim()) newErrors['guardian.idNumber'] = 'Required';
+                        else if (!isValidID(familyDetails.guardian.idNumber)) newErrors['guardian.idNumber'] = '8-10 digits only';
+                    }
                     if (!familyDetails.guardian.dob) newErrors['guardian.dob'] = 'Required';
                     else {
                         const age = calculateAge(familyDetails.guardian.dob);
