@@ -17,7 +17,7 @@ export const isValidKenyanPhone = (phone: string) => {
 };
 
 export const isValidID = (id: string) => {
-    return /^\d{8,10}$/.test(id);
+    return /^\d{6,10}$/.test(id);
 };
 
 export interface Classification {

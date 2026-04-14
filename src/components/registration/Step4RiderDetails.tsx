@@ -16,11 +16,6 @@ const ArrowRight = () => (
         <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
     </svg>
 );
-const FlaskIcon = () => (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 3h6M9 3v7l-4 8h14l-4-8V3" />
-    </svg>
-);
 const ChevronDown = () => (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="6 9 12 15 18 9" />
@@ -31,6 +26,11 @@ const SpinnerIcon = () => (
         <path d="M21 12a9 9 0 1 1-6.219-8.56" />
     </svg>
 );
+
+const MILITARY_RANKS = [
+    'Gen', 'Lt Gen', 'Maj Gen', 'Brig', 'Col', 'Lt Col', 'Maj', 'Capt',
+    'Lt', '2Lt', 'WOI', 'WOII', 'Ssgt', 'Sgt', 'Cpl', 'Pte',
+];
 
 /* ── Section header ───────────────────────────────────────────────────── */
 const SectionLabel = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
@@ -102,28 +102,6 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
             stepLabel="Step 3 of 4"
             title="Rider Details"
             subtitle="Provide your personal information to complete the registration."
-            headerRight={
-                <button
-                    type="button"
-                    className="rd4-test-btn"
-                    onClick={() => onChange({
-                        firstName: 'Jane', lastName: 'Doe',
-                        email: `jane.doe.${Math.floor(Math.random() * 1000)}@example.com`,
-                        phoneNumber: '0712345678', idNumber: '12345678',
-                        dob: '1995-05-15', gender: 'female',
-                        tshirtSize: 'M',
-                        emergencyContactName: 'John Smith', emergencyPhone: '0787654321',
-                        isMilitary: isMilitary,
-                        ...(isMilitary ? {
-                            service: 'KA',
-                            rank: 'Sgt',
-                            unit: '1st Battalion'
-                        } : {})
-                    })}
-                >
-                    <FlaskIcon /> Fill Test Data
-                </button>
-            }
             footer={
                 <>
                     <button type="button" className="rd4-back-btn" onClick={onBack} disabled={isSubmitting}>
@@ -183,8 +161,20 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                                         value={data.idNumber} onChange={e => set('idNumber', e.target.value)} disabled={isSubmitting} />
                                 </Field>
                                 <Field label="Rank" required error={errors.rank}>
-                                    <input className={inputClass(!!errors.rank)} placeholder="e.g. Sgt" type="text"
-                                        value={data.rank || ''} onChange={e => set('rank', e.target.value)} disabled={isSubmitting} />
+                                    <div className="rd4-select-wrap">
+                                        <select
+                                            className={inputClass(!!errors.rank)}
+                                            value={data.rank || ''}
+                                            onChange={e => set('rank', e.target.value)}
+                                            disabled={isSubmitting}
+                                        >
+                                            <option value="">Select rank</option>
+                                            {MILITARY_RANKS.map(r => (
+                                                <option key={r} value={r}>{r}</option>
+                                            ))}
+                                        </select>
+                                        <span className="rd4-chevron"><ChevronDown /></span>
+                                    </div>
                                 </Field>
                                 <Field label="First Name" required error={errors.firstName}>
                                     <input className={inputClass(!!errors.firstName)} placeholder="Jane" type="text"

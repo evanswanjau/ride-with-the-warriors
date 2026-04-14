@@ -29,6 +29,11 @@ const TrashIcon = () => (
     </svg>
 );
 
+const MILITARY_RANKS = [
+    'Gen', 'Lt Gen', 'Maj Gen', 'Brig', 'Col', 'Lt Col', 'Maj', 'Capt',
+    'Lt', '2Lt', 'WOI', 'WOII', 'Ssgt', 'Sgt', 'Cpl', 'Pte',
+];
+
 interface FamilyRegistrationFlowProps {
     data: FamilyDetails;
     onChange: (data: FamilyDetails) => void;
@@ -131,85 +136,6 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
             stepLabel="Step 3 of 4"
             title="Family Warriors"
             subtitle="Register your little champions for their specific age groups. Strength lies in numbers."
-            headerRight={
-                <button
-                    onClick={() => {
-                        onChange({
-                            guardian: {
-                                firstName: 'Jane',
-                                lastName: 'Doe',
-                                fullName: 'Jane Doe',
-                                dob: '1985-06-20',
-                                email: `jane.doe.${Math.floor(Math.random() * 1000)}@example.com`,
-                                phoneNumber: '0712345678',
-                                idNumber: '12345678',
-                                gender: 'female',
-                                participation: 'mom',
-                                tshirtSize: 'M',
-                                relationship: 'Mother',
-                                emergencyPhone: '0788990011',
-                                emergencyContactName: 'John Doe',
-                                isMilitary: isMilitary,
-                                ...(isMilitary ? {
-                                    service: 'KA',
-                                    rank: 'Sgt',
-                                    unit: '1st Battalion'
-                                } : {})
-                            },
-                            riders: {
-                                cubs: [{
-                                    id: Math.random().toString(36).substr(2, 9),
-                                    firstName: 'Leo',
-                                    lastName: 'Doe',
-                                    dob: '2020-01-01',
-                                    gender: 'male',
-                                    tshirtSize: 'S',
-                                    idNumber: '',
-                                    emergencyContactName: '',
-                                    emergencyPhone: ''
-                                }],
-                                champs: [{
-                                    id: Math.random().toString(36).substr(2, 9),
-                                    firstName: 'Maya',
-                                    lastName: 'Doe',
-                                    dob: '2015-01-01',
-                                    gender: 'female',
-                                    tshirtSize: 'L',
-                                    idNumber: '',
-                                    emergencyContactName: '',
-                                    emergencyPhone: ''
-                                }],
-                                tigers: [
-                                    {
-                                        id: 'mom-rider-id',
-                                        firstName: 'Jane',
-                                        lastName: 'Doe',
-                                        dob: '1985-06-20',
-                                        idNumber: '12345678',
-                                        gender: 'female',
-                                        tshirtSize: 'M',
-                                        emergencyContactName: '',
-                                        emergencyPhone: '0712345678'
-                                    }
-                                ]
-                            }
-                        });
-                    }}
-                    style={{
-                        padding: '6px 12px',
-                        background: 'rgba(76,175,80,0.1)',
-                        border: '1px solid rgba(76,175,80,0.2)',
-                        color: '#4caf50',
-                        fontFamily: "'Barlow Condensed', sans-serif",
-                        fontSize: '9px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase',
-                        clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%)',
-                        cursor: 'pointer'
-                    }}
-                    type="button"
-                >
-                    Quick Test Data
-                </button>
-            }
             footer={
                 <>
                     <button className="fam-back-btn" onClick={onBack} type="button" disabled={isSubmitting}>
@@ -384,14 +310,17 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                     </div>
                                     <div>
                                         <label className="fam-field-label">Rank *</label>
-                                        <input
+                                        <select
                                             className="fam-input"
-                                            type="text"
                                             value={data.guardian.rank || ''}
                                             onChange={(e) => updateGuardian('rank', e.target.value)}
-                                            placeholder="e.g. Sgt"
                                             disabled={isSubmitting}
-                                        />
+                                        >
+                                            <option value="">Select rank</option>
+                                            {MILITARY_RANKS.map(r => (
+                                                <option key={r} value={r}>{r}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div>
                                         <label className="fam-field-label">First Name *</label>

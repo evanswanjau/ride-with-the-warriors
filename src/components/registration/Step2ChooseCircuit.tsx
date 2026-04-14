@@ -6,6 +6,7 @@ import intermediateImage from "../../assets/images/recon.jpeg";
 import corporateImage from "../../assets/images/corporate.jpeg";
 import familyImage from "../../assets/images/family.jpeg";
 import RegistrationStepLayout from "./ui/RegistrationStepLayout";
+import { useRegistration } from '../../context/RegistrationContext';
 
 const CIRCUIT_IMAGES: Record<string, string> = {
     blitz: blitzImage,
@@ -21,7 +22,9 @@ interface Step2ChooseCircuitProps {
 }
 
 const Step2ChooseCircuit = ({ selectedCircuit, onSelect, onNext }: Step2ChooseCircuitProps) => {
-    const selected = CIRCUITS.find(c => c.id === selectedCircuit);
+    const { isMilitary } = useRegistration();
+    const visibleCircuits = CIRCUITS.filter(c => isMilitary ? c.id !== 'family' : true);
+    const selected = visibleCircuits.find(c => c.id === selectedCircuit);
 
     return (
         <RegistrationStepLayout
@@ -60,12 +63,11 @@ const Step2ChooseCircuit = ({ selectedCircuit, onSelect, onNext }: Step2ChooseCi
                 </>
             )}
         >
-            
 
             <div className="s2-wrapper">
                 {/* ── Circuit grid ── */}
                 <div className="s2-grid">
-                    {CIRCUITS.map((circuit) => (
+                    {visibleCircuits.map((circuit) => (
                         <CircuitCard
                             key={circuit.id}
                             id={circuit.id}

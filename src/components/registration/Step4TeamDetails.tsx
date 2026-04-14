@@ -16,11 +16,6 @@ const ArrowRight = () => (
         <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
     </svg>
 );
-const FlaskIcon = () => (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 3h6M9 3v7l-4 8h14l-4-8V3" />
-    </svg>
-);
 const ChevronDown = () => (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="6 9 12 15 18 9" />
@@ -31,6 +26,11 @@ const SpinnerIcon = () => (
         <path d="M21 12a9 9 0 1 1-6.219-8.56" />
     </svg>
 );
+
+const MILITARY_RANKS = [
+    'Gen', 'Lt Gen', 'Maj Gen', 'Brig', 'Col', 'Lt Col', 'Maj', 'Capt',
+    'Lt', '2Lt', 'WOI', 'WOII', 'Ssgt', 'Sgt', 'Cpl', 'Pte',
+];
 const StarIcon = () => (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
@@ -158,8 +158,20 @@ const MemberCard = ({ member, index, errors, isSubmitting, onUpdate, onRemove }:
                                 value={member.idNumber} onChange={ev => set('idNumber', ev.target.value)} disabled={isSubmitting} />
                         </Field>
                         <Field label="Rank" required error={e('rank')}>
-                            <input className={inp(!!e('rank'))} placeholder="e.g. Sgt" type="text"
-                                value={member.rank || ''} onChange={ev => set('rank', ev.target.value)} disabled={isSubmitting} />
+                            <div style={{ position: 'relative' }}>
+                                <select
+                                    className={inp(!!e('rank'))}
+                                    value={member.rank || ''}
+                                    onChange={ev => set('rank', ev.target.value)}
+                                    disabled={isSubmitting}
+                                >
+                                    <option value="">Select rank</option>
+                                    {MILITARY_RANKS.map(r => (
+                                        <option key={r} value={r}>{r}</option>
+                                    ))}
+                                </select>
+                                <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--td4-text-3)' }}><ChevronDown /></span>
+                            </div>
                         </Field>
                         <Field label="First Name" required error={e('firstName')}>
                             <input className={inp(!!e('firstName'))} placeholder="Jane" type="text"
@@ -311,7 +323,6 @@ interface Step4TeamDetailsProps {
 }
 
 const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: Step4TeamDetailsProps) => {
-    const { isMilitary } = useRegistration();
     const updateMember = (id: string, field: keyof TeamMember, value: string) =>
         onChange({ ...data, members: data.members.map(m => m.id === id ? { ...m, [field]: value } : m) });
 
@@ -340,34 +351,6 @@ const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, 
                 stepLabel="Step 3 of 4"
                 title="Build Your Squad"
                 subtitle="Enter your team name and add your fellow warriors. Minimum 2 members required."
-                headerRight={
-                    <button type="button" className="td4-test-btn" onClick={() => {
-                        const firstNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'];
-                        const lastNames = ['Smith', 'Johnson', 'Brown', 'Davis', 'Wilson'];
-                        const genders: Array<'male' | 'female'> = ['female', 'male', 'male', 'female', 'female'];
-                        onChange({
-                            teamName: 'Warriors United',
-                            members: firstNames.map((fn, i) => ({
-                                id: Math.random().toString(36).substr(2, 9),
-                                firstName: fn, lastName: lastNames[i],
-                                email: `${fn.toLowerCase()}.${lastNames[i].toLowerCase()}.${Math.floor(Math.random() * 1000)}@example.com`,
-                                phoneNumber: `07${Math.floor(10000000 + Math.random() * 90000000)}`,
-                                idNumber: `${Math.floor(10000000 + Math.random() * 90000000)}`,
-                                dob: `${1985 + i}-01-01`, gender: genders[i],
-                                tshirtSize: ['S', 'M', 'L', 'XL', 'M'][i],
-                                emergencyContactName: 'Emergency Contact', emergencyPhone: '0711223344',
-                                isCaptain: i === 0,
-                                ...(isMilitary ? {
-                                    service: ['KA', 'KAF', 'KN', 'KA', 'KAF'][i],
-                                    rank: ['Sgt', 'Cpl', 'Pte', 'Sgt', 'Cpl'][i],
-                                    unit: '1st Battalion'
-                                } : {})
-                            })),
-                        });
-                    }}>
-                        <FlaskIcon /> Fill Test Data
-                    </button>
-                }
                 footer={
                     <>
                         <button type="button" className="td4-back-btn" onClick={onBack} disabled={isSubmitting}>
