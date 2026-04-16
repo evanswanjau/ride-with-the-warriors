@@ -47,7 +47,7 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
     return (
         <>
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+                
 
                 .al-root {
                     min-height: 100vh;

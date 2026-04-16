@@ -131,7 +131,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
     return (
         <div className="selection:bg-primary selection:text-white font-sans print:p-0 print:bg-white">
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+                
 
                 :root, [data-theme="dark"] {
                     --color-primary: #2d6a2d;
