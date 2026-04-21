@@ -137,7 +137,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                     else if (!isValidID(riderDetails.idNumber)) newErrors.idNumber = 'Invalid service number';
                 } else {
                     if (!riderDetails.idNumber.trim()) newErrors.idNumber = 'ID/Passport is required';
-                    else if (!isValidID(riderDetails.idNumber)) newErrors.idNumber = 'ID must be 6-10 digits only';
+                    else if (!isValidID(riderDetails.idNumber)) newErrors.idNumber = 'ID must be 4-10 digits only';
                 }
                 if (!riderDetails.dob) newErrors.dob = 'Date of birth is required';
                 else {
@@ -171,7 +171,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                         else if (!isValidID(member.idNumber)) newErrors[`${member.id}.idNumber`] = 'Invalid';
                     } else {
                         if (!member.idNumber.trim()) newErrors[`${member.id}.idNumber`] = 'Required';
-                        else if (!isValidID(member.idNumber)) newErrors[`${member.id}.idNumber`] = '6-10 digits only';
+                        else if (!isValidID(member.idNumber)) newErrors[`${member.id}.idNumber`] = '4-10 digits only';
                     }
                     if (!member.dob) newErrors[`${member.id}.dob`] = 'Required';
                     else {
@@ -219,7 +219,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                 if (familyDetails.guardian.participation === 'mom') {
                     if (!isMilitary) {
                         if (!familyDetails.guardian.idNumber.trim()) newErrors['guardian.idNumber'] = 'Required';
-                        else if (!isValidID(familyDetails.guardian.idNumber)) newErrors['guardian.idNumber'] = '6-10 digits only';
+                        else if (!isValidID(familyDetails.guardian.idNumber)) newErrors['guardian.idNumber'] = '4-10 digits only';
                     }
                     if (!familyDetails.guardian.dob) newErrors['guardian.dob'] = 'Required';
                     else {
