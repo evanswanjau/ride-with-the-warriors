@@ -67,18 +67,18 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
 
     // Registration Data State
     const [riderDetails, setRiderDetails] = useState<RiderDetails>({
-        firstName: '', lastName: '', email: '', phoneNumber: '', idNumber: '', dob: '', gender: '', tshirtSize: '', emergencyContactName: '', emergencyPhone: ''
+        firstName: '', lastName: '', email: '', phoneNumber: '', idNumber: '', dob: '', gender: '', tshirtSize: '', emergencyContactName: '', emergencyPhone: '', country: 'Kenya'
     });
 
     const [teamDetails, setTeamDetails] = useState<TeamDetails>({
         teamName: '',
         members: [{
-            id: '1', firstName: '', lastName: '', email: '', phoneNumber: '', idNumber: '', dob: '', gender: '', tshirtSize: '', emergencyContactName: '', emergencyPhone: '', isCaptain: true
+            id: '1', firstName: '', lastName: '', email: '', phoneNumber: '', idNumber: '', dob: '', gender: '', tshirtSize: '', emergencyContactName: '', emergencyPhone: '', isCaptain: true, country: 'Kenya'
         }]
     });
 
     const [familyDetails, setFamilyDetails] = useState<FamilyDetails>({
-        guardian: { firstName: '', lastName: '', fullName: '', phoneNumber: '', emergencyPhone: '', email: '', idNumber: '', gender: '', relationship: '', participation: 'none', dob: '', emergencyContactName: '', tshirtSize: '' },
+        guardian: { firstName: '', lastName: '', fullName: '', phoneNumber: '', emergencyPhone: '', email: '', idNumber: '', gender: '', relationship: '', participation: 'none', dob: '', emergencyContactName: '', tshirtSize: '', country: 'Kenya' },
         riders: { cubs: [], champs: [], tigers: [] }
     });
 

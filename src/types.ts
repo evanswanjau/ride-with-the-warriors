@@ -9,6 +9,7 @@ export interface RiderDetails {
     tshirtSize: string;
     emergencyContactName: string;
     emergencyPhone: string;
+    country?: string;
     isMilitary?: boolean;
     serviceNumber?: string;
     rank?: string;
@@ -56,6 +57,7 @@ export interface FamilyDetails {
         relationship: string;
         tshirtSize: string;
         participation: 'none' | 'mom' | 'other';
+        country?: string;
         isMilitary?: boolean;
         serviceNumber?: string;
         rank?: string;
