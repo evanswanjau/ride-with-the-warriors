@@ -485,17 +485,6 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                         />
                                     </div>
                                     <div>
-                                        <label className="fam-field-label">ID / Passport *</label>
-                                        <input
-                                            className="fam-input"
-                                            type="text"
-                                            value={data.guardian.idNumber}
-                                            onChange={(e) => updateGuardian('idNumber', e.target.value)}
-                                            placeholder="12345678"
-                                            disabled={isSubmitting}
-                                        />
-                                    </div>
-                                    <div>
                                         <label className="fam-field-label">Country</label>
                                         <select
                                             className="fam-input"
@@ -555,8 +544,29 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                             ))}
                                         </div>
                                     </div>
-                                    {data.guardian.participation === 'mom' && (
+                                    {data.guardian.participation !== 'none' && (
                                         <>
+                                            <div>
+                                                <label className="fam-field-label">ID / Passport *</label>
+                                                <input
+                                                    className="fam-input"
+                                                    type="text"
+                                                    value={data.guardian.idNumber}
+                                                    onChange={(e) => updateGuardian('idNumber', e.target.value)}
+                                                    placeholder="12345678"
+                                                    disabled={isSubmitting}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="fam-field-label">Date of Birth *</label>
+                                                <input
+                                                    className="fam-input"
+                                                    type="date"
+                                                    value={data.guardian.dob || ''}
+                                                    onChange={(e) => updateGuardian('dob', e.target.value)}
+                                                    disabled={isSubmitting}
+                                                />
+                                            </div>
                                             <div>
                                                 <label className="fam-field-label">T-Shirt Size *</label>
                                                 <select
