@@ -29,11 +29,6 @@ const TrashIcon = () => (
     </svg>
 );
 
-const MILITARY_RANKS = [
-    'Gen', 'Lt Gen', 'Maj Gen', 'Brig', 'Col', 'Lt Col', 'Maj', 'Capt',
-    'Lt', '2Lt', 'WOI', 'WOII', 'Ssgt', 'Sgt', 'Cpl', 'Pte',
-];
-
 interface FamilyRegistrationFlowProps {
     data: FamilyDetails;
     onChange: (data: FamilyDetails) => void;
