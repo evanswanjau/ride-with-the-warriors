@@ -8,7 +8,6 @@ import corporateIndividual from '../../assets/images/corporate-individual.jpeg';
 import corporateTeam from '../../assets/images/corporate-team.jpeg';
 import familyImage from '../../assets/images/family.jpeg';
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
-import { useRegistration } from '../../context/RegistrationContext';
 
 /* ── Inline SVGs ──────────────────────────────────────────────────────── */
 const ArrowLeft = () => (
@@ -64,7 +63,6 @@ const Step3RegistrationType = ({
     onNext,
     onBack,
 }: Step3RegistrationTypeProps) => {
-    const { isMilitary } = useRegistration();
     const circuitInfo = CIRCUIT_LABELS[selectedCircuit];
 
     const types = [
@@ -110,8 +108,7 @@ const Step3RegistrationType = ({
 
     const visibleTypes = types.filter(t => {
         if (selectedCircuit === 'family') return t.id === 'family';
-        if (isMilitary) return t.id === 'individual' || t.id === 'team';
-        return true;
+        return t.id === 'individual' || t.id === 'team';
     });
 
     const selectedTypeMeta = selectedType ? visibleTypes.find(t => t.id === selectedType) : null;
