@@ -9,7 +9,7 @@ import App from './App.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <HelmetProvider>
-      <BrowserRouter basename="/ride-with-the-warriors">
+      <BrowserRouter basename="/">
         <App />
       </BrowserRouter>
     </HelmetProvider>
