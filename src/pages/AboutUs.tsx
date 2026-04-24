@@ -7,6 +7,7 @@ import collageImage1 from '../assets/images/collage1.jpeg';
 import collageImage2 from '../assets/images/collage2.jpeg';
 import collageImage3 from '../assets/images/collage3.jpeg';
 import reconImage from '../assets/images/recon-team.jpeg';
+import goingGreenImage from '../assets/images/going-green.jpg';
 
 const AboutUs = () => {
     const pillars = [
@@ -193,6 +194,25 @@ const AboutUs = () => {
                         </div>
                         <div className="ab-img-frame ab-img-hero" style={{ order: 1 }}>
                             <img src={teamImage} alt="KDF Airborne Fraternity" />
+                        </div>
+                    </div>
+
+                    {/* ── Going Green ── */}
+                    <div id="going-green" className="page-section ab-two-col">
+                        <div>
+                            <div className="page-label-row">
+                                <div className="page-label-line" />
+                                <span className="page-eyebrow">Going Green</span>
+                            </div>
+                            <h2 className="ab-display" style={{ fontSize: 'clamp(2.8rem,5vw,4.5rem)', marginBottom: 24 }}>
+                                A <span className="ab-accent">Greener</span> Future.
+                            </h2>
+                            <p className="ab-body" style={{ lineHeight: '1.8' }}>
+                                Climate change is a major threat multiplier and has profound implications on national, regional and global security. This threat continues to destabilize societies across the world by exacerbating poverty, resource scarcity and political instability leading to conflict and social unrest. Cycling is a powerful tool in combating climate change that provides many benefits to the environment and the entire society by reducing emission of greenhouses gases and providing an alternative sustainable and cheap transport system. When linked with a structured urban mobility plan that factors cycling infrastructure the effects will significantly decrease vehicular traffic and lead to lower emissions. By embracing cycling this community seeks actively contribute towards a sustainable, emission free and eco-friendly environment.
+                            </p>
+                        </div>
+                        <div className="ab-img-frame ab-img-hero">
+                            <img src={goingGreenImage} alt="Going Green Initiative" />
                         </div>
                     </div>
 

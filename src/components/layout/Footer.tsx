@@ -160,6 +160,45 @@ const Footer = () => {
                     opacity: 1; transform: translateX(0);
                 }
 
+                /* ── Going Green Badge ── */
+                .footer-eco-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 9px 16px;
+                    background: rgba(76, 175, 80, 0.05);
+                    border: 1px dashed rgba(76, 175, 80, 0.3);
+                    margin-top: 14px;
+                    transition: all 0.3s ease;
+                    width: fit-content;
+                    max-width: 280px;
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+                }
+                .footer-eco-badge:hover {
+                    background: rgba(76, 175, 80, 0.1);
+                    border-color: rgba(76, 175, 80, 0.6);
+                    transform: translateY(-2px);
+                }
+                .footer-eco-icon {
+                    font-size: 1.1rem;
+                    filter: drop-shadow(0 0 8px rgba(76, 175, 80, 0.4));
+                }
+                .footer-eco-text {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.72rem;
+                    font-weight: 700;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                    color: var(--f-top-border);
+                }
+                [data-theme="light"] .footer-eco-badge {
+                    background: rgba(36, 89, 36, 0.05);
+                    border-color: rgba(36, 89, 36, 0.2);
+                }
+                [data-theme="light"] .footer-eco-text {
+                    color: #1b4d1b;
+                }
+
                 /* ── CTA column ── */
                 .footer-cta-col { display: flex; flex-direction: column; gap: 12px; }
                 .footer-cta-btn {
@@ -276,6 +315,9 @@ const Footer = () => {
                             <div className="footer-badge-dot" />
                             <span className="footer-badge-text">2nd Edition — 05 July 2026 · Nairobi</span>
                         </div>
+                        <Link to="/about#going-green" className="footer-eco-badge" style={{ textDecoration: 'none' }}>
+                            <span className="footer-eco-text">Going Green: Promoting sustainable transport & eco-conservation</span>
+                        </Link>
                     </div>
 
                     {/* ── Nav ── */}
