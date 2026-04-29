@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
+import TopBar from './TopBar';
 import Footer from './Footer';
 
 const useTheme = () => {
@@ -67,6 +68,7 @@ const Layout = ({ children, registrationType, isFullWidth = false, maxWidth = 'm
                     --border-2: rgba(0,0,0,0.16);
                 }
             `}</style>
+            <TopBar />
             <Navbar />
             <main className={`flex flex-1 flex-col ${isFullWidth ? '' : 'pt-20 md:pt-24 lg:pt-28'}`}>
                 <div className={`w-full ${isFullWidth ? '' : `${maxWidth} mx-auto px-4 pb-12`}`}>

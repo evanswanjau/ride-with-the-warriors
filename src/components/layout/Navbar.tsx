@@ -125,7 +125,7 @@ const Navbar = () => {
                 /* ── Navbar base ── */
                 .rwtw-nav {
                     position: fixed;
-                    top: 0;
+                    top: 32px;
                     width: 100%;
                     z-index: 100;
                     transition: background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;

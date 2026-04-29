@@ -20,6 +20,7 @@ import RafflePage from './pages/RafflePage';
 import RaffleSuccessPage from './pages/RaffleSuccessPage';
 import RaffleProfilePage from './pages/RaffleProfilePage';
 import RafflePaymentPageRoute from './pages/RafflePaymentPageRoute';
+import DonatePage from './pages/DonatePage';
 
 import ScrollToTop from './utils/ScrollToTop';
 import PageTitle from './utils/PageTitle';
@@ -48,6 +49,7 @@ const App = () => {
         <Route path="/contact" element={<Layout isFullWidth><ContactUs /></Layout>} />
         <Route path="/gallery" element={<Layout isFullWidth><Gallery /></Layout>} />
         <Route path="/faqs" element={<Layout isFullWidth><Faqs /></Layout>} />
+        <Route path="/donate" element={<DonatePage />} />
 
         {/* Registration Flow */}
         <Route path="/register/step/:stepId" element={<RegisterPage />} />
