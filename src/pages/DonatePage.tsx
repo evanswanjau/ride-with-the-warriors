@@ -16,27 +16,27 @@ function formatKenyanPhone(raw: string): string {
 
 const DonatePage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [amount, setAmount] = useState<string>(searchParams.get('amount') || '');
+    const presetAmounts = ['100', '500', '1000', '5000'];
+    const [amount, setAmount] = useState<string>(searchParams.get('amount') || '100');
     const [customAmount, setCustomAmount] = useState<string>('');
-    const [isCustom, setIsCustom] = useState(false);
-    
+    const [isCustom, setIsCustom] = useState(searchParams.get('amount') ? !presetAmounts.includes(searchParams.get('amount')!) : false);
+
+
     // Donor Info
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    
+
     // Payment State
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentStatus, setPaymentStatus] = useState<'initial' | 'pending' | 'success' | 'error'>('initial');
     const [error, setError] = useState<string | null>(null);
     const [donationId, setDonationId] = useState<string | null>(null);
 
-    const presetAmounts = ['100', '500', '1000', '5000'];
-
     useEffect(() => {
         const urlAmount = searchParams.get('amount');
         if (urlAmount) {
-            if (presetAmounts.includes(urlAmount)) {
+            if (presetAmounts.includes(urlAmount) && !isCustom) {
                 setAmount(urlAmount);
                 setIsCustom(false);
                 setCustomAmount('');
@@ -45,8 +45,14 @@ const DonatePage = () => {
                 setCustomAmount(urlAmount);
                 setIsCustom(true);
             }
+        } else {
+            // Default to 100 if no amount in URL
+            setAmount('100');
+            setIsCustom(false);
+            setCustomAmount('');
         }
-    }, [searchParams]);
+    }, [searchParams]); // Note: isCustom is not in deps to prevent loop, but searchParams change will trigger it
+
 
     const handleAmountSelect = (val: string) => {
         if (val === 'custom') {
@@ -66,8 +72,15 @@ const DonatePage = () => {
     };
 
     const handleCustomChange = (val: string) => {
+        // Prevent negative or zero amounts immediately if they are numbers
+        if (val && !isNaN(Number(val)) && Number(val) < 1) {
+            setCustomAmount('1');
+            setSearchParams({ amount: '1' });
+            return;
+        }
         setCustomAmount(val);
         if (val) setSearchParams({ amount: val });
+
         else {
             const params = new URLSearchParams(searchParams);
             params.delete('amount');
@@ -94,7 +107,8 @@ const DonatePage = () => {
                     }
                     if (data.donation?.status === 'FAILED') {
                         setPaymentStatus('error');
-                        setError('Payment was not completed. Please try again.');
+                        const reason = data.donation?.failureReason || 'Payment was not completed. Please try again.';
+                        setError(reason);
                         return;
                     }
                 }
@@ -107,10 +121,11 @@ const DonatePage = () => {
 
     const handleDonate = async () => {
         const finalAmount = isCustom ? customAmount : amount;
-        if (!finalAmount || isNaN(Number(finalAmount)) || Number(finalAmount) <= 0) {
-            setError('Please enter a valid donation amount.');
+        if (!finalAmount || isNaN(Number(finalAmount)) || Number(finalAmount) < 1) {
+            setError('Please enter a donation amount of at least KES 1.');
             return;
         }
+
 
         if (!name.trim()) {
             setError('Please enter your full name.');
@@ -173,10 +188,10 @@ const DonatePage = () => {
                         </div>
                         <h2 className="display-heading text-5xl text-[var(--text-1)] mb-4 uppercase tracking-wider">Thank You!</h2>
                         <p className="text-[var(--text-2)] mb-10 leading-relaxed font-light">
-                            Your donation of <span className="text-white font-bold">KES {(isCustom ? customAmount : amount).toLocaleString()}</span> has been received. 
+                            Your donation of <span className="text-white font-bold">KES {(isCustom ? customAmount : amount).toLocaleString()}</span> has been received.
                             Your support means the world to our widows and their families.
                         </p>
-                        <button 
+                        <button
                             onClick={() => window.location.href = '/'}
                             className="raffle-cta-btn w-full justify-center"
                         >
@@ -196,21 +211,21 @@ const DonatePage = () => {
                         <div className="h-px w-12 bg-amber-500" />
                         <span className="section-label" style={{ color: '#f59e0b' }}>Support The Cause</span>
                     </div>
-                    
+
                     <h1 className="display-heading text-[clamp(2.5rem,7vw,5.5rem)] mb-6 text-[var(--text-1)]">
                         Giving Back to <br />
                         Our <span className="text-amber-500">Heroes' Families.</span>
                     </h1>
-                    
+
                     <p className="text-lg text-[var(--text-2)] mb-12 leading-relaxed max-w-2xl font-light">
-                        Every contribution helps us provide essential support, education, and welfare 
-                        for the widows and children of our fallen KDF Airborne paratroopers. 
+                        Every contribution helps us provide essential support, education, and welfare
+                        for the widows and children of our fallen KDF Airborne paratroopers.
                         Your generosity ensures they are never forgotten.
                     </p>
 
-                    <div className="bg-[var(--raised-bg)] border border-[var(--border-1)] p-8 md:p-12 relative overflow-hidden" 
-                         style={{ clipPath: 'polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px))' }}>
-                        
+                    <div className="bg-[var(--raised-bg)] border border-[var(--border-1)] p-8 md:p-12 relative overflow-hidden"
+                        style={{ clipPath: 'polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px))' }}>
+
                         <div className="absolute top-0 right-0 p-8 text-amber-500 opacity-10 pointer-events-none">
                             <AiOutlineHeart size={140} />
                         </div>
@@ -237,11 +252,10 @@ const DonatePage = () => {
                                         <button
                                             key={amt}
                                             onClick={() => handleAmountSelect(amt)}
-                                            className={`py-6 px-4 font-['Bebas_Neue'] text-3xl tracking-wider border transition-all duration-300 ${
-                                                amount === amt 
-                                                ? 'bg-amber-500 border-amber-500 text-black shadow-[0_0_20px_rgba(245,158,11,0.3)]' 
-                                                : 'bg-transparent border-[var(--border-1)] text-[var(--text-1)] hover:border-amber-500/50'
-                                            }`}
+                                            className={`py-6 px-4 font-['Bebas_Neue'] text-3xl tracking-wider border transition-all duration-300 ${amount === amt
+                                                    ? 'bg-amber-500 border-amber-500 text-black shadow-[0_0_20px_rgba(245,158,11,0.3)]'
+                                                    : 'bg-transparent border-[var(--border-1)] text-[var(--text-1)] hover:border-amber-500/50'
+                                                }`}
                                         >
                                             {amt}
                                         </button>
@@ -251,11 +265,10 @@ const DonatePage = () => {
                                 <div className="mb-10">
                                     <button
                                         onClick={() => handleAmountSelect('custom')}
-                                        className={`w-full py-4 mb-4 font-['Barlow_Condensed'] text-lg font-bold uppercase tracking-widest border transition-all duration-300 ${
-                                            isCustom 
-                                            ? 'bg-[var(--text-1)] border-[var(--text-1)] text-[var(--page-bg)]' 
-                                            : 'bg-transparent border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--text-1)]/30'
-                                        }`}
+                                        className={`w-full py-4 mb-4 font-['Barlow_Condensed'] text-lg font-bold uppercase tracking-widest border transition-all duration-300 ${isCustom
+                                                ? 'bg-[var(--text-1)] border-[var(--text-1)] text-[var(--page-bg)]'
+                                                : 'bg-transparent border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--text-1)]/30'
+                                            }`}
                                     >
                                         Custom Amount
                                     </button>
@@ -265,11 +278,13 @@ const DonatePage = () => {
                                             <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[var(--text-3)] font-bold">KES</span>
                                             <input
                                                 type="number"
+                                                min="1"
                                                 value={customAmount}
                                                 onChange={(e) => handleCustomChange(e.target.value)}
                                                 placeholder="Enter amount..."
                                                 className="w-full bg-[var(--text-1)]/5 border border-[var(--border-1)] py-5 pl-16 pr-6 text-2xl text-[var(--text-1)] font-bold focus:outline-none focus:border-amber-500 transition-colors"
                                             />
+
                                         </div>
                                     )}
                                 </div>
@@ -282,8 +297,8 @@ const DonatePage = () => {
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div>
                                             <label className="block text-[10px] uppercase tracking-widest text-[var(--text-3)] font-bold mb-2">Full Name</label>
-                                            <input 
-                                                type="text" 
+                                            <input
+                                                type="text"
                                                 value={name}
                                                 onChange={e => setName(e.target.value)}
                                                 placeholder="John Doe"
@@ -292,8 +307,8 @@ const DonatePage = () => {
                                         </div>
                                         <div>
                                             <label className="block text-[10px] uppercase tracking-widest text-[var(--text-3)] font-bold mb-2">Email Address</label>
-                                            <input 
-                                                type="email" 
+                                            <input
+                                                type="email"
                                                 value={email}
                                                 onChange={e => setEmail(e.target.value)}
                                                 placeholder="john@example.com"
@@ -303,8 +318,8 @@ const DonatePage = () => {
                                     </div>
                                     <div>
                                         <label className="block text-[10px] uppercase tracking-widest text-[var(--text-3)] font-bold mb-2">M-Pesa Phone Number</label>
-                                        <input 
-                                            type="tel" 
+                                        <input
+                                            type="tel"
                                             value={phone}
                                             onChange={e => setPhone(e.target.value)}
                                             placeholder="07XX XXX XXX"
@@ -320,18 +335,13 @@ const DonatePage = () => {
                                     </div>
                                 )}
 
-                                <button 
+                                <button
                                     onClick={handleDonate}
                                     disabled={isProcessing}
                                     className="shimmer-btn shimmer-btn--amber w-full py-6 text-xl justify-center font-black disabled:opacity-50"
                                 >
                                     {isProcessing ? 'Processing...' : 'Complete Donation'}
                                 </button>
-                                
-                                <p className="mt-8 text-center text-[var(--text-3)] text-[10px] font-bold uppercase tracking-[0.25em] flex items-center justify-center gap-2">
-                                    <AiOutlineMobile className="text-amber-500" />
-                                    Secure M-Pesa Checkout
-                                </p>
                             </>
                         )}
                     </div>

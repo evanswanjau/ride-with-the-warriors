@@ -53,7 +53,7 @@ const RafflePaymentPage = ({ ticketId, ticketIds, firstName, lastName, amount, p
                     const t = data.ticket;
                     if (t?.status === 'PAID' || t?.status === 'CONFIRMED') { onSuccess(); return; }
                     if (t?.paymentFailed === true) {
-                        const reason = t?.paymentFailureReason || 'Payment was not completed.';
+                        const reason = t?.failureReason || 'Payment was not completed.';
                         setPaymentStatus('error');
                         setError(`Payment failed: ${reason}. Please try again.`);
                         return;
