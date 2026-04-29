@@ -45,6 +45,8 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('adminTheme') === 'dark');
     const [selectedRegistration, setSelectedRegistration] = useState<any>(null);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+    const [selectedRaffleTicket, setSelectedRaffleTicket] = useState<any>(null);
+    const [isRaffleDetailsOpen, setIsRaffleDetailsOpen] = useState(false);
     const [payments, setPayments] = useState<any[]>([]);
     const [paymentsStats, setPaymentsStats] = useState<any>(null);
     const [paymentsFilter, setPaymentsFilter] = useState({ status: '', search: '', dateFrom: '', dateTo: '' });
@@ -117,6 +119,33 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         if (!confirm('Delete this registration?')) return;
         try { const r = await fetch(`${API_BASE_URL}/admin/registrations/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }); if (r.ok) fetchData(); } catch (e) { console.error(e); }
     };
+
+    const handleRaffleStatusUpdate = async (id: string, s: string) => {
+        try {
+            const r = await fetch(`${API_BASE_URL}/admin/raffle/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ status: s })
+            });
+            if (r.ok) fetchRaffleTickets();
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    const handleDeleteRaffleTicket = async (id: string) => {
+        if (!confirm('Delete this raffle ticket?')) return;
+        try {
+            const r = await fetch(`${API_BASE_URL}/admin/raffle/${id}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (r.ok) fetchRaffleTickets();
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     const formatDate = (d: string) => { try { return new Date(d).toLocaleString(); } catch { return 'N/A'; } };
     const cap = (s: string) => s ? s.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : '';
 
@@ -1167,17 +1196,34 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     ) : (
                                         <div className="ad-table-wrap">
                                             <table className="ad-table">
-                                                <thead><tr>{['Ticket ID', 'Name', 'Email', 'Phone', 'Status', 'Created', 'Link'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                <thead><tr>{['Ticket ID', 'Name', 'Email', 'Phone', 'Status', 'Created', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                 <tbody>
                                                     {raffleTickets.map((t: any) => (
                                                         <tr key={t.id} className="ad-tr">
                                                             <td className="ad-td ad-mono">{t.id}</td>
-                                                            <td className="ad-td">{cap(t.firstName)} {cap(t.lastName)}</td>
+                                                            <td className="ad-td">
+                                                                <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{cap(t.firstName)} {cap(t.lastName)}</div>
+                                                            </td>
                                                             <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.email || '—'}</td>
                                                             <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.phoneNumber || '—'}</td>
-                                                            <td className="ad-td"><span className={`ad-badge ${t.status === 'PAID' ? 'ad-badge-paid' : 'ad-badge-unpaid'}`}>{t.status}</span></td>
+                                                            <td className="ad-td">
+                                                                <select className="ad-status-select" value={t.status} onChange={e => handleRaffleStatusUpdate(t.id, e.target.value)}
+                                                                    style={{ color: t.status === 'PAID' ? 'var(--ad-pl)' : 'var(--ad-accent)' }}>
+                                                                    <option value="UNPAID">UNPAID</option>
+                                                                    <option value="PAID">PAID</option>
+                                                                </select>
+                                                            </td>
                                                             <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{formatDate(t.createdAt)}</td>
-                                                            <td className="ad-td"><a href={`/raffle/profile/${t.id}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a></td>
+                                                            <td className="ad-td" style={{ textAlign: 'right' }}>
+                                                                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
+                                                                    <button onClick={() => { setSelectedRaffleTicket(t); setIsRaffleDetailsOpen(true); }} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="View" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-pl)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-pl)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
+                                                                        <AiOutlineEye />
+                                                                    </button>
+                                                                    <button onClick={() => handleDeleteRaffleTicket(t.id)} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="Delete" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-red)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-red)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
+                                                                        <AiOutlineDelete />
+                                                                    </button>
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
@@ -1305,17 +1351,39 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     </main>
                 </div>
 
-                {/* ── Registration detail drawer ── */}
-                {isDetailsOpen && selectedRegistration && (
+                {/* ── Detail drawer ── */}
+                {(isDetailsOpen || isRaffleDetailsOpen) && (
                     <>
-                        <div className="ad-drawer-overlay" onClick={() => { setIsDetailsOpen(false); setSelectedRegistration(null); }} />
+                        <div className="ad-drawer-overlay" onClick={() => {
+                            setIsDetailsOpen(false); setSelectedRegistration(null);
+                            setIsRaffleDetailsOpen(false); setSelectedRaffleTicket(null);
+                        }} />
                         <aside className="ad-drawer">
                             <div className="ad-drawer-head">
-                                <span className="ad-drawer-title">Registration Detail</span>
-                                <button className="ad-drawer-close" onClick={() => { setIsDetailsOpen(false); setSelectedRegistration(null); }}><AiOutlineClose /></button>
+                                <span className="ad-drawer-title">{isRaffleDetailsOpen ? 'Raffle Ticket Detail' : 'Registration Detail'}</span>
+                                <button className="ad-drawer-close" onClick={() => {
+                                    setIsDetailsOpen(false); setSelectedRegistration(null);
+                                    setIsRaffleDetailsOpen(false); setSelectedRaffleTicket(null);
+                                }}><AiOutlineClose /></button>
                             </div>
                             <div className="ad-drawer-body">
-                                {[
+                                {isRaffleDetailsOpen && selectedRaffleTicket && [
+                                    { label: 'Ticket ID', val: selectedRaffleTicket.id, mono: true },
+                                    { label: 'Name', val: `${cap(selectedRaffleTicket.firstName)} ${cap(selectedRaffleTicket.lastName)}` },
+                                    { label: 'Email', val: selectedRaffleTicket.email || '—' },
+                                    { label: 'Phone', val: selectedRaffleTicket.phoneNumber || '—' },
+                                    { label: 'ID Number', val: selectedRaffleTicket.idNumber || '—' },
+                                    { label: 'Gender', val: selectedRaffleTicket.gender || '—' },
+                                    { label: 'Status', val: selectedRaffleTicket.status },
+                                    { label: 'Created At', val: formatDate(selectedRaffleTicket.createdAt) },
+                                ].map(f => (
+                                    <div key={f.label}>
+                                        <div className="ad-drawer-field-label">{f.label}</div>
+                                        <div className={`ad-drawer-field-val${f.mono ? ' ad-mono' : ''}`}>{f.val}</div>
+                                    </div>
+                                ))}
+
+                                {isDetailsOpen && selectedRegistration && [
                                     { label: 'Pass ID', val: selectedRegistration.id, mono: true },
                                     { label: 'Name', val: `${cap(selectedRegistration.firstName)} ${cap(selectedRegistration.lastName)}` },
                                     { label: 'Military Status', val: selectedRegistration.isMilitary ? 'Yes' : 'No' },
@@ -1343,8 +1411,15 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 ))}
                             </div>
                             <div className="ad-drawer-actions">
-                                <a href={`/profile/${selectedRegistration.id}`} target="_blank" rel="noreferrer" className="ad-drawer-link-primary">Open Full Profile &rarr;</a>
-                                <a href={`/payment/${selectedRegistration.id}`} className="ad-drawer-link-ghost">Go to Payment</a>
+                                {isRaffleDetailsOpen && selectedRaffleTicket && (
+                                    <a href={`/raffle/profile/${selectedRaffleTicket.id}`} target="_blank" rel="noreferrer" className="ad-drawer-link-primary">Open Full Profile &rarr;</a>
+                                )}
+                                {isDetailsOpen && selectedRegistration && (
+                                    <>
+                                        <a href={`/profile/${selectedRegistration.id}`} target="_blank" rel="noreferrer" className="ad-drawer-link-primary">Open Full Profile &rarr;</a>
+                                        <a href={`/payment/${selectedRegistration.id}`} className="ad-drawer-link-ghost">Go to Payment</a>
+                                    </>
+                                )}
                             </div>
                         </aside>
                     </>
