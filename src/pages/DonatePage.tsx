@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
-import { AiOutlineHeart, AiOutlineWarning, AiOutlineCheckCircle, AiOutlineMobile } from 'react-icons/ai';
+import { AiOutlineHeart, AiOutlineWarning, AiOutlineCheckCircle } from 'react-icons/ai';
 import { API_BASE_URL } from '../config';
 import '../styles/home.css';
 
@@ -253,8 +253,8 @@ const DonatePage = () => {
                                             key={amt}
                                             onClick={() => handleAmountSelect(amt)}
                                             className={`py-6 px-4 font-['Bebas_Neue'] text-3xl tracking-wider border transition-all duration-300 ${amount === amt
-                                                    ? 'bg-amber-500 border-amber-500 text-black shadow-[0_0_20px_rgba(245,158,11,0.3)]'
-                                                    : 'bg-transparent border-[var(--border-1)] text-[var(--text-1)] hover:border-amber-500/50'
+                                                ? 'bg-amber-500 border-amber-500 text-black shadow-[0_0_20px_rgba(245,158,11,0.3)]'
+                                                : 'bg-transparent border-[var(--border-1)] text-[var(--text-1)] hover:border-amber-500/50'
                                                 }`}
                                         >
                                             {amt}
@@ -266,8 +266,8 @@ const DonatePage = () => {
                                     <button
                                         onClick={() => handleAmountSelect('custom')}
                                         className={`w-full py-4 mb-4 font-['Barlow_Condensed'] text-lg font-bold uppercase tracking-widest border transition-all duration-300 ${isCustom
-                                                ? 'bg-[var(--text-1)] border-[var(--text-1)] text-[var(--page-bg)]'
-                                                : 'bg-transparent border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--text-1)]/30'
+                                            ? 'bg-[var(--text-1)] border-[var(--text-1)] text-[var(--page-bg)]'
+                                            : 'bg-transparent border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--text-1)]/30'
                                             }`}
                                     >
                                         Custom Amount
