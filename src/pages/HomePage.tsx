@@ -208,12 +208,12 @@ const HomePage = () => {
                     <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
                         <div className="grid grid-cols-2 gap-3">
                             <div className="space-y-3 pt-10">
-                                <div className="img-hover-frame h-[350px] w-full overflow-hidden"><img src={highlightImage1} alt="RWTW Cyclist" className="w-full h-full object-cover" /></div>
-                                <div className="img-hover-frame h-[350px] w-full overflow-hidden"><img src={highlightImage3} alt="RWTW Action" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img src={highlightImage1} alt="RWTW Cyclist" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img src={highlightImage3} alt="RWTW Action" className="w-full h-full object-cover" /></div>
                             </div>
                             <div className="space-y-3">
-                                <div className="img-hover-frame h-[350px] w-full overflow-hidden"><img src={highlightImage2} alt="RWTW Peloton" className="w-full h-full object-cover" /></div>
-                                <div className="img-hover-frame h-[350px] w-full overflow-hidden"><img src={heroImage} alt="RWTW Landscape" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img src={highlightImage2} alt="RWTW Peloton" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img src={heroImage} alt="RWTW Landscape" className="w-full h-full object-cover" /></div>
                             </div>
                         </div>
 
@@ -342,8 +342,9 @@ const HomePage = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <Link to="/raffle/step/1" className="raffle-cta-btn">
-                                        Get Your Tickets Now
+                                    <Link to="/raffle/step/1" className="raffle-cta-btn w-full sm:w-auto flex justify-center">
+                                        <span className="sm:hidden">Buy Tickets Now</span>
+                                        <span className="hidden sm:inline">Get Your Tickets Now</span>
                                         <AiOutlineArrowRight className="text-lg" />
                                     </Link>
                                 </div>

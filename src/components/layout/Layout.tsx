@@ -70,7 +70,7 @@ const Layout = ({ children, registrationType, isFullWidth = false, maxWidth = 'm
             `}</style>
             <TopBar />
             <Navbar />
-            <main className={`flex flex-1 flex-col ${isFullWidth ? '' : 'pt-20 md:pt-24 lg:pt-28'}`}>
+            <main className={`flex flex-1 flex-col ${isFullWidth ? '' : 'pt-[110px] md:pt-[120px] lg:pt-[136px]'}`}>
                 <div className={`w-full ${isFullWidth ? '' : `${maxWidth} mx-auto px-4 pb-12`}`}>
                     {children}
                 </div>

@@ -125,10 +125,10 @@ const Navbar = () => {
                 /* ── Navbar base ── */
                 .rwtw-nav {
                     position: fixed;
-                    top: 32px;
+                    top: ${isScrolled ? '0' : '26px'};
                     width: 100%;
                     z-index: 100;
-                    transition: background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
+                    transition: top 0.3s ease, background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
                     font-family: 'Barlow', sans-serif;
                 }
                 .rwtw-nav.is-solid {
@@ -338,7 +338,7 @@ const Navbar = () => {
                 .nav-mobile-overlay {
                     position: fixed;
                     inset: 0;
-                    z-index: 99;
+                    z-index: 120;
                     background: var(--nav-mobile-bg);
                     transform: translateX(100%);
                     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -602,6 +602,13 @@ const Navbar = () => {
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Buy Raffle Tickets
+                    </Link>
+                    <Link
+                        to="/donate"
+                        className="nav-mobile-cta black-white"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Donate
                     </Link>
                 </div>
             </div>

@@ -67,7 +67,7 @@ const Gallery = () => {
 
             <div
                 className="page"
-                style={{ padding: '100px 48px 80px' }}
+                style={{ padding: '130px 48px 80px' }}
                 onKeyDown={handleKeyDown}
                 tabIndex={-1}
             >

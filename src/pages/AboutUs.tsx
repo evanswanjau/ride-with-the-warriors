@@ -28,7 +28,7 @@ const AboutUs = () => {
         <>
 
 
-            <div className="page" style={{ padding: '96px 48px 80px' }}>
+            <div className="page" style={{ padding: '130px 48px 80px' }}>
                 <div className="page-inner">
 
                     {/* ── Header ── */}
