@@ -1,4 +1,4 @@
-import { AiOutlineExperiment, AiOutlineArrowRight, AiOutlineCheckCircle } from 'react-icons/ai';
+import { AiOutlineArrowRight, AiOutlineCheckCircle } from 'react-icons/ai';
 import RegistrationStepLayout, { REG_INPUT_CLASSES, REG_LABEL_CLASSES } from '../registration/ui/RegistrationStepLayout';
 
 interface RaffleDetailsFormProps {
@@ -25,29 +25,7 @@ const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsForm
     const inputClass = (field: string) =>
         `${REG_INPUT_CLASSES} ${errors[field] ? '!border-red-500 focus:!ring-red-500' : ''}`;
 
-    const TestDataButton = (
-        <button
-            onClick={() => {
-                onChange({
-                    ...data,
-                    firstName: 'John',
-                    lastName: 'Doe',
-                    email: `john.doe.${Math.floor(Math.random() * 1000)}@example.com`,
-                    phoneNumber: '0712345678',
-                    idNumber: '12345678',
-                    gender: 'male',
-                    quantity: data.quantity || '1',
-                    acceptedTerms: true,
-                });
-            }}
-            className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary hover:bg-primary/20 transition-all font-bold text-[10px] tracking-widest uppercase"
-            type="button"
-            style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-        >
-            <AiOutlineExperiment className="text-sm" />
-            Fill Test Data
-        </button>
-    );
+
 
     const Footer = (
         <div className="flex justify-end w-full">
@@ -72,7 +50,6 @@ const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsForm
             stepLabel="DETAILS"
             title="RAFFLE ENTRY"
             subtitle="Please provide your information to enter the raffle."
-            headerRight={TestDataButton}
             footer={Footer}
         >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
