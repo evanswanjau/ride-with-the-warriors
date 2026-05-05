@@ -23,7 +23,7 @@ const TopBar = () => {
             `}</style>
             <Link to="/donate" className="topbar-campaign absolute top-0 left-0 w-full bg-amber-500 h-[26px] flex items-center justify-center overflow-hidden z-[110] no-underline transition-colors">
                 <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-black text-center flex items-center gap-2">
-                    Support the movement <span className="text-sm">❤️</span>
+                    Support the widows and families of our fallen heroes <span className="text-sm">❤️</span>
                 </p>
             </Link>
         </>
