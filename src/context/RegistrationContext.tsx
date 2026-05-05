@@ -306,22 +306,27 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                 if (!response.ok) {
                     if (data.error?.code === 'DUPLICATE' && data.error.details?.duplicates) {
                         const newErrors: Record<string, string> = {};
-                        const duplicateEmails = data.error.details.duplicates as string[];
+                        const duplicateInfo = data.error.details.duplicates as string[];
 
                         if (registrationType === 'individual') {
-                            if (duplicateEmails.includes(riderDetails.email)) newErrors.email = 'This email is already registered';
+                            if (duplicateInfo.includes(riderDetails.email)) newErrors.email = 'This email is already registered';
+                            if (duplicateInfo.includes(riderDetails.idNumber)) newErrors.idNumber = 'This ID number is already registered';
                         } else if (registrationType === 'team') {
                             teamDetails.members.forEach(m => {
-                                if (duplicateEmails.includes(m.email)) newErrors[`${m.id}.email`] = 'Already registered';
+                                if (duplicateInfo.includes(m.email)) newErrors[`${m.id}.email`] = 'Already registered';
+                                if (duplicateInfo.includes(m.idNumber)) newErrors[`${m.id}.idNumber`] = 'Already registered';
                             });
                         } else if (registrationType === 'family') {
-                            if (duplicateEmails.includes(familyDetails.guardian.email) && familyDetails.guardian.participation === 'mom') {
+                            if (duplicateInfo.includes(familyDetails.guardian.email) && familyDetails.guardian.participation === 'mom') {
                                 newErrors['guardian.email'] = 'Guardian already registered';
+                            }
+                            if (duplicateInfo.includes(familyDetails.guardian.idNumber)) {
+                                newErrors['guardian.idNumber'] = 'Guardian ID already registered';
                             }
                         }
 
                         setErrors(newErrors);
-                        setFormErrors(['One or more participants are already registered. Please check the highlighted emails.']);
+                        setFormErrors(['One or more participants are already registered. Please check the highlighted fields.']);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                         return;
                     }
