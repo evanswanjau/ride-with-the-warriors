@@ -253,16 +253,67 @@ const MemberCard = ({ member, index, errors, isSubmitting, onUpdate, onRemove }:
                     </>
                 )}
 
-                {/* Shared Fields: Country + T-Shirt Row */}
-                <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    {!isMilitary ? (
-                        <Field label="Country" error={e('country')}>
+                {/* Layout varies based on isMilitary */}
+                {isMilitary ? (
+                    <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <Field label="Gender" required error={e('gender')}>
+                            <div style={{ display: 'flex', gap: 16, alignItems: 'center', height: 42 }}>
+                                {(['male', 'female'] as const).map(g => (
+                                    <label
+                                        key={g}
+                                        style={{
+                                            display: 'flex', alignItems: 'center', gap: 8,
+                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                            fontFamily: "'Barlow', sans-serif",
+                                            fontSize: 13.5, fontWeight: 600,
+                                            color: member.gender === g ? 'var(--td4-primary-lt)' : 'var(--td4-text-2)',
+                                            transition: 'color 0.2s', userSelect: 'none',
+                                        }}
+                                        onClick={() => !isSubmitting && set('gender', g)}
+                                    >
+                                        <div style={{
+                                            width: 18, height: 18, flexShrink: 0,
+                                            border: `2px solid ${member.gender === g ? 'var(--td4-primary-lt)' : 'var(--td4-radio-bd)'}`,
+                                            borderRadius: '50%',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            transition: 'border-color 0.2s',
+                                        }}>
+                                            <div style={{
+                                                width: 8, height: 8, borderRadius: '50%',
+                                                background: 'var(--td4-primary-lt)',
+                                                transform: member.gender === g ? 'scale(1)' : 'scale(0)',
+                                                transition: 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
+                                            }} />
+                                        </div>
+                                        {g.charAt(0).toUpperCase() + g.slice(1)}
+                                    </label>
+                                ))}
+                            </div>
+                        </Field>
+                        <Field label="T-Shirt Size" required error={e('tshirtSize')}>
                             <div style={{ position: 'relative' }}>
-                                <select className={inp(!!e('country'))}
-                                    value={member.country || 'Kenya'} onChange={ev => set('country', ev.target.value)} disabled={isSubmitting}>
-                                    <option value="">Select country</option>
-                                    <option value="Kenya">Kenya</option>
-                                    <option disabled>──────────</option>
+                                <select className={inp(!!e('tshirtSize'))}
+                                    value={member.tshirtSize} onChange={ev => set('tshirtSize', ev.target.value)} disabled={isSubmitting}>
+                                    <option value="">Select size</option>
+                                    {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
+                                        <option key={s} value={s}>{s === 'S' ? 'Small (S)' : s === 'M' ? 'Medium (M)' : s === 'L' ? 'Large (L)' : s === 'XL' ? 'Extra Large (XL)' : 'Double XL (XXL)'}</option>
+                                    ))}
+                                </select>
+                                <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--td4-text-3)' }}><ChevronDown /></span>
+                            </div>
+                        </Field>
+                    </div>
+                ) : (
+                    <>
+                        {/* Country + T-Shirt Row */}
+                        <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                            <Field label="Country" error={e('country')}>
+                                <div style={{ position: 'relative' }}>
+                                    <select className={inp(!!e('country'))}
+                                        value={member.country || 'Kenya'} onChange={ev => set('country', ev.target.value)} disabled={isSubmitting}>
+                                        <option value="">Select country</option>
+                                        <option value="Kenya">Kenya</option>
+                                        <option disabled>──────────</option>
                                     <option value="Afghanistan">Afghanistan</option>
                                     <option value="Åland Islands">Åland Islands</option>
                                     <option value="Albania">Albania</option>
@@ -507,63 +558,62 @@ const MemberCard = ({ member, index, errors, isSubmitting, onUpdate, onRemove }:
                                     <option value="Yemen">Yemen</option>
                                     <option value="Zambia">Zambia</option>
                                     <option value="Zimbabwe">Zimbabwe</option>
-                                </select>
-                                <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--td4-text-3)' }}><ChevronDown /></span>
+                                    </select>
+                                    <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--td4-text-3)' }}><ChevronDown /></span>
+                                </div>
+                            </Field>
+                            <Field label="T-Shirt Size" required error={e('tshirtSize')}>
+                                <div style={{ position: 'relative' }}>
+                                    <select className={inp(!!e('tshirtSize'))}
+                                        value={member.tshirtSize} onChange={ev => set('tshirtSize', ev.target.value)} disabled={isSubmitting}>
+                                        <option value="">Select size</option>
+                                        {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
+                                            <option key={s} value={s}>{s === 'S' ? 'Small (S)' : s === 'M' ? 'Medium (M)' : s === 'L' ? 'Large (L)' : s === 'XL' ? 'Extra Large (XL)' : 'Double XL (XXL)'}</option>
+                                        ))}
+                                    </select>
+                                    <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--td4-text-3)' }}><ChevronDown /></span>
+                                </div>
+                            </Field>
+                        </div>
+
+                        {/* Gender alone on left column */}
+                        <Field label="Gender" required error={e('gender')}>
+                            <div style={{ display: 'flex', gap: 16, alignItems: 'center', height: 42 }}>
+                                {(['male', 'female'] as const).map(g => (
+                                    <label
+                                        key={g}
+                                        style={{
+                                            display: 'flex', alignItems: 'center', gap: 8,
+                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                            fontFamily: "'Barlow', sans-serif",
+                                            fontSize: 13.5, fontWeight: 600,
+                                            color: member.gender === g ? 'var(--td4-primary-lt)' : 'var(--td4-text-2)',
+                                            transition: 'color 0.2s', userSelect: 'none',
+                                        }}
+                                        onClick={() => !isSubmitting && set('gender', g)}
+                                    >
+                                        <div style={{
+                                            width: 18, height: 18, flexShrink: 0,
+                                            border: `2px solid ${member.gender === g ? 'var(--td4-primary-lt)' : 'var(--td4-radio-bd)'}`,
+                                            borderRadius: '50%',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            transition: 'border-color 0.2s',
+                                        }}>
+                                            <div style={{
+                                                width: 8, height: 8, borderRadius: '50%',
+                                                background: 'var(--td4-primary-lt)',
+                                                transform: member.gender === g ? 'scale(1)' : 'scale(0)',
+                                                transition: 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
+                                            }} />
+                                        </div>
+                                        {g.charAt(0).toUpperCase() + g.slice(1)}
+                                    </label>
+                                ))}
                             </div>
                         </Field>
-                    ) : (
                         <div />
-                    )}
-                    <Field label="T-Shirt Size" required error={e('tshirtSize')}>
-                        <div style={{ position: 'relative' }}>
-                            <select className={inp(!!e('tshirtSize'))}
-                                value={member.tshirtSize} onChange={ev => set('tshirtSize', ev.target.value)} disabled={isSubmitting}>
-                                <option value="">Select size</option>
-                                {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
-                                    <option key={s} value={s}>{s === 'S' ? 'Small (S)' : s === 'M' ? 'Medium (M)' : s === 'L' ? 'Large (L)' : s === 'XL' ? 'Extra Large (XL)' : 'Double XL (XXL)'}</option>
-                                ))}
-                            </select>
-                            <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--td4-text-3)' }}><ChevronDown /></span>
-                        </div>
-                    </Field>
-                </div>
-
-                {/* Gender alone on left column */}
-                <Field label="Gender" required error={e('gender')}>
-                    <div style={{ display: 'flex', gap: 16, alignItems: 'center', height: 42 }}>
-                        {(['male', 'female'] as const).map(g => (
-                            <label
-                                key={g}
-                                style={{
-                                    display: 'flex', alignItems: 'center', gap: 8,
-                                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                                    fontFamily: "'Barlow', sans-serif",
-                                    fontSize: 13.5, fontWeight: 600,
-                                    color: member.gender === g ? 'var(--td4-primary-lt)' : 'var(--td4-text-2)',
-                                    transition: 'color 0.2s', userSelect: 'none',
-                                }}
-                                onClick={() => !isSubmitting && set('gender', g)}
-                            >
-                                <div style={{
-                                    width: 18, height: 18, flexShrink: 0,
-                                    border: `2px solid ${member.gender === g ? 'var(--td4-primary-lt)' : 'var(--td4-radio-bd)'}`,
-                                    borderRadius: '50%',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    transition: 'border-color 0.2s',
-                                }}>
-                                    <div style={{
-                                        width: 8, height: 8, borderRadius: '50%',
-                                        background: 'var(--td4-primary-lt)',
-                                        transform: member.gender === g ? 'scale(1)' : 'scale(0)',
-                                        transition: 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
-                                    }} />
-                                </div>
-                                {g.charAt(0).toUpperCase() + g.slice(1)}
-                            </label>
-                        ))}
-                    </div>
-                </Field>
-                <div />
+                    </>
+                )}
 
                 {/* Emergency contacts on same row */}
                 <Field label="Emergency Contact Name" required error={e('emergencyContactName')}>

@@ -236,20 +236,57 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                             </>
                         )}
 
-                        {/* Country + T-Shirt on same row */}
-                        <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                            {!isMilitary ? (
-                                <Field label="Country" error={errors.country}>
+                        {/* Layout varies based on isMilitary */}
+                        {isMilitary ? (
+                            <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                                <Field label="Gender" required error={errors.gender}>
+                                    <div className="rd4-radio-group">
+                                        {(['male', 'female'] as const).map(g => (
+                                            <label
+                                                key={g}
+                                                className={`rd4-radio-label${data.gender === g ? ' rd4-radio-checked' : ''}`}
+                                                onClick={() => !isSubmitting && set('gender', g)}
+                                            >
+                                                <div className="rd4-radio-outer">
+                                                    <div className="rd4-radio-inner" />
+                                                </div>
+                                                {g.charAt(0).toUpperCase() + g.slice(1)}
+                                            </label>
+                                        ))}
+                                    </div>
+                                </Field>
+                                <Field label="T-Shirt Size" required error={errors.tshirtSize}>
                                     <div className="rd4-select-wrap">
                                         <select
-                                            className={inputClass(!!errors.country)}
-                                            value={data.country || 'Kenya'}
-                                            onChange={e => set('country', e.target.value)}
+                                            className={inputClass(!!errors.tshirtSize)}
+                                            value={data.tshirtSize}
+                                            onChange={e => set('tshirtSize', e.target.value)}
                                             disabled={isSubmitting}
                                         >
-                                            <option value="">Select country</option>
-                                            <option value="Kenya">Kenya</option>
-                                            <option disabled>──────────</option>
+                                            <option value="">Select size</option>
+                                            {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
+                                                <option key={s} value={s}>{s === 'S' ? 'Small (S)' : s === 'M' ? 'Medium (M)' : s === 'L' ? 'Large (L)' : s === 'XL' ? 'Extra Large (XL)' : 'Double XL (XXL)'}</option>
+                                            ))}
+                                        </select>
+                                        <span className="rd4-chevron"><ChevronDown /></span>
+                                    </div>
+                                </Field>
+                            </div>
+                        ) : (
+                            <>
+                                {/* Country + T-Shirt on same row */}
+                                <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                                    <Field label="Country" error={errors.country}>
+                                        <div className="rd4-select-wrap">
+                                            <select
+                                                className={inputClass(!!errors.country)}
+                                                value={data.country || 'Kenya'}
+                                                onChange={e => set('country', e.target.value)}
+                                                disabled={isSubmitting}
+                                            >
+                                                <option value="">Select country</option>
+                                                <option value="Kenya">Kenya</option>
+                                                <option disabled>──────────</option>
                                             <option value="Afghanistan">Afghanistan</option>
                                             <option value="Åland Islands">Åland Islands</option>
                                             <option value="Albania">Albania</option>
@@ -497,45 +534,43 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                                         <span className="rd4-chevron"><ChevronDown /></span>
                                     </div>
                                 </Field>
-                            ) : (
-                                <div />
-                            )}
-                            <Field label="T-Shirt Size" required error={errors.tshirtSize}>
-                                <div className="rd4-select-wrap">
-                                    <select
-                                        className={inputClass(!!errors.tshirtSize)}
-                                        value={data.tshirtSize}
-                                        onChange={e => set('tshirtSize', e.target.value)}
-                                        disabled={isSubmitting}
-                                    >
-                                        <option value="">Select size</option>
-                                        {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
-                                            <option key={s} value={s}>{s === 'S' ? 'Small (S)' : s === 'M' ? 'Medium (M)' : s === 'L' ? 'Large (L)' : s === 'XL' ? 'Extra Large (XL)' : 'Double XL (XXL)'}</option>
-                                        ))}
-                                    </select>
-                                    <span className="rd4-chevron"><ChevronDown /></span>
+                                <Field label="T-Shirt Size" required error={errors.tshirtSize}>
+                                    <div className="rd4-select-wrap">
+                                        <select
+                                            className={inputClass(!!errors.tshirtSize)}
+                                            value={data.tshirtSize}
+                                            onChange={e => set('tshirtSize', e.target.value)}
+                                            disabled={isSubmitting}
+                                        >
+                                            <option value="">Select size</option>
+                                            {['S', 'M', 'L', 'XL', 'XXL'].map(s => (
+                                                <option key={s} value={s}>{s === 'S' ? 'Small (S)' : s === 'M' ? 'Medium (M)' : s === 'L' ? 'Large (L)' : s === 'XL' ? 'Extra Large (XL)' : 'Double XL (XXL)'}</option>
+                                            ))}
+                                        </select>
+                                        <span className="rd4-chevron"><ChevronDown /></span>
+                                    </div>
+                                </Field>
                                 </div>
-                            </Field>
-                        </div>
-
-                        {/* Gender alone on left column */}
-                        <Field label="Gender" required error={errors.gender}>
-                            <div className="rd4-radio-group">
-                                {(['male', 'female'] as const).map(g => (
-                                    <label
-                                        key={g}
-                                        className={`rd4-radio-label${data.gender === g ? ' rd4-radio-checked' : ''}`}
-                                        onClick={() => !isSubmitting && set('gender', g)}
-                                    >
-                                        <div className="rd4-radio-outer">
-                                            <div className="rd4-radio-inner" />
-                                        </div>
-                                        {g.charAt(0).toUpperCase() + g.slice(1)}
-                                    </label>
-                                ))}
-                            </div>
-                        </Field>
-                        <div />{/* spacer — keeps Gender in left column only */}
+                                {/* Gender alone on left column */}
+                                <Field label="Gender" required error={errors.gender}>
+                                    <div className="rd4-radio-group">
+                                        {(['male', 'female'] as const).map(g => (
+                                            <label
+                                                key={g}
+                                                className={`rd4-radio-label${data.gender === g ? ' rd4-radio-checked' : ''}`}
+                                                onClick={() => !isSubmitting && set('gender', g)}
+                                            >
+                                                <div className="rd4-radio-outer">
+                                                    <div className="rd4-radio-inner" />
+                                                </div>
+                                                {g.charAt(0).toUpperCase() + g.slice(1)}
+                                            </label>
+                                        ))}
+                                    </div>
+                                </Field>
+                                <div />{/* spacer — keeps Gender in left column only */}
+                            </>
+                        )}
 
                         {/* Emergency contacts on same row */}
                         <Field label="Emergency Contact Name" required error={errors.emergencyContactName}>
