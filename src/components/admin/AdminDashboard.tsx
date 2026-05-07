@@ -53,33 +53,65 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [paymentsPagination, setPaymentsPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
     const [raffleTickets, setRaffleTickets] = useState<any[]>([]);
     const [raffleFilter, setRaffleFilter] = useState({ status: '', search: '' });
-    const [rafflePagination, setRafflePagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
+    const [rafflePagination, setRafflePagination] = useState({ page: 1, limit: 12, total: 0, pages: 1 });
     const [isPrintingRaffle, setIsPrintingRaffle] = useState(false);
     const [allRaffleTicketsForPrint, setAllRaffleTicketsForPrint] = useState<any[]>([]);
     const [isPrintingBibs, setIsPrintingBibs] = useState(false);
     const [allRegsForPrint, setAllRegsForPrint] = useState<any[]>([]);
     const [printProgress, setPrintProgress] = useState<number>(0);
     const [sortBy, setSortBy] = useState<string>('id'); // 'id', 'name', 'category'
+    const [debouncedSearch, setDebouncedSearch] = useState(filter.search);
+    const [debouncedPaymentSearch, setDebouncedPaymentSearch] = useState(paymentsFilter.search);
+    const [debouncedRaffleSearch, setDebouncedRaffleSearch] = useState(raffleFilter.search);
 
     const dm = isDarkMode;
 
     useEffect(() => { localStorage.setItem('adminTheme', dm ? 'dark' : 'light'); }, [dm]);
     useEffect(() => { fetchPricingCategories(); }, []);
+
     useEffect(() => {
-        if (activeView === 'overview' || activeView === 'analytics') fetchDashboardStats();
-        else if (activeView === 'registrations' || activeView === 'bibs') fetchData();
+        const timer = setTimeout(() => setDebouncedSearch(filter.search), 500);
+        return () => clearTimeout(timer);
+    }, [filter.search]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setDebouncedPaymentSearch(paymentsFilter.search), 500);
+        return () => clearTimeout(timer);
+    }, [paymentsFilter.search]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setDebouncedRaffleSearch(raffleFilter.search), 500);
+        return () => clearTimeout(timer);
+    }, [raffleFilter.search]);
+
+    useEffect(() => {
+        if (activeView === 'overview' || activeView === 'analytics' || activeView === 'raffle') fetchDashboardStats();
+
+        if (activeView === 'registrations' || activeView === 'bibs') fetchData(debouncedSearch);
         else if (activeView === 'pricing') fetchPricingCategories();
-        else if (activeView === 'payments') fetchPayments();
-        else if (activeView === 'raffle') fetchRaffleTickets();
-    }, [filter, pagination.page, activeView, paymentsFilter, paymentsPagination.page, raffleFilter, rafflePagination.page]);
+        else if (activeView === 'payments') fetchPayments(debouncedPaymentSearch);
+        else if (activeView === 'raffle') fetchRaffleTickets(debouncedRaffleSearch);
+    }, [
+        filter.circuitId, filter.type, filter.status, filter.category, filter.isMilitary, debouncedSearch,
+        pagination.page, activeView,
+        paymentsFilter.status, paymentsFilter.dateFrom, paymentsFilter.dateTo, debouncedPaymentSearch,
+        paymentsPagination.page,
+        raffleFilter.status, debouncedRaffleSearch,
+        rafflePagination.page
+    ]);
 
     const fetchDashboardStats = async () => {
         try { setLoading(true); const r = await fetch(`${API_BASE_URL}/admin/dashboard`, { headers: { Authorization: `Bearer ${token}` } }); if (!r.ok) throw new Error(); setDashboardData(await r.json()); } catch { setError('Failed to load dashboard'); } finally { setLoading(false); }
     };
-    const fetchData = async () => {
+    const fetchData = async (overrideSearch?: string) => {
         try {
             setLoading(true);
-            const q = new URLSearchParams({ page: String(pagination.page), limit: String(pagination.limit), ...filter });
+            const q = new URLSearchParams({ 
+                page: String(pagination.page), 
+                limit: String(pagination.limit), 
+                ...filter,
+                search: overrideSearch ?? filter.search 
+            });
             const [rr, sr] = await Promise.all([
                 fetch(`${API_BASE_URL}/admin/registrations?${q}`, { headers: { Authorization: `Bearer ${token}` } }),
                 fetch(`${API_BASE_URL}/admin/registrations/stats/summary`, { headers: { Authorization: `Bearer ${token}` } })
@@ -92,23 +124,38 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const fetchPricingCategories = async () => {
         try { setLoading(true); const r = await fetch(`${API_BASE_URL}/registrations/config/categories`); if (!r.ok) throw new Error(); const d = await r.json(); setPricingCategories(d.categories || []); } catch { setError('Failed to load pricing'); } finally { setLoading(false); }
     };
-    const fetchPayments = async () => {
+    const fetchPayments = async (overrideSearch?: string) => {
         try {
             setLoading(true); setError(null);
-            const p = new URLSearchParams({ page: String(paymentsPagination.page), limit: String(paymentsPagination.limit), ...(paymentsFilter.status && { status: paymentsFilter.status }), ...(paymentsFilter.search && { search: paymentsFilter.search }), ...(paymentsFilter.dateFrom && { dateFrom: paymentsFilter.dateFrom }), ...(paymentsFilter.dateTo && { dateTo: paymentsFilter.dateTo }) });
+            const searchVal = overrideSearch ?? paymentsFilter.search;
+            const p = new URLSearchParams({ 
+                page: String(paymentsPagination.page), 
+                limit: String(paymentsPagination.limit), 
+                ...(paymentsFilter.status && { status: paymentsFilter.status }), 
+                ...(searchVal && { search: searchVal }), 
+                ...(paymentsFilter.dateFrom && { dateFrom: paymentsFilter.dateFrom }), 
+                ...(paymentsFilter.dateTo && { dateTo: paymentsFilter.dateTo }) 
+            });
             const [lr, sr] = await Promise.all([fetch(`${API_BASE_URL}/admin/payments?${p}`, { headers: { Authorization: `Bearer ${token}` } }), fetch(`${API_BASE_URL}/admin/payments/stats/summary`, { headers: { Authorization: `Bearer ${token}` } })]);
             if (!lr.ok || !sr.ok) throw new Error();
             const ld = await lr.json(); const sd = await sr.json();
             setPayments(ld.payments || []); setPaymentsPagination(prev => ({ ...prev, ...(ld.pagination || {}) })); setPaymentsStats(sd);
         } catch { setError('Failed to load payments'); } finally { setLoading(false); }
     };
-    const fetchRaffleTickets = async () => {
+    const fetchRaffleTickets = async (overrideSearch?: string) => {
         try {
             setLoading(true); setError(null);
-            const p = new URLSearchParams({ page: String(rafflePagination.page), limit: String(rafflePagination.limit), ...(raffleFilter.status && { status: raffleFilter.status }), ...(raffleFilter.search && { search: raffleFilter.search }) });
+            const searchVal = overrideSearch ?? raffleFilter.search;
+            const p = new URLSearchParams({ 
+                page: String(rafflePagination.page), 
+                limit: String(rafflePagination.limit), 
+                ...(raffleFilter.status && { status: raffleFilter.status }), 
+                ...(searchVal && { search: searchVal }) 
+            });
             const r = await fetch(`${API_BASE_URL}/admin/raffle?${p}`, { headers: { Authorization: `Bearer ${token}` } });
             if (!r.ok) throw new Error(); const d = await r.json();
             setRaffleTickets(d.tickets || []); setRafflePagination(prev => ({ ...prev, ...(d.pagination || {}) }));
+            if (!dashboardData) fetchDashboardStats();
         } catch { setError('Failed to load raffle'); } finally { setLoading(false); }
     };
 
@@ -127,7 +174,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ status: s })
             });
-            if (r.ok) fetchRaffleTickets();
+            if (r.ok) {
+                fetchRaffleTickets();
+                fetchDashboardStats();
+            }
         } catch (e) {
             console.error(e);
         }
@@ -174,8 +224,8 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             setIsPrintingRaffle(true);
             setPrintProgress(0);
 
-            // Fetch all raffle tickets matching filter (ignoring pagination)
-            const q = new URLSearchParams({ limit: '5000', ...raffleFilter });
+            // Fetch only PAID raffle tickets (as requested by user)
+            const q = new URLSearchParams({ limit: '5000', status: 'PAID' });
             const r = await fetch(`${API_BASE_URL}/admin/raffle?${q}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -334,6 +384,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     --ad-accent:  #f59e0b;
                     --ad-red:     #ef4444;
                     --ad-sidebar: #0d1a0d;
+                    --ad-bg-rgb:  10,10,10;
                 }
                 .ad-light {
                     --ad-bg:      #f5f2eb;
@@ -349,6 +400,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     --ad-accent:  #b45309;
                     --ad-red:     #dc2626;
                     --ad-sidebar: #0d1a0d;
+                    --ad-bg-rgb:  245,242,235;
                 }
 
                 .ad-root { font-family: 'Barlow', sans-serif; background: var(--ad-bg); color: var(--ad-t1); min-height: 100vh; display: flex; flex-direction: column; transition: background 0.25s, color 0.25s; }
@@ -538,6 +590,24 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 .ad-main::-webkit-scrollbar { width: 4px; } .ad-main::-webkit-scrollbar-track { background: transparent; } .ad-main::-webkit-scrollbar-thumb { background: var(--ad-border2); }
                 .ad-feed::-webkit-scrollbar { width: 3px; } .ad-feed::-webkit-scrollbar-thumb { background: var(--ad-border2); }
                 .ad-drawer::-webkit-scrollbar { width: 3px; } .ad-drawer::-webkit-scrollbar-thumb { background: var(--ad-border2); }
+
+                /* Loading Overlay */
+                .ad-panel-rel { position: relative; }
+                .ad-loading-overlay {
+                    position: absolute; inset: 0;
+                    background: rgba(var(--ad-bg-rgb, 10,10,10), 0.5);
+                    backdrop-filter: blur(4px);
+                    display: flex; align-items: center; justify-content: center;
+                    z-index: 50; transition: opacity 0.3s;
+                }
+                .ad-spinner {
+                    width: 32px; height: 32px;
+                    border: 3px solid var(--ad-border);
+                    border-top-color: var(--ad-pl);
+                    border-radius: 50%;
+                    animation: ad-spin 0.8s linear infinite;
+                }
+                @keyframes ad-spin { to { transform: rotate(360deg); } }
             `}</style>
 
             <div className={`ad-root ${dm ? 'ad-dark' : 'ad-light'}`}>
@@ -981,7 +1051,6 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
 
                                 {/* Table panel */}
                                 <div className="ad-panel">
-                                    {/* Filters */}
                                     <div className="ad-filters">
                                         <div className="ad-filter-group" style={{ flex: 1, minWidth: 200 }}>
                                             <label className="ad-filter-label">Search</label>
@@ -1016,66 +1085,72 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             </select>
                                         </div>
                                     </div>
-
-                                    {/* Table */}
-                                    <div className="ad-table-wrap">
-                                        <table className="ad-table">
-                                            <thead>
-                                                <tr>
-                                                    {['Pass ID', 'Participant', 'Circuit / Category', 'Amount', 'Status', 'Registered', 'Actions'].map(h => (
-                                                        <th key={h} className="ad-th">{h}</th>
-                                                    ))}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {loading && registrations.length === 0 ? (
-                                                    <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>Loading…</td></tr>
-                                                ) : registrations.length === 0 ? (
-                                                    <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>No registrations found.</td></tr>
-                                                ) : registrations.map(reg => (
-                                                    <tr key={reg.id} className="ad-tr">
-                                                        <td className="ad-td ad-mono">{reg.id}</td>
-                                                        <td className="ad-td">
-                                                            <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{cap(reg.firstName)} {cap(reg.lastName)}</div>
-                                                            {reg.teamName && <div style={{ fontSize: '0.72rem', color: 'var(--ad-t3)', fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 2 }}>Team: {reg.teamName}</div>}
-                                                            {reg.isMilitary && <div style={{ fontSize: '0.65rem', color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 2 }}>[Military]</div>}
-                                                        </td>
-                                                        <td className="ad-td">
-                                                            <div style={{ fontWeight: 700, color: 'var(--ad-t1)', fontSize: '0.8rem' }}>{reg.category || 'Rider'}</div>
-                                                            <div style={{ fontSize: '0.65rem', color: 'var(--ad-t3)', fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.14em', textTransform: 'uppercase', marginTop: 2 }}>{reg.circuitId?.toUpperCase()}</div>
-                                                        </td>
-                                                        <td className="ad-td" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1rem', color: 'var(--ad-pl)' }}>KES {(reg.totalAmount ?? 0).toLocaleString()}</td>
-                                                        <td className="ad-td">
-                                                            <select className="ad-status-select" value={reg.status} onChange={e => handleStatusUpdate(reg.id, e.target.value)}
-                                                                style={{ color: reg.status === 'PAID' || reg.status === 'CONFIRMED' ? 'var(--ad-pl)' : reg.status === 'CANCELLED' ? 'var(--ad-red)' : 'var(--ad-accent)' }}>
-                                                                <option value="UNPAID">UNPAID</option>
-                                                                <option value="PAID">PAID</option>
-                                                                <option value="CONFIRMED">CONFIRMED</option>
-                                                                <option value="CANCELLED">CANCELLED</option>
-                                                            </select>
-                                                        </td>
-                                                        <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{formatDate(reg.createdAt)}</td>
-                                                        <td className="ad-td" style={{ textAlign: 'right' }}>
-                                                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
-                                                                <button onClick={() => { setSelectedRegistration(reg); setIsDetailsOpen(true); }} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="View" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-pl)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-pl)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
-                                                                    <AiOutlineEye />
-                                                                </button>
-                                                                <button onClick={() => handleDelete(reg.id)} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="Delete" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-red)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-red)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
-                                                                    <AiOutlineDelete />
-                                                                </button>
-                                                            </div>
-                                                        </td>
+                                    <div className="ad-panel-rel">
+                                        {loading && (
+                                            <div className="ad-loading-overlay">
+                                                <div className="ad-spinner" />
+                                            </div>
+                                        )}
+                                        {/* Table */}
+                                        <div className="ad-table-wrap">
+                                            <table className="ad-table">
+                                                <thead>
+                                                    <tr>
+                                                        {['Pass ID', 'Participant', 'Circuit / Category', 'Amount', 'Status', 'Registered', 'Actions'].map(h => (
+                                                            <th key={h} className="ad-th">{h}</th>
+                                                        ))}
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div className="ad-pagination">
-                                        <span className="ad-page-info">Showing {(pagination.page - 1) * pagination.limit + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}</span>
-                                        <div className="ad-page-btns">
-                                            <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={pagination.page === 1}><AiOutlineLeft /> Prev</button>
-                                            <span className="ad-page-cur">Page {pagination.page} / {pagination.pages}</span>
-                                            <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.min(p.pages, p.page + 1) }))} disabled={pagination.page === pagination.pages}>Next <AiOutlineRight /></button>
+                                                </thead>
+                                                <tbody>
+                                                    {loading && registrations.length === 0 ? (
+                                                        <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>Loading…</td></tr>
+                                                    ) : registrations.length === 0 ? (
+                                                        <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>No registrations found.</td></tr>
+                                                    ) : registrations.map(reg => (
+                                                        <tr key={reg.id} className="ad-tr">
+                                                            <td className="ad-td ad-mono">{reg.id}</td>
+                                                            <td className="ad-td">
+                                                                <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{cap(reg.firstName)} {cap(reg.lastName)}</div>
+                                                                {reg.teamName && <div style={{ fontSize: '0.72rem', color: 'var(--ad-t3)', fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 2 }}>Team: {reg.teamName}</div>}
+                                                                {reg.isMilitary && <div style={{ fontSize: '0.65rem', color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 2 }}>[Military]</div>}
+                                                            </td>
+                                                            <td className="ad-td">
+                                                                <div style={{ fontWeight: 700, color: 'var(--ad-t1)', fontSize: '0.8rem' }}>{reg.category || 'Rider'}</div>
+                                                                <div style={{ fontSize: '0.65rem', color: 'var(--ad-t3)', fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.14em', textTransform: 'uppercase', marginTop: 2 }}>{reg.circuitId?.toUpperCase()}</div>
+                                                            </td>
+                                                            <td className="ad-td" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1rem', color: 'var(--ad-pl)' }}>KES {(reg.totalAmount ?? 0).toLocaleString()}</td>
+                                                            <td className="ad-td">
+                                                                <select className="ad-status-select" value={reg.status} onChange={e => handleStatusUpdate(reg.id, e.target.value)}
+                                                                    style={{ color: reg.status === 'PAID' || reg.status === 'CONFIRMED' ? 'var(--ad-pl)' : reg.status === 'CANCELLED' ? 'var(--ad-red)' : 'var(--ad-accent)' }}>
+                                                                    <option value="UNPAID">UNPAID</option>
+                                                                    <option value="PAID">PAID</option>
+                                                                    <option value="CONFIRMED">CONFIRMED</option>
+                                                                    <option value="CANCELLED">CANCELLED</option>
+                                                                </select>
+                                                            </td>
+                                                            <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{formatDate(reg.createdAt)}</td>
+                                                            <td className="ad-td" style={{ textAlign: 'right' }}>
+                                                                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
+                                                                    <button onClick={() => { setSelectedRegistration(reg); setIsDetailsOpen(true); }} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="View" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-pl)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-pl)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
+                                                                        <AiOutlineEye />
+                                                                    </button>
+                                                                    <button onClick={() => handleDelete(reg.id)} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="Delete" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-red)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-red)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
+                                                                        <AiOutlineDelete />
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div className="ad-pagination">
+                                            <span className="ad-page-info">Showing {(pagination.page - 1) * pagination.limit + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}</span>
+                                            <div className="ad-page-btns">
+                                                <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={pagination.page === 1}><AiOutlineLeft /> Prev</button>
+                                                <span className="ad-page-cur">Page {pagination.page} / {pagination.pages}</span>
+                                                <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.min(p.pages, p.page + 1) }))} disabled={pagination.page === pagination.pages}>Next <AiOutlineRight /></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1125,32 +1200,39 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             <input className="ad-input" type="date" value={paymentsFilter.dateTo} onChange={e => setPaymentsFilter({ ...paymentsFilter, dateTo: e.target.value })} style={{ minWidth: 130 }} />
                                         </div>
                                     </div>
-                                    <div className="ad-table-wrap">
-                                        <table className="ad-table">
-                                            <thead><tr>{['Transaction Code', 'Phone', 'Amount', 'Status', 'Timestamp', 'Registration ID', 'Link'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
-                                            <tbody>
-                                                {loading && payments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>Loading…</td></tr>
-                                                    : payments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>No payments found.</td></tr>
-                                                        : payments.map((p: any) => (
-                                                            <tr key={p.id} className="ad-tr">
-                                                                <td className="ad-td ad-mono">{p.mpesaReceiptNumber || '—'}</td>
-                                                                <td className="ad-td">{p.phone || '—'}</td>
-                                                                <td className="ad-td" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1rem', color: 'var(--ad-pl)' }}>KES {(p.amount || 0).toLocaleString()}</td>
-                                                                <td className="ad-td"><span className={`ad-badge ad-badge-${p.status.toLowerCase()}`}>{p.status}</span></td>
-                                                                <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{p.transactionDate ? String(p.transactionDate).slice(0, 8) : formatDate(p.createdAt)}</td>
-                                                                <td className="ad-td ad-mono">{p.registrationId}</td>
-                                                                <td className="ad-td"><a href={`/profile/${p.registrationId}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a></td>
-                                                            </tr>
-                                                        ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div className="ad-pagination">
-                                        <span className="ad-page-info">Showing {(paymentsPagination.page - 1) * paymentsPagination.limit + 1}–{Math.min(paymentsPagination.page * paymentsPagination.limit, paymentsPagination.total)} of {paymentsPagination.total}</span>
-                                        <div className="ad-page-btns">
-                                            <button className="ad-page-btn" onClick={() => setPaymentsPagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={paymentsPagination.page === 1}><AiOutlineLeft /> Prev</button>
-                                            <span className="ad-page-cur">Page {paymentsPagination.page} / {paymentsPagination.pages}</span>
-                                            <button className="ad-page-btn" onClick={() => setPaymentsPagination(p => ({ ...p, page: Math.min(p.pages, p.page + 1) }))} disabled={paymentsPagination.page === paymentsPagination.pages}>Next <AiOutlineRight /></button>
+                                    <div className="ad-panel-rel">
+                                        {loading && (
+                                            <div className="ad-loading-overlay">
+                                                <div className="ad-spinner" />
+                                            </div>
+                                        )}
+                                        <div className="ad-table-wrap">
+                                            <table className="ad-table">
+                                                <thead><tr>{['Transaction Code', 'Phone', 'Amount', 'Status', 'Timestamp', 'Registration ID', 'Link'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                <tbody>
+                                                    {loading && payments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>Loading…</td></tr>
+                                                        : payments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>No payments found.</td></tr>
+                                                            : payments.map((p: any) => (
+                                                                <tr key={p.id} className="ad-tr">
+                                                                    <td className="ad-td ad-mono">{p.mpesaReceiptNumber || '—'}</td>
+                                                                    <td className="ad-td">{p.phone || '—'}</td>
+                                                                    <td className="ad-td" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1rem', color: 'var(--ad-pl)' }}>KES {(p.amount || 0).toLocaleString()}</td>
+                                                                    <td className="ad-td"><span className={`ad-badge ad-badge-${p.status.toLowerCase()}`}>{p.status}</span></td>
+                                                                    <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{p.transactionDate ? String(p.transactionDate).slice(0, 8) : formatDate(p.createdAt)}</td>
+                                                                    <td className="ad-td ad-mono">{p.registrationId}</td>
+                                                                    <td className="ad-td"><a href={`/profile/${p.registrationId}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a></td>
+                                                                </tr>
+                                                            ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div className="ad-pagination">
+                                            <span className="ad-page-info">Showing {(paymentsPagination.page - 1) * paymentsPagination.limit + 1}–{Math.min(paymentsPagination.page * paymentsPagination.limit, paymentsPagination.total)} of {paymentsPagination.total}</span>
+                                            <div className="ad-page-btns">
+                                                <button className="ad-page-btn" onClick={() => setPaymentsPagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={paymentsPagination.page === 1}><AiOutlineLeft /> Prev</button>
+                                                <span className="ad-page-cur">Page {paymentsPagination.page} / {paymentsPagination.pages}</span>
+                                                <button className="ad-page-btn" onClick={() => setPaymentsPagination(p => ({ ...p, page: Math.min(p.pages, p.page + 1) }))} disabled={paymentsPagination.page === paymentsPagination.pages}>Next <AiOutlineRight /></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1172,6 +1254,20 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     </div>
                                 </div>
 
+                                <div className="ad-kpi-grid" style={{ marginBottom: 24 }}>
+                                    {[
+                                        { label: 'Total Tickets', val: d?.summary?.raffle?.total || 0, cls: '' },
+                                        { label: 'Paid Tickets', val: rafflePaid, cls: 'green' },
+                                        { label: 'Unpaid Tickets', val: (d?.summary?.raffle?.total || 0) - rafflePaid, cls: 'amber' },
+                                        { label: 'Raffle Revenue', val: `KES ${raffleRevenue.toLocaleString()}`, cls: 'green' },
+                                    ].map(k => (
+                                        <div key={k.label} className="ad-kpi">
+                                            <div className="ad-kpi-label">{k.label}</div>
+                                            <div className={`ad-kpi-value ${k.cls}`}>{k.val}</div>
+                                        </div>
+                                    ))}
+                                </div>
+
                                 <div className="ad-panel">
                                     <div className="ad-filters" style={{ borderBottom: 'none' }}>
                                         <div className="ad-filter-group" style={{ flex: 1 }}>
@@ -1189,54 +1285,62 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         </div>
                                     </div>
 
-                                    {loading && raffleTickets.length === 0 ? (
-                                        <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>Loading tickets…</div>
-                                    ) : raffleTickets.length === 0 ? (
-                                        <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>No raffle tickets found matching filters.</div>
-                                    ) : (
-                                        <div className="ad-table-wrap">
-                                            <table className="ad-table">
-                                                <thead><tr>{['Ticket ID', 'Name', 'Email', 'Phone', 'Status', 'Created', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
-                                                <tbody>
-                                                    {raffleTickets.map((t: any) => (
-                                                        <tr key={t.id} className="ad-tr">
-                                                            <td className="ad-td ad-mono">{t.id}</td>
-                                                            <td className="ad-td">
-                                                                <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{cap(t.firstName)} {cap(t.lastName)}</div>
-                                                            </td>
-                                                            <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.email || '—'}</td>
-                                                            <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.phoneNumber || '—'}</td>
-                                                            <td className="ad-td">
-                                                                <select className="ad-status-select" value={t.status} onChange={e => handleRaffleStatusUpdate(t.id, e.target.value)}
-                                                                    style={{ color: t.status === 'PAID' ? 'var(--ad-pl)' : 'var(--ad-accent)' }}>
-                                                                    <option value="UNPAID">UNPAID</option>
-                                                                    <option value="PAID">PAID</option>
-                                                                </select>
-                                                            </td>
-                                                            <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{formatDate(t.createdAt)}</td>
-                                                            <td className="ad-td" style={{ textAlign: 'right' }}>
-                                                                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
-                                                                    <button onClick={() => { setSelectedRaffleTicket(t); setIsRaffleDetailsOpen(true); }} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="View" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-pl)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-pl)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
-                                                                        <AiOutlineEye />
-                                                                    </button>
-                                                                    <button onClick={() => handleDeleteRaffleTicket(t.id)} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="Delete" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-red)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-red)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
-                                                                        <AiOutlineDelete />
-                                                                    </button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    )}
+                                    <div className="ad-panel-rel">
+                                        {loading && (
+                                            <div className="ad-loading-overlay">
+                                                <div className="ad-spinner" />
+                                            </div>
+                                        )}
+                                        {loading && raffleTickets.length === 0 ? (
+                                            <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>Loading tickets…</div>
+                                        ) : raffleTickets.length === 0 ? (
+                                            <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>No raffle tickets found matching filters.</div>
+                                        ) : (
+                                            <div className="ad-table-wrap">
+                                                <table className="ad-table">
+                                                    <thead><tr>{['#', 'Ticket ID', 'Name', 'Email', 'Phone', 'Status', 'Created', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                    <tbody>
+                                                        {raffleTickets.map((t: any, index: number) => (
+                                                            <tr key={t.id} className="ad-tr">
+                                                                <td className="ad-td ad-mono" style={{ opacity: 0.5 }}>{(rafflePagination.page - 1) * rafflePagination.limit + index + 1}</td>
+                                                                <td className="ad-td ad-mono">{t.id}</td>
+                                                                <td className="ad-td">
+                                                                    <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{cap(t.firstName)} {cap(t.lastName)}</div>
+                                                                </td>
+                                                                <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.email || '—'}</td>
+                                                                <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.phoneNumber || '—'}</td>
+                                                                <td className="ad-td">
+                                                                    <select className="ad-status-select" value={t.status} onChange={e => handleRaffleStatusUpdate(t.id, e.target.value)}
+                                                                        style={{ color: t.status === 'PAID' ? 'var(--ad-pl)' : 'var(--ad-accent)' }}>
+                                                                        <option value="UNPAID">UNPAID</option>
+                                                                        <option value="PAID">PAID</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{formatDate(t.createdAt)}</td>
+                                                                <td className="ad-td" style={{ textAlign: 'right' }}>
+                                                                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
+                                                                        <button onClick={() => { setSelectedRaffleTicket(t); setIsRaffleDetailsOpen(true); }} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="View" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-pl)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-pl)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
+                                                                            <AiOutlineEye />
+                                                                        </button>
+                                                                        <button onClick={() => handleDeleteRaffleTicket(t.id)} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="Delete" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-red)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-red)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
+                                                                            <AiOutlineDelete />
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
 
-                                    <div className="ad-pagination" style={{ marginTop: 20 }}>
-                                        <span className="ad-page-info">Showing {(rafflePagination.page - 1) * rafflePagination.limit + 1}–{Math.min(rafflePagination.page * rafflePagination.limit, rafflePagination.total)} of {rafflePagination.total}</span>
-                                        <div className="ad-page-btns">
-                                            <button className="ad-page-btn" onClick={() => setRafflePagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={rafflePagination.page === 1}><AiOutlineLeft /> Prev</button>
-                                            <span className="ad-page-cur">Page {rafflePagination.page} / {rafflePagination.pages}</span>
-                                            <button className="ad-page-btn" onClick={() => setRafflePagination(p => ({ ...p, page: Math.min(rafflePagination.pages, p.page + 1) }))} disabled={rafflePagination.page === rafflePagination.pages}>Next <AiOutlineRight /></button>
+                                        <div className="ad-pagination" style={{ marginTop: 20 }}>
+                                            <span className="ad-page-info">Showing {(rafflePagination.page - 1) * rafflePagination.limit + 1}–{Math.min(rafflePagination.page * rafflePagination.limit, rafflePagination.total)} of {rafflePagination.total}</span>
+                                            <div className="ad-page-btns">
+                                                <button className="ad-page-btn" onClick={() => setRafflePagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={rafflePagination.page === 1}><AiOutlineLeft /> Prev</button>
+                                                <span className="ad-page-cur">Page {rafflePagination.page} / {rafflePagination.pages}</span>
+                                                <button className="ad-page-btn" onClick={() => setRafflePagination(p => ({ ...p, page: Math.min(rafflePagination.pages, p.page + 1) }))} disabled={rafflePagination.page === rafflePagination.pages}>Next <AiOutlineRight /></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1291,20 +1395,27 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         </div>
                                     </div>
 
-                                    {loading && registrations.length === 0 ? (
-                                        <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>Loading bibs…</div>
-                                    ) : registrations.length === 0 ? (
-                                        <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>No registrations found matching filters.</div>
-                                    ) : (
-                                        <AdminBibVisual registrations={getBibRegistrationData()} />
-                                    )}
+                                    <div className="ad-panel-rel">
+                                        {loading && (
+                                            <div className="ad-loading-overlay">
+                                                <div className="ad-spinner" />
+                                            </div>
+                                        )}
+                                        {loading && registrations.length === 0 ? (
+                                            <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>Loading bibs…</div>
+                                        ) : registrations.length === 0 ? (
+                                            <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>No registrations found matching filters.</div>
+                                        ) : (
+                                            <AdminBibVisual registrations={getBibRegistrationData()} />
+                                        )}
 
-                                    <div className="ad-pagination" style={{ marginTop: 20 }}>
-                                        <span className="ad-page-info">Showing {registrations.length} visual bibs</span>
-                                        <div className="ad-page-btns">
-                                            <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={pagination.page === 1}><AiOutlineLeft /> Prev</button>
-                                            <span className="ad-page-cur">Page {pagination.page} / {pagination.pages}</span>
-                                            <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.min(pagination.pages, p.page + 1) }))} disabled={pagination.page === pagination.pages}>Next <AiOutlineRight /></button>
+                                        <div className="ad-pagination" style={{ marginTop: 20 }}>
+                                            <span className="ad-page-info">Showing {registrations.length} visual bibs</span>
+                                            <div className="ad-page-btns">
+                                                <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={pagination.page === 1}><AiOutlineLeft /> Prev</button>
+                                                <span className="ad-page-cur">Page {pagination.page} / {pagination.pages}</span>
+                                                <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.min(pagination.pages, p.page + 1) }))} disabled={pagination.page === pagination.pages}>Next <AiOutlineRight /></button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
