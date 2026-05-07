@@ -217,6 +217,17 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             if (fmt === 'csv') { const csv = XLSX.utils.sheet_to_csv(ws); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Payments.csv'; a.click(); URL.revokeObjectURL(url); } else { const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Payments'); XLSX.writeFile(wb, 'Payments.xlsx'); }
         } catch { alert('Export failed'); }
     };
+    const handleExportRaffle = async () => {
+        try {
+            const p = new URLSearchParams({ limit: '10000', ...(raffleFilter.status && { status: raffleFilter.status }), ...(raffleFilter.search && { search: raffleFilter.search }) });
+            const r = await fetch(`${API_BASE_URL}/admin/raffle?${p}`, { headers: { Authorization: `Bearer ${token}` } });
+            const d = await r.json(); const list = d.tickets || [];
+            if (!list.length) return alert('No tickets found to export');
+            const rows = list.map((t: any) => ({ TicketID: t.id, Name: `${t.firstName} ${t.lastName}`, Email: t.email || '', Phone: t.phoneNumber || '', Status: t.status, CreatedAt: new Date(t.createdAt).toLocaleString() }));
+            const ws = XLSX.utils.json_to_sheet(rows);
+            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'RaffleTickets'); XLSX.writeFile(wb, 'Raffle_Tickets.xlsx');
+        } catch { alert('Export failed'); }
+    };
 
     const handleDownloadRaffleTickets = async () => {
         try {
@@ -619,20 +630,28 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         <span className="ad-header-title">Admin Workspace &mdash; {admin?.name}</span>
                     </div>
                     <div className="ad-header-actions">
+                        {(activeView === 'registrations' || activeView === 'bibs') && (
+                            <button className="ad-hbtn ad-hbtn-ghost" onClick={handleDownloadBibNumbers} disabled={isPrintingBibs}>
+                                <AiOutlinePrinter /> {isPrintingBibs ? 'Generating…' : 'Bibs PDF'}
+                            </button>
+                        )}
                         {activeView === 'registrations' && (
-                            <>
-                                <button className="ad-hbtn ad-hbtn-ghost" onClick={handleDownloadBibNumbers} disabled={isPrintingBibs}>
-                                    <AiOutlinePrinter /> {isPrintingBibs ? 'Generating…' : 'Bibs PDF'}
-                                </button>
-                                <button className="ad-hbtn ad-hbtn-primary" onClick={handleExport}>
-                                    <AiOutlineTable /> Export Excel
-                                </button>
-                            </>
+                            <button className="ad-hbtn ad-hbtn-primary" onClick={handleExport}>
+                                <AiOutlineTable /> Export Excel
+                            </button>
                         )}
                         {activeView === 'payments' && (
                             <>
                                 <button className="ad-hbtn ad-hbtn-ghost" onClick={() => handleExportPayments('csv')}>Export CSV</button>
                                 <button className="ad-hbtn ad-hbtn-primary" onClick={() => handleExportPayments('excel')}><AiOutlineTable /> Export Excel</button>
+                            </>
+                        )}
+                        {activeView === 'raffle' && (
+                            <>
+                                <button className="ad-hbtn ad-hbtn-ghost" onClick={handleExportRaffle}>Export Excel</button>
+                                <button className="ad-hbtn ad-hbtn-primary" onClick={handleDownloadRaffleTickets} disabled={isPrintingRaffle}>
+                                    <AiOutlinePrinter /> {isPrintingRaffle ? 'Generating…' : 'Generate Tickets'}
+                                </button>
                             </>
                         )}
                         <button className="ad-hbtn ad-hbtn-icon" onClick={() => setIsDarkMode(!dm)} title="Toggle theme">
@@ -1242,16 +1261,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         {/* ══════════════════════════════════════════════ RAFFLE ══ */}
                         {activeView === 'raffle' && (
                             <>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
-                                    <div>
-                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Raffle System</span></div>
-                                        <div className="ad-page-title">Raffle Tickets</div>
-                                    </div>
-                                    <div style={{ marginBottom: 24 }}>
-                                        <button className="ad-hbtn ad-hbtn-primary" onClick={handleDownloadRaffleTickets} disabled={isPrintingRaffle}>
-                                            <AiOutlineDownload /> {isPrintingRaffle ? `Generating... ${printProgress}%` : 'Generate Tickets (A4 PDF)'}
-                                        </button>
-                                    </div>
+                                <div>
+                                    <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Engagement</span></div>
+                                    <div className="ad-page-title">Raffle Tickets</div>
                                 </div>
 
                                 <div className="ad-kpi-grid" style={{ marginBottom: 24 }}>
@@ -1349,16 +1361,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         {/* ══════════════════════════════════════════════════ BIBS ══ */}
                         {activeView === 'bibs' && (
                             <>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
-                                    <div>
-                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Participant IDs</span></div>
-                                        <div className="ad-page-title">Bibs</div>
-                                    </div>
-                                    <div style={{ marginBottom: 24 }}>
-                                        <button className="ad-hbtn ad-hbtn-primary" onClick={handleDownloadBibNumbers} disabled={isPrintingBibs}>
-                                            <AiOutlineDownload /> {isPrintingBibs ? `Generating... ${printProgress}%` : 'Generate Bibs (A4 PDF)'}
-                                        </button>
-                                    </div>
+                                <div>
+                                    <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Participant IDs</span></div>
+                                    <div className="ad-page-title">Bibs</div>
                                 </div>
 
                                 <div className="ad-panel">
