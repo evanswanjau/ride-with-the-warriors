@@ -26,6 +26,8 @@ interface RegistrationContextType {
     setFoundRegistration: (val: any) => void;
     isMilitary: boolean;
     setIsMilitary: (val: boolean) => void;
+    allRaffleTickets: any[];
+    setAllRaffleTickets: (val: any[]) => void;
 
     // Helpers/Handlers
     handleNext: (currentStep: number) => Promise<void>;
@@ -100,6 +102,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
     }, [hasInProgressRegistration]);
 
     const [foundRegistration, setFoundRegistration] = useState<any>(null);
+    const [allRaffleTickets, setAllRaffleTickets] = useState<any[]>([]);
 
     // Fetch Pricing Categories
     useEffect(() => {
@@ -424,6 +427,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
             serverClassifications,
             foundRegistration, setFoundRegistration,
             isMilitary, setIsMilitary,
+            allRaffleTickets, setAllRaffleTickets,
             handleNext, handleBack, handleSubmit, validateStep,
             hasInProgressRegistration
         }}>

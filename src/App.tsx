@@ -19,6 +19,7 @@ import AdminPage from './pages/AdminPage';
 import RafflePage from './pages/RafflePage';
 import RaffleSuccessPage from './pages/RaffleSuccessPage';
 import RaffleProfilePage from './pages/RaffleProfilePage';
+import RaffleEmailProfilePage from './pages/RaffleEmailProfilePage';
 import RafflePaymentPageRoute from './pages/RafflePaymentPageRoute';
 import DonatePage from './pages/DonatePage';
 
@@ -68,6 +69,7 @@ const App = () => {
         <Route path="/raffle/payment/:id" element={<RafflePaymentPageRoute />} />
         <Route path="/raffle/success/:id" element={<RaffleSuccessPage />} />
         <Route path="/raffle/profile/:id" element={<RaffleProfilePage />} />
+        <Route path="/raffle/profile/email/:email" element={<RaffleEmailProfilePage />} />
 
         {/* Legal */}
         <Route path="/terms-and-conditions" element={<TermsPage />} />

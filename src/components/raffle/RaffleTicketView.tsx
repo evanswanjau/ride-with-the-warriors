@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { QRCodeCanvas } from 'qrcode.react';
 import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
@@ -9,8 +10,12 @@ import {
     AiOutlineHourglass,
     AiOutlineCheckCircle,
     AiOutlineDownload,
+    AiOutlineCreditCard,
+    AiOutlineTeam
 } from 'react-icons/ai';
 import logo from '../../assets/logos/logo.png';
+import { API_BASE_URL } from '../../config';
+import { useEffect } from 'react';
 
 interface RaffleTicketViewProps {
     ticket: {
@@ -28,9 +33,25 @@ interface RaffleTicketViewProps {
 }
 
 const RaffleTicketView = ({ ticket, onBack }: RaffleTicketViewProps) => {
+    const navigate = useNavigate();
     const [copySuccess, setCopySuccess] = useState(false);
     const eventDate = '05 July 2026';
     const isPaid = ticket.status === 'PAID' || ticket.status === 'CONFIRMED';
+    const [registration, setRegistration] = useState<any>(null);
+
+    useEffect(() => {
+        if (!ticket.email) return;
+        fetch(`${API_BASE_URL}/profile/search`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ searchType: 'email', searchValue: ticket.email })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.registration) setRegistration(data.registration);
+            })
+            .catch(console.error);
+    }, [ticket.email]);
 
     const handleDownloadPDF = async () => {
         const ticketElement = document.getElementById('raffle-ticket-container');
@@ -379,6 +400,18 @@ const RaffleTicketView = ({ ticket, onBack }: RaffleTicketViewProps) => {
                                         <div className="tk-logo-sub">Official Raffle Pass 2026</div>
                                     </div>
                                 </div>
+
+                                {registration && (
+                                    <div 
+                                        className="ml-4 p-2 bg-primary/10 border border-primary/20 flex items-center gap-2 cursor-pointer hover:bg-primary/20 transition-all no-print" 
+                                        onClick={() => navigate(`/profile/${registration.id}`)}
+                                        style={{ clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}
+                                    >
+                                        <AiOutlineTeam className="text-primary" />
+                                        <div className="text-[9px] font-bold uppercase tracking-widest text-primary">Cycling Member</div>
+                                    </div>
+                                )}
+                                
                                 <div className="tk-pass-id-block">
                                     <div className="tk-pass-id-label">Ticket ID</div>
                                     <div className="tk-pass-id">{ticket.id}</div>
@@ -414,6 +447,17 @@ const RaffleTicketView = ({ ticket, onBack }: RaffleTicketViewProps) => {
                                 {isPaid ? <AiOutlineCheckCircle /> : <AiOutlineHourglass />}
                                 {ticket.status}
                             </div>
+                            {!isPaid && (
+                                <button
+                                    onClick={() => {
+                                        navigate(`/raffle/payment/${ticket.id}`, { state: { ticketIds: [ticket.id], amount: 1000 } });
+                                    }}
+                                    className="shimmer-btn shimmer-btn--amber mt-6 w-full flex items-center justify-center gap-3 text-sm"
+                                >
+                                    <AiOutlineCreditCard size={18} />
+                                    Finalize Payment (KES 1,000)
+                                </button>
+                            )}
                         </div>
 
                         <div className="tk-qr-box">

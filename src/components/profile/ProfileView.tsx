@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRegistration } from '../../context/RegistrationContext';
 import { QRCodeCanvas } from 'qrcode.react';
 import {
     AiOutlineArrowLeft,
+    AiOutlineArrowRight,
     AiOutlineCheck,
     AiOutlineShareAlt,
     AiOutlineCheckCircle,
@@ -18,6 +20,7 @@ import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import { CIRCUITS } from '../../constants';
 import logo from '../../assets/logos/logo.png';
+import { API_BASE_URL } from '../../config';
 import { calculateAge, getCategoryColor, getContrastText } from '../../utils';
 
 interface ProfileViewProps {
@@ -29,11 +32,45 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
     const navigate = useNavigate();
     const [showAllMembers, setShowAllMembers] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
+    const [otherUnpaidItems, setOtherUnpaidItems] = useState<any[]>([]);
+    const [loadingOther, setLoadingOther] = useState(false);
     const circuit = CIRCUITS.find(c => c.id === registration.circuitId) || CIRCUITS[0];
     const pricing = registration.pricing;
     const payload = registration.payload;
     const categoryColor = getCategoryColor(registration.id);
     const contrastText = getContrastText(categoryColor);
+
+    const { allRaffleTickets } = useRegistration() as any;
+    const [raffleCount, setRaffleCount] = useState(0);
+
+    useEffect(() => {
+        // If we already have tickets from the context (e.g. from the search result), use them
+        if (allRaffleTickets && allRaffleTickets.length > 0) {
+            setRaffleCount(allRaffleTickets.length);
+            const unpaid = allRaffleTickets.filter((r: any) => r.status === 'UNPAID' && r.id !== registration.id);
+            setOtherUnpaidItems(unpaid);
+            return;
+        }
+
+        // Otherwise (e.g. direct link view), only fetch if we have an unmasked email
+        if (registration.email && !registration.email.includes('****')) {
+            setLoadingOther(true);
+            fetch(`${API_BASE_URL}/profile/search`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ searchType: 'email', searchValue: registration.email })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    const found = data.allRaffleTickets || [];
+                    setRaffleCount(found.length);
+                    const unpaid = found.filter((r: any) => r.status === 'UNPAID' && r.id !== registration.id);
+                    setOtherUnpaidItems(unpaid);
+                })
+                .catch(console.error)
+                .finally(() => setLoadingOther(false));
+        }
+    }, [registration.email, registration.id, allRaffleTickets]);
 
     const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -287,8 +324,6 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                 @media (min-width: 768px) {
                     #ticket-container { flex-direction: row; }
                 }
-                /* chamfer only on the outer corners */
-                #ticket-container { clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%); }
 
                 /* Main left area */
                 .tk-main {
@@ -782,17 +817,46 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
 
                                 <hr className="pv-rule" />
 
-                                <div className="pv-field-grid">
-                                    <div className="pv-field">
-                                        <div className="pv-field-label">Emergency Contact</div>
-                                        <div className="pv-field-value">{info.emergencyContact}</div>
+                                    <div className="pv-field-grid">
+                                        <div className="pv-field">
+                                            <div className="pv-field-label">Emergency Contact</div>
+                                            <div className="pv-field-value">{info.emergencyContact}</div>
+                                        </div>
+                                        <div className="pv-field">
+                                            <div className="pv-field-label">Emergency Phone</div>
+                                            <div className="pv-field-value accent mono">{info.emergencyPhone}</div>
+                                        </div>
                                     </div>
-                                    <div className="pv-field">
-                                        <div className="pv-field-label">Emergency Phone</div>
-                                        <div className="pv-field-value accent mono">{info.emergencyPhone}</div>
-                                    </div>
+
+                                    {raffleCount > 0 && (
+                                        <div 
+                                            className="mt-8 p-4 bg-amber-500/5 border border-amber-500/20 flex items-center justify-between gap-4"
+                                            style={{ clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div 
+                                                    className="w-8 h-8 bg-amber-500/10 flex items-center justify-center text-amber-600"
+                                                    style={{ clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))' }}
+                                                >
+                                                    <AiOutlineStar />
+                                                </div>
+                                                <div>
+                                                    <div className="text-[10px] font-bold uppercase tracking-widest text-amber-600/70">Raffle Entry Found</div>
+                                                    <div className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                                                        You have {raffleCount} {raffleCount === 1 ? 'raffle ticket' : 'raffle tickets'} linked to this email.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button 
+                                                onClick={() => navigate(`/raffle/profile/email/${encodeURIComponent(registration.email)}`)}
+                                                className="px-3 py-1.5 bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-amber-600 transition-colors flex items-center gap-2"
+                                                style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))' }}
+                                            >
+                                                View <AiOutlineArrowRight />
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
 
                             {/* Transaction summary */}
                             <div style={{ position: 'relative', paddingLeft: 0 }}>
@@ -933,7 +997,50 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                             </div>
                         </div>
                     )}
-
+                    {/* ── Pay All Floating Button ── */}
+                    {otherUnpaidItems.length > 0 && !isPaid && !loadingOther && (
+                        <div className="fixed bottom-8 right-8 z-50 no-print animate-in fade-in slide-in-from-bottom-5 duration-700">
+                            <div className="bg-white dark:bg-neutral-900 border border-primary/20 dark:border-primary/40 rounded-3xl p-6 shadow-2xl shadow-primary/20 flex flex-col gap-4 max-w-[280px]">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-xl">
+                                        <AiOutlineCreditCard />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-sm text-neutral-900 dark:text-white">Pay for All Items</h4>
+                                        <p className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold">Consolidated Checkout</p>
+                                    </div>
+                                </div>
+                                <div className="space-y-2 py-2 border-t border-b border-neutral-100 dark:border-neutral-800">
+                                    <div className="flex justify-between items-center text-xs">
+                                        <span className="text-neutral-500">Current Item</span>
+                                        <span className="font-bold">KES {registration.totalAmount?.toLocaleString() || '1,000'}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-xs">
+                                        <span className="text-neutral-500">{otherUnpaidItems.length} Other Unpaid</span>
+                                        <span className="font-bold">KES {(otherUnpaidItems.length * 1000).toLocaleString()}</span>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-black text-primary">Total: KES {((otherUnpaidItems.length + 1) * 1000).toLocaleString()}</span>
+                                </div>
+                                <button 
+                                    onClick={() => navigate(`/raffle/payment/${registration.id}`, { 
+                                        state: { 
+                                            ticketIds: [registration.id, ...otherUnpaidItems.map(i => i.id)],
+                                            amount: (otherUnpaidItems.length + 1) * 1000,
+                                            firstName: registration.firstName,
+                                            lastName: registration.lastName,
+                                            email: registration.email,
+                                            phoneNumber: registration.phoneNumber
+                                        } 
+                                    })}
+                                    className="w-full py-4 rounded-2xl bg-primary text-white font-black text-sm uppercase tracking-widest hover:bg-primary-dark transition-all shadow-lg shadow-primary/30"
+                                >
+                                    Pay for All
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

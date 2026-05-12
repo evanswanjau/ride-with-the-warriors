@@ -62,10 +62,22 @@ const ProfileLookup = ({ onFound, onRaffleFound }: ProfileLookupProps) => {
                 body: JSON.stringify({ searchType, searchValue: searchValue.trim() }),
             });
             const data = await response.json();
-            if (!response.ok) throw new Error(data.error?.message || 'No registration or raffle ticket found');
             const { registration, raffleTicket } = data;
-            if (registration) { onFound(registration); navigate(`/profile/${registration.id}`); }
-            else if (raffleTicket) { onRaffleFound(raffleTicket); navigate(`/raffle/profile/${raffleTicket.id}`); }
+            
+            if (registration) { 
+                onFound(registration); 
+                navigate(`/profile/${registration.id}`); 
+            }
+            else if (raffleTicket) { 
+                onRaffleFound(raffleTicket); 
+                // For email or phone searches, it's better to show the consolidated list page
+                if (searchType === 'email' || searchType === 'phone') {
+                    const targetEmail = raffleTicket.email || searchValue.trim();
+                    navigate(`/raffle/profile/email/${encodeURIComponent(targetEmail)}`);
+                } else {
+                    navigate(`/raffle/profile/${raffleTicket.id}`); 
+                }
+            }
             else setError('Nothing found matching your search. Please try again.');
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred');

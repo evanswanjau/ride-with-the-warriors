@@ -7,7 +7,7 @@ import { API_BASE_URL } from '../config';
 const ProfilePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { foundRegistration, setFoundRegistration } = useRegistration() as any;
+    const { foundRegistration, setFoundRegistration, setAllRaffleTickets } = useRegistration() as any;
 
     useEffect(() => {
         if (!foundRegistration && id) {
@@ -17,7 +17,10 @@ const ProfilePage = () => {
                 body: JSON.stringify({ searchType: 'id', searchValue: id })
             })
                 .then(res => res.json())
-                .then(data => data.registration && setFoundRegistration(data.registration))
+                .then(data => {
+                    if (data.registration) setFoundRegistration(data.registration);
+                    if (data.allRaffleTickets) setAllRaffleTickets(data.allRaffleTickets);
+                })
                 .catch(console.error);
         }
     }, [id, foundRegistration, setFoundRegistration]);

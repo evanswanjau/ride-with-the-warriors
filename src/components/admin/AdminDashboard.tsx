@@ -6,7 +6,7 @@ import {
     AiOutlineDollar, AiOutlineExclamationCircle, AiOutlineSearch, AiOutlineEye, AiOutlineDelete,
     AiOutlineLeft, AiOutlineRight, AiOutlineStar, AiOutlineClose,
     AiOutlineDownload, AiOutlinePrinter, AiOutlineDashboard, AiOutlineHistory,
-    AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart
+    AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart, AiOutlineBell
 } from 'react-icons/ai';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
