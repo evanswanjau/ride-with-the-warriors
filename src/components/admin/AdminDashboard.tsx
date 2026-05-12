@@ -1227,7 +1227,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         )}
                                         <div className="ad-table-wrap">
                                             <table className="ad-table">
-                                                <thead><tr>{['Transaction Code', 'Phone', 'Amount', 'Status', 'Timestamp', 'Registration ID', 'Link'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                <thead><tr>{['Transaction Code', 'Phone', 'Amount', 'Status', 'Timestamp', 'Context / ID', 'Link'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                 <tbody>
                                                     {loading && payments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>Loading…</td></tr>
                                                         : payments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>No payments found.</td></tr>
@@ -1238,8 +1238,16 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                                     <td className="ad-td" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1rem', color: 'var(--ad-pl)' }}>KES {(p.amount || 0).toLocaleString()}</td>
                                                                     <td className="ad-td"><span className={`ad-badge ad-badge-${p.status.toLowerCase()}`}>{p.status}</span></td>
                                                                     <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{p.transactionDate ? String(p.transactionDate).slice(0, 8) : formatDate(p.createdAt)}</td>
-                                                                    <td className="ad-td ad-mono">{p.registrationId}</td>
-                                                                    <td className="ad-td"><a href={`/profile/${p.registrationId}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a></td>
+                                                                    <td className="ad-td ad-mono" style={{ fontSize: '0.65rem' }}>
+                                                                        {p.registrationId ? `Cycling: ${p.registrationId}` :
+                                                                            (p.raffleTicketIds && p.raffleTicketIds.length > 0) ? `Raffle: ${p.raffleTicketIds[0]}${p.raffleTicketIds.length > 1 ? '...' : ''}` :
+                                                                                p.donationId ? `Donation: ${p.donationId.slice(0, 8)}...` : '—'}
+                                                                    </td>
+                                                                    <td className="ad-td">
+                                                                        {p.registrationId && <a href={`/profile/${p.registrationId}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a>}
+                                                                        {(p.raffleTicketIds && p.raffleTicketIds.length > 0) && <a href={`/raffle/ticket/${p.raffleTicketIds[0]}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-accent)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>Tix &rarr;</a>}
+                                                                        {p.donationId && <span style={{ color: 'var(--ad-t3)', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase' }}>Donation</span>}
+                                                                    </td>
                                                                 </tr>
                                                             ))}
                                                 </tbody>
