@@ -6,7 +6,7 @@ import {
     AiOutlineDollar, AiOutlineExclamationCircle, AiOutlineSearch, AiOutlineEye, AiOutlineDelete,
     AiOutlineLeft, AiOutlineRight, AiOutlineStar, AiOutlineClose,
         AiOutlinePrinter, AiOutlineDashboard, AiOutlineHistory,
-        AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart
+        AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart, AiOutlineHeart
     } from 'react-icons/ai';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -30,10 +30,10 @@ interface AdminDashboardProps {
 
 
 const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
-    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs';
+    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs' | 'donations';
     const { "*": viewParam } = useParams();
     const navigate = useNavigate();
-    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
+    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs', 'donations'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
     const [dashboardData, setDashboardData] = useState<any>(null);
     const [registrations, setRegistrations] = useState<any[]>([]);
     const [pricingCategories, setPricingCategories] = useState<any[]>([]);
@@ -58,6 +58,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [allRaffleTicketsForPrint, setAllRaffleTicketsForPrint] = useState<any[]>([]);
     const [isPrintingBibs, setIsPrintingBibs] = useState(false);
     const [allRegsForPrint, setAllRegsForPrint] = useState<any[]>([]);
+    const [donations, setDonations] = useState<any[]>([]);
+    const [donationsStats, setDonationsStats] = useState<any>(null);
+    const [donationsFilter, setDonationsFilter] = useState({ status: '', search: '' });
+    const [donationsPagination, setDonationsPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
+    const [debouncedDonationSearch, setDebouncedDonationSearch] = useState(donationsFilter.search);
 
     const [sortBy, setSortBy] = useState<string>('id'); // 'id', 'name', 'category'
     const [debouncedSearch, setDebouncedSearch] = useState(filter.search);
@@ -85,19 +90,27 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     }, [raffleFilter.search]);
 
     useEffect(() => {
+        const timer = setTimeout(() => setDebouncedDonationSearch(donationsFilter.search), 500);
+        return () => clearTimeout(timer);
+    }, [donationsFilter.search]);
+
+    useEffect(() => {
         if (activeView === 'overview' || activeView === 'analytics' || activeView === 'raffle') fetchDashboardStats();
 
         if (activeView === 'registrations' || activeView === 'bibs') fetchData(debouncedSearch);
         else if (activeView === 'pricing') fetchPricingCategories();
         else if (activeView === 'payments') fetchPayments(debouncedPaymentSearch);
         else if (activeView === 'raffle') fetchRaffleTickets(debouncedRaffleSearch);
+        else if (activeView === 'donations') fetchDonations(debouncedDonationSearch);
     }, [
         filter.circuitId, filter.type, filter.status, filter.category, filter.isMilitary, debouncedSearch,
         pagination.page, activeView,
         paymentsFilter.status, paymentsFilter.dateFrom, paymentsFilter.dateTo, debouncedPaymentSearch,
         paymentsPagination.page,
         raffleFilter.status, debouncedRaffleSearch,
-        rafflePagination.page
+        rafflePagination.page,
+        donationsFilter.status, debouncedDonationSearch,
+        donationsPagination.page
     ]);
 
     const fetchDashboardStats = async () => {
@@ -157,6 +170,25 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             setRaffleTickets(d.tickets || []); setRafflePagination(prev => ({ ...prev, ...(d.pagination || {}) }));
             if (!dashboardData) fetchDashboardStats();
         } catch { setError('Failed to load raffle'); } finally { setLoading(false); }
+    };
+    const fetchDonations = async (overrideSearch?: string) => {
+        try {
+            setLoading(true); setError(null);
+            const searchVal = overrideSearch ?? donationsFilter.search;
+            const p = new URLSearchParams({ 
+                page: String(donationsPagination.page), 
+                limit: String(donationsPagination.limit), 
+                ...(donationsFilter.status && { status: donationsFilter.status }), 
+                ...(searchVal && { search: searchVal }) 
+            });
+            const [lr, sr] = await Promise.all([
+                fetch(`${API_BASE_URL}/admin/donations?${p}`, { headers: { Authorization: `Bearer ${token}` } }), 
+                fetch(`${API_BASE_URL}/admin/donations/stats/summary`, { headers: { Authorization: `Bearer ${token}` } })
+            ]);
+            if (!lr.ok || !sr.ok) throw new Error();
+            const ld = await lr.json(); const sd = await sr.json();
+            setDonations(ld.donations || []); setDonationsPagination(prev => ({ ...prev, ...(ld.pagination || {}) })); setDonationsStats(sd);
+        } catch { setError('Failed to load donations'); } finally { setLoading(false); }
     };
 
     const handleStatusUpdate = async (id: string, s: string) => {
@@ -372,6 +404,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         { id: 'registrations', label: 'Registrations', icon: AiOutlineTeam },
         { id: 'raffle', label: 'Raffle', icon: AiOutlineHistory },
         { id: 'payments', label: 'Payments', icon: AiOutlineDollar },
+        { id: 'donations', label: 'Donations', icon: AiOutlineHeart },
         { id: 'bibs', label: 'Bibs', icon: AiOutlineStar },
         { id: 'pricing', label: 'Pricing', icon: AiOutlineTable },
     ];
@@ -1366,7 +1399,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 </div>
                             </>
                         )}
-                        {/* ══════════════════════════════════════════════════ BIBS ══ */}
+                        {/* ══════════════════════════════════════════════ BIBS ══ */}
                         {activeView === 'bibs' && (
                             <>
                                 <div>
@@ -1428,6 +1461,99 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={pagination.page === 1}><AiOutlineLeft /> Prev</button>
                                                 <span className="ad-page-cur">Page {pagination.page} / {pagination.pages}</span>
                                                 <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.min(pagination.pages, p.page + 1) }))} disabled={pagination.page === pagination.pages}>Next <AiOutlineRight /></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
+                        {/* ══════════════════════════════════════════════ DONATIONS ══ */}
+                        {activeView === 'donations' && (
+                            <>
+                                <div>
+                                    <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Contributions</span></div>
+                                    <div className="ad-page-title">Donations</div>
+                                </div>
+
+                                {donationsStats && (
+                                    <div className="ad-kpi-grid">
+                                        {[
+                                            { label: 'Total Count', val: donationsStats.summary.totalCount, cls: '' },
+                                            { label: 'Paid Count', val: donationsStats.summary.paidCount, cls: 'green' },
+                                            { label: 'Total Revenue', val: `KES ${(donationsStats.summary.totalAmount || 0).toLocaleString()}`, cls: 'green' },
+                                        ].map(k => (
+                                            <div key={k.label} className="ad-kpi">
+                                                <div className="ad-kpi-label">{k.label}</div>
+                                                <div className={`ad-kpi-value ${k.cls}`}>{k.val}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <div className="ad-panel">
+                                    <div className="ad-filters">
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Search</label>
+                                            <div className="ad-search-wrap">
+                                                <AiOutlineSearch className="ad-search-icon" />
+                                                <input className="ad-input" type="text" value={donationsFilter.search} onChange={e => setDonationsFilter({ ...donationsFilter, search: e.target.value })} placeholder="Name, email, phone or code…" />
+                                            </div>
+                                        </div>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Status</label>
+                                            <select className="ad-select" value={donationsFilter.status} onChange={e => setDonationsFilter({ ...donationsFilter, status: e.target.value })}>
+                                                <option value="">All</option><option value="PAID">Paid</option><option value="PENDING">Pending</option><option value="FAILED">Failed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="ad-panel-rel">
+                                        {loading && (
+                                            <div className="ad-loading-overlay">
+                                                <div className="ad-spinner" />
+                                            </div>
+                                        )}
+                                        {loading && donations.length === 0 ? (
+                                            <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>Loading donations…</div>
+                                        ) : donations.length === 0 ? (
+                                            <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>No donations found matching filters.</div>
+                                        ) : (
+                                            <div className="ad-table-wrap">
+                                                <table className="ad-table">
+                                                    <thead><tr>{['#', 'Donor', 'Contact Info', 'Amount', 'Status', 'M-Pesa Code', 'Date'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                    <tbody>
+                                                        {donations.map((d: any, index: number) => (
+                                                            <tr key={d.id} className="ad-tr">
+                                                                <td className="ad-td ad-mono" style={{ opacity: 0.5 }}>{(donationsPagination.page - 1) * donationsPagination.limit + index + 1}</td>
+                                                                <td className="ad-td">
+                                                                    <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{d.name || 'Anonymous'}</div>
+                                                                </td>
+                                                                <td className="ad-td">
+                                                                    <div style={{ fontSize: '0.78rem', color: 'var(--ad-t2)' }}>{d.email}</div>
+                                                                    <div style={{ fontSize: '0.75rem', color: 'var(--ad-t3)' }}>{d.phone}</div>
+                                                                </td>
+                                                                <td className="ad-td" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', color: 'var(--ad-pl)' }}>
+                                                                    KES {(d.amount || 0).toLocaleString()}
+                                                                </td>
+                                                                <td className="ad-td">
+                                                                    <span className={`ad-badge ad-badge-${d.status.toLowerCase()}`}>{d.status}</span>
+                                                                </td>
+                                                                <td className="ad-td ad-mono" style={{ fontSize: '0.78rem' }}>{d.mpesaCode || '—'}</td>
+                                                                <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{formatDate(d.createdAt)}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
+
+                                        <div className="ad-pagination" style={{ marginTop: 20 }}>
+                                            <span className="ad-page-info">Showing {(donationsPagination.page - 1) * donationsPagination.limit + 1}–{Math.min(donationsPagination.page * donationsPagination.limit, donationsPagination.total)} of {donationsPagination.total}</span>
+                                            <div className="ad-page-btns">
+                                                <button className="ad-page-btn" onClick={() => setDonationsPagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={donationsPagination.page === 1}><AiOutlineLeft /> Prev</button>
+                                                <span className="ad-page-cur">Page {donationsPagination.page} / {donationsPagination.pages}</span>
+                                                <button className="ad-page-btn" onClick={() => setDonationsPagination(p => ({ ...p, page: Math.min(donationsPagination.pages, p.page + 1) }))} disabled={donationsPagination.page === donationsPagination.pages}>Next <AiOutlineRight /></button>
                                             </div>
                                         </div>
                                     </div>
