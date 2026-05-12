@@ -5,9 +5,9 @@ import {
     AiOutlineTable, AiOutlineSun, AiOutlineMoon, AiOutlineTeam,
     AiOutlineDollar, AiOutlineExclamationCircle, AiOutlineSearch, AiOutlineEye, AiOutlineDelete,
     AiOutlineLeft, AiOutlineRight, AiOutlineStar, AiOutlineClose,
-    AiOutlineDownload, AiOutlinePrinter, AiOutlineDashboard, AiOutlineHistory,
-    AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart, AiOutlineBell
-} from 'react-icons/ai';
+        AiOutlinePrinter, AiOutlineDashboard, AiOutlineHistory,
+        AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart
+    } from 'react-icons/ai';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     BarChart, Bar, Cell, PieChart, Pie, Line, Legend, ComposedChart
@@ -58,7 +58,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [allRaffleTicketsForPrint, setAllRaffleTicketsForPrint] = useState<any[]>([]);
     const [isPrintingBibs, setIsPrintingBibs] = useState(false);
     const [allRegsForPrint, setAllRegsForPrint] = useState<any[]>([]);
-    const [printProgress, setPrintProgress] = useState<number>(0);
+
     const [sortBy, setSortBy] = useState<string>('id'); // 'id', 'name', 'category'
     const [debouncedSearch, setDebouncedSearch] = useState(filter.search);
     const [debouncedPaymentSearch, setDebouncedPaymentSearch] = useState(paymentsFilter.search);
@@ -233,7 +233,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         try {
             setError(null);
             setIsPrintingRaffle(true);
-            setPrintProgress(0);
+
 
             // Fetch only PAID raffle tickets (as requested by user)
             const q = new URLSearchParams({ limit: '5000', status: 'PAID' });
@@ -267,7 +267,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     backgroundColor: '#ffffff'
                 });
                 pdf.addImage(url, 'PNG', 0, 0, 210, 297);
-                setPrintProgress(Math.round(((i + 1) / pages.length) * 100));
+
             }
 
             pdf.save(`RWTW_Raffle_Tickets_All_${new Date().toISOString().split('T')[0]}.pdf`);
@@ -276,7 +276,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             alert(e.message || 'Failed to generate PDF');
         } finally {
             setIsPrintingRaffle(false);
-            setPrintProgress(0);
+
             setAllRaffleTicketsForPrint([]);
         }
     };
@@ -300,7 +300,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             }
 
             setAllRegsForPrint(list);
-            setPrintProgress(0);
+
 
             // Wait for render
             await new Promise(r => setTimeout(r, 2500));
@@ -318,7 +318,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     backgroundColor: '#ffffff'
                 });
                 pdf.addImage(url, 'PNG', 0, 0, 210, 297);
-                setPrintProgress(Math.round(((i + 1) / pages.length) * 100));
+
             }
 
             pdf.save(`RWTW_Bib_Numbers_All_${new Date().toISOString().split('T')[0]}.pdf`);
@@ -327,7 +327,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             alert(e.message || 'Failed to generate PDF');
         } finally {
             setIsPrintingBibs(false);
-            setPrintProgress(0);
+
             setAllRegsForPrint([]);
         }
     };
