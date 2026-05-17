@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import { AiOutlineExclamationCircle, AiOutlineReload } from 'react-icons/ai';
 import { API_BASE_URL } from '../../config';
 
 export const AdminCommunications: React.FC = () => {
@@ -16,8 +16,33 @@ export const AdminCommunications: React.FC = () => {
     const [loading, setLoading] = useState(false);
     
     const [preview, setPreview] = useState<any>(null);
+    const [balance, setBalance] = useState<any>(null);
+    const [showRenewInfo, setShowRenewInfo] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
+    const [refreshing, setRefreshing] = useState(false);
+
+    const fetchBalance = async () => {
+        setRefreshing(true);
+        try {
+            const token = localStorage.getItem('adminToken');
+            const res = await fetch(`${API_BASE_URL}/admin/email/sms-balance`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setBalance(data);
+            }
+        } catch (e) {
+            console.error('Failed to fetch SMS balance', e);
+        } finally {
+            setRefreshing(false);
+        }
+    };
+
+    React.useEffect(() => {
+        fetchBalance();
+    }, []);
 
     const handleSend = async () => {
         setErrorMsg(null);
@@ -88,6 +113,7 @@ export const AdminCommunications: React.FC = () => {
                 setMessage('');
                 setSubject('');
                 setPreview(data); // Will show the final sent stats on the right side
+                fetchBalance(); // Refresh balance after live send
             }
         } catch (error: any) {
             console.error('Error sending message:', error);
@@ -99,13 +125,77 @@ export const AdminCommunications: React.FC = () => {
 
     return (
         <>
-            <div>
-                <div className="ad-section-head">
-                    <div className="ad-section-line" />
-                    <span className="ad-section-eyebrow">Communication</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                    <div className="ad-section-head">
+                        <div className="ad-section-line" />
+                        <span className="ad-section-eyebrow">Communication</span>
+                    </div>
+                    <div className="ad-page-title">Bulk SMS/Email</div>
                 </div>
-                <div className="ad-page-title">Bulk SMS/Email</div>
+                
+                {balance && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'right' }}>
+                                <span style={{ fontSize: '0.55rem', color: 'var(--ad-t3)', fontWeight: 800, textTransform: 'uppercase', lineHeight: 1 }}>SMS Credits</span>
+                                <span style={{ fontSize: '1rem', fontFamily: "'Bebas Neue', sans-serif", color: 'var(--ad-pl)', lineHeight: 1 }}>{balance.UserData?.balance || 'N/A'}</span>
+                            </div>
+                            <button 
+                                className={`ad-hbtn ad-hbtn-icon ${refreshing ? 'ad-spin' : ''}`} 
+                                onClick={fetchBalance}
+                                style={{ padding: '2px', minWidth: 'auto', border: 'none', background: 'none', color: 'var(--ad-t3)' }}
+                                title="Refresh Balance"
+                            >
+                                <AiOutlineReload size={12} />
+                            </button>
+                        </div>
+                        <button 
+                            className="ad-hbtn ad-hbtn-primary" 
+                            style={{ padding: '4px 12px', fontSize: '0.7rem', height: '26px', minWidth: 'auto' }}
+                            onClick={() => setShowRenewInfo(true)}
+                        >
+                            Top Up Credits
+                        </button>
+                    </div>
+                )}
             </div>
+
+            {/* Top Up Modal */}
+            {showRenewInfo && (
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                    <div className="ad-panel" style={{ maxWidth: '450px', width: '100%', border: 'none', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
+                        <div className="ad-panel-head">
+                            <div className="ad-panel-title">Top Up SMS Credits</div>
+                        </div>
+                        <div className="ad-panel-body">
+                             <div style={{ marginBottom: '25px', padding: '20px', background: 'rgba(245,158,11,0.03)', border: '1px solid rgba(245,158,11,0.1)', borderRadius: '4px', borderLeft: '4px solid var(--ad-accent)' }}>
+                                <div style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--ad-accent)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <AiOutlineExclamationCircle size={20} /> M-Pesa Payment Instructions
+                                </div>
+                                <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '0.9rem', color: 'var(--ad-t2)', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                    <li>Select <strong>Pay Bill</strong> on M-Pesa</li>
+                                    <li>Business Number: <strong>525900</strong></li>
+                                    <li>Account: <strong>{balance?.username || 'evansw'}</strong></li>
+                                    <li>Amount: <strong>Enter any amount</strong></li>
+                                </ol>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--ad-t3)', marginTop: '25px', fontStyle: 'italic', lineHeight: '1.5' }}>
+                                    Your SMS credits will be updated automatically in your Africa's Talking account after payment.
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', borderTop: '1px solid var(--ad-border)', paddingTop: '20px' }}>
+                                <button className="ad-hbtn" onClick={() => setShowRenewInfo(false)} style={{ border: '1px solid var(--ad-border)', background: 'transparent' }}>
+                                    Close
+                                </button>
+                                <button className="ad-hbtn ad-hbtn-primary" onClick={() => window.location.reload()}>
+                                    Complete & Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {errorMsg && (
                 <div className="ad-error" style={{ marginBottom: '20px' }}>
