@@ -6,7 +6,7 @@ import {
     AiOutlineDollar, AiOutlineExclamationCircle, AiOutlineSearch, AiOutlineEye, AiOutlineDelete,
     AiOutlineLeft, AiOutlineRight, AiOutlineStar, AiOutlineClose,
         AiOutlinePrinter, AiOutlineDashboard, AiOutlineHistory,
-        AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart, AiOutlineHeart
+        AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart, AiOutlineHeart, AiOutlineMessage
     } from 'react-icons/ai';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -17,6 +17,7 @@ import { toPng } from 'html-to-image';
 import AdminRaffleTicketsPrint from './AdminRaffleTicketsPrint';
 import AdminBibNumbersPrint from './AdminBibNumbersPrint';
 import AdminBibVisual from './AdminBibVisual';
+import { AdminCommunications } from './AdminCommunications';
 import logo from '../../assets/logos/logo.png';
 import { CIRCUITS } from '../../constants';
 import { API_BASE_URL } from '../../config';
@@ -30,10 +31,10 @@ interface AdminDashboardProps {
 
 
 const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
-    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs' | 'donations';
+    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs' | 'donations' | 'communications';
     const { "*": viewParam } = useParams();
     const navigate = useNavigate();
-    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs', 'donations'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
+    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs', 'donations', 'communications'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
     const [dashboardData, setDashboardData] = useState<any>(null);
     const [registrations, setRegistrations] = useState<any[]>([]);
     const [pricingCategories, setPricingCategories] = useState<any[]>([]);
@@ -406,6 +407,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         { id: 'payments', label: 'Payments', icon: AiOutlineDollar },
         { id: 'donations', label: 'Donations', icon: AiOutlineHeart },
         { id: 'bibs', label: 'Bibs', icon: AiOutlineStar },
+        { id: 'communications', label: 'Communications', icon: AiOutlineMessage },
         { id: 'pricing', label: 'Pricing', icon: AiOutlineTable },
     ];
 
@@ -1596,6 +1598,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             </div>
                                         ))}
                             </>
+                        )}
+
+                        {activeView === 'communications' && (
+                            <AdminCommunications />
                         )}
 
                     </main>
