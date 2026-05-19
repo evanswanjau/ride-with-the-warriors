@@ -11,21 +11,21 @@ interface RaffleDetailsFormProps {
         gender: string;
         quantity: string;
         acceptedTerms: boolean;
+        referralCode: string;
     };
     onChange: (data: any) => void;
     onNext: () => void;
     errors: Record<string, string>;
+    hasStoredRef?: boolean;
 }
 
-const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsFormProps) => {
+const RaffleDetailsForm = ({ data, onChange, onNext, errors, hasStoredRef = false }: RaffleDetailsFormProps) => {
     const handleInputChange = (field: string, value: string) => {
         onChange({ ...data, [field]: value });
     };
 
     const inputClass = (field: string) =>
         `${REG_INPUT_CLASSES} ${errors[field] ? '!border-red-500 focus:!ring-red-500' : ''}`;
-
-
 
     const Footer = (
         <div className="flex justify-end w-full">
@@ -202,6 +202,23 @@ const RaffleDetailsForm = ({ data, onChange, onNext, errors }: RaffleDetailsForm
                     </div>
                     {errors.quantity && <span className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-1">{errors.quantity}</span>}
                 </div>
+
+                {/* Referral Code — only show if not auto-captured from URL */}
+                {!hasStoredRef && (
+                    <div className="flex flex-col gap-1.5">
+                        <label className={REG_LABEL_CLASSES}>
+                            Referral Code <span className="text-rs-text-3 text-[9px]">(optional)</span>
+                        </label>
+                        <input
+                            className={inputClass('referralCode')}
+                            placeholder="e.g. JAMES2026"
+                            type="text"
+                            value={data.referralCode}
+                            onChange={(e) => handleInputChange('referralCode', e.target.value.toUpperCase())}
+                            style={{ textTransform: 'uppercase' }}
+                        />
+                    </div>
+                )}
             </div>
 
             {/* Terms Acceptance */}

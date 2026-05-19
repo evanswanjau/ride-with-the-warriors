@@ -25,6 +25,7 @@ import DonatePage from './pages/DonatePage';
 
 import ScrollToTop from './utils/ScrollToTop';
 import PageTitle from './utils/PageTitle';
+import ReferralCapture from './components/ReferralCapture';
 
 const MilitaryRedirect = () => {
   const { setIsMilitary } = useRegistration();
@@ -41,6 +42,7 @@ const App = () => {
     <RegistrationProvider>
       <ScrollToTop />
       <PageTitle />
+      <ReferralCapture />
       <Routes>
         {/* Public Pages */}
         <Route path="/" element={<Layout isFullWidth><HomePage /></Layout>} />

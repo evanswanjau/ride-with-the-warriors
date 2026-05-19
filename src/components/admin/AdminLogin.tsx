@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AiOutlineSun, AiOutlineMoon, AiOutlineArrowLeft, AiOutlineExclamationCircle } from 'react-icons/ai';
+import { AiOutlineSun, AiOutlineMoon, AiOutlineArrowLeft, AiOutlineExclamationCircle, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { API_BASE_URL } from '../../config';
 import logo from '../../assets/logos/logo.png';
 
@@ -11,6 +11,7 @@ interface AdminLoginProps {
 const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('adminTheme') === 'dark');
@@ -241,6 +242,21 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
                 .light .al-input::placeholder { color: rgba(0,0,0,0.2); }
                 .light .al-input:focus { border-color: #2d6a2d; background: rgba(45,106,45,0.04); }
 
+                /* Password wrap */
+                .al-pass-wrap { position: relative; }
+                .al-pass-toggle {
+                    position: absolute; right: 12px; top: 50%;
+                    transform: translateY(-50%);
+                    background: none; border: none; cursor: pointer;
+                    display: flex; align-items: center; justify-content: center;
+                    padding: 8px; font-size: 1.1rem;
+                    transition: color 0.15s;
+                }
+                .dark .al-pass-toggle { color: rgba(255,255,255,0.2); }
+                .dark .al-pass-toggle:hover { color: rgba(255,255,255,0.6); }
+                .light .al-pass-toggle { color: rgba(0,0,0,0.22); }
+                .light .al-pass-toggle:hover { color: rgba(0,0,0,0.5); }
+
                 /* Error */
                 .al-error {
                     display: flex; align-items: flex-start; gap: 10px;
@@ -386,14 +402,25 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
 
                             <div className="al-field">
                                 <label className="al-label">Password</label>
-                                <input
-                                    className="al-input"
-                                    type="password"
-                                    value={password}
-                                    onChange={e => setPassword(e.target.value)}
-                                    placeholder="••••••••"
-                                    autoComplete="current-password"
-                                />
+                                <div className="al-pass-wrap">
+                                    <input
+                                        className="al-input"
+                                        type={showPassword ? 'text' : 'password'}
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                        placeholder="••••••••"
+                                        autoComplete="current-password"
+                                        style={{ paddingRight: 48 }}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="al-pass-toggle"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        title={showPassword ? 'Hide password' : 'Show password'}
+                                    >
+                                        {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                                    </button>
+                                </div>
                             </div>
 
                             {error && (

@@ -5,6 +5,7 @@ import RaffleDetailsForm from '../components/raffle/RaffleDetailsForm';
 import RaffleReview from '../components/raffle/RaffleReview';
 import ProgressBar from '../components/layout/ProgressBar';
 import { API_BASE_URL } from '../config';
+import { getStoredReferralCode } from '../components/ReferralCapture';
 
 
 const RafflePage = () => {
@@ -13,6 +14,9 @@ const RafflePage = () => {
     const navigate = useNavigate();
 
     const location = useLocation();
+
+    // Check if a referral code was captured from the URL
+    const storedRef = getStoredReferralCode();
 
     const [formData, setFormData] = useState({
         firstName: location.state?.firstName || '',
@@ -23,6 +27,7 @@ const RafflePage = () => {
         gender: location.state?.gender || 'male',
         quantity: location.state?.quantity || '1',
         acceptedTerms: location.state?.acceptedTerms || false,
+        referralCode: location.state?.referralCode || storedRef || '',
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -74,6 +79,7 @@ const RafflePage = () => {
                     idNumber: formData.idNumber.trim(),
                     gender: formData.gender,
                     quantity: formData.quantity,
+                    referralCode: formData.referralCode.trim() || null,
                 }),
             });
             const data = await res.json();
@@ -114,6 +120,7 @@ const RafflePage = () => {
                     onChange={setFormData}
                     onNext={handleNext}
                     errors={errors}
+                    hasStoredRef={!!storedRef}
                 />
             )}
             {step === 2 && (

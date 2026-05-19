@@ -5,9 +5,10 @@ import {
     AiOutlineTable, AiOutlineSun, AiOutlineMoon, AiOutlineTeam,
     AiOutlineDollar, AiOutlineExclamationCircle, AiOutlineSearch, AiOutlineEye, AiOutlineDelete,
     AiOutlineLeft, AiOutlineRight, AiOutlineStar, AiOutlineClose,
-        AiOutlinePrinter, AiOutlineDashboard, AiOutlineHistory,
-        AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart, AiOutlineHeart, AiOutlineMessage
-    } from 'react-icons/ai';
+    AiOutlinePrinter, AiOutlineDashboard, AiOutlineHistory,
+    AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart, AiOutlineHeart, AiOutlineMessage, AiOutlineLink,
+    AiOutlineCheckCircle
+} from 'react-icons/ai';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     BarChart, Bar, Cell, PieChart, Pie, Line, Legend, ComposedChart
@@ -31,10 +32,10 @@ interface AdminDashboardProps {
 
 
 const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
-    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs' | 'donations' | 'communications';
+    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs' | 'donations' | 'communications' | 'referrals';
     const { "*": viewParam } = useParams();
     const navigate = useNavigate();
-    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs', 'donations', 'communications'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
+    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs', 'donations', 'communications', 'referrals'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
     const [dashboardData, setDashboardData] = useState<any>(null);
     const [registrations, setRegistrations] = useState<any[]>([]);
     const [pricingCategories, setPricingCategories] = useState<any[]>([]);
@@ -53,7 +54,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [paymentsFilter, setPaymentsFilter] = useState({ status: '', search: '', dateFrom: '', dateTo: '' });
     const [paymentsPagination, setPaymentsPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
     const [raffleTickets, setRaffleTickets] = useState<any[]>([]);
-    const [raffleFilter, setRaffleFilter] = useState({ status: '', search: '' });
+    const [raffleFilter, setRaffleFilter] = useState({ status: '', search: '', referralCode: '' });
     const [rafflePagination, setRafflePagination] = useState({ page: 1, limit: 12, total: 0, pages: 1 });
     const [isPrintingRaffle, setIsPrintingRaffle] = useState(false);
     const [allRaffleTicketsForPrint, setAllRaffleTicketsForPrint] = useState<any[]>([]);
@@ -65,10 +66,20 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [donationsPagination, setDonationsPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
     const [debouncedDonationSearch, setDebouncedDonationSearch] = useState(donationsFilter.search);
 
+    const [referrals, setReferrals] = useState<any[]>([]);
+    const [referralsStats, setReferralsStats] = useState<any>(null);
+    const [referralsFilter, setReferralsFilter] = useState({ status: '', search: '' });
+    const [referralsPagination, setReferralsPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
+    const [debouncedReferralSearch, setDebouncedReferralSearch] = useState(referralsFilter.search);
+
     const [sortBy, setSortBy] = useState<string>('id'); // 'id', 'name', 'category'
     const [debouncedSearch, setDebouncedSearch] = useState(filter.search);
     const [debouncedPaymentSearch, setDebouncedPaymentSearch] = useState(paymentsFilter.search);
     const [debouncedRaffleSearch, setDebouncedRaffleSearch] = useState(raffleFilter.search);
+
+    const [isReferralModalOpen, setIsReferralModalOpen] = useState(false);
+    const [editingReferral, setEditingReferral] = useState<any>(null);
+    const [newReferral, setNewReferral] = useState({ code: '', influencerName: '', influencerEmail: '', influencerPhone: '' });
 
     const dm = isDarkMode;
 
@@ -96,6 +107,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     }, [donationsFilter.search]);
 
     useEffect(() => {
+        const timer = setTimeout(() => setDebouncedReferralSearch(referralsFilter.search), 500);
+        return () => clearTimeout(timer);
+    }, [referralsFilter.search]);
+
+    useEffect(() => {
         if (activeView === 'overview' || activeView === 'analytics' || activeView === 'raffle') fetchDashboardStats();
 
         if (activeView === 'registrations' || activeView === 'bibs') fetchData(debouncedSearch);
@@ -108,11 +124,17 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         pagination.page, activeView,
         paymentsFilter.status, paymentsFilter.dateFrom, paymentsFilter.dateTo, debouncedPaymentSearch,
         paymentsPagination.page,
-        raffleFilter.status, debouncedRaffleSearch,
+        raffleFilter.status, debouncedRaffleSearch, raffleFilter.referralCode,
         rafflePagination.page,
         donationsFilter.status, debouncedDonationSearch,
-        donationsPagination.page
+        donationsPagination.page,
+        referralsFilter.status, debouncedReferralSearch,
+        referralsPagination.page
     ]);
+
+    useEffect(() => {
+        if (activeView === 'referrals') fetchReferrals(debouncedReferralSearch);
+    }, [activeView, debouncedReferralSearch, referralsPagination.page, referralsFilter.status]);
 
     const fetchDashboardStats = async () => {
         try { setLoading(true); const r = await fetch(`${API_BASE_URL}/admin/dashboard`, { headers: { Authorization: `Bearer ${token}` } }); if (!r.ok) throw new Error(); setDashboardData(await r.json()); } catch { setError('Failed to load dashboard'); } finally { setLoading(false); }
@@ -120,11 +142,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const fetchData = async (overrideSearch?: string) => {
         try {
             setLoading(true);
-            const q = new URLSearchParams({ 
-                page: String(pagination.page), 
-                limit: String(pagination.limit), 
+            const q = new URLSearchParams({
+                page: String(pagination.page),
+                limit: String(pagination.limit),
                 ...filter,
-                search: overrideSearch ?? filter.search 
+                search: overrideSearch ?? filter.search
             });
             const [rr, sr] = await Promise.all([
                 fetch(`${API_BASE_URL}/admin/registrations?${q}`, { headers: { Authorization: `Bearer ${token}` } }),
@@ -142,13 +164,13 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         try {
             setLoading(true); setError(null);
             const searchVal = overrideSearch ?? paymentsFilter.search;
-            const p = new URLSearchParams({ 
-                page: String(paymentsPagination.page), 
-                limit: String(paymentsPagination.limit), 
-                ...(paymentsFilter.status && { status: paymentsFilter.status }), 
-                ...(searchVal && { search: searchVal }), 
-                ...(paymentsFilter.dateFrom && { dateFrom: paymentsFilter.dateFrom }), 
-                ...(paymentsFilter.dateTo && { dateTo: paymentsFilter.dateTo }) 
+            const p = new URLSearchParams({
+                page: String(paymentsPagination.page),
+                limit: String(paymentsPagination.limit),
+                ...(paymentsFilter.status && { status: paymentsFilter.status }),
+                ...(searchVal && { search: searchVal }),
+                ...(paymentsFilter.dateFrom && { dateFrom: paymentsFilter.dateFrom }),
+                ...(paymentsFilter.dateTo && { dateTo: paymentsFilter.dateTo })
             });
             const [lr, sr] = await Promise.all([fetch(`${API_BASE_URL}/admin/payments?${p}`, { headers: { Authorization: `Bearer ${token}` } }), fetch(`${API_BASE_URL}/admin/payments/stats/summary`, { headers: { Authorization: `Bearer ${token}` } })]);
             if (!lr.ok || !sr.ok) throw new Error();
@@ -160,11 +182,12 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         try {
             setLoading(true); setError(null);
             const searchVal = overrideSearch ?? raffleFilter.search;
-            const p = new URLSearchParams({ 
-                page: String(rafflePagination.page), 
-                limit: String(rafflePagination.limit), 
-                ...(raffleFilter.status && { status: raffleFilter.status }), 
-                ...(searchVal && { search: searchVal }) 
+            const p = new URLSearchParams({
+                page: String(rafflePagination.page),
+                limit: String(rafflePagination.limit),
+                ...(raffleFilter.status && { status: raffleFilter.status }),
+                ...(searchVal && { search: searchVal }),
+                ...(raffleFilter.referralCode && { referralCode: raffleFilter.referralCode })
             });
             const r = await fetch(`${API_BASE_URL}/admin/raffle?${p}`, { headers: { Authorization: `Bearer ${token}` } });
             if (!r.ok) throw new Error(); const d = await r.json();
@@ -176,20 +199,36 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         try {
             setLoading(true); setError(null);
             const searchVal = overrideSearch ?? donationsFilter.search;
-            const p = new URLSearchParams({ 
-                page: String(donationsPagination.page), 
-                limit: String(donationsPagination.limit), 
-                ...(donationsFilter.status && { status: donationsFilter.status }), 
-                ...(searchVal && { search: searchVal }) 
+            const p = new URLSearchParams({
+                page: String(donationsPagination.page),
+                limit: String(donationsPagination.limit),
+                ...(donationsFilter.status && { status: donationsFilter.status }),
+                ...(searchVal && { search: searchVal })
             });
             const [lr, sr] = await Promise.all([
-                fetch(`${API_BASE_URL}/admin/donations?${p}`, { headers: { Authorization: `Bearer ${token}` } }), 
+                fetch(`${API_BASE_URL}/admin/donations?${p}`, { headers: { Authorization: `Bearer ${token}` } }),
                 fetch(`${API_BASE_URL}/admin/donations/stats/summary`, { headers: { Authorization: `Bearer ${token}` } })
             ]);
             if (!lr.ok || !sr.ok) throw new Error();
             const ld = await lr.json(); const sd = await sr.json();
             setDonations(ld.donations || []); setDonationsPagination(prev => ({ ...prev, ...(ld.pagination || {}) })); setDonationsStats(sd);
         } catch { setError('Failed to load donations'); } finally { setLoading(false); }
+    };
+    const fetchReferrals = async (overrideSearch?: string) => {
+        try {
+            setLoading(true); setError(null);
+            const searchVal = overrideSearch ?? referralsFilter.search;
+            const p = new URLSearchParams({
+                page: String(referralsPagination.page),
+                limit: String(referralsPagination.limit),
+                ...(referralsFilter.status && { status: referralsFilter.status }),
+                ...(searchVal && { search: searchVal })
+            });
+            const r = await fetch(`${API_BASE_URL}/admin/referrals?${p}`, { headers: { Authorization: `Bearer ${token}` } });
+            if (!r.ok) throw new Error();
+            const d = await r.json();
+            setReferrals(d.referrals || []); setReferralsPagination(prev => ({ ...prev, ...(d.pagination || {}) })); setReferralsStats(d.stats);
+        } catch { setError('Failed to load referrals'); } finally { setLoading(false); }
     };
 
     const handleStatusUpdate = async (id: string, s: string) => {
@@ -252,14 +291,75 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     };
     const handleExportRaffle = async () => {
         try {
-            const p = new URLSearchParams({ limit: '10000', ...(raffleFilter.status && { status: raffleFilter.status }), ...(raffleFilter.search && { search: raffleFilter.search }) });
+            const p = new URLSearchParams({
+                limit: '10000',
+                ...(raffleFilter.status && { status: raffleFilter.status }),
+                ...(raffleFilter.search && { search: raffleFilter.search }),
+                ...(raffleFilter.referralCode && { referralCode: raffleFilter.referralCode })
+            });
             const r = await fetch(`${API_BASE_URL}/admin/raffle?${p}`, { headers: { Authorization: `Bearer ${token}` } });
             const d = await r.json(); const list = d.tickets || [];
             if (!list.length) return alert('No tickets found to export');
-            const rows = list.map((t: any) => ({ TicketID: t.id, Name: `${t.firstName} ${t.lastName}`, Email: t.email || '', Phone: t.phoneNumber || '', Status: t.status, CreatedAt: new Date(t.createdAt).toLocaleString() }));
+            const rows = list.map((t: any) => ({ TicketID: t.id, Name: `${t.firstName} ${t.lastName}`, Email: t.email || '', Phone: t.phoneNumber || '', Referral: t.referralCode || 'Direct', Status: t.status, CreatedAt: new Date(t.createdAt).toLocaleString() }));
             const ws = XLSX.utils.json_to_sheet(rows);
             const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'RaffleTickets'); XLSX.writeFile(wb, 'Raffle_Tickets.xlsx');
         } catch { alert('Export failed'); }
+    };
+
+    const handleCreateReferral = async () => {
+        try {
+            setLoading(true);
+            const r = await fetch(`${API_BASE_URL}/admin/referrals`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify(newReferral),
+            });
+            if (!r.ok) {
+                const d = await r.json();
+                throw new Error(d.error?.message || 'Failed to create referral');
+            }
+            setIsReferralModalOpen(false);
+            setNewReferral({ code: '', influencerName: '', influencerEmail: '', influencerPhone: '' });
+            fetchReferrals();
+        } catch (e: any) { setError(e.message); } finally { setLoading(false); }
+    };
+    const handleUpdateReferral = async () => {
+        if (!editingReferral) return;
+        try {
+            setLoading(true);
+            const r = await fetch(`${API_BASE_URL}/admin/referrals/${editingReferral.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify(editingReferral),
+            });
+            if (!r.ok) throw new Error();
+            setIsReferralModalOpen(false);
+            setEditingReferral(null);
+            fetchReferrals();
+        } catch { setError('Failed to update referral'); } finally { setLoading(false); }
+    };
+    const handleDeleteReferral = async (id: string) => {
+        if (!window.confirm('Deactivate this referral code?')) return;
+        try {
+            setLoading(true);
+            const r = await fetch(`${API_BASE_URL}/admin/referrals/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+            if (!r.ok) throw new Error();
+            fetchReferrals();
+        } catch { setError('Failed to deactivate referral'); } finally { setLoading(false); }
+    };
+    const handleExportReferrals = async () => {
+        try {
+            const r = await fetch(`${API_BASE_URL}/admin/referrals/export`, { headers: { Authorization: `Bearer ${token}` } });
+            if (!r.ok) throw new Error();
+            const blob = await r.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `referrals_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch { setError('Export failed'); }
     };
 
     const handleDownloadRaffleTickets = async () => {
@@ -408,6 +508,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         { id: 'donations', label: 'Donations', icon: AiOutlineHeart },
         { id: 'bibs', label: 'Bibs', icon: AiOutlineStar },
         { id: 'communications', label: 'Communications', icon: AiOutlineMessage },
+        { id: 'referrals', label: 'Referrals', icon: AiOutlineLink },
         { id: 'pricing', label: 'Pricing', icon: AiOutlineTable },
     ];
 
@@ -568,12 +669,29 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 .ad-filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; padding: 16px 20px; background: var(--ad-raised); border-bottom: 1px solid var(--ad-border); }
                 .ad-filter-group { display: flex; flex-direction: column; gap: 5px; }
                 .ad-filter-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ad-t3); }
-                .ad-input { background: var(--ad-surface); border: 1px solid var(--ad-border); color: var(--ad-t1); padding: 8px 12px; font-family: 'Barlow', sans-serif; font-size: 0.82rem; outline: none; transition: border-color 0.2s; min-width: 180px; }
-                .ad-input:focus { border-color: var(--ad-pl); }
-                .ad-select { background: var(--ad-surface); border: 1px solid var(--ad-border); color: var(--ad-t1); padding: 8px 12px; font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; outline: none; cursor: pointer; }
+                .ad-input {
+                    background: var(--ad-surface);
+                    border: 1px solid var(--ad-border);
+                    color: var(--ad-t1);
+                    padding: 10px 14px;
+                    font-family: 'Barlow', sans-serif;
+                    font-size: 13.5px;
+                    font-weight: 500;
+                    outline: none;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                    min-width: 180px;
+                }
+                .ad-input:focus { border-color: var(--ad-pl); box-shadow: 0 0 0 3px rgba(76,175,80,0.1); }
+                .ad-select {
+                    background: var(--ad-surface); border: 1px solid var(--ad-border); color: var(--ad-t1);
+                    padding: 10px 14px; font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700;
+                    letter-spacing: 0.1em; text-transform: uppercase; outline: none; cursor: pointer;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                }
                 .ad-search-wrap { position: relative; }
-                .ad-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ad-t3); font-size: 1rem; }
-                .ad-search-wrap .ad-input { padding-left: 32px; }
+                .ad-search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--ad-t3); font-size: 1rem; }
+                .ad-search-wrap .ad-input { padding-left: 36px; }
 
                 /* Pagination */
                 .ad-pagination { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-top: 1px solid var(--ad-border); background: var(--ad-raised); }
@@ -591,7 +709,91 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 .ad-feed-title { font-size: 0.83rem; font-weight: 600; color: var(--ad-t1); margin-bottom: 2px; }
                 .ad-feed-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ad-t3); }
 
-                /* Error */
+                /* Buttons */
+                .ad-btn {
+                    position: relative; overflow: hidden;
+                    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+                    padding: 10px 20px;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.78rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+                    border: none; cursor: pointer; transition: background 0.2s, opacity 0.2s;
+                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+                }
+                .ad-btn::before { content: ''; position: absolute; top: 0; left: -80%; width: 60%; height: 100%; background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.2) 50%, transparent 80%); transform: skewX(-20deg); pointer-events: none; }
+                .ad-btn:hover:not(:disabled)::before { left: 140%; transition: left 0.5s cubic-bezier(0.25,0.46,0.45,0.94); }
+                .ad-btn-primary { background: var(--ad-primary); color: #fff; }
+                .ad-btn-primary:hover:not(:disabled) { background: #1e4d1e; }
+                .ad-btn-ghost { background: var(--ad-raised); border: 1px solid var(--ad-border2); color: var(--ad-t2); }
+                .ad-btn-ghost:hover:not(:disabled) { border-color: var(--ad-pl); color: var(--ad-pl); }
+                .ad-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+                /* Modals - Centered */
+                .ad-modal-overlay {
+                    position: fixed; inset: 0;
+                    background: rgba(0,0,0,0.65);
+                    backdrop-filter: blur(4px);
+                    display: flex; align-items: center; justify-content: center;
+                    z-index: 500;
+                    padding: 24px;
+                }
+                .ad-modal {
+                    background: var(--ad-surface);
+                    border: none;
+                    width: 100%;
+                    max-height: 90vh;
+                    overflow: hidden;
+                    display: flex; flex-direction: column;
+                    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+                    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%);
+                    animation: ad-modal-appear 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                @keyframes ad-modal-appear {
+                    from { opacity: 0; transform: scale(0.96) translateY(10px); }
+                    to { opacity: 1; transform: scale(1) translateY(0); }
+                }
+                .ad-modal-header { padding: 22px 24px; border-bottom: 2px solid var(--ad-primary); background: var(--ad-sidebar); display: flex; align-items: center; justify-content: space-between; position: relative; }
+                .ad-modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.06em; color: #fff; margin: 0; line-height: 1; }
+                .ad-modal-close { background: rgba(255,255,255,0.07); border: none; color: rgba(255,255,255,0.5); width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: background 0.2s, color 0.2s; }
+                .ad-modal-close:hover { background: rgba(255,255,255,0.14); color: #fff; }
+                .ad-modal-body { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+                .ad-modal-footer { padding: 18px 24px; border-top: 1px solid var(--ad-border); display: flex; align-items: center; justify-content: flex-end; gap: 12px; background: var(--ad-raised); }
+
+                /* Modal Specifics */
+                .ad-modal-chip {
+                    position: absolute; right: 24px; top: -14px;
+                    background: var(--ad-primary);
+                    padding: 5px 12px;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.65rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+                    color: #fff;
+                    clip-path: polygon(0 0, 100% 0, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                }
+                .ad-m-field { display: flex; flex-direction: column; gap: 6px; }
+
+                .ad-m-label {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.6rem; font-weight: 700;
+                    letter-spacing: 0.18em; text-transform: uppercase;
+                    color: var(--ad-t3);
+                }
+                .ad-m-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+                @media (max-width: 640px) { .ad-m-grid { grid-template-columns: 1fr; } }
+
+
+                /* Actions */
+                .ad-row-actions { display: flex; gap: 4px; justify-content: flex-end; }
+                .ad-row-btn {
+                    background: none; border: 1px solid var(--ad-border); color: var(--ad-t3);
+                    padding: 5px 8px; cursor: pointer; font-size: 0.95rem;
+                    display: flex; align-items: center; justify-content: center;
+                    transition: border-color 0.2s, color 0.2s;
+                }
+                .ad-row-btn:hover { border-color: var(--ad-pl); color: var(--ad-pl); }
+                .ad-row-btn.red:hover { border-color: var(--ad-red); color: var(--ad-red); }
+                .ad-row-btn.amber:hover { border-color: var(--ad-accent); color: var(--ad-accent); }
+                .ad-row-btn.blue:hover { border-color: #3b82f6; color: #3b82f6; }
+
                 .ad-error { padding: 14px 18px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); border-left: 3px solid var(--ad-red); display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--ad-red); }
 
                 /* Side panel */
@@ -689,6 +891,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 </button>
                             </>
                         )}
+
                         <button className="ad-hbtn ad-hbtn-icon" onClick={() => setIsDarkMode(!dm)} title="Toggle theme">
                             {dm ? <AiOutlineSun /> : <AiOutlineMoon />}
                         </button>
@@ -1338,6 +1541,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <option value="">All</option><option value="PAID">Paid</option><option value="UNPAID">Unpaid</option>
                                             </select>
                                         </div>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Referral Code</label>
+                                            <input className="ad-input" type="text" value={raffleFilter.referralCode} onChange={e => setRaffleFilter({ ...raffleFilter, referralCode: e.target.value.toUpperCase() })} placeholder="e.g. JAMES2026" />
+                                        </div>
                                     </div>
 
                                     <div className="ad-panel-rel">
@@ -1353,17 +1560,16 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         ) : (
                                             <div className="ad-table-wrap">
                                                 <table className="ad-table">
-                                                    <thead><tr>{['#', 'Ticket ID', 'Name', 'Email', 'Phone', 'Status', 'Created', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                    <thead><tr>{['#', 'Ticket ID', 'Name', 'Email', 'Phone', 'Referral', 'Status', 'Created', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                     <tbody>
                                                         {raffleTickets.map((t: any, index: number) => (
                                                             <tr key={t.id} className="ad-tr">
-                                                                <td className="ad-td ad-mono" style={{ opacity: 0.5 }}>{(rafflePagination.page - 1) * rafflePagination.limit + index + 1}</td>
-                                                                <td className="ad-td ad-mono">{t.id}</td>
-                                                                <td className="ad-td">
-                                                                    <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{cap(t.firstName)} {cap(t.lastName)}</div>
-                                                                </td>
-                                                                <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.email || '—'}</td>
-                                                                <td className="ad-td" style={{ fontSize: '0.78rem' }}>{t.phoneNumber || '—'}</td>
+                                                                <td className="ad-td ad-mono" style={{ fontSize: '0.65rem', color: 'var(--ad-t3)' }}>{(rafflePagination.page - 1) * rafflePagination.limit + index + 1}</td>
+                                                                <td className="ad-td ad-mono" style={{ fontWeight: 700, color: 'var(--ad-accent)' }}>{t.id}</td>
+                                                                <td className="ad-td" style={{ fontWeight: 600 }}>{cap(t.firstName)} {cap(t.lastName)}</td>
+                                                                <td className="ad-td" style={{ fontSize: '0.75rem' }}>{t.email || '—'}</td>
+                                                                <td className="ad-td ad-mono" style={{ fontSize: '0.75rem' }}>{t.phoneNumber || '—'}</td>
+                                                                <td className="ad-td"><span className="ad-badge ad-badge-blue" style={{ fontSize: '0.65rem' }}>{t.referralCode || 'Direct'}</span></td>
                                                                 <td className="ad-td">
                                                                     <select className="ad-status-select" value={t.status} onChange={e => handleRaffleStatusUpdate(t.id, e.target.value)}
                                                                         style={{ color: t.status === 'PAID' ? 'var(--ad-pl)' : 'var(--ad-accent)' }}>
@@ -1563,6 +1769,101 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                             </>
                         )}
 
+                        {/* ══════════════════════════════════════════ REFERRALS ══ */}
+                        {activeView === 'referrals' && (
+                            <>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+                                    <div>
+                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Marketing</span></div>
+                                        <div className="ad-page-title" style={{ marginBottom: 0 }}>Referral System</div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: 12 }}>
+                                        <button className="ad-btn ad-btn-primary" onClick={() => { setEditingReferral(null); setNewReferral({ code: '', influencerName: '', influencerEmail: '', influencerPhone: '' }); setIsReferralModalOpen(true); }}>
+                                            <AiOutlineLink /> Create Code
+                                        </button>
+                                        <button className="ad-btn ad-btn-ghost" onClick={handleExportReferrals}>Export CSV</button>
+                                    </div>
+                                </div>
+
+                                <div className="ad-kpi-grid" style={{ marginBottom: 24 }}>
+                                    {[
+                                        { label: 'Total Codes', val: referralsStats?.totalReferrals || 0, cls: '' },
+                                        { label: 'Active Codes', val: referralsStats?.activeReferrals || 0, cls: 'blue' },
+                                        { label: 'Total Clicks', val: referralsStats?.totalClicks || 0, cls: 'amber' },
+                                        { label: 'Conversions', val: referralsStats?.totalPaidReferred || 0, cls: 'green' },
+                                    ].map(k => (
+                                        <div key={k.label} className="ad-kpi">
+                                            <div className="ad-kpi-label">{k.label}</div>
+                                            <div className={`ad-kpi-value ${k.cls}`}>{k.val}</div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="ad-panel">
+                                    <div className="ad-filters">
+                                        <div className="ad-filter-group" style={{ flex: 1 }}>
+                                            <label className="ad-filter-label">Search Influencer or Code</label>
+                                            <div className="ad-search-wrap">
+                                                <AiOutlineSearch className="ad-search-icon" />
+                                                <input className="ad-input" type="text" value={referralsFilter.search} onChange={e => setReferralsFilter({ ...referralsFilter, search: e.target.value })} placeholder="Name, code, email…" />
+                                            </div>
+                                        </div>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Status</label>
+                                            <select className="ad-select" value={referralsFilter.status} onChange={e => setReferralsFilter({ ...referralsFilter, status: e.target.value })}>
+                                                <option value="">All</option><option value="active">Active</option><option value="inactive">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="ad-panel-rel">
+                                        {loading && <div className="ad-loading-overlay"><div className="ad-spinner" /></div>}
+                                        <div className="ad-table-wrap">
+                                            <table className="ad-table">
+                                                <thead><tr>{['#', 'Code', 'Influencer', 'Email', 'Phone', 'Clicks', 'Direct', 'Paid', 'Status', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                <tbody>
+                                                    {referrals.length === 0 ? <tr><td className="ad-td" colSpan={10} style={{ textAlign: 'center', padding: 60, color: 'var(--ad-t3)' }}>No referral codes found.</td></tr>
+                                                        : referrals.map((r: any, idx: number) => (
+                                                            <tr key={r.id} className="ad-tr">
+                                                                <td className="ad-td ad-mono" style={{ opacity: 0.5 }}>{(referralsPagination.page - 1) * referralsPagination.limit + idx + 1}</td>
+                                                                <td className="ad-td"><span className="ad-badge ad-badge-paid" style={{ fontSize: '0.85rem', padding: '4px 8px' }}>{r.code}</span></td>
+                                                                <td className="ad-td">
+                                                                    <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{r.influencerName}</div>
+                                                                </td>
+                                                                <td className="ad-td">
+                                                                    <div style={{ fontSize: '0.78rem', color: 'var(--ad-t2)' }}>{r.influencerEmail || '—'}</div>
+                                                                </td>
+                                                                <td className="ad-td">
+                                                                    <div className="ad-mono" style={{ fontSize: '0.75rem', color: 'var(--ad-t3)' }}>{r.influencerPhone || '—'}</div>
+                                                                </td>
+                                                                <td className="ad-td ad-mono">{r.clicks}</td>
+                                                                <td className="ad-td ad-mono">{r.totalTickets}</td>
+                                                                <td className="ad-td ad-mono" style={{ color: 'var(--ad-pl)', fontWeight: 700 }}>{r.paidTickets}</td>
+                                                                <td className="ad-td"><span className={`ad-badge ad-badge-${r.isActive ? 'paid' : 'failed'}`}>{r.isActive ? 'ACTIVE' : 'INACTIVE'}</span></td>
+                                                                <td className="ad-td">
+                                                                    <div className="ad-row-actions">
+                                                                        <button className="ad-row-btn blue" title="Copy Referral Link" onClick={() => {
+                                                                            const url = `${window.location.origin}?ref=${r.code}`;
+                                                                            navigator.clipboard.writeText(url);
+                                                                            alert(`Link copied: ${url}`);
+                                                                        }}><AiOutlineLink /></button>
+                                                                        {r.isActive && (
+                                                                            <button className="ad-row-btn red" title="Deactivate" onClick={() => handleDeleteReferral(r.id)}>
+                                                                                <AiOutlineDelete />
+                                                                            </button>
+                                                                        )}
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
                         {/* ══════════════════════════════════════════════ PRICING ══ */}
                         {activeView === 'pricing' && (
                             <>
@@ -1686,6 +1987,84 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     {isPrintingRaffle && <AdminRaffleTicketsPrint tickets={allRaffleTicketsForPrint.length > 0 ? allRaffleTicketsForPrint : raffleTickets} />}
                     {isPrintingBibs && <AdminBibNumbersPrint registrations={getBibRegistrationData(allRegsForPrint.length > 0 ? allRegsForPrint : registrations)} />}
                 </div>
+
+                {/* ─── Referral Form Modal ─────────────────────────────────────── */}
+                {isReferralModalOpen && (
+                    <div className="ad-modal-overlay">
+                        <div className="ad-modal" style={{ maxWidth: 500 }}>
+                            <div className="ad-modal-header">
+                                <h3 className="ad-modal-title">{editingReferral ? 'Update Influencer' : 'New Referral Portal'}</h3>
+                                <button className="ad-modal-close" onClick={() => setIsReferralModalOpen(false)}><AiOutlineClose /></button>
+                            </div>
+                            <div className="ad-modal-body" style={{ position: 'relative', paddingTop: 32 }}>
+                                {editingReferral && <div className="ad-modal-chip">{editingReferral.isActive ? 'Active' : 'Paused'}</div>}
+
+                                <div className="ad-m-field">
+                                    <div className="ad-m-label">Referral Code (Unique)</div>
+                                    <input className="ad-input" style={{ textTransform: 'uppercase', fontSize: '1.1rem', fontWeight: 700, letterSpacing: '0.05em' }} type="text" placeholder="e.g. JAMES2026" value={editingReferral ? editingReferral.code : newReferral.code} onChange={e => {
+                                        const v = e.target.value.toUpperCase().replace(/\s+/g, '');
+                                        if (editingReferral) setEditingReferral({ ...editingReferral, code: v });
+                                        else setNewReferral({ ...newReferral, code: v });
+                                    }} disabled={!!editingReferral} />
+                                    <div style={{ fontSize: '0.65rem', color: 'var(--ad-t3)', marginTop: 4 }}>This code will be appended to URLs for tracking.</div>
+                                </div>
+
+                                <div className="ad-m-field">
+                                    <div className="ad-m-label">Full Name</div>
+                                    <input className="ad-input" type="text" placeholder="e.g. Jane Doe" value={editingReferral ? editingReferral.influencerName : newReferral.influencerName} onChange={e => {
+                                        if (editingReferral) setEditingReferral({ ...editingReferral, influencerName: e.target.value });
+                                        else setNewReferral({ ...newReferral, influencerName: e.target.value });
+                                    }} />
+                                </div>
+
+                                <div className="ad-m-grid">
+                                    <div className="ad-m-field">
+                                        <div className="ad-m-label">Email Address</div>
+                                        <input className="ad-input" type="email" placeholder="jane@example.com" value={editingReferral ? editingReferral.influencerEmail || '' : newReferral.influencerEmail} onChange={e => {
+                                            if (editingReferral) setEditingReferral({ ...editingReferral, influencerEmail: e.target.value });
+                                            else setNewReferral({ ...newReferral, influencerEmail: e.target.value });
+                                        }} />
+                                    </div>
+                                    <div className="ad-m-field">
+                                        <div className="ad-m-label">Phone Number</div>
+                                        <input className="ad-input" type="tel" placeholder="07XX XXX XXX" value={editingReferral ? editingReferral.influencerPhone || '' : newReferral.influencerPhone} onChange={e => {
+                                            if (editingReferral) setEditingReferral({ ...editingReferral, influencerPhone: e.target.value });
+                                            else setNewReferral({ ...newReferral, influencerPhone: e.target.value });
+                                        }} />
+                                    </div>
+                                </div>
+
+                                {editingReferral && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', background: 'var(--ad-raised)', border: '1px solid var(--ad-border)' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                            <input type="checkbox" style={{ width: 16, height: 16, cursor: 'pointer' }} checked={editingReferral.isActive} onChange={e => setEditingReferral({ ...editingReferral, isActive: e.target.checked })} />
+                                            <span className="ad-m-label" style={{ color: editingReferral.isActive ? 'var(--ad-pl)' : 'var(--ad-t3)' }}>
+                                                {editingReferral.isActive ? 'Referral Link Active' : 'Referral Link Paused'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="ad-modal-footer">
+                                <button className="ad-btn ad-btn-ghost" onClick={() => setIsReferralModalOpen(false)}>Discard</button>
+                                <button className="ad-btn ad-btn-primary" onClick={editingReferral ? handleUpdateReferral : handleCreateReferral} disabled={loading}>
+                                    {loading ? (
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                            <div className="ad-spinner" style={{ width: 14, height: 14, borderWidth: 2 }} />
+                                            <span>Processing…</span>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <AiOutlineCheckCircle />
+                                            <span>{editingReferral ? 'Save Changes' : 'Confirm & Create'}</span>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </div>
         </>
     );
