@@ -1,11 +1,11 @@
 import '../../styles/registration/Step3RegistrationType.css';
 import RegistrationTypeCard from './RegistrationTypeCard';
-import blitzIndividual from '../../assets/images/blitz-individual.jpeg';
-import blitzTeam from '../../assets/images/blitz-team.jpeg';
-import reconIndividual from '../../assets/images/recon-individual.jpeg';
-import reconTeam from '../../assets/images/recon-team.jpeg';
-import corporateIndividual from '../../assets/images/corporate-individual.jpeg';
-import corporateTeam from '../../assets/images/corporate-team.jpeg';
+import blitzIndividual from '../../assets/images/gallery/Ride-With-The-Warriors-2025/blitz-individual.jpeg';
+import blitzTeam from '../../assets/images/gallery/Ride-With-The-Warriors-2025/blitz-team.jpeg';
+import reconIndividual from '../../assets/images/gallery/Ride-With-The-Warriors-2025/recon-individual.jpeg';
+import reconTeam from '../../assets/images/gallery/Ride-With-The-Warriors-2025/recon-team.jpeg';
+import corporateIndividual from '../../assets/images/gallery/Ride-With-The-Warriors-2025/corporate-individual.jpeg';
+import corporateTeam from '../../assets/images/gallery/Ride-With-The-Warriors-2025/corporate-team.jpeg';
 import familyImage from '../../assets/images/family.jpeg';
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
 

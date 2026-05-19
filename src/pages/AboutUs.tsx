@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import '../styles/about-us.css';
 import { AiOutlineAim, AiOutlineHeart, AiOutlineGlobal, AiOutlineStar } from 'react-icons/ai';
-import storyImage from '../assets/images/296A0186-34-min.jpeg';
-import teamImage from '../assets/images/296A0075-30-min.jpeg';
-import collageImage1 from '../assets/images/collage1.jpeg';
-import collageImage2 from '../assets/images/collage2.jpeg';
-import collageImage3 from '../assets/images/collage3.jpeg';
-import reconImage from '../assets/images/recon-team.jpeg';
+import storyImage from '../assets/images/gallery/Ride-With-The-Warriors-2025/296A0186-34-min.jpeg';
+import teamImage from '../assets/images/gallery/Ride-With-The-Warriors-2025/296A0075-30-min.jpeg';
+import collageImage1 from '../assets/images/gallery/Ride-With-The-Warriors-2025/collage1.jpeg';
+import collageImage2 from '../assets/images/gallery/Ride-With-The-Warriors-2025/collage2.jpeg';
+import collageImage3 from '../assets/images/gallery/Ride-With-The-Warriors-2025/collage3.jpeg';
+import reconImage from '../assets/images/gallery/Ride-With-The-Warriors-2025/recon-team.jpeg';
 import goingGreenImage from '../assets/images/going-green.jpg';
 
 const AboutUs = () => {

@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/gallery.css';
 
-// Dynamically import all images from assets/images
-const imageModules = import.meta.glob('../assets/images/*.{jpeg,jpg,png,svg,webp}', { eager: true });
+// Dynamically import all images from assets/images/gallery
+const imageModules = import.meta.glob('../assets/images/gallery/**/*.{jpeg,jpg,png,svg,webp}', { eager: true });
 
 /* ─── Lightbox ────────────────────────────────────────────────────────────── */
-interface GalleryImage { url: string; title: string; }
+interface GalleryImage { url: string; title: string; category: string; }
 interface LightboxProps {
     images: GalleryImage[];
     index: number | null;
@@ -23,8 +23,11 @@ const Lightbox = ({ images, index, onClose, onPrev, onNext }: LightboxProps) => 
             <div className="lightbox-inner" onClick={(e) => e.stopPropagation()}>
                 <img src={img.url} alt={img.title} className="lightbox-img" />
                 <div className="lightbox-caption">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <span className="lightbox-title">{img.title}</span>
+                        <span className="lightbox-index" style={{ color: 'var(--color-primary-light)', fontSize: '0.6rem' }}>{img.category}</span>
+                    </div>
                     <span className="lightbox-index">{index + 1} / {images.length}</span>
-                    <span className="lightbox-title">{img.title}</span>
                 </div>
             </div>
             <button className="lightbox-arrow lightbox-next" onClick={(e) => { e.stopPropagation(); onNext(); }}>›</button>
@@ -35,23 +38,44 @@ const Lightbox = ({ images, index, onClose, onPrev, onNext }: LightboxProps) => 
 /* ─── Gallery ─────────────────────────────────────────────────────────────── */
 const Gallery = () => {
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const [activeCategory, setActiveCategory] = useState<string>('');
 
-    const images = Object.entries(imageModules).map(([path, module]) => {
-        const filename = path.split('/').pop() || '';
+    // Process all images and group by category
+    const allImages = Object.entries(imageModules).map(([path, module]) => {
+        const parts = path.split('/');
+        const filename = parts.pop() || '';
+        const categoryDir = parts.pop() || 'Other';
+        const displayCategory = categoryDir.replace(/-/g, ' ');
         const title = filename
             .replace(/\.[^/.]+$/, '')
             .replace(/[-_]/g, ' ')
             .split(' ')
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
-        return { url: (module as any).default, title };
+        return { url: (module as any).default, title, category: displayCategory };
     });
-    images.sort((a, b) => a.title.localeCompare(b.title));
+
+    const categories = Array.from(new Set(allImages.map(img => img.category))).sort((a, b) => {
+        // Prioritize Registration Drive Launch
+        if (a.toLowerCase().includes('registration')) return -1;
+        if (b.toLowerCase().includes('registration')) return 1;
+        return a.localeCompare(b);
+    });
+
+    useEffect(() => {
+        if (categories.length > 0 && !activeCategory) {
+            setActiveCategory(categories[0]);
+        }
+    }, [categories, activeCategory]);
+
+    const filteredImages = allImages
+        .filter(img => img.category === activeCategory)
+        .sort((a, b) => a.title.localeCompare(b.title));
 
     const openLightbox = (idx: number) => setLightboxIndex(idx);
     const closeLightbox = () => setLightboxIndex(null);
-    const prevImage = () => setLightboxIndex((i) => i !== null ? (i - 1 + images.length) % images.length : 0);
-    const nextImage = () => setLightboxIndex((i) => i !== null ? (i + 1) % images.length : 0);
+    const prevImage = () => setLightboxIndex((i) => i !== null ? (i - 1 + filteredImages.length) % filteredImages.length : 0);
+    const nextImage = () => setLightboxIndex((i) => i !== null ? (i + 1) % filteredImages.length : 0);
 
     // Keyboard navigation
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -63,8 +87,6 @@ const Gallery = () => {
 
     return (
         <>
-
-
             <div
                 className="page"
                 style={{ padding: '130px 48px 80px' }}
@@ -85,12 +107,29 @@ const Gallery = () => {
                         from epic climbs to muddy sprints.
                     </p>
 
+                    {/* ── Category Tabs ───────────────────────────────────────── */}
+                    {categories.length > 1 && (
+                        <div className="gallery-categories">
+                            {categories.map(cat => (
+                                <button
+                                    key={cat}
+                                    className={`category-tab ${activeCategory === cat ? 'active' : ''}`}
+                                    onClick={() => setActiveCategory(cat)}
+                                >
+                                    {cat}
+                                    <span className="category-tab-count">
+                                        ({allImages.filter(img => img.category === cat).length})
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* ── Grid ───────────────────────────────────────────────── */}
-                {images.length > 0 ? (
+                {filteredImages.length > 0 ? (
                     <div className="gallery-grid">
-                        {images.map((img, idx) => (
+                        {filteredImages.map((img, idx) => (
                             <div
                                 key={idx}
                                 className="gallery-item"
@@ -118,7 +157,7 @@ const Gallery = () => {
 
             {/* ── Lightbox ───────────────────────────────────────────────── */}
             <Lightbox
-                images={images}
+                images={filteredImages}
                 index={lightboxIndex}
                 onClose={closeLightbox}
                 onPrev={prevImage}

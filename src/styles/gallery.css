@@ -63,6 +63,54 @@
     background: var(--gallery-border);
 }
 
+/* ── Category Tabs ───────────────────────────────────────── */
+.gallery-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 48px;
+}
+
+.category-tab {
+    position: relative;
+    padding: 10px 24px;
+    background: var(--gallery-count-bg);
+    border: 1px solid var(--gallery-border);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gallery-text-3);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+.category-tab:hover {
+    color: var(--color-primary-light);
+    border-color: rgba(76, 175, 80, 0.4);
+    background: rgba(76, 175, 80, 0.05);
+}
+
+.category-tab.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(45, 106, 45, 0.25);
+}
+
+.category-tab-count {
+    display: inline-block;
+    margin-left: 8px;
+    opacity: 0.5;
+    font-size: 0.65rem;
+}
+
+.category-tab.active .category-tab-count {
+    opacity: 0.8;
+}
+
 /* ── Masonry grid ────────────────────────────────────────── */
 .gallery-grid {
     max-width: 1400px;
