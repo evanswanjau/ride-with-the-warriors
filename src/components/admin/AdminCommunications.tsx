@@ -139,20 +139,19 @@ export const AdminCommunications: React.FC = () => {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'right' }}>
                                 <span style={{ fontSize: '0.55rem', color: 'var(--ad-t3)', fontWeight: 800, textTransform: 'uppercase', lineHeight: 1 }}>SMS Credits</span>
-                                <span style={{ fontSize: '1rem', fontFamily: "'Bebas Neue', sans-serif", color: 'var(--ad-pl)', lineHeight: 1 }}>{balance.UserData?.balance || 'N/A'}</span>
+                                <span style={{ fontSize: '1.8rem', fontFamily: "'Bebas Neue', sans-serif", color: 'var(--ad-pl)', lineHeight: 1 }}>{balance.credit || 'N/A'}</span>
                             </div>
                             <button 
                                 className={`ad-hbtn ad-hbtn-icon ${refreshing ? 'ad-spin' : ''}`} 
                                 onClick={fetchBalance}
-                                style={{ padding: '2px', minWidth: 'auto', border: 'none', background: 'none', color: 'var(--ad-t3)' }}
+                                style={{ padding: '8px', minWidth: 'auto', border: 'none', background: 'none', color: 'var(--ad-t3)' }}
                                 title="Refresh Balance"
                             >
-                                <AiOutlineReload size={12} />
+                                <AiOutlineReload size={16} />
                             </button>
                         </div>
                         <button 
                             className="ad-hbtn ad-hbtn-primary" 
-                            style={{ padding: '4px 12px', fontSize: '0.7rem', height: '26px', minWidth: 'auto' }}
                             onClick={() => setShowRenewInfo(true)}
                         >
                             Top Up Credits
@@ -175,12 +174,12 @@ export const AdminCommunications: React.FC = () => {
                                 </div>
                                 <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '0.9rem', color: 'var(--ad-t2)', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                                     <li>Select <strong>Pay Bill</strong> on M-Pesa</li>
-                                    <li>Business Number: <strong>525900</strong></li>
-                                    <li>Account: <strong>{balance?.username || 'evansw'}</strong></li>
+                                    <li>Business Number: <strong>4093753</strong></li>
+                                    <li>Account: <strong>Airborne</strong></li>
                                     <li>Amount: <strong>Enter any amount</strong></li>
                                 </ol>
                                 <div style={{ fontSize: '0.75rem', color: 'var(--ad-t3)', marginTop: '25px', fontStyle: 'italic', lineHeight: '1.5' }}>
-                                    Your SMS credits will be updated automatically in your Africa's Talking account after payment.
+                                    Your SMS credits will be updated automatically in your TextSMS account after payment.
                                 </div>
                             </div>
 
