@@ -59,6 +59,15 @@
                     clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
                 }
                 .fam-input:focus { border-color: var(--fam-primary-lt); }
+                .fam-input::-webkit-calendar-picker-indicator {
+                    filter: invert(1);
+                    cursor: pointer;
+                    opacity: 0.6;
+                    transition: opacity 0.2s;
+                }
+                .fam-input::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+                [data-theme="light"] .fam-input::-webkit-calendar-picker-indicator { filter: none; }
+
 
                 .fam-add-btn {
                     width: 100%; padding: 20px; border: 2px dashed var(--fam-border); background: transparent;

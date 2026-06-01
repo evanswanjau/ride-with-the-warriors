@@ -40,7 +40,7 @@ interface FamilyRegistrationFlowProps {
 }
 
 const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, isSubmitting }: FamilyRegistrationFlowProps) => {
-    const { isMilitary } = useRegistration();
+    const { isMilitary, hireBike, setHireBike } = useRegistration();
     const categories = [
         { id: 'cubs', title: 'Cubs (Ages 4-8)', icon: MdPedalBike },
         { id: 'champs', title: 'Champs (Ages 9-13)', icon: MdDirectionsBike }
@@ -605,6 +605,50 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                             )}
                         </div>
                     </div>
+                </div>
+
+                {/* Bike Hiring Section */}
+                <div style={{ marginTop: 24 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                        <div style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--fam-border)', color: 'var(--fam-primary-lt)', clipPath: 'polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%)' }}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>
+                            </svg>
+                        </div>
+                        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--fam-text-2)' }}>Equipment & Hire</span>
+                    </div>
+                    <label style={{
+                        display: 'flex', alignItems: 'flex-start', gap: 12, padding: 24,
+                        background: hireBike ? 'rgba(45,106,45,0.05)' : 'rgba(255,255,255,0.02)',
+                        border: `1px solid ${hireBike ? 'var(--fam-primary-lt)' : 'var(--fam-border)'}`,
+                        cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                        clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)',
+                    }}>
+                        <input
+                            type="checkbox"
+                            checked={hireBike}
+                            onChange={e => setHireBike(e.target.checked)}
+                            disabled={isSubmitting}
+                            style={{
+                                marginTop: 4, width: 18, height: 18, cursor: 'pointer',
+                                accentColor: 'var(--fam-primary-lt)',
+                            }}
+                        />
+                        <div style={{ flex: 1 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.2rem', letterSpacing: '0.04em', color: 'var(--fam-text-1)' }}>
+                                    Hire a Bike for the Event
+                                </span>
+                                <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '1.1rem', fontWeight: 700, color: 'var(--fam-primary-lt)' }}>
+                                    KES 1,500
+                                </span>
+                            </div>
+                            <div style={{ fontSize: '13px', color: 'var(--fam-text-2)', marginTop: 4, lineHeight: 1.5 }}>
+                                Get a standard mountain bike ready for you at the starting line. Recommended for participants who don't have their own equipment.
+                            </div>
+                        </div>
+                    </label>
                 </div>
             </div>
         </RegistrationStepLayout>

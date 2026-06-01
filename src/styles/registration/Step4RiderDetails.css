@@ -81,6 +81,15 @@
                     box-sizing: border-box;
                 }
                 .rd4-input::placeholder { color: var(--rd4-placeholder); }
+                .rd4-input::-webkit-calendar-picker-indicator {
+                    filter: invert(1);
+                    cursor: pointer;
+                    opacity: 0.6;
+                    transition: opacity 0.2s;
+                }
+                .rd4-input::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+                [data-theme="light"] .rd4-input::-webkit-calendar-picker-indicator { filter: none; }
+
                 .rd4-input:focus {
                     border-color: var(--rd4-input-focus);
                     box-shadow: 0 0 0 3px rgba(76,175,80,0.12);

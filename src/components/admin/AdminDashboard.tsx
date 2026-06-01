@@ -19,6 +19,7 @@ import AdminRaffleTicketsPrint from './AdminRaffleTicketsPrint';
 import AdminBibNumbersPrint from './AdminBibNumbersPrint';
 import AdminBibVisual from './AdminBibVisual';
 import { AdminCommunications } from './AdminCommunications';
+import AdminBikeHires from './AdminBikeHires';
 import logo from '../../assets/logos/logo.png';
 import { CIRCUITS } from '../../constants';
 import { API_BASE_URL } from '../../config';
@@ -32,10 +33,10 @@ interface AdminDashboardProps {
 
 
 const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
-    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs' | 'donations' | 'communications' | 'referrals';
+    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs' | 'donations' | 'communications' | 'referrals' | 'bike-hires';
     const { "*": viewParam } = useParams();
     const navigate = useNavigate();
-    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs', 'donations', 'communications', 'referrals'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
+    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs', 'donations', 'communications', 'referrals', 'bike-hires'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
     const [dashboardData, setDashboardData] = useState<any>(null);
     const [registrations, setRegistrations] = useState<any[]>([]);
     const [pricingCategories, setPricingCategories] = useState<any[]>([]);
@@ -1862,6 +1863,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     </div>
                                 </div>
                             </>
+                        )}
+
+                        {activeView === 'bike-hires' && (
+                            <AdminBikeHires />
                         )}
 
                         {/* ══════════════════════════════════════════════ PRICING ══ */}

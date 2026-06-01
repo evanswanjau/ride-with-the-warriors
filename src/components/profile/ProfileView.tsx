@@ -162,8 +162,36 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
         return info;
     };
 
+    const [isHiring, setIsHiring] = useState(false);
+    const [hireSuccess, setHireSuccess] = useState(false);
+
+    const handleHireBike = async () => {
+        if (!window.confirm('Hire a bike for KES 1,000?')) return;
+        setIsHiring(true);
+        try {
+            const res = await fetch(`${API_BASE_URL}/profile/hire-bike`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ registrationId: registration.id })
+            });
+            const data = await res.json();
+            if (data.success) {
+                setHireSuccess(true);
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                alert(data.error?.message || 'Failed to hire bike');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('An error occurred');
+        } finally {
+            setIsHiring(false);
+        }
+    };
+
     const info = getParticipantInfo();
     const isPaid = registration.status === 'PAID' || registration.status === 'CONFIRMED';
+    const bikeHire = registration.bikeHire;
 
     return (
         <div className="selection:bg-primary selection:text-white font-sans print:p-0 print:bg-white">
@@ -941,6 +969,52 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                     <p className="pv-micro" style={{ textAlign: 'center', marginTop: 20 }}>
                                         Registered on {formatDate(registration.createdAt)}
                                     </p>
+                                    <hr className="pv-rule" />
+                                    <h3 className="pv-section-title">Bike Rental</h3>
+                                    {bikeHire ? (
+                                        <div className={`pv-payment-card ${bikeHire.status === 'PAID' ? 'paid' : 'pending'}`}>
+                                            <div className="pv-payment-header">
+                                                <div className={`pv-payment-icon ${bikeHire.status === 'PAID' ? 'paid' : 'pending'}`}>
+                                                    {bikeHire.status === 'PAID' ? <AiOutlineCheck /> : <AiOutlineHourglass />}
+                                                </div>
+                                                <div>
+                                                    <div className={`pv-payment-status-label ${bikeHire.status === 'PAID' ? 'paid' : 'pending'}`}>
+                                                        {bikeHire.status}
+                                                    </div>
+                                                    <div className="pv-field-value">{bikeHire.bikeType} Mountain Bike</div>
+                                                </div>
+                                            </div>
+                                            {bikeHire.status === 'PENDING' && !isPaid && (
+                                                <p className="pv-micro" style={{ marginTop: 8 }}>Included in your total registration fee below.</p>
+                                            )}
+                                            {bikeHire.status === 'PENDING' && isPaid && (
+                                                <div style={{ marginTop: 12 }}>
+                                                    <p className="pv-micro" style={{ marginBottom: 10 }}>Special rental fee of KES 1,000 for registered participants.</p>
+                                                    <button onClick={() => navigate(`/payment/${registration.id}`, { state: { amount: 1000, email: registration.email || '', phoneNumber: registration.phoneNumber || '', description: 'Bike Hire' } })} className="pv-pay-btn">
+                                                        <AiOutlineCreditCard /> Pay for Bike Hire
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="pv-no-payment" style={{ alignItems: 'flex-start' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                                                <div className="pv-payment-icon" style={{ background: 'var(--pv-divider)', color: 'var(--pv-text-3)' }}>
+                                                    <AiOutlineHourglass />
+                                                </div>
+                                                <span className="pv-field-value" style={{ opacity: 0.7 }}>No bike hired</span>
+                                            </div>
+                                            <p className="pv-micro" style={{ marginBottom: 12, textAlign: 'left' }}>Need a bike? You can hire a standard mountain bike for KES 1,000.</p>
+                                            <button 
+                                                onClick={handleHireBike} 
+                                                disabled={isHiring || hireSuccess} 
+                                                className="pv-pay-btn" 
+                                                style={{ marginTop: 0, opacity: (isHiring || hireSuccess) ? 0.7 : 1 }}
+                                            >
+                                                {isHiring ? 'Processing...' : hireSuccess ? 'Bike Added!' : 'Hire a Bike Now'}
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

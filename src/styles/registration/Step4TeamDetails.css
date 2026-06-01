@@ -99,6 +99,15 @@
                     transition: border-color 0.2s, box-shadow 0.2s;
                 }
                 .td4-input::placeholder { color: var(--td4-placeholder); }
+                .td4-input::-webkit-calendar-picker-indicator {
+                    filter: invert(1);
+                    cursor: pointer;
+                    opacity: 0.6;
+                    transition: opacity 0.2s;
+                }
+                .td4-input::-webkit-calendar-picker-indicator:hover { opacity: 1; }
+                [data-theme="light"] .td4-input::-webkit-calendar-picker-indicator { filter: none; }
+
                 .td4-input:focus { border-color: var(--td4-input-focus); box-shadow: 0 0 0 3px rgba(76,175,80,0.12); }
                 .td4-input:disabled { opacity: 0.45; cursor: not-allowed; }
                 .td4-input-error { border-color: var(--td4-input-err) !important; }

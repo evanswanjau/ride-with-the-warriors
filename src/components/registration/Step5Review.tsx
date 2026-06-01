@@ -110,7 +110,7 @@ const Step5Review = ({
     pricingCategories = [],
     serverClassifications = [],
 }: Step5ReviewProps) => {
-    const { isMilitary } = useRegistration();
+    const { isMilitary, hireBike } = useRegistration();
     const [termsAgreed, setTermsAgreed] = useState(false);
 
     const circuit = CIRCUITS.find(c => c.id === selectedCircuitId) || CIRCUITS[0];
@@ -166,6 +166,12 @@ const Step5Review = ({
                 color: cls.hexColor 
             });
         });
+    }
+
+    if (hireBike) {
+        const bikeFee = 1500;
+        totalCost += bikeFee;
+        lineItems.push({ label: 'Bike Hire', amount: bikeFee });
     }
 
     const fmt = (n: number) => n.toLocaleString() + '/=';

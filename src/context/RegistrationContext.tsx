@@ -36,6 +36,8 @@ interface RegistrationContextType {
     validateStep: (step: number) => boolean;
     hasInProgressRegistration: boolean;
     setFormErrors: (errors: string[]) => void;
+    hireBike: boolean;
+    setHireBike: (val: boolean) => void;
 }
 
 const RegistrationContext = createContext<RegistrationContextType | undefined>(undefined);
@@ -54,6 +56,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [formErrors, setFormErrors] = useState<string[]>([]);
     const [isMilitary, setIsMilitary] = useState(false);
+    const [hireBike, setHireBike] = useState(false);
 
     // Sync isMilitary with URL
     useEffect(() => {
@@ -290,9 +293,9 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
             setIsSubmitting(true);
             try {
                 let payload: any;
-                if (registrationType === 'individual') payload = { riderDetails: { ...riderDetails, isMilitary } };
-                else if (registrationType === 'team') payload = { teamDetails: { ...teamDetails, isMilitary } };
-                else payload = { familyDetails: { ...familyDetails, guardian: { ...familyDetails.guardian, isMilitary } } };
+                if (registrationType === 'individual') payload = { riderDetails: { ...riderDetails, isMilitary, hireBike } };
+                else if (registrationType === 'team') payload = { teamDetails: { ...teamDetails, isMilitary, hireBike } };
+                else payload = { familyDetails: { ...familyDetails, guardian: { ...familyDetails.guardian, isMilitary, hireBike } } };
 
                 const response = await fetch(`${API_BASE_URL}/registrations`, {
                     method: 'POST',
@@ -370,9 +373,9 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
 
         try {
             let payload: any;
-            if (registrationType === 'individual') payload = { riderDetails: { ...riderDetails, isMilitary } };
-            else if (registrationType === 'team') payload = { teamDetails: { ...teamDetails, isMilitary } };
-            else payload = { familyDetails: { ...familyDetails, guardian: { ...familyDetails.guardian, isMilitary } } };
+            if (registrationType === 'individual') payload = { riderDetails: { ...riderDetails, isMilitary, hireBike } };
+            else if (registrationType === 'team') payload = { teamDetails: { ...teamDetails, isMilitary, hireBike } };
+            else payload = { familyDetails: { ...familyDetails, guardian: { ...familyDetails.guardian, isMilitary, hireBike } } };
 
             const response = await fetch(`${API_BASE_URL}/registrations`, {
                 method: 'POST',
@@ -428,6 +431,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
             foundRegistration, setFoundRegistration,
             isMilitary, setIsMilitary,
             allRaffleTickets, setAllRaffleTickets,
+            hireBike, setHireBike,
             handleNext, handleBack, handleSubmit, validateStep,
             hasInProgressRegistration
         }}>
