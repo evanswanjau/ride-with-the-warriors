@@ -641,7 +641,7 @@ interface Step4TeamDetailsProps {
 }
 
 const Step4TeamDetails = ({ data, onChange, onNext, onBack, errors, formErrors, isSubmitting }: Step4TeamDetailsProps) => {
-    const { isMilitary, hireBike, setHireBike } = useRegistration();
+    const { hireBike, setHireBike } = useRegistration();
     const updateMember = (id: string, field: keyof TeamMember, value: string) =>
         onChange({ ...data, members: data.members.map(m => m.id === id ? { ...m, [field]: value } : m) });
 
