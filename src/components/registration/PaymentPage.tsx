@@ -8,7 +8,7 @@ import {
     AiOutlineEnvironment,
     AiOutlineWarning,
 } from 'react-icons/ai';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, PAYMENT_MODE } from '../../config';
 
 interface PaymentPageProps {
     registrationId: string;
@@ -112,6 +112,30 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
         }
     };
 
+    const handleSimulate = async () => {
+        setIsProcessing(true);
+        setError(null);
+        try {
+            const phone = mpesaPhone || '254700000000';
+            const response = await fetch(`${API_BASE_URL}/registrations/pay/stk-push`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ registrationId, amount: regInfo?.amount || amount, phoneNumber: phone }),
+            });
+            const data = await response.json();
+            if (response.ok && data.success) {
+                setPaymentStatus('pending');
+                startPolling(registrationId);
+            } else {
+                setError(data.message || 'Simulation failed.');
+            }
+        } catch {
+            setError('Connection error during simulation.');
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
     const handleRetry = () => { setPaymentStatus('initial'); setError(null); };
 
     const isPending = paymentStatus === 'pending';
@@ -179,7 +203,87 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                     <div className="py-panel">
 
                         {/* Left — M-Pesa */}
-                        <div className="py-left">
+                                            {/* ── Simulation banner ── */}
+                    {PAYMENT_MODE === 'simulate' && (
+                        <div style={{
+                            margin: '0 auto 20px',
+                            maxWidth: 560,
+                            padding: '10px 18px',
+                            background: 'rgba(234,179,8,0.1)',
+                            border: '1px solid rgba(234,179,8,0.35)',
+                            borderRadius: 4,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 10,
+                            fontFamily: "'Barlow Condensed', sans-serif",
+                            fontSize: 12,
+                            fontWeight: 700,
+                            letterSpacing: '0.12em',
+                            textTransform: 'uppercase',
+                            color: '#ca8a04',
+                        }}>
+                            <span style={{ fontSize: 16 }}>⚡</span>
+                            Simulation Mode — Payments are instant and free
+                        </div>
+                    )}
+
+                    {/* Left — M-Pesa / Simulation */}
+                        <div className="py-left">{PAYMENT_MODE === 'simulate' ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                                <div style={{
+                                    padding: '28px',
+                                    background: 'rgba(45,106,45,0.06)',
+                                    border: '1px solid rgba(45,106,45,0.25)',
+                                    clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 12,
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                        <span style={{ fontSize: 28 }}>⚡</span>
+                                        <div>
+                                            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.4rem', letterSpacing: '0.06em', color: 'var(--py-text-1)' }}>Instant Pay (Dev Mode)</div>
+                                            <div style={{ fontFamily: "'Barlow', sans-serif", fontSize: 13, color: 'var(--py-text-3)' }}>No real money moves — for testing only</div>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={handleSimulate}
+                                        disabled={isProcessing || isPending}
+                                        style={{
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                                            padding: '14px 24px',
+                                            background: 'linear-gradient(135deg, var(--py-accent), #16a34a)',
+                                            border: 'none',
+                                            color: '#fff',
+                                            fontFamily: "'Bebas Neue', sans-serif",
+                                            fontSize: '1.15rem', letterSpacing: '0.12em',
+                                            cursor: isProcessing || isPending ? 'not-allowed' : 'pointer',
+                                            opacity: isProcessing || isPending ? 0.6 : 1,
+                                            clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)',
+                                            transition: 'opacity 0.2s',
+                                        }}
+                                    >
+                                        {isPending ? (
+                                            <><div className="py-btn-spinner" /><span>Confirming…</span></>
+                                        ) : isProcessing ? (
+                                            <><div className="py-btn-spinner" /><span>Processing…</span></>
+                                        ) : (
+                                            <><span>⚡ Simulate Payment — KES {(regInfo?.amount ?? amount).toLocaleString()}</span></>
+                                        )}
+                                    </button>
+                                    {error && (
+                                        <div className="py-error">
+                                            <AiOutlineWarning className="py-error-icon" />
+                                            <span className="py-error-text">{error}</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <button onClick={onBack} className="py-back-link">
+                                    <AiOutlineArrowLeft /> Change Details
+                                </button>
+                            </div>
+                        ) : (
+                            <>
                             {/* M-Pesa header */}
                             <div className="py-mpesa-header">
                                 <div className="py-mpesa-logo-box">
@@ -226,12 +330,14 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                             )}
 
                             {/* Back link — desktop */}
-                            <div className="hidden md:block">
+                                                        {PAYMENT_MODE !== 'simulate' && <div className="hidden md:block">
                                 <button onClick={onBack} className="py-back-link">
                                     <AiOutlineArrowLeft />
                                     Change Details
                                 </button>
-                            </div>
+                            </div>}
+                            </>
+                        )}
                         </div>
 
                         {/* Right — Steps + CTA */}

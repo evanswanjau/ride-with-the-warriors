@@ -508,6 +508,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         { id: 'payments', label: 'Payments', icon: AiOutlineDollar },
         { id: 'donations', label: 'Donations', icon: AiOutlineHeart },
         { id: 'bibs', label: 'Bibs', icon: AiOutlineStar },
+        { id: 'bike-hires', label: 'Bike Hires', icon: AiOutlineStar },
         { id: 'communications', label: 'Communications', icon: AiOutlineMessage },
         { id: 'referrals', label: 'Referrals', icon: AiOutlineLink },
         { id: 'pricing', label: 'Pricing', icon: AiOutlineTable },

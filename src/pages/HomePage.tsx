@@ -7,9 +7,9 @@ import highlightImage2 from '../assets/images/gallery/Ride-With-The-Warriors-202
 import highlightImage3 from '../assets/images/gallery/Ride-With-The-Warriors-2025/296A0219-40-min.jpeg';
 import kdfLogo from '../assets/logos/kdf.png';
 import logo from '../assets/logos/logo.png';
-import coop from '../assets/logos/coop.webp';
-import dtb from '../assets/logos/dtb.png';
-import qatar from '../assets/logos/qatar.png';
+import equity from '../assets/logos/equity.png';
+import dedsilva from '../assets/logos/dedsilva.png';
+import isuzu from '../assets/logos/isuzu.png';
 import gigamsys from '../assets/logos/gigamsys.png';
 
 import '../styles/home.css';
@@ -425,11 +425,11 @@ const HomePage = () => {
                     </div>
                     {/* Placeholder Sponsor Images */}
                     <div className="flex gap-32 items-center justify-center flex-wrap">
-                        <img src={kdfLogo} alt="KDF" className="h-16 w-auto object-contain rounded" />
-                        <img src={qatar} alt="Qatar" className="h-16 w-auto object-contain rounded" />
-                        <img src={logo} alt="Airborne Fraternity" className="h-16 w-auto object-contain rounded" />
-                        <img src={coop} alt="Coop" className="h-16 w-auto object-contain rounded" />
-                        <img src={dtb} alt="DTB" className="h-16 w-auto object-contain rounded" />
+                        <img src={kdfLogo} alt="KDF" className="h-18 w-auto object-contain rounded" />
+                        <img src={isuzu} alt="Isuzu" className="h-24 w-auto object-contain rounded" />
+                        <img src={logo} alt="Airborne Fraternity" className="h-24 w-auto object-contain rounded" />
+                        <img src={equity} alt="Equity" className="h-24 w-auto object-contain rounded" />
+                        <img src={dedsilva} alt="Dedsilva" className="h-24 w-auto object-contain rounded" />
                         <img src={gigamsys} alt="GigamSys" className="h-16 w-auto object-contain rounded" />
                     </div>
                 </section>
