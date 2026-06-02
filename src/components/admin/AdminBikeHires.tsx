@@ -3,6 +3,7 @@ import { API_BASE_URL } from '../../config';
 import { 
     AiOutlineSearch,
     AiOutlineReload,
+    AiOutlineExclamationCircle,
 } from 'react-icons/ai';
 
 interface BikeHire {
@@ -24,20 +25,32 @@ interface BikeHire {
 const AdminBikeHires = () => {
     const [hires, setHires] = useState<BikeHire[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('ALL');
 
     const fetchHires = async () => {
         setLoading(true);
+        setError(null);
         try {
             const token = localStorage.getItem('adminToken');
             const res = await fetch(`${API_BASE_URL}/admin/bike-hires`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
-            setHires(data);
-        } catch (error) {
+            
+            if (res.ok && Array.isArray(data)) {
+                setHires(data);
+            } else {
+                const errMsg = data.error?.message || 'Failed to fetch bike hires';
+                console.error('Fetch error:', errMsg);
+                setError(errMsg);
+                setHires([]);
+            }
+        } catch (error: any) {
             console.error('Fetch error:', error);
+            setError(error.message || 'An unexpected error occurred');
+            setHires([]);
         } finally {
             setLoading(false);
         }
@@ -137,6 +150,15 @@ const AdminBikeHires = () => {
                     {loading && hires.length === 0 ? (
                         <div className="ad-loading-overlay">
                             <div className="ad-spinner" />
+                        </div>
+                    ) : error ? (
+                        <div style={{ padding: 60, textAlign: 'center' }}>
+                            <div className="ad-error" style={{ display: 'inline-flex', clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)' }}>
+                                <AiOutlineExclamationCircle /> {error}
+                            </div>
+                            <div style={{ marginTop: 16 }}>
+                                <button className="ad-btn ad-btn-ghost" onClick={fetchHires}>Try Again</button>
+                            </div>
                         </div>
                     ) : filteredHires.length === 0 ? (
                         <div style={{ padding: 60, textAlign: 'center', color: 'var(--ad-t3)' }}>
