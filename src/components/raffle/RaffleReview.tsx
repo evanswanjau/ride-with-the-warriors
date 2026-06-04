@@ -39,9 +39,10 @@ interface RaffleReviewProps {
     onSubmit: () => void;
     isSubmitting: boolean;
     error?: string | null;
+    unpaidEmail?: string | null;
 }
 
-const RaffleReview = ({ data, onBack, onSubmit, isSubmitting, error }: RaffleReviewProps) => {
+const RaffleReview = ({ data, onBack, onSubmit, isSubmitting, error, unpaidEmail }: RaffleReviewProps) => {
     const Footer = (
         <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-4">
             <button
@@ -132,8 +133,18 @@ const RaffleReview = ({ data, onBack, onSubmit, isSubmitting, error }: RaffleRev
             </div>
 
             {error && (
-                <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold uppercase tracking-widest text-center" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                    {error}
+                <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-bold tracking-wide text-center" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                    <span className="uppercase text-xs tracking-widest">{error}</span>
+                    {unpaidEmail && (
+                        <div className="mt-3">
+                            <a
+                                href={`/raffle/profile/email/${encodeURIComponent(unpaidEmail)}`}
+                                className="inline-block px-4 py-2 bg-primary text-white text-xs font-black uppercase tracking-widest hover:opacity-80 transition-opacity"
+                            >
+                                VIEW &amp; PAY YOUR TICKETS →
+                            </a>
+                        </div>
+                    )}
                 </div>
             )}
         </RegistrationStepLayout>

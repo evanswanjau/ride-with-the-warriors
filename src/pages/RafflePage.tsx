@@ -32,6 +32,7 @@ const RafflePage = () => {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [unpaidEmail, setUnpaidEmail] = useState<string | null>(null);
 
     const validate = () => {
         const errs: Record<string, string> = {};
@@ -84,10 +85,16 @@ const RafflePage = () => {
             });
             const data = await res.json();
             if (!res.ok) {
-                const msg = data?.error?.message || 'Something went wrong. Please try again.';
-                setSubmitError(msg);
+                if (data?.error?.code === 'UNPAID_TICKETS' && data?.error?.email) {
+                    setUnpaidEmail(data.error.email);
+                    setSubmitError(data.error.message);
+                } else {
+                    setUnpaidEmail(null);
+                    setSubmitError(data?.error?.message || 'Something went wrong. Please try again.');
+                }
                 return;
             }
+            setUnpaidEmail(null);
             navigate(`/raffle/payment/${data.ticketIds[0]}`, {
                 state: {
                     ...formData,
@@ -130,6 +137,7 @@ const RafflePage = () => {
                     onSubmit={handleSubmit}
                     isSubmitting={isSubmitting}
                     error={submitError}
+                    unpaidEmail={unpaidEmail}
                 />
             )}
         </Layout>
