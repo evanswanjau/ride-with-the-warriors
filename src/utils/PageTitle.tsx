@@ -62,6 +62,11 @@ const PageTitle = () => {
     else if (path.startsWith('/raffle/profile/')) {
         title = 'Raffle Ticket';
     }
+    // Military Routes — not indexed
+    else if (path.startsWith('/military')) {
+        title = 'Register';
+        description = 'Register for Ride With The Warriors 2026.';
+    }
     // Admin Routes
     else if (path.startsWith('/admin')) {
         const adminViews: Record<string, string> = {
@@ -81,7 +86,7 @@ const PageTitle = () => {
     return (
         <Helmet>
             <title>{title}</title>
-            {path.startsWith('/admin') && <meta name="robots" content="noindex, nofollow" />}
+            {(path.startsWith('/admin') || path.startsWith('/military')) && <meta name="robots" content="noindex, nofollow" />}
             <meta name="description" content={description} />
             <meta property="og:title" content={title} />
             <meta property="og:description" content={description} />
