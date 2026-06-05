@@ -154,7 +154,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                     }
                 }
                 if (!riderDetails.gender) newErrors.gender = 'Gender is required';
-                if (!riderDetails.tshirtSize) newErrors.tshirtSize = 'T-shirt size is required';
+                if (!riderDetails.tshirtSize) newErrors.tshirtSize = 'Full cycling kit size is required';
                 if (!riderDetails.emergencyContactName?.trim()) newErrors.emergencyContactName = 'Emergency contact name is required';
                 if (!riderDetails.emergencyPhone?.trim()) newErrors.emergencyPhone = 'Emergency phone is required';
                 else if (!isValidKenyanPhone(riderDetails.emergencyPhone)) newErrors.emergencyPhone = 'Invalid Kenyan phone number';
@@ -233,7 +233,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                         if (new Date(familyDetails.guardian.dob) > new Date()) newErrors['guardian.dob'] = 'Invalid';
                         else if (age !== null && age < 18) newErrors['guardian.dob'] = 'Parents must be 18+';
                     }
-                    if (!familyDetails.guardian.tshirtSize) newErrors['guardian.tshirtSize'] = 'T-shirt size is required';
+                    if (!familyDetails.guardian.tshirtSize) newErrors['guardian.tshirtSize'] = 'Full cycling kit size is required';
                 }
 
                 Object.entries(familyDetails.riders).forEach(([category, riders]) => {

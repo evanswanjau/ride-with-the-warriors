@@ -217,7 +217,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                     )}
                                 </div>
                                 <div>
-                                    <label className="fam-field-label">T-Shirt Size *</label>
+                                    <label className="fam-field-label">Full Cycling Kit Size *</label>
                                     <select
                                         className="fam-input"
                                         value={rider.tshirtSize}
@@ -404,7 +404,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                     {data.guardian.participation === 'mom' && (
                                         <>
                                             <div>
-                                                <label className="fam-field-label">T-Shirt Size *</label>
+                                                <label className="fam-field-label">Full Cycling Kit Size *</label>
                                                 <select
                                                     className="fam-input"
                                                     value={data.guardian.tshirtSize}
@@ -568,7 +568,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                                 />
                                             </div>
                                             <div>
-                                                <label className="fam-field-label">T-Shirt Size *</label>
+                                                <label className="fam-field-label">Full Cycling Kit Size *</label>
                                                 <select
                                                     className="fam-input"
                                                     value={data.guardian.tshirtSize}

@@ -255,7 +255,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                                         ))}
                                     </div>
                                 </Field>
-                                <Field label="T-Shirt Size" required error={errors.tshirtSize}>
+                                <Field label="Full Cycling Kit Size" required error={errors.tshirtSize}>
                                     <div className="rd4-select-wrap">
                                         <select
                                             className={inputClass(!!errors.tshirtSize)}
@@ -534,7 +534,7 @@ const Step4RiderDetails = ({ data, onChange, onNext, onBack, errors, formErrors,
                                             <span className="rd4-chevron"><ChevronDown /></span>
                                         </div>
                                     </Field>
-                                    <Field label="T-Shirt Size" required error={errors.tshirtSize}>
+                                    <Field label="Full Cycling Kit Size" required error={errors.tshirtSize}>
                                         <div className="rd4-select-wrap">
                                             <select
                                                 className={inputClass(!!errors.tshirtSize)}

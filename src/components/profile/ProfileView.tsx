@@ -832,7 +832,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
 
                                 <div className="pv-field-grid">
                                     <div className="pv-field">
-                                        <div className="pv-field-label">T-Shirt Size</div>
+                                        <div className="pv-field-label">Full Cycling Kit Size</div>
                                         <div className="pv-field-value large">{info.tshirtSize}</div>
                                     </div>
                                     {info.details.map((detail, idx) => (

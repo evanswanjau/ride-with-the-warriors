@@ -290,7 +290,7 @@ const MemberCard = ({ member, index, errors, isSubmitting, onUpdate, onRemove }:
                                 ))}
                             </div>
                         </Field>
-                        <Field label="T-Shirt Size" required error={e('tshirtSize')}>
+                        <Field label="Full Cycling Kit Size" required error={e('tshirtSize')}>
                             <div style={{ position: 'relative' }}>
                                 <select className={inp(!!e('tshirtSize'))}
                                     value={member.tshirtSize} onChange={ev => set('tshirtSize', ev.target.value)} disabled={isSubmitting}>
@@ -562,7 +562,7 @@ const MemberCard = ({ member, index, errors, isSubmitting, onUpdate, onRemove }:
                                     <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--td4-text-3)' }}><ChevronDown /></span>
                                 </div>
                             </Field>
-                            <Field label="T-Shirt Size" required error={e('tshirtSize')}>
+                            <Field label="Full Cycling Kit Size" required error={e('tshirtSize')}>
                                 <div style={{ position: 'relative' }}>
                                     <select className={inp(!!e('tshirtSize'))}
                                         value={member.tshirtSize} onChange={ev => set('tshirtSize', ev.target.value)} disabled={isSubmitting}>

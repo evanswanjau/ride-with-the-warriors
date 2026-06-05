@@ -1035,7 +1035,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     </div>
 
                                     <div className="ad-panel">
-                                        <div className="ad-panel-head"><div className="ad-panel-title">T-Shirt Sizes</div></div>
+                                        <div className="ad-panel-head"><div className="ad-panel-title">Kit Sizes</div></div>
                                         <div className="ad-panel-body">
                                             <ResponsiveContainer width="100%" height={210}>
                                                 <BarChart data={d?.demographics?.tshirtBreakdown || []} layout="vertical" margin={{ left: 0, right: 10 }}>
@@ -1960,7 +1960,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     { label: 'Circuit', val: CIRCUITS.find(c => c.id === selectedRegistration.circuitId)?.title || selectedRegistration.circuitId },
                                     { label: 'Category', val: selectedRegistration.category || '—' },
                                     { label: 'Type', val: selectedRegistration.type },
-                                    { label: 'T-Shirt', val: selectedRegistration.tshirtSize || '—' },
+                                    { label: 'Kit Size', val: selectedRegistration.tshirtSize || '—' },
                                     { label: 'Email', val: selectedRegistration.email || '—' },
                                     { label: 'Phone', val: selectedRegistration.phoneNumber || '—' },
                                     { label: 'Emergency', val: `${selectedRegistration.emergencyContactName || '—'} · ${selectedRegistration.emergencyPhone || '—'}` },

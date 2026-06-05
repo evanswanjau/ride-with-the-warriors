@@ -195,7 +195,7 @@ const Step5Review = ({
                         </>
                     )}
                     <Detail label="Date of Birth" value={`${riderData.dob} · ${age} yrs`} />
-                    <Detail label="T-Shirt Size" value={riderData.tshirtSize || '—'} />
+                    <Detail label="Full Cycling Kit Size" value={riderData.tshirtSize || '—'} />
                     <Detail label="Emergency Contact" value={`${riderData.emergencyContactName} · ${riderData.emergencyPhone}`} />
                 </div>
             );
