@@ -20,9 +20,9 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
         if (reg.type === 'team') {
             const team = reg.teamName || 'Team';
             const displayTeam = team.length > 25 ? team.substring(0, 22) + '...' : team;
-            return `${displayTeam} - ${reg.circuitId}`;
+            return `${displayTeam} - ${reg.category}`;
         }
-        return `${reg.circuitId} - ${reg.type}`;
+        return `${reg.circuitId} - ${reg.category}`;
     };
 
     return (

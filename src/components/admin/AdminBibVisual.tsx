@@ -21,9 +21,9 @@ const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
         if (reg.type === 'team') {
             const team = reg.teamName || 'Team';
             const displayTeam = team.length > 22 ? team.substring(0, 19) + '...' : team;
-            return `${displayTeam} - ${reg.circuitId}`;
+            return `${displayTeam} - ${reg.category}`;
         }
-        return `${reg.circuitId} - ${reg.type}`;
+        return `${reg.circuitId} - ${reg.category}`;
     };
 
     return (
