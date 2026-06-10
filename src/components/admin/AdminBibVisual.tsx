@@ -1,6 +1,6 @@
 import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
-import { SITE_URL } from '../../../config';
+import { SITE_URL } from '../../config';
 
 interface BibRegistration {
     id: string;

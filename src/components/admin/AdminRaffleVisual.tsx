@@ -1,7 +1,7 @@
 import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import logo from '../../assets/logos/logo.png';
-import { SITE_URL } from '../../../config';
+import { SITE_URL } from '../../config';
 
 interface RaffleTicket {
     id: string;
