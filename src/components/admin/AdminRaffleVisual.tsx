@@ -1,6 +1,7 @@
 import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import logo from '../../assets/logos/logo.png';
+import { SITE_URL } from '../../../config';
 
 interface RaffleTicket {
     id: string;
@@ -151,7 +152,7 @@ const AdminRaffleVisual: React.FC<AdminRaffleVisualProps> = ({ tickets }) => {
                         </div>
                         <div className="ad-raffle-qr">
                             <QRCodeCanvas
-                                value={`https://airbornefraternity.org/raffle/profile/${ticket.id}`}
+                                value={`${SITE_URL}/raffle/profile/${ticket.id}`}
                                 size={56}
                                 level="H"
                             />

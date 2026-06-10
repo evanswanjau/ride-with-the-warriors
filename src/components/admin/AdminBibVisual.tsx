@@ -1,5 +1,6 @@
 import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
+import { SITE_URL } from '../../../config';
 
 interface BibRegistration {
     id: string;
@@ -128,7 +129,7 @@ const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
                         <span className="ad-bib-brand">Ride With The Warriors 2026</span>
                         <div className="ad-bib-qr">
                             <QRCodeCanvas
-                                value={`https://airbornefraternity.org/profile/${reg.id}`}
+                                value={`${SITE_URL}/profile/${reg.id}`}
                                 size={40}
                                 level="H"
                             />

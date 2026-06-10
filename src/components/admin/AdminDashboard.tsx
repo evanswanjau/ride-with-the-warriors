@@ -22,7 +22,7 @@ import { AdminCommunications } from './AdminCommunications';
 import AdminBikeHires from './AdminBikeHires';
 import logo from '../../assets/logos/logo.png';
 import { CIRCUITS } from '../../constants';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, SITE_URL } from '../../config';
 
 interface AdminDashboardProps {
     token: string;
@@ -1484,8 +1484,8 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                                                 p.donationId ? `Donation: ${p.donationId.slice(0, 8)}...` : '—'}
                                                                     </td>
                                                                     <td className="ad-td">
-                                                                        {p.registrationId && <a href={`/profile/${p.registrationId}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a>}
-                                                                        {(p.raffleTicketIds && p.raffleTicketIds.length > 0) && <a href={`/raffle/ticket/${p.raffleTicketIds[0]}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-accent)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>Tix &rarr;</a>}
+                                                                        {p.registrationId && <a href={`${SITE_URL}/profile/${p.registrationId}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a>}
+                                                                        {(p.raffleTicketIds && p.raffleTicketIds.length > 0) && <a href={`${SITE_URL}/raffle/ticket/${p.raffleTicketIds[0]}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-accent)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>Tix &rarr;</a>}
                                                                         {p.donationId && <span style={{ color: 'var(--ad-t3)', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase' }}>Donation</span>}
                                                                     </td>
                                                                 </tr>
@@ -1845,7 +1845,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                                 <td className="ad-td">
                                                                     <div className="ad-row-actions">
                                                                         <button className="ad-row-btn blue" title="Copy Referral Link" onClick={() => {
-                                                                            const url = `${window.location.origin}?ref=${r.code}`;
+                                                                            const url = `${SITE_URL}?ref=${r.code}`;
                                                                             navigator.clipboard.writeText(url);
                                                                             alert(`Link copied: ${url}`);
                                                                         }}><AiOutlineLink /></button>
@@ -1975,12 +1975,12 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                             </div>
                             <div className="ad-drawer-actions">
                                 {isRaffleDetailsOpen && selectedRaffleTicket && (
-                                    <a href={`/raffle/profile/${selectedRaffleTicket.id}`} target="_blank" rel="noreferrer" className="ad-drawer-link-primary">Open Full Profile &rarr;</a>
+                                    <a href={`${SITE_URL}/raffle/profile/${selectedRaffleTicket.id}`} target="_blank" rel="noreferrer" className="ad-drawer-link-primary">Open Full Profile &rarr;</a>
                                 )}
                                 {isDetailsOpen && selectedRegistration && (
                                     <>
-                                        <a href={`/profile/${selectedRegistration.id}`} target="_blank" rel="noreferrer" className="ad-drawer-link-primary">Open Full Profile &rarr;</a>
-                                        <a href={`/payment/${selectedRegistration.id}`} className="ad-drawer-link-ghost">Go to Payment</a>
+                                        <a href={`${SITE_URL}/profile/${selectedRegistration.id}`} target="_blank" rel="noreferrer" className="ad-drawer-link-primary">Open Full Profile &rarr;</a>
+                                        <a href={`${SITE_URL}/payment/${selectedRegistration.id}`} className="ad-drawer-link-ghost">Go to Payment</a>
                                     </>
                                 )}
                             </div>

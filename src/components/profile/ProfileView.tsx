@@ -20,7 +20,7 @@ import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import { CIRCUITS } from '../../constants';
 import logo from '../../assets/logos/logo.png';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, SITE_URL } from '../../config';
 import { calculateAge, getCategoryColor, getContrastText } from '../../utils';
 
 interface ProfileViewProps {
@@ -795,7 +795,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
 
                             <div className="tk-qr-box">
                                 <QRCodeCanvas
-                                    value={`${window.location.host === 'localhost:5173' || window.location.host.includes('vercel.app') ? window.location.origin : 'https://airbornefraternity.org'}/profile/${registration.id}`}
+                                    value={`${SITE_URL}/profile/${registration.id}`}
                                     size={160} level="H" includeMargin={true}
                                     imageSettings={{ src: logo, height: 32, width: 32, excavate: true }}
                                 />
