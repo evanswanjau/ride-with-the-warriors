@@ -293,6 +293,13 @@ const Footer = () => {
                     letter-spacing: 0.05em; transition: color 0.3s;
                     white-space: nowrap;
                 }
+                .footer-made a {
+                    color: var(--f-text-2);
+                    text-decoration: none;
+                    font-weight: 700;
+                    transition: color 0.2s;
+                }
+                .footer-made a:hover { color: var(--f-link-hover); }
             `}</style>
 
             <footer className="rwtw-footer">
@@ -358,6 +365,12 @@ const Footer = () => {
                 {/* ── Bottom bar ── */}
                 <div className="footer-bottom">
                     <span className="footer-copy">© {currentYear} Ride With The Warriors. All rights reserved.</span>
+                    <span className="footer-made">
+                        Designed &amp; maintained by{' '}
+                        <a href="https://wa.me/254707837313" target="_blank" rel="noopener noreferrer">
+                            Cody Developers
+                        </a>
+                    </span>
                     <div className="footer-legal" style={{ marginLeft: 'auto' }}>
                         {legalLinks.map((link, i) => (
                             <span key={link.path} style={{ display: 'flex', alignItems: 'center' }}>
