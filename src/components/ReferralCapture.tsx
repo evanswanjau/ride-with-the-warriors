@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 
 const STORAGE_KEY = 'rwtw_ref';
 
 /**
  * Invisible component that captures referral codes from the URL.
- * Reads `?ref=CODE` → stores in localStorage → fires click tracking.
+ * Reads `?ref=CODE` → stores in localStorage → fires click tracking → redirects to raffle.
  * Mount once at the top level of the app.
  */
 const ReferralCapture = () => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const ref = searchParams.get('ref');
@@ -22,9 +23,8 @@ const ReferralCapture = () => {
         // Store in localStorage
         localStorage.setItem(STORAGE_KEY, code);
 
-        // Remove `ref` param from URL to keep it clean
-        searchParams.delete('ref');
-        setSearchParams(searchParams, { replace: true });
+        // Redirect to raffle ticket page
+        navigate('/raffle/step/1', { replace: true });
 
         // Fire click tracking (fire-and-forget)
         fetch(`${API_BASE_URL}/referrals/click`, {
@@ -34,7 +34,7 @@ const ReferralCapture = () => {
         }).catch(() => {
             // Silently fail — don't block the user
         });
-    }, [searchParams, setSearchParams]);
+    }, [searchParams, setSearchParams, navigate]);
 
     return null;
 };
