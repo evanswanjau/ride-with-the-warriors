@@ -1332,6 +1332,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <option value="UNPAID">Unpaid</option>
                                                 <option value="PAID">Paid</option>
                                                 <option value="CONFIRMED">Confirmed</option>
+                                                <option value="COMPLEMENTARY">Complementary</option>
                                                 <option value="CANCELLED">Cancelled</option>
                                             </select>
                                         </div>
@@ -1380,10 +1381,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                             <td className="ad-td" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1rem', color: 'var(--ad-pl)' }}>KES {(reg.totalAmount ?? 0).toLocaleString()}</td>
                                                             <td className="ad-td">
                                                                 <select className="ad-status-select" value={reg.status} onChange={e => handleStatusUpdate(reg.id, e.target.value)}
-                                                                    style={{ color: reg.status === 'PAID' || reg.status === 'CONFIRMED' ? 'var(--ad-pl)' : reg.status === 'CANCELLED' ? 'var(--ad-red)' : 'var(--ad-accent)' }}>
+                                                                    style={{ color: reg.status === 'PAID' || reg.status === 'CONFIRMED' ? 'var(--ad-pl)' : reg.status === 'COMPLEMENTARY' ? '#a78bfa' : reg.status === 'CANCELLED' ? 'var(--ad-red)' : 'var(--ad-accent)' }}>
                                                                     <option value="UNPAID">UNPAID</option>
                                                                     <option value="PAID">PAID</option>
                                                                     <option value="CONFIRMED">CONFIRMED</option>
+                                                                    <option value="COMPLEMENTARY">COMPLEMENTARY</option>
                                                                     <option value="CANCELLED">CANCELLED</option>
                                                                 </select>
                                                             </td>
