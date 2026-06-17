@@ -105,6 +105,10 @@
                     transform: translateY(-50%); pointer-events: none;
                     color: var(--rd4-text-3);
                 }
+                .rd4-input option {
+                    background-color: var(--rd4-input-bg);
+                    color: var(--rd4-text-1);
+                }
 
                 /* ── Section card ── */
                 .rd4-card {
