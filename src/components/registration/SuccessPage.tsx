@@ -8,7 +8,9 @@ import {
     AiOutlineIdcard,
     AiOutlineHome,
     AiOutlineTrophy,
+    AiOutlineClose,
 } from 'react-icons/ai';
+import fdsaLogo from '../../assets/logos/fdsa-logo.png';
 import Confetti from 'react-confetti';
 import { calculateAge } from '../../utils';
 import { API_BASE_URL } from '../../config';
@@ -23,6 +25,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
     const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
     const [registration, setRegistration] = useState<any>(null);
     const [showMembers, setShowMembers] = useState(false);
+    const [fdsaDismissed, setFdsaDismissed] = useState(false);
 
     useEffect(() => {
         const handleResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
@@ -44,8 +47,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
     const members = registration?.payload?.teamDetails?.members || [];
 
     return (
-        <>
-            
+        <div style={{ overflowX: 'hidden' }}>
 
             <Confetti
                 width={windowSize.width}
@@ -152,6 +154,33 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
                         </button>
                     </div>
 
+                    {/* ── Flying Doctors Safety Card ── */}
+                    {!fdsaDismissed && (
+                        <div className="sx-fdsa-card">
+                            <button className="sx-fdsa-dismiss" onClick={() => setFdsaDismissed(true)} aria-label="Dismiss">
+                                <AiOutlineClose />
+                            </button>
+                            <div className="sx-fdsa-eyebrow">Recommended for All Participants</div>
+                            <div className="sx-fdsa-body">
+                                <img src={fdsaLogo} alt="Flying Doctors Society of Africa" className="sx-fdsa-logo" />
+                                <div className="sx-fdsa-content">
+                                    <div className="sx-fdsa-title">Get Emergency Medical Cover</div>
+                                    <p className="sx-fdsa-text">
+                                        Flying Doctors Society of Africa recommends all RWTW 2026 participants enroll in evacuation membership — air rescue and emergency medical services on race day and beyond.
+                                    </p>
+                                    <a
+                                        href="https://forms.office.com/r/HUT4VV2juN"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="sx-fdsa-btn"
+                                    >
+                                        Enroll Now →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* ── Caption ── */}
                     <p className="sx-caption">
                         A confirmation email has been sent to the registered email address.<br />
@@ -160,7 +189,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
 
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

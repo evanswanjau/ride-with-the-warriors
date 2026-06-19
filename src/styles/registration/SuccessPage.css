@@ -1,5 +1,7 @@
 
 
+                html, body { overflow-x: hidden; }
+
                 :root, [data-theme="dark"] {
                     --color-primary: #2d6a2d;
                     --color-primary-dark: #1e4d1e;
@@ -278,6 +280,79 @@
                     clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
                 }
                 .sx-btn-ghost:hover { border-color: var(--sx-border-2); color: var(--sx-text-2); }
+
+                /* ── Flying Doctors Card ── */
+                .sx-fdsa-card {
+                    position: relative;
+                    width: 100%;
+                    overflow: hidden;
+                    background: var(--sx-card);
+                    border: 1px solid rgba(239, 68, 68, 0.22);
+                    padding: 20px 24px;
+                    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+                    animation: sxFadeUp 0.6s ease 0.65s both;
+                    margin-top: 4px;
+                    box-sizing: border-box;
+                }
+                .sx-fdsa-dismiss {
+                    position: absolute;
+                    top: 12px; right: 14px;
+                    background: none; border: none; cursor: pointer;
+                    color: var(--sx-text-3);
+                    font-size: 0.9rem;
+                    line-height: 1;
+                    padding: 4px;
+                    transition: color 0.2s;
+                }
+                .sx-fdsa-dismiss:hover { color: var(--sx-text-1); }
+                .sx-fdsa-eyebrow {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.58rem; font-weight: 700;
+                    letter-spacing: 0.26em; text-transform: uppercase;
+                    color: #ef4444;
+                    margin-bottom: 14px;
+                }
+                .sx-fdsa-body {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 16px;
+                }
+                .sx-fdsa-logo {
+                    height: 48px; width: auto; max-width: 64px;
+                    object-fit: contain;
+                    flex-shrink: 0;
+                }
+                .sx-fdsa-content { flex: 1; min-width: 0; }
+                .sx-fdsa-title {
+                    font-family: 'Bebas Neue', sans-serif;
+                    font-size: 1.3rem;
+                    letter-spacing: 0.04em;
+                    color: var(--sx-text-1);
+                    margin-bottom: 6px;
+                }
+                .sx-fdsa-text {
+                    font-size: 0.78rem;
+                    line-height: 1.66;
+                    color: var(--sx-text-2);
+                    margin-bottom: 14px;
+                }
+                .sx-fdsa-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 9px 20px;
+                    background: #ef4444;
+                    color: #fff;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 0.78rem; font-weight: 800;
+                    letter-spacing: 0.14em; text-transform: uppercase;
+                    text-decoration: none;
+                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+                    transition: background 0.2s, transform 0.2s;
+                }
+                .sx-fdsa-btn:hover {
+                    background: #dc2626;
+                    transform: translateY(-1px);
+                }
 
                 /* ── Caption ── */
                 .sx-caption {

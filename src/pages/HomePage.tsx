@@ -9,8 +9,11 @@ import kdfLogo from '../assets/logos/kdf.png';
 import logo from '../assets/logos/logo.png';
 import equity from '../assets/logos/equity.png';
 import dedsilva from '../assets/logos/dedsilva.png';
-import isuzu from '../assets/logos/isuzu.png';
+import isuzu from '../assets/logos/Isuzu.png';
 import gigamsys from '../assets/logos/gigamsys.png';
+import stanfajoy from '../assets/logos/stanfajoy.png';
+import wld from '../assets/logos/wld.png';
+import fdsaLogo from '../assets/logos/fdsa-logo.png';
 
 import '../styles/home.css';
 
@@ -417,20 +420,61 @@ const HomePage = () => {
                     </div>
                 </section>
 
+                {/* ── Flying Doctors Safety Partner ── */}
+                <section className="py-14 px-6 lg:px-12 border-t" style={{ borderColor: 'var(--border-1)', background: 'var(--page-bg)', transition: 'background 0.3s' }}>
+                    <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
+                        <div className="flex-none flex items-center justify-center w-32 h-32 border" style={{ borderColor: 'var(--border-2)', background: 'rgba(255,255,255,0.04)', clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}>
+                            <img src={fdsaLogo} alt="Flying Doctors Society of Africa" className="h-20 w-auto object-contain" />
+                        </div>
+                        <div className="flex-1 text-center md:text-left">
+                            <div className="flex items-center gap-3 mb-3 justify-center md:justify-start">
+                                <div className="h-px w-8 bg-red-500 flex-shrink-0" />
+                                <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.26em', textTransform: 'uppercase', color: '#ef4444' }}>Official Safety Partner</span>
+                            </div>
+                            <h3 className="display-heading text-3xl mb-3" style={{ color: 'var(--text-1)' }}>Flying Doctors Society of Africa</h3>
+                            <p className="text-sm leading-relaxed max-w-lg" style={{ color: 'var(--text-2)' }}>
+                                As a RWTW 2026 participant, we strongly recommend enrolling in Flying Doctors' Emergency Medical Evacuation membership — ensuring access to air rescue and emergency medical services throughout the event and beyond.
+                            </p>
+                        </div>
+                        <div className="flex-none">
+                            <a
+                                href="https://forms.office.com/r/HUT4VV2juN"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="shimmer-btn shimmer-btn--primary whitespace-nowrap"
+                            >
+                                Enroll Now →
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
                 {/* ── Sponsors Carousel ── */}
                 <section className="py-12 px-6 overflow-hidden border-t border-b" style={{ borderColor: 'var(--border-1)', background: 'var(--raised-bg)', transition: 'background 0.3s' }}>
                     <div className="max-w-7xl mx-auto mb-8 text-center flex flex-col items-center">
                         <div className="h-px w-12 bg-[var(--color-primary)] mb-4" />
-                        <span className="section-label">Our Proud Sponsors</span>
+                        <span className="section-label">Our Proud Sponsors &amp; Partners</span>
                     </div>
-                    {/* Placeholder Sponsor Images */}
-                    <div className="flex gap-32 items-center justify-center flex-wrap">
-                        <img src={kdfLogo} alt="KDF" className="h-18 w-auto object-contain rounded" />
-                        <img src={isuzu} alt="Isuzu" className="h-24 w-auto object-contain rounded" />
-                        <img src={logo} alt="Airborne Fraternity" className="h-24 w-auto object-contain rounded" />
-                        <img src={equity} alt="Equity" className="h-24 w-auto object-contain rounded" />
-                        <img src={dedsilva} alt="Dedsilva" className="h-24 w-auto object-contain rounded" />
-                        <img src={gigamsys} alt="GigamSys" className="h-16 w-auto object-contain rounded" />
+                    <div className="sp-mask">
+                        <div className="sp-track">
+                            {[...Array(2)].flatMap((_, pass) =>
+                                [
+                                    { src: kdfLogo, alt: 'KDF', h: 'h-24' },
+                                    { src: isuzu, alt: 'Isuzu', h: 'h-28' },
+                                    { src: logo, alt: 'Airborne Fraternity', h: 'h-28' },
+                                    { src: equity, alt: 'Equity Bank', h: 'h-28' },
+                                    { src: dedsilva, alt: 'Dedsilva', h: 'h-24' },
+                                    { src: gigamsys, alt: 'GigamSys', h: 'h-20' },
+                                    { src: stanfajoy, alt: 'Stanfa Joy', h: 'h-24' },
+                                    { src: wld, alt: 'WLD', h: 'h-24' },
+                                    { src: fdsaLogo, alt: 'Flying Doctors Society of Africa', h: 'h-24', cls: 'sp-logo-fdsa' },
+                                ].map((s, i) => (
+                                    <div key={`${pass}-${i}`} className={`sp-logo-wrap flex-shrink-0 flex items-center justify-center ${'cls' in s ? s.cls : ''}`} aria-hidden={pass === 1}>
+                                        <img src={s.src} alt={s.alt} className={`${s.h} w-auto object-contain`} />
+                                    </div>
+                                ))
+                            )}
+                        </div>
                     </div>
                 </section>
 

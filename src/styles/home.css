@@ -248,6 +248,74 @@
 }
 
 /* ════════════════════════════════════
+   SPONSORS CAROUSEL
+   ════════════════════════════════════ */
+.sp-mask {
+    position: relative;
+    overflow: hidden;
+}
+
+.sp-mask::before,
+.sp-mask::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 120px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.sp-mask::before {
+    left: 0;
+    background: linear-gradient(to right, var(--raised-bg) 0%, transparent 100%);
+}
+
+.sp-mask::after {
+    right: 0;
+    background: linear-gradient(to left, var(--raised-bg) 0%, transparent 100%);
+}
+
+.sp-track {
+    display: flex;
+    align-items: center;
+    gap: 72px;
+    width: max-content;
+    animation: spScroll 34s linear infinite;
+    padding: 8px 0;
+}
+
+.sp-track:hover {
+    animation-play-state: paused;
+}
+
+.sp-logo-wrap {
+    transition: filter 0.25s;
+    filter: grayscale(1);
+}
+
+[data-theme="dark"] .sp-logo-wrap {
+    filter: brightness(0) invert(1);
+}
+
+.sp-logo-wrap:hover {
+    filter: grayscale(0);
+}
+
+[data-theme="dark"] .sp-logo-wrap:hover {
+    filter: brightness(0) invert(1);
+}
+
+[data-theme="dark"] .sp-logo-fdsa {
+    display: none;
+}
+
+@keyframes spScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+/* ════════════════════════════════════
    TESTIMONIALS CAROUSEL
    ════════════════════════════════════ */
 .t-section {
