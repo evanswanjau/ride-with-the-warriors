@@ -57,7 +57,7 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
                     border-bottom: none;
                 }
                 .color-band {
-                    height: 35mm;
+                    height: 28mm;
                     width: 100%;
                 }
                 .bib-content {
@@ -66,36 +66,22 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
-                    padding: 10px;
+                    padding: 0 10px;
+                    overflow: hidden;
                 }
                 .bib-number {
-                    font-size: 160px;
-                    font-weight: 900;
-                    line-height: 0.8;
-                    font-family: 'Barlow Condensed', sans-serif;
-                    margin: 0;
-                    color: #000;
-                    text-align: center;
-                }
-                .bib-name {
-                    font-size: 24px;
-                    font-weight: 800;
-                    text-transform: uppercase;
-                    letter-spacing: 0.1em;
-                    margin-top: 10px;
-                    color: #000;
-                    text-align: center;
-                }
-                .bib-cat {
-                    font-size: 16px;
+                    font-size: 400px;
                     font-weight: 700;
-                    text-transform: uppercase;
-                    letter-spacing: 0.2em;
-                    color: #666;
+                    line-height: 0.82;
+                    letter-spacing: 0.05em;
+                    text-indent: 0.05em;
+                    font-family: 'Barlow Condensed', sans-serif;
+                    margin-top: -0.08em;
+                    color: #000;
                     text-align: center;
                 }
                 .bib-footer {
-                    height: 35mm;
+                    height: 30mm;
                     width: 100%;
                     position: relative;
                     display: flex;
@@ -104,12 +90,35 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
                     padding: 0 40px;
                     box-sizing: border-box;
                 }
+                .bib-footer-left {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 2px;
+                }
                 .bib-brand {
                     font-size: 24px;
                     font-weight: 900;
                     font-style: italic;
                     text-transform: uppercase;
                     color: #ffffff;
+                    line-height: 1.1;
+                }
+                .bib-name {
+                    font-size: 18px;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    color: #ffffff;
+                    line-height: 1.1;
+                }
+                .bib-cat {
+                    font-size: 13px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.2em;
+                    color: rgba(255,255,255,0.8);
+                    line-height: 1.1;
                 }
                 .bib-qr-wrap {
                     background: #ffffff;
@@ -130,13 +139,15 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
                             {/* Middle Section */}
                             <div className="bib-content">
                                 <div className="bib-number">{reg.id}</div>
-                                <div className="bib-name">{reg.firstName} {reg.lastName}</div>
-                                <div className="bib-cat">{getDisplayCategory(reg)}</div>
                             </div>
 
                             {/* Bottom Band */}
                             <div className="bib-footer" style={{ backgroundColor: reg.hexColor }}>
-                                <span className="bib-brand">Ride With The Warriors 2026</span>
+                                <div className="bib-footer-left">
+                                    <span className="bib-brand">Ride With The Warriors 2026</span>
+                                    <div className="bib-name">{reg.firstName} {reg.lastName}</div>
+                                    <div className="bib-cat">{getDisplayCategory(reg)}</div>
+                                </div>
                                 <div className="bib-qr-wrap">
                                     <QRCodeCanvas
                                         value={`${SITE_URL}/profile/${reg.id}`}

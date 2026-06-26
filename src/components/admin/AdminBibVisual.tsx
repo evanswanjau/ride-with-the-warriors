@@ -58,40 +58,31 @@ const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    padding: 10px;
+                    padding: 0 10px 4% 10px;
                 }
                 .ad-bib-num {
                     font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 80px;
-                    font-weight: 900;
-                    line-height: 0.8;
+                    font-size: 140px;
+                    font-weight: 700;
+                    line-height: 0.85;
+                    letter-spacing: 0.05em;
                     margin: 0;
                     color: #000;
                 }
-                .ad-bib-name {
-                    font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 14px;
-                    font-weight: 800;
-                    text-transform: uppercase;
-                    letter-spacing: 0.1em;
-                    margin-top: 8px;
-                    color: #111;
-                }
-                .ad-bib-cat {
-                    font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 11px;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    letter-spacing: 0.2em;
-                    color: #666;
-                }
                 .ad-bib-footer {
-                    height: 22%;
+                    height: 30%;
                     width: 100%;
                     position: relative;
                     display: flex;
                     align-items: center;
+                    justify-content: space-between;
                     padding: 0 15px;
+                }
+                .ad-bib-footer-left {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 1px;
                 }
                 .ad-bib-brand {
                     font-family: 'Barlow Condensed', sans-serif;
@@ -101,15 +92,32 @@ const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
                     text-transform: uppercase;
                     color: #fff;
                     letter-spacing: 0.05em;
+                    line-height: 1.2;
+                }
+                .ad-bib-name {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 9px;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    letter-spacing: 0.08em;
+                    color: #fff;
+                    line-height: 1.2;
+                }
+                .ad-bib-cat {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 7px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    color: rgba(255,255,255,0.8);
+                    line-height: 1.2;
                 }
                 .ad-bib-qr {
-                    position: absolute;
-                    right: 15px;
-                    bottom: 10px;
                     background: #fff;
                     padding: 4px;
                     border-radius: 4px;
                     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                    flex-shrink: 0;
                 }
             `}</style>
             {registrations.map((reg) => (
@@ -120,13 +128,15 @@ const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
                     {/* Main Content */}
                     <div className="ad-bib-main">
                         <div className="ad-bib-num">{reg.id}</div>
-                        <div className="ad-bib-name">{reg.firstName} {reg.lastName}</div>
-                        <div className="ad-bib-cat">{getDisplayCategory(reg)}</div>
                     </div>
 
                     {/* Bottom Band / Footer */}
                     <div className="ad-bib-footer" style={{ backgroundColor: reg.hexColor }}>
-                        <span className="ad-bib-brand">Ride With The Warriors 2026</span>
+                        <div className="ad-bib-footer-left">
+                            <span className="ad-bib-brand">Ride With The Warriors 2026</span>
+                            <div className="ad-bib-name">{reg.firstName} {reg.lastName}</div>
+                            <div className="ad-bib-cat">{getDisplayCategory(reg)}</div>
+                        </div>
                         <div className="ad-bib-qr">
                             <QRCodeCanvas
                                 value={`${SITE_URL}/profile/${reg.id}`}
