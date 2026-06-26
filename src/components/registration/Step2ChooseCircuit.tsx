@@ -1,4 +1,5 @@
 import '../../styles/registration/Step2ChooseCircuit.css';
+import { useRef } from 'react';
 import CircuitCard from "./CircuitCard";
 import { CIRCUITS } from "../../constants";
 import blitzImage from "../../assets/images/blitz.jpeg";
@@ -25,6 +26,18 @@ const Step2ChooseCircuit = ({ selectedCircuit, onSelect, onNext }: Step2ChooseCi
     const { isMilitary } = useRegistration();
     const visibleCircuits = CIRCUITS.filter(c => isMilitary ? c.id !== 'family' : true);
     const selected = visibleCircuits.find(c => c.id === selectedCircuit);
+    const footerRef = useRef<HTMLButtonElement>(null);
+
+    const handleSelect = (id: string) => {
+        onSelect(id);
+        setTimeout(() => {
+            if (footerRef.current) {
+                footerRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            } else {
+                window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+            }
+        }, 150);
+    };
 
     return (
         <RegistrationStepLayout
@@ -49,6 +62,7 @@ const Step2ChooseCircuit = ({ selectedCircuit, onSelect, onNext }: Step2ChooseCi
 
                     {/* CTA button */}
                     <button
+                        ref={footerRef}
                         className={`s2-cta-btn${!selectedCircuit ? " s2-cta-disabled" : ""}`}
                         onClick={onNext}
                         disabled={!selectedCircuit}
@@ -77,7 +91,7 @@ const Step2ChooseCircuit = ({ selectedCircuit, onSelect, onNext }: Step2ChooseCi
                             description={circuit.description}
                             imageUrl={CIRCUIT_IMAGES[circuit.id] ?? circuit.imageUrl ?? ""}
                             isSelected={selectedCircuit === circuit.id}
-                            onSelect={onSelect}
+                            onSelect={handleSelect}
                             isCompetitive={circuit.isCompetitive}
                         />
                     ))}

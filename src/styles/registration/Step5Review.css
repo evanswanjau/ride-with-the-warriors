@@ -215,7 +215,28 @@
                     clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
                 }
 
-                @media (max-width: 640px) {
+                .rv5-review-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 340px;
+                    gap: 20px;
+                    align-items: start;
+                }
+
+                .rv5-sidebar-col {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 14px;
+                    position: sticky;
+                    top: 24px;
+                }
+
+                @media (max-width: 768px) {
+                    .rv5-review-grid {
+                        grid-template-columns: 1fr;
+                    }
+                    .rv5-sidebar-col {
+                        position: static;
+                    }
                     .rv5-details-grid { grid-template-columns: 1fr !important; }
                     .rv5-meta-cell { border-right: none; border-bottom: 1px solid var(--rv5-divider); }
                 }

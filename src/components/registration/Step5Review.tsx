@@ -304,7 +304,7 @@ const Step5Review = ({
         >
             
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 20, alignItems: 'start' }}>
+            <div className="rv5-review-grid">
 
                 {/* ── Left: main card ── */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -387,7 +387,7 @@ const Step5Review = ({
                 </div>
 
                 {/* ── Right: order summary + actions ── */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 14, position: 'sticky', top: 24 }}>
+                <div className="rv5-sidebar-col">
 
                     {/* Order summary */}
                     <div className="rv5-sidebar-card">
