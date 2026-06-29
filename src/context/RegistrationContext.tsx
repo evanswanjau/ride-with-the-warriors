@@ -209,8 +209,8 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                 if (!familyDetails.guardian.lastName.trim()) newErrors['guardian.lastName'] = 'Last name is required';
                 if (!familyDetails.guardian.email.trim()) newErrors['guardian.email'] = 'Guardian email is required';
                 else if (!/\S+@\S+\.\S/.test(familyDetails.guardian.email)) newErrors['guardian.email'] = 'Invalid email';
-                if (!familyDetails.guardian.emergencyPhone.trim()) newErrors['guardian.emergencyPhone'] = 'Emergency phone is required';
-                else if (!isValidKenyanPhone(familyDetails.guardian.emergencyPhone)) newErrors['guardian.emergencyPhone'] = 'Invalid Kenyan number';
+                if (!familyDetails.guardian.phoneNumber.trim()) newErrors['guardian.phoneNumber'] = 'Phone number is required';
+                else if (!isValidKenyanPhone(familyDetails.guardian.phoneNumber)) newErrors['guardian.phoneNumber'] = 'Invalid Kenyan number';
                 const totalChildrenForValidation = familyDetails.riders.cubs.length + familyDetails.riders.champs.length;
                 if (totalChildrenForValidation > 0 && !familyDetails.guardian.relationship) newErrors['guardian.relationship'] = 'Relationship is required';
                 if (!familyDetails.guardian.participation) newErrors['guardian.participation'] = 'Required';
