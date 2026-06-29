@@ -61,6 +61,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [allRaffleTicketsForPrint, setAllRaffleTicketsForPrint] = useState<any[]>([]);
     const [isPrintingBibs, setIsPrintingBibs] = useState(false);
     const [allRegsForPrint, setAllRegsForPrint] = useState<any[]>([]);
+    const [bibProgress, setBibProgress] = useState(0);
     const [donations, setDonations] = useState<any[]>([]);
     const [donationsStats, setDonationsStats] = useState<any>(null);
     const [donationsFilter, setDonationsFilter] = useState({ status: '', search: '' });
@@ -418,9 +419,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         try {
             setError(null);
             setIsPrintingBibs(true);
+            setBibProgress(0);
 
-            // Fetch all registrations matching current filter (ignoring pagination)
-            const q = new URLSearchParams({ limit: '5000', ...filter }); // Limit to 5000 to be safe
+            const q = new URLSearchParams({ limit: '5000', ...filter });
             const r = await fetch(`${API_BASE_URL}/admin/registrations?${q}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -434,10 +435,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             }
 
             setAllRegsForPrint(list);
-
+            setBibProgress(5);
 
             // Wait for render
             await new Promise(r => setTimeout(r, 2500));
+            setBibProgress(10);
 
             const container = document.getElementById('bib-print-container');
             if (!container) throw new Error('Ready container not found');
@@ -448,20 +450,20 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             for (let i = 0; i < pages.length; i++) {
                 if (i > 0) pdf.addPage();
                 const url = await toPng(pages[i] as HTMLElement, {
-                    pixelRatio: 1.5, // Slightly lower for bulk to avoid OOM
+                    pixelRatio: 1.5,
                     backgroundColor: '#ffffff'
                 });
                 pdf.addImage(url, 'PNG', 0, 0, 210, 297);
-
+                setBibProgress(10 + Math.round(((i + 1) / pages.length) * 88));
             }
 
-            pdf.save(`RWTW_Bib_Numbers_All_${new Date().toISOString().split('T')[0]}.pdf`);
+            pdf.save(`RWTW_Bib_Numbers_${filter.status || 'All'}_${new Date().toISOString().split('T')[0]}.pdf`);
+            setBibProgress(100);
         } catch (e: any) {
             console.error(e);
             alert(e.message || 'Failed to generate PDF');
         } finally {
             setIsPrintingBibs(false);
-
             setAllRegsForPrint([]);
         }
     };
@@ -871,7 +873,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     <div className="ad-header-actions">
                         {(activeView === 'registrations' || activeView === 'bibs') && (
                             <button className="ad-hbtn ad-hbtn-ghost" onClick={handleDownloadBibNumbers} disabled={isPrintingBibs}>
-                                <AiOutlinePrinter /> {isPrintingBibs ? 'Generating…' : 'Bibs PDF'}
+                                <AiOutlinePrinter /> {isPrintingBibs ? `Generating… ${bibProgress}%` : `${filter.status === 'PAID' ? 'Paid ' : filter.status === 'UNPAID' ? 'Unpaid ' : ''}Bibs PDF`}
                             </button>
                         )}
                         {activeView === 'registrations' && (
@@ -1644,6 +1646,14 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             </select>
                                         </div>
                                         <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Payment</label>
+                                            <select className="ad-select" value={filter.status} onChange={e => setFilter({ ...filter, status: e.target.value })}>
+                                                <option value="">All</option>
+                                                <option value="PAID">Paid</option>
+                                                <option value="UNPAID">Unpaid</option>
+                                            </select>
+                                        </div>
+                                        <div className="ad-filter-group">
                                             <label className="ad-filter-label">Sort By</label>
                                             <select className="ad-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
                                                 <option value="id">Bib Number</option>
@@ -1668,7 +1678,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         )}
 
                                         <div className="ad-pagination" style={{ marginTop: 20 }}>
-                                            <span className="ad-page-info">Showing {registrations.length} visual bibs</span>
+                                            <span className="ad-page-info">
+                                                Showing {registrations.length} bibs
+                                                {filter.status && <span style={{ marginLeft: 8, padding: '2px 8px', background: filter.status === 'PAID' ? 'rgba(76,175,80,0.12)' : 'rgba(245,158,11,0.12)', color: filter.status === 'PAID' ? 'var(--ad-pl)' : 'var(--ad-accent)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.6rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase' }}>{filter.status}</span>}
+                                            </span>
                                             <div className="ad-page-btns">
                                                 <button className="ad-page-btn" onClick={() => setPagination(p => ({ ...p, page: Math.max(1, p.page - 1) }))} disabled={pagination.page === 1}><AiOutlineLeft /> Prev</button>
                                                 <span className="ad-page-cur">Page {pagination.page} / {pagination.pages}</span>
@@ -1677,6 +1690,22 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         </div>
                                     </div>
                                 </div>
+
+                                {/* Progress overlay during PDF generation */}
+                                {isPrintingBibs && (
+                                    <div className="ad-modal-overlay" style={{ zIndex: 1000 }}>
+                                        <div style={{ background: 'var(--ad-surface)', border: '1px solid var(--ad-border2)', padding: '40px 48px', width: 400, textAlign: 'center', clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)' }}>
+                                            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', letterSpacing: '0.04em', color: 'var(--ad-t1)', marginBottom: 6 }}>Generating PDF</div>
+                                            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ad-t3)', marginBottom: 28 }}>
+                                                {bibProgress < 5 ? 'Fetching registrations…' : bibProgress < 10 ? 'Rendering bibs…' : `Processing page ${Math.round((bibProgress - 10) / 88 * (allRegsForPrint.length / 2))} of ${Math.ceil(allRegsForPrint.length / 2)}`}
+                                            </div>
+                                            <div style={{ background: 'var(--ad-raised)', height: 6, marginBottom: 16, overflow: 'hidden' }}>
+                                                <div style={{ height: '100%', background: 'var(--ad-pl)', width: `${bibProgress}%`, transition: 'width 0.4s ease' }} />
+                                            </div>
+                                            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '2.8rem', letterSpacing: '0.04em', color: 'var(--ad-pl)', lineHeight: 1 }}>{bibProgress}%</div>
+                                        </div>
+                                    </div>
+                                )}
                             </>
                         )}
 
