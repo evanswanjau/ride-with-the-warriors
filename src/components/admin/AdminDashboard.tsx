@@ -14,7 +14,7 @@ import {
     BarChart, Bar, Cell, PieChart, Pie, Line, Legend, ComposedChart
 } from 'recharts';
 import { jsPDF } from 'jspdf';
-import { toPng, toJpeg } from 'html-to-image';
+import { toPng } from 'html-to-image';
 import AdminRaffleTicketsPrint from './AdminRaffleTicketsPrint';
 import AdminBibNumbersPrint from './AdminBibNumbersPrint';
 import AdminBibVisual from './AdminBibVisual';
