@@ -122,7 +122,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         else if (activeView === 'raffle') fetchRaffleTickets(debouncedRaffleSearch);
         else if (activeView === 'donations') fetchDonations(debouncedDonationSearch);
     }, [
-        filter.circuitId, filter.type, filter.status, filter.category, filter.isMilitary, debouncedSearch,
+        filter.circuitId, filter.type, filter.status, filter.category, filter.isMilitary, filter.dateFrom, debouncedSearch,
         pagination.page, activeView,
         paymentsFilter.status, paymentsFilter.dateFrom, paymentsFilter.dateTo, debouncedPaymentSearch,
         paymentsPagination.page,
