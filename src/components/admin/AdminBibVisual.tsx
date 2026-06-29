@@ -68,6 +68,7 @@ const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
                     letter-spacing: 0.05em;
                     margin: 0;
                     color: #000;
+                    white-space: nowrap;
                 }
                 .ad-bib-footer {
                     height: 30%;
@@ -127,7 +128,7 @@ const AdminBibVisual: React.FC<AdminBibVisualProps> = ({ registrations }) => {
 
                     {/* Main Content */}
                     <div className="ad-bib-main">
-                        <div className="ad-bib-num">{reg.id}</div>
+                        <div className="ad-bib-num" style={{ fontSize: `${Math.min(140, Math.max(60, Math.floor(560 / reg.id.length)))}px` }}>{reg.id}</div>
                     </div>
 
                     {/* Bottom Band / Footer */}

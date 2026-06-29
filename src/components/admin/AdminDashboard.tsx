@@ -14,7 +14,7 @@ import {
     BarChart, Bar, Cell, PieChart, Pie, Line, Legend, ComposedChart
 } from 'recharts';
 import { jsPDF } from 'jspdf';
-import { toPng } from 'html-to-image';
+import { toPng, toJpeg } from 'html-to-image';
 import AdminRaffleTicketsPrint from './AdminRaffleTicketsPrint';
 import AdminBibNumbersPrint from './AdminBibNumbersPrint';
 import AdminBibVisual from './AdminBibVisual';
@@ -43,7 +43,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [filter, setFilter] = useState({ circuitId: '', type: '', status: '', category: '', search: '', isMilitary: '' });
+    const [filter, setFilter] = useState({ circuitId: '', type: '', status: '', category: '', search: '', isMilitary: '', dateFrom: '' });
     const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0, pages: 1 });
     const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('adminTheme') === 'dark');
     const [selectedRegistration, setSelectedRegistration] = useState<any>(null);
@@ -449,15 +449,19 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
 
             for (let i = 0; i < pages.length; i++) {
                 if (i > 0) pdf.addPage();
-                const url = await toPng(pages[i] as HTMLElement, {
-                    pixelRatio: 1.5,
+                const url = await toJpeg(pages[i] as HTMLElement, {
+                    pixelRatio: 1.2,
+                    quality: 0.82,
                     backgroundColor: '#ffffff'
                 });
-                pdf.addImage(url, 'PNG', 0, 0, 210, 297);
+                pdf.addImage(url, 'JPEG', 0, 0, 210, 297);
                 setBibProgress(10 + Math.round(((i + 1) / pages.length) * 88));
+                // Yield to browser so progress bar updates
+                await new Promise(r => setTimeout(r, 10));
             }
 
-            pdf.save(`RWTW_Bib_Numbers_${filter.status || 'All'}_${new Date().toISOString().split('T')[0]}.pdf`);
+            const label = filter.status === 'PAID' ? 'Paid' : filter.status === 'UNPAID' ? 'Unpaid' : 'All';
+            pdf.save(`RWTW_Bib_Numbers_${label}_${new Date().toISOString().split('T')[0]}.pdf`);
             setBibProgress(100);
         } catch (e: any) {
             console.error(e);
@@ -1652,6 +1656,25 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <option value="PAID">Paid</option>
                                                 <option value="UNPAID">Unpaid</option>
                                             </select>
+                                        </div>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Registered From</label>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                                <input
+                                                    type="date"
+                                                    className="ad-input"
+                                                    style={{ minWidth: 0, width: 150 }}
+                                                    value={filter.dateFrom}
+                                                    onChange={e => setFilter({ ...filter, dateFrom: e.target.value })}
+                                                />
+                                                {filter.dateFrom && (
+                                                    <button
+                                                        onClick={() => setFilter({ ...filter, dateFrom: '' })}
+                                                        style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '10px 10px', cursor: 'pointer', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, lineHeight: 1 }}
+                                                        title="Clear date filter"
+                                                    >✕</button>
+                                                )}
+                                            </div>
                                         </div>
                                         <div className="ad-filter-group">
                                             <label className="ad-filter-label">Sort By</label>

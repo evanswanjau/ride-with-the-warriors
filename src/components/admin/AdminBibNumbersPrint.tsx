@@ -79,6 +79,7 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
                     margin-top: -0.08em;
                     color: #000;
                     text-align: center;
+                    white-space: nowrap;
                 }
                 .bib-footer {
                     height: 30mm;
@@ -138,7 +139,7 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
 
                             {/* Middle Section */}
                             <div className="bib-content">
-                                <div className="bib-number">{reg.id}</div>
+                                <div className="bib-number" style={{ fontSize: `${Math.min(400, Math.max(200, Math.floor(1800 / reg.id.length)))}px` }}>{reg.id}</div>
                             </div>
 
                             {/* Bottom Band */}
