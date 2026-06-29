@@ -41,6 +41,7 @@ interface FamilyRegistrationFlowProps {
 
 const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, isSubmitting }: FamilyRegistrationFlowProps) => {
     const { isMilitary, hireBike, setHireBike } = useRegistration();
+    const hasChildren = data.riders.cubs.length + data.riders.champs.length > 0;
     const categories = [
         { id: 'cubs', title: 'Cubs (Ages 4-8)', icon: MdPedalBike },
         { id: 'champs', title: 'Champs (Ages 9-13)', icon: MdDirectionsBike }
@@ -130,7 +131,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
         <RegistrationStepLayout
             stepLabel="Step 3 of 4"
             title="Family Warriors"
-            subtitle="Register your little champions for their specific age groups. Strength lies in numbers."
+            subtitle="Adults can ride solo or bring their little champions along. Children are optional — add Cubs or Champs if you have them."
             footer={
                 <>
                     <button className="fam-back-btn" onClick={onBack} type="button" disabled={isSubmitting}>
@@ -271,7 +272,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                 <div style={{ marginTop: 24 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
                         <div style={{ height: 1, width: 32, background: 'var(--fam-primary)' }} />
-                        <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', color: 'var(--fam-text-1)', letterSpacing: '0.04em', margin: 0 }}>Guardian Details</h3>
+                        <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', color: 'var(--fam-text-1)', letterSpacing: '0.04em', margin: 0 }}>{hasChildren ? 'Guardian Details' : 'Your Details'}</h3>
                     </div>
 
                     <div style={{ background: 'var(--fam-raised-bg)', padding: '32px', border: '1px solid var(--fam-border)', clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)' }}>
@@ -358,6 +359,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                             disabled={isSubmitting}
                                         />
                                     </div>
+                                    {hasChildren && (
                                     <div>
                                         <label className="fam-field-label">Relationship *</label>
                                         <select
@@ -372,12 +374,13 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                             <option value="other">Other</option>
                                         </select>
                                     </div>
+                                    )}
                                     <div style={{ gridColumn: '1 / -1' }}>
                                         <label className="fam-field-label">Participating in the ride? *</label>
                                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginTop: 8 }}>
                                             {[
                                                 { id: 'none', label: 'Not riding' },
-                                                { id: 'mom', label: 'Riding as Parent (5km)' },
+                                                { id: 'mom', label: 'Joining the Ride (5km)' },
                                                 { id: 'other', label: 'Riding other circuit' }
                                             ].map((opt) => (
                                                 <button
@@ -501,6 +504,7 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                             <option value="United States">United States</option>
                                         </select>
                                     </div>
+                                    {hasChildren && (
                                     <div>
                                         <label className="fam-field-label">Relationship *</label>
                                         <select
@@ -515,12 +519,13 @@ const FamilyRegistrationFlow = ({ data, onChange, onNext, onBack, formErrors, is
                                             <option value="other">Other</option>
                                         </select>
                                     </div>
+                                    )}
                                     <div style={{ gridColumn: '1 / -1' }}>
                                         <label className="fam-field-label">Participating in the ride? *</label>
                                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginTop: 8 }}>
                                             {[
                                                 { id: 'none', label: 'Not riding' },
-                                                { id: 'mom', label: 'Riding as Parent (5km)' },
+                                                { id: 'mom', label: 'Joining the Ride (5km)' },
                                                 { id: 'other', label: 'Riding other circuit' }
                                             ].map((opt) => (
                                                 <button

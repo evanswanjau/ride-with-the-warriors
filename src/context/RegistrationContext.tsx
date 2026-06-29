@@ -211,7 +211,8 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                 else if (!/\S+@\S+\.\S/.test(familyDetails.guardian.email)) newErrors['guardian.email'] = 'Invalid email';
                 if (!familyDetails.guardian.emergencyPhone.trim()) newErrors['guardian.emergencyPhone'] = 'Emergency phone is required';
                 else if (!isValidKenyanPhone(familyDetails.guardian.emergencyPhone)) newErrors['guardian.emergencyPhone'] = 'Invalid Kenyan number';
-                if (!familyDetails.guardian.relationship) newErrors['guardian.relationship'] = 'Relationship is required';
+                const totalChildrenForValidation = familyDetails.riders.cubs.length + familyDetails.riders.champs.length;
+                if (totalChildrenForValidation > 0 && !familyDetails.guardian.relationship) newErrors['guardian.relationship'] = 'Relationship is required';
                 if (!familyDetails.guardian.participation) newErrors['guardian.participation'] = 'Required';
 
                 if (isMilitary) {
@@ -253,8 +254,6 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
                     });
                 });
 
-                const totalChildren = familyDetails.riders.cubs.length + familyDetails.riders.champs.length;
-                if (totalChildren === 0) newFormErrors.push('A family registration must include at least one child (Cub or Champ).');
             }
         }
 

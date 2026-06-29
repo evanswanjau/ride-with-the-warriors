@@ -243,8 +243,8 @@ const Step5Review = ({
             return (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 28px' }}>
-                        <Detail label="Guardian" value={`${familyData.guardian.firstName} ${familyData.guardian.lastName}`} />
-                        <Detail label="Participation" value={familyData.guardian.participation === 'none' ? 'Not riding' : familyData.guardian.participation === 'mom' ? 'Parent (5km)' : 'Riding another circuit'} />
+                        <Detail label={(familyData.riders.cubs.length + familyData.riders.champs.length) > 0 ? 'Guardian' : 'Adult Participant'} value={`${familyData.guardian.firstName} ${familyData.guardian.lastName}`} />
+                        <Detail label="Participation" value={familyData.guardian.participation === 'none' ? 'Not riding' : familyData.guardian.participation === 'mom' ? 'Joining the Ride (5km)' : 'Riding another circuit'} />
                         {isMilitary && (
                             <>
                                 <Detail label="Service Number" value={familyData.guardian.idNumber} />
