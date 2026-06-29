@@ -462,7 +462,7 @@ const RaffleTicketView = ({ ticket, onBack }: RaffleTicketViewProps) => {
 
                         <div className="tk-qr-box">
                             <QRCodeCanvas
-                                value={`${window.location.origin}/raffle/profile/${ticket.id}`}
+                                value={`${window.location.origin}${import.meta.env.BASE_URL}raffle/profile/${ticket.id}`}
                                 size={140} level="H" includeMargin={true}
                             />
                         </div>

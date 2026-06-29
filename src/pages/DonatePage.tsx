@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import { AiOutlineHeart, AiOutlineWarning, AiOutlineCheckCircle } from 'react-icons/ai';
 import { API_BASE_URL } from '../config';
@@ -15,6 +15,7 @@ function formatKenyanPhone(raw: string): string {
 }
 
 const DonatePage = () => {
+    const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const presetAmounts = ['100', '500', '1000', '5000'];
     const [amount, setAmount] = useState<string>(searchParams.get('amount') || '100');
@@ -192,7 +193,7 @@ const DonatePage = () => {
                             Your support means the world to our widows and their families.
                         </p>
                         <button
-                            onClick={() => window.location.href = '/'}
+                            onClick={() => navigate('/')}
                             className="raffle-cta-btn w-full justify-center"
                         >
                             Return Home

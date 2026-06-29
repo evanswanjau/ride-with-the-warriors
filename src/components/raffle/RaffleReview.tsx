@@ -1,4 +1,5 @@
 import { AiOutlineArrowLeft, AiOutlineCheckCircle, AiOutlineUser, AiOutlineShopping, AiOutlineCheck } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 import RegistrationStepLayout from '../registration/ui/RegistrationStepLayout';
 
 /* ── Inline Design Components ────────────────────────────────────────── */
@@ -137,12 +138,12 @@ const RaffleReview = ({ data, onBack, onSubmit, isSubmitting, error, unpaidEmail
                     <span className="uppercase text-xs tracking-widest">{error}</span>
                     {unpaidEmail && (
                         <div className="mt-3">
-                            <a
-                                href={`/raffle/profile/email/${encodeURIComponent(unpaidEmail)}`}
+                            <Link
+                                to={`/raffle/profile/email/${encodeURIComponent(unpaidEmail)}`}
                                 className="inline-block px-4 py-2 bg-primary text-white text-xs font-black uppercase tracking-widest hover:opacity-80 transition-opacity"
                             >
                                 VIEW &amp; PAY YOUR TICKETS →
-                            </a>
+                            </Link>
                         </div>
                     )}
                 </div>

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminDashboard from '../components/admin/AdminDashboard';
 
 const AdminPage = () => {
+    const navigate = useNavigate();
     const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
     const getInitialToken = () => {
@@ -54,7 +56,7 @@ const AdminPage = () => {
     }, [adminToken]);
 
     if (!adminToken) {
-        return <AdminLogin onLogin={handleAdminLogin} onBack={() => window.location.href = '/'} />;
+        return <AdminLogin onLogin={handleAdminLogin} onBack={() => navigate('/')} />;
     }
 
     return (

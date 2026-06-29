@@ -197,7 +197,7 @@ const AdminBikeHires = () => {
                                                 </select>
                                             </td>
                                             <td className="ad-td" style={{ textAlign: 'right' }}>
-                                                <a href={`/profile/${hire.registrationId}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a>
+                                                <a href={`${import.meta.env.BASE_URL}profile/${hire.registrationId}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a>
                                             </td>
                                         </tr>
                                     ))}
