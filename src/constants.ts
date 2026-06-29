@@ -10,7 +10,7 @@ export const CIRCUITS: Circuit[] = [
         distance: '120 KM',
         price: 2000,
         date: 'July 5th, 2026',
-        time: '06:00 AM',
+        time: '07:00 AM',
         location: 'Ulinzi Sports Complex, Langata',
         isCompetitive: true
     },
@@ -36,7 +36,7 @@ export const CIRCUITS: Circuit[] = [
         distance: '30 KM',
         price: 9000,
         date: 'July 5th, 2026',
-        time: '07:00 AM',
+        time: '08:30 AM',
         location: 'Ulinzi Sports Complex, Langata'
     },
     {
@@ -48,7 +48,7 @@ export const CIRCUITS: Circuit[] = [
         distance: '5 KM',
         price: 1000,
         date: 'July 5th, 2026',
-        time: '09:00 AM',
+        time: '10:00 AM',
         location: 'Ulinzi Sports Complex, Langata'
     },
 ];
