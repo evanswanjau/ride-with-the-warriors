@@ -139,7 +139,7 @@ const AdminBibNumbersPrint = ({ registrations }: AdminBibNumbersPrintProps) => {
 
                             {/* Middle Section */}
                             <div className="bib-content">
-                                <div className="bib-number" style={{ fontSize: `${Math.min(400, Math.max(200, Math.floor(1800 / reg.id.length)))}px` }}>{reg.id}</div>
+                                <div className="bib-number" style={{ fontSize: `${Math.min(380, Math.max(160, Math.floor(1380 / reg.id.length)))}px` }}>{reg.id}</div>
                             </div>
 
                             {/* Bottom Band */}
