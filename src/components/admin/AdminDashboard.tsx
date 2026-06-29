@@ -449,12 +449,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
 
             for (let i = 0; i < pages.length; i++) {
                 if (i > 0) pdf.addPage();
-                const url = await toJpeg(pages[i] as HTMLElement, {
+                const url = await toPng(pages[i] as HTMLElement, {
                     pixelRatio: 1.2,
-                    quality: 0.82,
                     backgroundColor: '#ffffff'
                 });
-                pdf.addImage(url, 'JPEG', 0, 0, 210, 297);
+                pdf.addImage(url, 'PNG', 0, 0, 210, 297);
                 setBibProgress(10 + Math.round(((i + 1) / pages.length) * 88));
                 // Yield to browser so progress bar updates
                 await new Promise(r => setTimeout(r, 10));
