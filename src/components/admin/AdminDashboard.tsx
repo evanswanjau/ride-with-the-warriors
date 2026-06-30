@@ -16,7 +16,6 @@ import {
 import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import AdminRaffleTicketsPrint from './AdminRaffleTicketsPrint';
-import AdminBibNumbersPrint from './AdminBibNumbersPrint';
 import AdminBibVisual from './AdminBibVisual';
 import { AdminCommunications } from './AdminCommunications';
 import AdminBikeHires from './AdminBikeHires';
@@ -59,10 +58,6 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [rafflePagination, setRafflePagination] = useState({ page: 1, limit: 12, total: 0, pages: 1 });
     const [isPrintingRaffle, setIsPrintingRaffle] = useState(false);
     const [allRaffleTicketsForPrint, setAllRaffleTicketsForPrint] = useState<any[]>([]);
-    const [isPrintingBibs, setIsPrintingBibs] = useState(false);
-    const [allRegsForPrint, setAllRegsForPrint] = useState<any[]>([]);
-    const [bibProgress, setBibProgress] = useState(0);
-    const [bibCategoryStats, setBibCategoryStats] = useState<Array<{ category: string; count: number; status: 'pending' | 'generating' | 'done' }>>([]);
     const [isServerGeneratingBibs, setIsServerGeneratingBibs] = useState(false);
     const [serverBibProgress, setServerBibProgress] = useState<{ pct: number; processed: number; total: number } | null>(null);
     const [donations, setDonations] = useState<any[]>([]);
@@ -416,106 +411,6 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             setIsPrintingRaffle(false);
 
             setAllRaffleTicketsForPrint([]);
-        }
-    };
-    const handleDownloadBibNumbers = async () => {
-        let onVisibilityChange: (() => void) | null = null;
-        try {
-            setError(null);
-            setIsPrintingBibs(true);
-            setBibProgress(0);
-            setBibCategoryStats([]);
-
-            // Warn if user switches tabs — browsers throttle timers and canvas rendering in background
-            let tabHidden = false;
-            onVisibilityChange = () => { if (document.hidden) tabHidden = true; };
-            document.addEventListener('visibilitychange', onVisibilityChange);
-
-            const q = new URLSearchParams({ limit: '5000', ...filter });
-            const r = await fetch(`${API_BASE_URL}/admin/registrations?${q}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (!r.ok) throw new Error('Failed to fetch registrations for printing');
-            const d = await r.json();
-            const list: any[] = d.registrations || [];
-            if (!list.length) {
-                alert('No registrations found to print.');
-                return;
-            }
-
-            // Group by category (preserves whatever filter.category is set to)
-            const grouped: Record<string, any[]> = {};
-            for (const reg of list) {
-                const cat = reg.category || 'Uncategorized';
-                if (!grouped[cat]) grouped[cat] = [];
-                grouped[cat].push(reg);
-            }
-            const categories = Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b));
-            const totalBibs = list.length;
-
-            setBibCategoryStats(categories.map(([cat, regs]) => ({ category: cat, count: regs.length, status: 'pending' as const })));
-            setBibProgress(5);
-
-            const statusLabel = filter.status === 'PAID' ? 'Paid' : filter.status === 'UNPAID' ? 'Unpaid' : 'All';
-            const date = new Date().toISOString().split('T')[0];
-
-            // Max pages per PDF file — jsPDF accumulates decoded PNG data for every page
-            // until pdf.save(), so large categories must be split to avoid OOM.
-            // 15 pages = 30 bibs; at pixelRatio 1.0 (~1MB each) that's ~15MB per PDF.
-            const MAX_PAGES = 15;
-
-            for (let catIdx = 0; catIdx < categories.length; catIdx++) {
-                const [catName, catRegs] = categories[catIdx];
-                const processedBefore = categories.slice(0, catIdx).reduce((s, [, regs]) => s + regs.length, 0);
-
-                setBibCategoryStats(prev => prev.map((s, i) => i === catIdx ? { ...s, status: 'generating' } : s));
-
-                // Swap the print component to this category's regs and wait for re-render + QR codes
-                setAllRegsForPrint(catRegs);
-                await new Promise(resolve => setTimeout(resolve, catIdx === 0 ? 2500 : 1800));
-
-                const container = document.getElementById('bib-print-container');
-                if (!container) throw new Error('Print container not found');
-
-                const pages = Array.from(container.querySelectorAll('.bib-a4-page'));
-                const catSlug = catName.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '');
-                const numParts = Math.ceil(pages.length / MAX_PAGES);
-
-                for (let partIdx = 0; partIdx < numParts; partIdx++) {
-                    const pageBatch = pages.slice(partIdx * MAX_PAGES, (partIdx + 1) * MAX_PAGES);
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-
-                    for (let i = 0; i < pageBatch.length; i++) {
-                        if (i > 0) pdf.addPage();
-                        const url = await toPng(pageBatch[i] as HTMLElement, { pixelRatio: 1.0, backgroundColor: '#ffffff' });
-                        pdf.addImage(url, 'PNG', 0, 0, 210, 297);
-                        const bibsDone = partIdx * MAX_PAGES * 2 + Math.min((i + 1) * 2, pageBatch.length * 2);
-                        const totalDone = processedBefore + Math.min(bibsDone, catRegs.length);
-                        setBibProgress(10 + Math.round((totalDone / totalBibs) * 88));
-                        await new Promise(resolve => setTimeout(resolve, 10));
-                    }
-
-                    const partSuffix = numParts > 1 ? `_Part${partIdx + 1}of${numParts}` : '';
-                    pdf.save(`RWTW_Bibs_${catSlug}_${statusLabel}${partSuffix}_${date}.pdf`);
-
-                    // Give the browser time to GC the completed jsPDF before the next part
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                }
-
-                setBibCategoryStats(prev => prev.map((s, i) => i === catIdx ? { ...s, status: 'done' } : s));
-                await new Promise(resolve => setTimeout(resolve, 300));
-            }
-
-            setBibProgress(100);
-            if (tabHidden) alert('Warning: This tab was hidden during generation. Some pages may not have rendered correctly — please verify and regenerate if needed.');
-        } catch (e: any) {
-            console.error(e);
-            alert(e.message || 'Failed to generate PDF');
-        } finally {
-            if (onVisibilityChange) document.removeEventListener('visibilitychange', onVisibilityChange);
-            setIsPrintingBibs(false);
-            setAllRegsForPrint([]);
-            setBibCategoryStats([]);
         }
     };
     const handleServerGenerateBibs = async () => {
@@ -998,26 +893,6 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         <span className="ad-header-title">Admin Workspace &mdash; {admin?.name}</span>
                     </div>
                     <div className="ad-header-actions">
-                        {(activeView === 'registrations' || activeView === 'bibs') && (
-                            <>
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 3 }}>
-                                    <button className="ad-hbtn ad-hbtn-ghost" onClick={handleServerGenerateBibs} disabled={isServerGeneratingBibs || isPrintingBibs} title="Generate PDF on server — no browser memory limits">
-                                        <AiOutlinePrinter />
-                                        {isServerGeneratingBibs && serverBibProgress
-                                            ? `${serverBibProgress.pct}% (${serverBibProgress.processed}/${serverBibProgress.total})`
-                                            : isServerGeneratingBibs ? 'Starting…' : 'Server PDF'}
-                                    </button>
-                                    {isServerGeneratingBibs && serverBibProgress && (
-                                        <div style={{ height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.15)', overflow: 'hidden' }}>
-                                            <div style={{ height: '100%', width: `${serverBibProgress.pct}%`, background: '#ffffff', borderRadius: 2, transition: 'width 0.3s ease' }} />
-                                        </div>
-                                    )}
-                                </div>
-                                <button className="ad-hbtn ad-hbtn-ghost" onClick={handleDownloadBibNumbers} disabled={isPrintingBibs || isServerGeneratingBibs} title="Generate PDF in browser (legacy)">
-                                    <AiOutlinePrinter /> {isPrintingBibs ? `Generating… ${bibProgress}%` : `${filter.status === 'PAID' ? 'Paid ' : filter.status === 'UNPAID' ? 'Unpaid ' : ''}Bibs PDF`}
-                                </button>
-                            </>
-                        )}
                         {activeView === 'registrations' && (
                             <button className="ad-hbtn ad-hbtn-primary" onClick={handleExport}>
                                 <AiOutlineTable /> Export Excel
@@ -1758,9 +1633,24 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         {/* ══════════════════════════════════════════════ BIBS ══ */}
                         {activeView === 'bibs' && (
                             <>
-                                <div>
-                                    <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Participant IDs</span></div>
-                                    <div className="ad-page-title">Bibs</div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 0 }}>
+                                    <div>
+                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Participant IDs</span></div>
+                                        <div className="ad-page-title" style={{ marginBottom: 0 }}>Bibs</div>
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 3 }}>
+                                        <button className="ad-btn ad-btn-primary" onClick={handleServerGenerateBibs} disabled={isServerGeneratingBibs} title="Generate PDF on server">
+                                            <AiOutlinePrinter />
+                                            {isServerGeneratingBibs && serverBibProgress
+                                                ? `${serverBibProgress.pct}% (${serverBibProgress.processed}/${serverBibProgress.total})`
+                                                : isServerGeneratingBibs ? 'Starting…' : 'Generate PDF'}
+                                        </button>
+                                        {isServerGeneratingBibs && serverBibProgress && (
+                                            <div style={{ height: 3, borderRadius: 2, background: 'var(--ad-border2)', overflow: 'hidden' }}>
+                                                <div style={{ height: '100%', width: `${serverBibProgress.pct}%`, background: 'var(--ad-pl)', borderRadius: 2, transition: 'width 0.3s ease' }} />
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="ad-panel">
@@ -1852,46 +1742,6 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     </div>
                                 </div>
 
-                                {/* Progress overlay during PDF generation */}
-                                {isPrintingBibs && (
-                                    <div className="ad-modal-overlay" style={{ zIndex: 1000 }}>
-                                        <div style={{ background: 'var(--ad-surface)', border: '1px solid var(--ad-border2)', padding: '36px 44px', width: 500, clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)' }}>
-                                            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', letterSpacing: '0.04em', color: 'var(--ad-t1)', marginBottom: 20 }}>Generating Bibs</div>
-
-                                            {/* Per-category breakdown */}
-                                            {bibCategoryStats.length > 0 && (
-                                                <div style={{ marginBottom: 24, borderTop: '1px solid var(--ad-border2)' }}>
-                                                    {bibCategoryStats.map(s => (
-                                                        <div key={s.category} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--ad-border2)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                                                            <span style={{ color: 'var(--ad-t2)', flex: 1, marginRight: 12 }}>{s.category}</span>
-                                                            <span style={{ color: 'var(--ad-t3)', marginRight: 16 }}>{s.count} {s.count === 1 ? 'bib' : 'bibs'}</span>
-                                                            <span style={{ minWidth: 90, textAlign: 'right', color: s.status === 'done' ? 'var(--ad-pl)' : s.status === 'generating' ? 'var(--ad-accent)' : 'var(--ad-border2)' }}>
-                                                                {s.status === 'done' ? '✓ saved' : s.status === 'generating' ? '⋯ generating' : '○ pending'}
-                                                            </span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-
-                                            {/* Progress bar */}
-                                            <div style={{ background: 'var(--ad-raised)', height: 6, marginBottom: 12, overflow: 'hidden' }}>
-                                                <div style={{ height: '100%', background: 'var(--ad-pl)', width: `${bibProgress}%`, transition: 'width 0.4s ease' }} />
-                                            </div>
-
-                                            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20 }}>
-                                                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '2.8rem', letterSpacing: '0.04em', color: 'var(--ad-pl)', lineHeight: 1 }}>{bibProgress}%</div>
-                                                <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ad-t3)', textAlign: 'right', paddingBottom: 4 }}>
-                                                    {bibProgress < 5 ? 'Fetching registrations…' : bibProgress < 10 ? 'Rendering bibs…' : 'Generating pages…'}
-                                                </div>
-                                            </div>
-
-                                            {/* Tab warning */}
-                                            <div style={{ padding: '8px 12px', background: 'rgba(245,158,11,0.08)', borderLeft: '3px solid var(--ad-accent)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ad-accent)' }}>
-                                                ⚠ Keep this tab active — switching tabs may pause or break generation
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
                             </>
                         )}
 
@@ -2208,7 +2058,6 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 {/* Hidden print containers - kept off-screen for PDF capture */}
                 <div style={{ position: 'fixed', left: '-10000mm', top: 0, pointerEvents: 'none', zIndex: -1000 }}>
                     {isPrintingRaffle && <AdminRaffleTicketsPrint tickets={allRaffleTicketsForPrint.length > 0 ? allRaffleTicketsForPrint : raffleTickets} />}
-                    {isPrintingBibs && <AdminBibNumbersPrint registrations={getBibRegistrationData(allRegsForPrint.length > 0 ? allRegsForPrint : registrations)} />}
                 </div>
 
                 {/* ─── Referral Form Modal ─────────────────────────────────────── */}
