@@ -63,6 +63,8 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [allRegsForPrint, setAllRegsForPrint] = useState<any[]>([]);
     const [bibProgress, setBibProgress] = useState(0);
     const [bibCategoryStats, setBibCategoryStats] = useState<Array<{ category: string; count: number; status: 'pending' | 'generating' | 'done' }>>([]);
+    const [isServerGeneratingBibs, setIsServerGeneratingBibs] = useState(false);
+    const [serverBibProgress, setServerBibProgress] = useState<{ pct: number; processed: number; total: number } | null>(null);
     const [donations, setDonations] = useState<any[]>([]);
     const [donationsStats, setDonationsStats] = useState<any>(null);
     const [donationsFilter, setDonationsFilter] = useState({ status: '', search: '' });
@@ -457,11 +459,15 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             const statusLabel = filter.status === 'PAID' ? 'Paid' : filter.status === 'UNPAID' ? 'Unpaid' : 'All';
             const date = new Date().toISOString().split('T')[0];
 
+            // Max pages per PDF file — jsPDF accumulates decoded PNG data for every page
+            // until pdf.save(), so large categories must be split to avoid OOM.
+            // 15 pages = 30 bibs; at pixelRatio 1.0 (~1MB each) that's ~15MB per PDF.
+            const MAX_PAGES = 15;
+
             for (let catIdx = 0; catIdx < categories.length; catIdx++) {
                 const [catName, catRegs] = categories[catIdx];
                 const processedBefore = categories.slice(0, catIdx).reduce((s, [, regs]) => s + regs.length, 0);
 
-                // Mark this category as generating
                 setBibCategoryStats(prev => prev.map((s, i) => i === catIdx ? { ...s, status: 'generating' } : s));
 
                 // Swap the print component to this category's regs and wait for re-render + QR codes
@@ -472,25 +478,32 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 if (!container) throw new Error('Print container not found');
 
                 const pages = Array.from(container.querySelectorAll('.bib-a4-page'));
-                const pdf = new jsPDF('p', 'mm', 'a4');
+                const catSlug = catName.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '');
+                const numParts = Math.ceil(pages.length / MAX_PAGES);
 
-                for (let i = 0; i < pages.length; i++) {
-                    if (i > 0) pdf.addPage();
-                    const url = await toPng(pages[i] as HTMLElement, { pixelRatio: 1.2, backgroundColor: '#ffffff' });
-                    pdf.addImage(url, 'PNG', 0, 0, 210, 297);
-                    const bibsDoneInBatch = Math.min((i + 1) * 2, catRegs.length);
-                    const totalDone = processedBefore + bibsDoneInBatch;
-                    setBibProgress(10 + Math.round((totalDone / totalBibs) * 88));
-                    await new Promise(resolve => setTimeout(resolve, 10));
+                for (let partIdx = 0; partIdx < numParts; partIdx++) {
+                    const pageBatch = pages.slice(partIdx * MAX_PAGES, (partIdx + 1) * MAX_PAGES);
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+
+                    for (let i = 0; i < pageBatch.length; i++) {
+                        if (i > 0) pdf.addPage();
+                        const url = await toPng(pageBatch[i] as HTMLElement, { pixelRatio: 1.0, backgroundColor: '#ffffff' });
+                        pdf.addImage(url, 'PNG', 0, 0, 210, 297);
+                        const bibsDone = partIdx * MAX_PAGES * 2 + Math.min((i + 1) * 2, pageBatch.length * 2);
+                        const totalDone = processedBefore + Math.min(bibsDone, catRegs.length);
+                        setBibProgress(10 + Math.round((totalDone / totalBibs) * 88));
+                        await new Promise(resolve => setTimeout(resolve, 10));
+                    }
+
+                    const partSuffix = numParts > 1 ? `_Part${partIdx + 1}of${numParts}` : '';
+                    pdf.save(`RWTW_Bibs_${catSlug}_${statusLabel}${partSuffix}_${date}.pdf`);
+
+                    // Give the browser time to GC the completed jsPDF before the next part
+                    await new Promise(resolve => setTimeout(resolve, 500));
                 }
 
-                const catSlug = catName.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '');
-                pdf.save(`RWTW_Bibs_${catSlug}_${statusLabel}_${date}.pdf`);
-
                 setBibCategoryStats(prev => prev.map((s, i) => i === catIdx ? { ...s, status: 'done' } : s));
-
-                // Pause so browser can GC the completed jsPDF before loading the next category
-                await new Promise(resolve => setTimeout(resolve, 400));
+                await new Promise(resolve => setTimeout(resolve, 300));
             }
 
             setBibProgress(100);
@@ -505,6 +518,82 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             setBibCategoryStats([]);
         }
     };
+    const handleServerGenerateBibs = async () => {
+        try {
+            setIsServerGeneratingBibs(true);
+            setServerBibProgress({ pct: 0, processed: 0, total: 0 });
+
+            const q = new URLSearchParams(
+                Object.fromEntries(Object.entries(filter).filter(([, v]) => v !== ''))
+            );
+
+            // 1. Start the job
+            const startRes = await fetch(`${API_BASE_URL}/admin/bibs/generate/start?${q}`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!startRes.ok) {
+                const err = await startRes.json().catch(() => ({}));
+                throw new Error(err?.error?.message || 'Failed to start PDF generation');
+            }
+            const { jobId, total } = await startRes.json();
+            setServerBibProgress({ pct: 0, processed: 0, total });
+
+            // 2. Stream progress via SSE using fetch (supports Authorization header)
+            await new Promise<void>((resolve, reject) => {
+                fetch(`${API_BASE_URL}/admin/bibs/generate/progress/${jobId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                }).then(async progressRes => {
+                    const reader = progressRes.body!.getReader();
+                    const decoder = new TextDecoder();
+                    let buf = '';
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) { resolve(); break; }
+                        buf += decoder.decode(value, { stream: true });
+                        const lines = buf.split('\n');
+                        buf = lines.pop() ?? '';
+                        for (const line of lines) {
+                            if (!line.startsWith('data: ')) continue;
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                if (data.type === 'progress') {
+                                    setServerBibProgress({ pct: data.pct, processed: data.processed, total: data.total });
+                                } else if (data.type === 'done') {
+                                    setServerBibProgress(p => p ? { ...p, pct: 100 } : p);
+                                    resolve();
+                                } else if (data.type === 'error') {
+                                    reject(new Error(data.message || 'Generation failed'));
+                                }
+                            } catch { /* ignore parse errors */ }
+                        }
+                    }
+                }).catch(reject);
+            });
+
+            // 3. Download the completed PDF
+            const dlRes = await fetch(`${API_BASE_URL}/admin/bibs/generate/download/${jobId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!dlRes.ok) throw new Error('Failed to download generated PDF');
+            const blob = await dlRes.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const statusLabel = filter.status === 'PAID' ? 'Paid' : filter.status === 'UNPAID' ? 'Unpaid' : 'All';
+            const catSlug = filter.category ? `_${filter.category.replace(/[^a-zA-Z0-9]+/g, '_')}` : '';
+            a.download = `RWTW_Bibs${catSlug}_${statusLabel}_${new Date().toISOString().split('T')[0]}.pdf`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+        } catch (e: any) {
+            alert(e.message || 'Failed to generate PDF from server');
+        } finally {
+            setIsServerGeneratingBibs(false);
+            setServerBibProgress(null);
+        }
+    };
+
     const getBibRegistrationData = (regsToUse: any[] = registrations) => {
         const data = regsToUse.map(reg => ({
             id: reg.id,
@@ -910,9 +999,24 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                     </div>
                     <div className="ad-header-actions">
                         {(activeView === 'registrations' || activeView === 'bibs') && (
-                            <button className="ad-hbtn ad-hbtn-ghost" onClick={handleDownloadBibNumbers} disabled={isPrintingBibs}>
-                                <AiOutlinePrinter /> {isPrintingBibs ? `Generating… ${bibProgress}%` : `${filter.status === 'PAID' ? 'Paid ' : filter.status === 'UNPAID' ? 'Unpaid ' : ''}Bibs PDF`}
-                            </button>
+                            <>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 3 }}>
+                                    <button className="ad-hbtn ad-hbtn-ghost" onClick={handleServerGenerateBibs} disabled={isServerGeneratingBibs || isPrintingBibs} title="Generate PDF on server — no browser memory limits">
+                                        <AiOutlinePrinter />
+                                        {isServerGeneratingBibs && serverBibProgress
+                                            ? `${serverBibProgress.pct}% (${serverBibProgress.processed}/${serverBibProgress.total})`
+                                            : isServerGeneratingBibs ? 'Starting…' : 'Server PDF'}
+                                    </button>
+                                    {isServerGeneratingBibs && serverBibProgress && (
+                                        <div style={{ height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.15)', overflow: 'hidden' }}>
+                                            <div style={{ height: '100%', width: `${serverBibProgress.pct}%`, background: '#ffffff', borderRadius: 2, transition: 'width 0.3s ease' }} />
+                                        </div>
+                                    )}
+                                </div>
+                                <button className="ad-hbtn ad-hbtn-ghost" onClick={handleDownloadBibNumbers} disabled={isPrintingBibs || isServerGeneratingBibs} title="Generate PDF in browser (legacy)">
+                                    <AiOutlinePrinter /> {isPrintingBibs ? `Generating… ${bibProgress}%` : `${filter.status === 'PAID' ? 'Paid ' : filter.status === 'UNPAID' ? 'Unpaid ' : ''}Bibs PDF`}
+                                </button>
+                            </>
                         )}
                         {activeView === 'registrations' && (
                             <button className="ad-hbtn ad-hbtn-primary" onClick={handleExport}>
