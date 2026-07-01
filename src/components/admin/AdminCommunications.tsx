@@ -284,7 +284,7 @@ export const AdminCommunications: React.FC = () => {
                         <div className="ad-filter-group">
                             <label className="ad-filter-label">Message Content</label>
                             <div style={{ fontSize: '0.75rem', color: 'var(--ad-t3)', marginBottom: '6px' }}>
-                                Variables: <code>{'{firstName}'}</code>, <code>{'{lastName}'}</code>, <code>{'{idNumber}'}</code>, <code>{'{bibNumber}'}</code>
+                                Variables: <code>{'{firstName}'}</code>, <code>{'{lastName}'}</code>, <code>{'{bibNumber}'}</code>
                             </div>
                             <textarea 
                                 className="ad-input" 
