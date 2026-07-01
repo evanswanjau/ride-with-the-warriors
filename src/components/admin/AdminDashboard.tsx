@@ -80,8 +80,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [isReferralModalOpen, setIsReferralModalOpen] = useState(false);
     const [editingReferral, setEditingReferral] = useState<any>(null);
     const [newReferral, setNewReferral] = useState({ code: '', influencerName: '', influencerEmail: '', influencerPhone: '' });
-    const [analyticsDateFrom, setAnalyticsDateFrom] = useState('2026-01-01');
-    const [analyticsDateTo, setAnalyticsDateTo] = useState('');
+    const [revenueChartRange, setRevenueChartRange] = useState<'7d' | '30d' | '6m'>('30d');
+    const [regChartRange, setRegChartRange] = useState<'7d' | '30d' | '6m'>('30d');
+    const [statusChartRange, setStatusChartRange] = useState<'7d' | '30d' | '6m'>('30d');
     const [paymentsTypeFilter, setPaymentsTypeFilter] = useState('');
 
     const dm = isDarkMode;
@@ -124,7 +125,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         else if (activeView === 'donations') fetchDonations(debouncedDonationSearch);
     }, [
         filter.circuitId, filter.type, filter.status, filter.category, filter.isMilitary, filter.dateFrom, debouncedSearch,
-        pagination.page, activeView, analyticsDateFrom, analyticsDateTo,
+        pagination.page, activeView,
         paymentsFilter.status, paymentsFilter.dateFrom, paymentsFilter.dateTo, debouncedPaymentSearch,
         paymentsPagination.page,
         raffleFilter.status, debouncedRaffleSearch, raffleFilter.referralCode,
@@ -140,15 +141,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     }, [activeView, debouncedReferralSearch, referralsPagination.page, referralsFilter.status]);
 
     const fetchDashboardStats = async () => {
-        try {
-            setLoading(true);
-            const p = new URLSearchParams();
-            if (analyticsDateFrom) p.set('dateFrom', analyticsDateFrom);
-            if (analyticsDateTo) p.set('dateTo', analyticsDateTo);
-            const r = await fetch(`${API_BASE_URL}/admin/dashboard?${p}`, { headers: { Authorization: `Bearer ${token}` } });
-            if (!r.ok) throw new Error();
-            setDashboardData(await r.json());
-        } catch { setError('Failed to load dashboard'); } finally { setLoading(false); }
+        try { setLoading(true); const r = await fetch(`${API_BASE_URL}/admin/dashboard`, { headers: { Authorization: `Bearer ${token}` } }); if (!r.ok) throw new Error(); setDashboardData(await r.json()); } catch { setError('Failed to load dashboard'); } finally { setLoading(false); }
     };
     const fetchData = async (overrideSearch?: string) => {
         try {
@@ -893,8 +886,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 .ad-panel-rel { position: relative; }
                 .ad-loading-overlay {
                     position: absolute; inset: 0;
-                    background: rgba(var(--ad-bg-rgb, 10,10,10), 0.5);
-                    backdrop-filter: blur(4px);
+                    background: rgba(var(--ad-bg-rgb), 0.82);
                     display: flex; align-items: center; justify-content: center;
                     z-index: 50; transition: opacity 0.3s;
                 }
@@ -917,12 +909,6 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         <span className="ad-header-title">Admin Workspace &mdash; {admin?.name}</span>
                     </div>
                     <div className="ad-header-actions">
-                        {activeView === 'payments' && (
-                            <>
-                                <button className="ad-hbtn ad-hbtn-ghost" onClick={() => handleExportPayments('csv')}>Export CSV</button>
-                                <button className="ad-hbtn ad-hbtn-primary" onClick={() => handleExportPayments('excel')}><AiOutlineTable /> Export Excel</button>
-                            </>
-                        )}
 
                         <button className="ad-hbtn ad-hbtn-icon" onClick={() => setIsDarkMode(!dm)} title="Toggle theme">
                             {dm ? <AiOutlineSun /> : <AiOutlineMoon />}
@@ -992,11 +978,20 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <div className="ad-panel-title">Daily Revenue</div>
                                                 <div className="ad-panel-val">KES {totalRevenue.toLocaleString()}</div>
                                             </div>
-                                            <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ad-pl)' }}>30-day window</span>
+                                            <div style={{ display: 'flex', gap: 8 }}>
+                                                {(['7d', '30d', '6m'] as const).map(r => {
+                                                    const active = revenueChartRange === r;
+                                                    return (
+                                                        <button key={r} onClick={() => setRevenueChartRange(r)} style={{ padding: '5px 10px', border: '1px solid', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.15s', background: active ? 'var(--ad-pl)' : 'transparent', color: active ? '#fff' : 'var(--ad-t3)', borderColor: active ? 'var(--ad-pl)' : 'var(--ad-border)', clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%)' }}>
+                                                            {r === '7d' ? '7D' : r === '30d' ? '30D' : '6M'}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
                                         <div className="ad-panel-body">
                                             <ResponsiveContainer width="100%" height={240}>
-                                                <AreaChart data={d?.dailyStats || []}>
+                                                <AreaChart data={(d?.dailyStats || []).slice(revenueChartRange === '7d' ? -7 : revenueChartRange === '30d' ? -30 : undefined)}>
                                                     <defs>
                                                         <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
                                                             <stop offset="5%" stopColor="#4caf50" stopOpacity={0.22} />
@@ -1004,7 +999,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                         </linearGradient>
                                                     </defs>
                                                     <CartesianGrid strokeDasharray="2 4" vertical={false} stroke="var(--ad-border)" />
-                                                    <XAxis dataKey="date" tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} axisLine={false} tickLine={false} interval={4} />
+                                                    <XAxis dataKey="date" tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} axisLine={false} tickLine={false} interval={revenueChartRange === '7d' ? 0 : revenueChartRange === '30d' ? 4 : 29} tickFormatter={revenueChartRange === '6m' ? (v: string) => v.split(' ')[0] : undefined} />
                                                     <YAxis tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} axisLine={false} tickLine={false} tickFormatter={v => `${v / 1000}k`} />
                                                     <Tooltip contentStyle={ttStyle} />
                                                     <Area type="monotone" dataKey="revenue" stroke="#4caf50" strokeWidth={2} fill="url(#revGrad)" dot={false} />
@@ -1169,36 +1164,34 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         {/* ════════════════════════════════════════════ ANALYTICS ══ */}
                         {activeView === 'analytics' && (
                             <>
-                                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-                                    <div>
-                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Deep Dive</span></div>
-                                        <div className="ad-page-title">Analytics</div>
-                                    </div>
-                                    <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', flexWrap: 'wrap' }}>
-                                        <div className="ad-filter-group">
-                                            <label className="ad-filter-label">From</label>
-                                            <input className="ad-input" type="date" value={analyticsDateFrom} onChange={e => setAnalyticsDateFrom(e.target.value)} min="2026-01-01" style={{ minWidth: 130 }} />
-                                        </div>
-                                        <div className="ad-filter-group">
-                                            <label className="ad-filter-label">To</label>
-                                            <input className="ad-input" type="date" value={analyticsDateTo} onChange={e => setAnalyticsDateTo(e.target.value)} style={{ minWidth: 130 }} />
-                                        </div>
-                                    </div>
+                                <div>
+                                    <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Deep Dive</span></div>
+                                    <div className="ad-page-title">Analytics</div>
                                 </div>
 
                                 {/* Registrations + Payments dual line */}
                                 <div className="ad-panel">
                                     <div className="ad-panel-head">
                                         <div>
-                                            <div className="ad-panel-title">Registrations vs Paid — 30 Day</div>
+                                            <div className="ad-panel-title">Registrations vs Paid</div>
                                             <div className="ad-panel-val">Daily volume comparison</div>
+                                        </div>
+                                        <div style={{ display: 'flex', gap: 8 }}>
+                                            {(['7d', '30d', '6m'] as const).map(r => {
+                                                const active = regChartRange === r;
+                                                return (
+                                                    <button key={r} onClick={() => setRegChartRange(r)} style={{ padding: '5px 10px', border: '1px solid', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.15s', background: active ? 'var(--ad-pl)' : 'transparent', color: active ? '#fff' : 'var(--ad-t3)', borderColor: active ? 'var(--ad-pl)' : 'var(--ad-border)', clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%)' }}>
+                                                        {r === '7d' ? '7D' : r === '30d' ? '30D' : '6M'}
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                     <div className="ad-panel-body">
                                         <ResponsiveContainer width="100%" height={280}>
-                                            <ComposedChart data={d?.dailyStats || []}>
+                                            <ComposedChart data={(d?.dailyStats || []).slice(regChartRange === '7d' ? -7 : regChartRange === '30d' ? -30 : undefined)}>
                                                 <CartesianGrid strokeDasharray="2 4" vertical={false} stroke="var(--ad-border)" />
-                                                <XAxis dataKey="date" tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} axisLine={false} tickLine={false} interval={4} />
+                                                <XAxis dataKey="date" tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} axisLine={false} tickLine={false} interval={regChartRange === '7d' ? 0 : regChartRange === '30d' ? 4 : 29} tickFormatter={regChartRange === '6m' ? (v: string) => v.split(' ')[0] : undefined} />
                                                 <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} />
                                                 <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} tickFormatter={v => `${v / 1000}k`} />
                                                 <Tooltip contentStyle={ttStyle} />
@@ -1214,16 +1207,28 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 {/* Status trend + Hourly heatmap */}
                                 <div className="ad-chart-2">
                                     <div className="ad-panel">
-                                        <div className="ad-panel-head"><div className="ad-panel-title">Status Breakdown — 14 Day</div></div>
+                                        <div className="ad-panel-head">
+                                            <div className="ad-panel-title">Status Breakdown</div>
+                                            <div style={{ display: 'flex', gap: 8 }}>
+                                                {(['7d', '30d', '6m'] as const).map(r => {
+                                                    const active = statusChartRange === r;
+                                                    return (
+                                                        <button key={r} onClick={() => setStatusChartRange(r)} style={{ padding: '5px 10px', border: '1px solid', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.15s', background: active ? 'var(--ad-pl)' : 'transparent', color: active ? '#fff' : 'var(--ad-t3)', borderColor: active ? 'var(--ad-pl)' : 'var(--ad-border)', clipPath: 'polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%)' }}>
+                                                            {r === '7d' ? '7D' : r === '30d' ? '30D' : '6M'}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
                                         <div className="ad-panel-body">
                                             <ResponsiveContainer width="100%" height={220}>
-                                                <AreaChart data={d?.statusTrend || []}>
+                                                <AreaChart data={(d?.statusTrend || []).slice(statusChartRange === '7d' ? -7 : statusChartRange === '30d' ? -30 : undefined)}>
                                                     <defs>
                                                         <linearGradient id="gPaid" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#4caf50" stopOpacity={0.2} /><stop offset="95%" stopColor="#4caf50" stopOpacity={0} /></linearGradient>
                                                         <linearGradient id="gUnpaid" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#f59e0b" stopOpacity={0.15} /><stop offset="95%" stopColor="#f59e0b" stopOpacity={0} /></linearGradient>
                                                     </defs>
                                                     <CartesianGrid strokeDasharray="2 4" vertical={false} stroke="var(--ad-border)" />
-                                                    <XAxis dataKey="date" tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} axisLine={false} tickLine={false} />
+                                                    <XAxis dataKey="date" tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} axisLine={false} tickLine={false} interval={statusChartRange === '7d' ? 0 : statusChartRange === '30d' ? 4 : 29} tickFormatter={statusChartRange === '6m' ? (v: string) => v.split(' ')[0] : undefined} />
                                                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} />
                                                     <Tooltip contentStyle={ttStyle} />
                                                     <Legend wrapperStyle={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }} />
@@ -1466,9 +1471,12 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         {/* ═══════════════════════════════════════════ PAYMENTS ══ */}
                         {activeView === 'payments' && (
                             <>
-                                <div>
-                                    <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Transactions</span></div>
-                                    <div className="ad-page-title">Payments</div>
+                                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                                    <div>
+                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Transactions</span></div>
+                                        <div className="ad-page-title" style={{ marginBottom: 0 }}>Payments</div>
+                                    </div>
+                                    <button className="ad-btn ad-btn-primary" onClick={() => handleExportPayments('excel')}><AiOutlineTable /> Export Excel</button>
                                 </div>
                                 {paymentsStats?.summary && (
                                     <div className="ad-kpi-grid">
@@ -1694,7 +1702,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             <AiOutlinePrinter />
                                             {isServerGeneratingBibs && serverBibProgress
                                                 ? `${serverBibProgress.pct}% (${serverBibProgress.processed}/${serverBibProgress.total})`
-                                                : isServerGeneratingBibs ? 'Starting…' : 'Generate PDF'}
+                                                : isServerGeneratingBibs ? 'Starting…' : 'Generate Bibs'}
                                         </button>
                                         {isServerGeneratingBibs && serverBibProgress && (
                                             <div style={{ height: 3, borderRadius: 2, background: 'var(--ad-border2)', overflow: 'hidden' }}>
