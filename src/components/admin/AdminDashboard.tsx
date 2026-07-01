@@ -80,6 +80,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [isReferralModalOpen, setIsReferralModalOpen] = useState(false);
     const [editingReferral, setEditingReferral] = useState<any>(null);
     const [newReferral, setNewReferral] = useState({ code: '', influencerName: '', influencerEmail: '', influencerPhone: '' });
+    const [analyticsDateFrom, setAnalyticsDateFrom] = useState('2026-01-01');
+    const [analyticsDateTo, setAnalyticsDateTo] = useState('');
+    const [paymentsTypeFilter, setPaymentsTypeFilter] = useState('');
 
     const dm = isDarkMode;
 
@@ -121,7 +124,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         else if (activeView === 'donations') fetchDonations(debouncedDonationSearch);
     }, [
         filter.circuitId, filter.type, filter.status, filter.category, filter.isMilitary, filter.dateFrom, debouncedSearch,
-        pagination.page, activeView,
+        pagination.page, activeView, analyticsDateFrom, analyticsDateTo,
         paymentsFilter.status, paymentsFilter.dateFrom, paymentsFilter.dateTo, debouncedPaymentSearch,
         paymentsPagination.page,
         raffleFilter.status, debouncedRaffleSearch, raffleFilter.referralCode,
@@ -137,7 +140,15 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     }, [activeView, debouncedReferralSearch, referralsPagination.page, referralsFilter.status]);
 
     const fetchDashboardStats = async () => {
-        try { setLoading(true); const r = await fetch(`${API_BASE_URL}/admin/dashboard`, { headers: { Authorization: `Bearer ${token}` } }); if (!r.ok) throw new Error(); setDashboardData(await r.json()); } catch { setError('Failed to load dashboard'); } finally { setLoading(false); }
+        try {
+            setLoading(true);
+            const p = new URLSearchParams();
+            if (analyticsDateFrom) p.set('dateFrom', analyticsDateFrom);
+            if (analyticsDateTo) p.set('dateTo', analyticsDateTo);
+            const r = await fetch(`${API_BASE_URL}/admin/dashboard?${p}`, { headers: { Authorization: `Bearer ${token}` } });
+            if (!r.ok) throw new Error();
+            setDashboardData(await r.json());
+        } catch { setError('Failed to load dashboard'); } finally { setLoading(false); }
     };
     const fetchData = async (overrideSearch?: string) => {
         try {
@@ -263,6 +274,19 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (r.ok) fetchRaffleTickets();
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    const handleDeleteDonation = async (id: string) => {
+        if (!confirm('Delete this donation?')) return;
+        try {
+            const r = await fetch(`${API_BASE_URL}/admin/donations/${id}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (r.ok) fetchDonations();
         } catch (e) {
             console.error(e);
         }
@@ -893,23 +917,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         <span className="ad-header-title">Admin Workspace &mdash; {admin?.name}</span>
                     </div>
                     <div className="ad-header-actions">
-                        {activeView === 'registrations' && (
-                            <button className="ad-hbtn ad-hbtn-primary" onClick={handleExport}>
-                                <AiOutlineTable /> Export Excel
-                            </button>
-                        )}
                         {activeView === 'payments' && (
                             <>
                                 <button className="ad-hbtn ad-hbtn-ghost" onClick={() => handleExportPayments('csv')}>Export CSV</button>
                                 <button className="ad-hbtn ad-hbtn-primary" onClick={() => handleExportPayments('excel')}><AiOutlineTable /> Export Excel</button>
-                            </>
-                        )}
-                        {activeView === 'raffle' && (
-                            <>
-                                <button className="ad-hbtn ad-hbtn-ghost" onClick={handleExportRaffle}>Export Excel</button>
-                                <button className="ad-hbtn ad-hbtn-primary" onClick={handleDownloadRaffleTickets} disabled={isPrintingRaffle}>
-                                    <AiOutlinePrinter /> {isPrintingRaffle ? 'Generating…' : 'Generate Tickets'}
-                                </button>
                             </>
                         )}
 
@@ -1082,7 +1093,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 </div>
                                             ))}
                                             <div className="ad-insight" style={{ marginTop: 8 }}>
-                                                Minimum lady-per-team rules are on track. <strong>Female participation at {d?.demographics?.genderBreakdown?.find((g: any) => g.label === 'Female')?.pct || 0}%</strong>.
+                                                Minimum lady-per-team rules are on track. <strong>Female participation at {d?.demographics?.genderBreakdown?.find((g: any) => g.label?.toLowerCase() === 'female')?.pct ?? 0}%</strong>.
                                             </div>
                                         </div>
                                     </div>
@@ -1158,9 +1169,21 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         {/* ════════════════════════════════════════════ ANALYTICS ══ */}
                         {activeView === 'analytics' && (
                             <>
-                                <div>
-                                    <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Deep Dive</span></div>
-                                    <div className="ad-page-title">Analytics</div>
+                                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+                                    <div>
+                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Deep Dive</span></div>
+                                        <div className="ad-page-title">Analytics</div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', flexWrap: 'wrap' }}>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">From</label>
+                                            <input className="ad-input" type="date" value={analyticsDateFrom} onChange={e => setAnalyticsDateFrom(e.target.value)} min="2026-01-01" style={{ minWidth: 130 }} />
+                                        </div>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">To</label>
+                                            <input className="ad-input" type="date" value={analyticsDateTo} onChange={e => setAnalyticsDateTo(e.target.value)} style={{ minWidth: 130 }} />
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Registrations + Payments dual line */}
@@ -1305,9 +1328,12 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         {/* ════════════════════════════════════════ REGISTRATIONS ══ */}
                         {activeView === 'registrations' && (
                             <>
-                                <div>
-                                    <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Participants</span></div>
-                                    <div className="ad-page-title">Registrations</div>
+                                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                                    <div>
+                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Participants</span></div>
+                                        <div className="ad-page-title" style={{ marginBottom: 0 }}>Registrations</div>
+                                    </div>
+                                    <button className="ad-btn ad-btn-primary" onClick={handleExport}><AiOutlineTable /> Export Excel</button>
                                 </div>
 
                                 {/* Mini KPIs */}
@@ -1479,6 +1505,15 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             <label className="ad-filter-label">To</label>
                                             <input className="ad-input" type="date" value={paymentsFilter.dateTo} onChange={e => setPaymentsFilter({ ...paymentsFilter, dateTo: e.target.value })} style={{ minWidth: 130 }} />
                                         </div>
+                                        <div className="ad-filter-group">
+                                            <label className="ad-filter-label">Type</label>
+                                            <select className="ad-select" value={paymentsTypeFilter} onChange={e => setPaymentsTypeFilter(e.target.value)}>
+                                                <option value="">All Types</option>
+                                                <option value="cycling">Cycling</option>
+                                                <option value="raffle">Raffle</option>
+                                                <option value="donation">Donation</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div className="ad-panel-rel">
                                         {loading && (
@@ -1490,9 +1525,16 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             <table className="ad-table">
                                                 <thead><tr>{['Transaction Code', 'Phone', 'Amount', 'Status', 'Timestamp', 'Context / ID', 'Link'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                 <tbody>
-                                                    {loading && payments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>Loading…</td></tr>
-                                                        : payments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>No payments found.</td></tr>
-                                                            : payments.map((p: any) => (
+                                                    {(() => {
+                                                        const filteredPayments = paymentsTypeFilter === '' ? payments : payments.filter((p: any) => {
+                                                            if (paymentsTypeFilter === 'cycling') return !!p.registrationId;
+                                                            if (paymentsTypeFilter === 'raffle') return p.raffleTicketIds?.length > 0;
+                                                            if (paymentsTypeFilter === 'donation') return !!p.donationId;
+                                                            return true;
+                                                        });
+                                                        return loading && payments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>Loading…</td></tr>
+                                                        : filteredPayments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>No payments found.</td></tr>
+                                                            : filteredPayments.map((p: any) => (
                                                                 <tr key={p.id} className="ad-tr">
                                                                     <td className="ad-td ad-mono">{p.mpesaReceiptNumber || '—'}</td>
                                                                     <td className="ad-td">{p.phone || '—'}</td>
@@ -1506,11 +1548,12 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                                     </td>
                                                                     <td className="ad-td">
                                                                         {p.registrationId && <a href={`${SITE_URL}/profile/${p.registrationId}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a>}
-                                                                        {(p.raffleTicketIds && p.raffleTicketIds.length > 0) && <a href={`${SITE_URL}/raffle/ticket/${p.raffleTicketIds[0]}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-accent)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>Tix &rarr;</a>}
+                                                                        {(p.raffleTicketIds && p.raffleTicketIds.length > 0) && <a href={`${SITE_URL}/raffle/profile/${p.raffleTicketIds[0]}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-accent)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>Tix &rarr;</a>}
                                                                         {p.donationId && <span style={{ color: 'var(--ad-t3)', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase' }}>Donation</span>}
                                                                     </td>
                                                                 </tr>
-                                                            ))}
+                                                            ));
+                                                    })()}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -1530,9 +1573,17 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                         {/* ══════════════════════════════════════════════ RAFFLE ══ */}
                         {activeView === 'raffle' && (
                             <>
-                                <div>
-                                    <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Engagement</span></div>
-                                    <div className="ad-page-title">Raffle Tickets</div>
+                                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                                    <div>
+                                        <div className="ad-section-head"><div className="ad-section-line" /><span className="ad-section-eyebrow">Engagement</span></div>
+                                        <div className="ad-page-title" style={{ marginBottom: 0 }}>Raffle Tickets</div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: 10 }}>
+                                        <button className="ad-btn ad-btn-ghost" onClick={handleExportRaffle}><AiOutlineTable /> Export Excel</button>
+                                        <button className="ad-btn ad-btn-primary" onClick={handleDownloadRaffleTickets} disabled={isPrintingRaffle}>
+                                            <AiOutlinePrinter /> {isPrintingRaffle ? 'Generating…' : 'Generate Tickets'}
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="ad-kpi-grid" style={{ marginBottom: 24 }}>
@@ -1758,6 +1809,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         {[
                                             { label: 'Total Count', val: donationsStats.summary.totalCount, cls: '' },
                                             { label: 'Paid Count', val: donationsStats.summary.paidCount, cls: 'green' },
+                                            { label: 'Unpaid Count', val: donationsStats.summary.unpaidCount ?? 0, cls: 'amber' },
                                             { label: 'Total Revenue', val: `KES ${(donationsStats.summary.totalAmount || 0).toLocaleString()}`, cls: 'green' },
                                         ].map(k => (
                                             <div key={k.label} className="ad-kpi">
@@ -1770,14 +1822,14 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
 
                                 <div className="ad-panel">
                                     <div className="ad-filters">
-                                        <div className="ad-filter-group">
+                                        <div className="ad-filter-group" style={{ flex: 1 }}>
                                             <label className="ad-filter-label">Search</label>
                                             <div className="ad-search-wrap">
                                                 <AiOutlineSearch className="ad-search-icon" />
                                                 <input className="ad-input" type="text" value={donationsFilter.search} onChange={e => setDonationsFilter({ ...donationsFilter, search: e.target.value })} placeholder="Name, email, phone or code…" />
                                             </div>
                                         </div>
-                                        <div className="ad-filter-group">
+                                        <div className="ad-filter-group" style={{ marginLeft: 'auto' }}>
                                             <label className="ad-filter-label">Status</label>
                                             <select className="ad-select" value={donationsFilter.status} onChange={e => setDonationsFilter({ ...donationsFilter, status: e.target.value })}>
                                                 <option value="">All</option><option value="PAID">Paid</option><option value="PENDING">Pending</option><option value="FAILED">Failed</option>
@@ -1798,7 +1850,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         ) : (
                                             <div className="ad-table-wrap">
                                                 <table className="ad-table">
-                                                    <thead><tr>{['#', 'Donor', 'Contact Info', 'Amount', 'Status', 'M-Pesa Code', 'Date'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                    <thead><tr>{['#', 'Donor', 'Contact Info', 'Amount', 'Status', 'M-Pesa Code', 'Date', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                     <tbody>
                                                         {donations.map((d: any, index: number) => (
                                                             <tr key={d.id} className="ad-tr">
@@ -1818,6 +1870,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                                 </td>
                                                                 <td className="ad-td ad-mono" style={{ fontSize: '0.78rem' }}>{d.mpesaCode || '—'}</td>
                                                                 <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{formatDate(d.createdAt)}</td>
+                                                                <td className="ad-td" style={{ textAlign: 'right' }}>
+                                                                    <button onClick={() => handleDeleteDonation(d.id)} style={{ background: 'none', border: '1px solid var(--ad-border)', color: 'var(--ad-t3)', padding: '5px 8px', cursor: 'pointer', fontSize: '0.95rem', transition: 'border-color 0.2s, color 0.2s' }} title="Delete" onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-red)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-red)'; }} onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--ad-border)'; (e.currentTarget as HTMLButtonElement).style.color = 'var(--ad-t3)'; }}>
+                                                                        <AiOutlineDelete />
+                                                                    </button>
+                                                                </td>
                                                             </tr>
                                                         ))}
                                                     </tbody>

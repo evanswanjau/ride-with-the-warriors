@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../../config';
-import { 
+import {
     AiOutlineSearch,
     AiOutlineReload,
     AiOutlineExclamationCircle,
+    AiOutlineLeft,
+    AiOutlineRight,
 } from 'react-icons/ai';
 
 interface BikeHire {
@@ -28,6 +30,8 @@ const AdminBikeHires = () => {
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('ALL');
+    const [hiresPage, setHiresPage] = useState(1);
+    const HIRES_LIMIT = 10;
 
     const fetchHires = async () => {
         setLoading(true);
@@ -80,13 +84,15 @@ const AdminBikeHires = () => {
     };
 
     const filteredHires = hires.filter(h => {
-        const matchesSearch = 
+        const matchesSearch =
             h.registration.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             h.registration.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             h.registrationId.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesStatus = statusFilter === 'ALL' || h.status === statusFilter;
         return matchesSearch && matchesStatus;
     });
+
+    useEffect(() => { setHiresPage(1); }, [searchTerm, statusFilter]);
 
     return (
         <>
@@ -107,6 +113,7 @@ const AdminBikeHires = () => {
                     { label: 'Paid & Ready', val: hires.filter(h => h.status === 'PAID').length, cls: 'green' },
                     { label: 'Out for Use', val: hires.filter(h => h.status === 'COLLECTED').length, cls: 'blue' },
                     { label: 'Returned', val: hires.filter(h => h.status === 'RETURNED').length, cls: 'gray' },
+                    { label: 'Total Revenue', val: `KES ${hires.filter(h => h.status === 'PAID' || h.status === 'COLLECTED' || h.status === 'RETURNED').reduce((sum, h) => sum + (h.amount || 0), 0).toLocaleString()}`, cls: 'green' },
                 ].map((stat, i) => (
                     <div key={i} className="ad-kpi">
                         <div className="ad-kpi-label">{stat.label}</div>
@@ -165,17 +172,18 @@ const AdminBikeHires = () => {
                             No bike hire requests found.
                         </div>
                     ) : (
+                        <>
                         <div className="ad-table-wrap">
                             <table className="ad-table">
                                 <thead>
                                     <tr>
-                                        {['Participant', 'Contact', 'Reg ID', 'Status', 'Actions'].map(h => (
+                                        {['Participant', 'Contact', 'Reg ID', 'Amount', 'Status', 'Actions'].map(h => (
                                             <th key={h} className="ad-th">{h}</th>
                                         ))}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredHires.map((hire) => (
+                                    {filteredHires.slice((hiresPage - 1) * HIRES_LIMIT, hiresPage * HIRES_LIMIT).map((hire) => (
                                         <tr key={hire.id} className="ad-tr">
                                             <td className="ad-td">
                                                 <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{hire.registration.firstName} {hire.registration.lastName}</div>
@@ -187,6 +195,9 @@ const AdminBikeHires = () => {
                                             </td>
                                             <td className="ad-td ad-mono">
                                                 {hire.registrationId}
+                                            </td>
+                                            <td className="ad-td" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1rem', color: 'var(--ad-pl)' }}>
+                                                KES {(hire.amount || 0).toLocaleString()}
                                             </td>
                                             <td className="ad-td">
                                                 <select className="ad-status-select" value={hire.status} onChange={(e) => updateStatus(hire.id, e.target.value)} style={{ color: hire.status === 'PAID' ? 'var(--ad-pl)' : hire.status === 'COLLECTED' ? 'var(--ad-accent)' : hire.status === 'RETURNED' ? 'var(--ad-t3)' : 'var(--ad-t2)' }}>
@@ -204,6 +215,15 @@ const AdminBikeHires = () => {
                                 </tbody>
                             </table>
                         </div>
+                        <div className="ad-pagination" style={{ marginTop: 20 }}>
+                            <span className="ad-page-info">Showing {Math.min((hiresPage - 1) * HIRES_LIMIT + 1, filteredHires.length)}–{Math.min(hiresPage * HIRES_LIMIT, filteredHires.length)} of {filteredHires.length}</span>
+                            <div className="ad-page-btns">
+                                <button className="ad-page-btn" onClick={() => setHiresPage(p => Math.max(1, p - 1))} disabled={hiresPage === 1}><AiOutlineLeft /> Prev</button>
+                                <span className="ad-page-cur">Page {hiresPage} / {Math.max(1, Math.ceil(filteredHires.length / HIRES_LIMIT))}</span>
+                                <button className="ad-page-btn" onClick={() => setHiresPage(p => Math.min(Math.ceil(filteredHires.length / HIRES_LIMIT), p + 1))} disabled={hiresPage >= Math.ceil(filteredHires.length / HIRES_LIMIT)}>Next <AiOutlineRight /></button>
+                            </div>
+                        </div>
+                        </>
                     )}
                 </div>
             </div>
