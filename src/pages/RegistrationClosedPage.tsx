@@ -66,8 +66,8 @@ const RegistrationClosedPage = () => {
                     <Link to="/raffle/step/1" className="shimmer-btn shimmer-btn--amber">
                         Purchase a Raffle Ticket
                     </Link>
-                    <Link to="/circuits" className="shimmer-btn shimmer-btn--ghost">
-                        Learn More
+                    <Link to="/register/notify" className="shimmer-btn shimmer-btn--ghost">
+                        Notify Me for 2027
                     </Link>
                 </div>
 

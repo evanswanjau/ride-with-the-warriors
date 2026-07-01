@@ -11,6 +11,7 @@ import Faqs from './pages/Faqs';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import RegistrationClosedPage from './pages/RegistrationClosedPage';
+import NotifyPage from './pages/NotifyPage';
 import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
 import SearchPage from './pages/SearchPage';
@@ -56,6 +57,7 @@ const App = () => {
 
         {/* Registration Flow — closed; redirect all register paths to closed page */}
         <Route path="/register/closed" element={<RegistrationClosedPage />} />
+        <Route path="/register/notify" element={<NotifyPage />} />
         <Route path="/register/*" element={<RegistrationClosedPage />} />
         <Route path="/military/register/*" element={<RegistrationClosedPage />} />
 

@@ -18,6 +18,11 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
         navigate('/raffle/step/1');
     };
 
+    const handleNotify = () => {
+        onClose();
+        navigate('/register/notify');
+    };
+
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
             if (e.key === 'Escape') handleDismiss();
@@ -125,11 +130,11 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
                         Purchase a Raffle Ticket
                     </button>
                     <button
-                        onClick={handleDismiss}
+                        onClick={handleNotify}
                         className="shimmer-btn shimmer-btn--ghost"
                         style={{ width: '100%', justifyContent: 'center', border: '1px solid var(--p-border-2)', cursor: 'pointer' }}
                     >
-                        Learn More
+                        Notify Me for 2027
                     </button>
                 </div>
             </div>
