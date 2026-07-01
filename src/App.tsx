@@ -10,7 +10,7 @@ import Gallery from './pages/Gallery';
 import Faqs from './pages/Faqs';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
-import RegisterPage from './pages/RegisterPage';
+import RegistrationClosedPage from './pages/RegistrationClosedPage';
 import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
 import SearchPage from './pages/SearchPage';
@@ -54,9 +54,10 @@ const App = () => {
         <Route path="/faqs" element={<Layout isFullWidth><Faqs /></Layout>} />
         <Route path="/donate" element={<DonatePage />} />
 
-        {/* Registration Flow */}
-        <Route path="/register/step/:stepId" element={<RegisterPage />} />
-        <Route path="/military/register/step/:stepId" element={<RegisterPage />} />
+        {/* Registration Flow — closed; redirect all register paths to closed page */}
+        <Route path="/register/closed" element={<RegistrationClosedPage />} />
+        <Route path="/register/*" element={<RegistrationClosedPage />} />
+        <Route path="/military/register/*" element={<RegistrationClosedPage />} />
 
         {/* Payment & Success */}
         <Route path="/payment/:regId" element={<PaymentPage />} />

@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import RegistrationClosedModal from '../components/common/RegistrationClosedModal';
 import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineTeam, AiOutlineTrophy, AiOutlineTags, AiOutlineArrowRight } from 'react-icons/ai';
 import heroImage from '../assets/images/hero.jpeg';
 import highlightImage1 from '../assets/images/gallery/Ride-With-The-Warriors-2025/296A0069-28-min.jpeg';
@@ -88,6 +89,7 @@ const TestimonialsSection = () => {
 /* ─── Main Component ─────────────────────────────────────────────────────── */
 const HomePage = () => {
     const heroRef = useRef<HTMLImageElement>(null);
+    const [showRegModal, setShowRegModal] = useState(false);
 
     useEffect(() => {
         let ticking = false;
@@ -159,7 +161,7 @@ const HomePage = () => {
                                     <span className="text-white/90 font-semibold"> supporting the widows</span> of our fallen heroes.
                                 </p>
                                 <div className="flex flex-wrap gap-4 md:ml-auto md:pb-1">
-                                    <Link to="/register/step/1" className="shimmer-btn shimmer-btn--primary">Register to Cycle</Link>
+                                    <button onClick={() => setShowRegModal(true)} className="shimmer-btn shimmer-btn--primary" style={{ cursor: 'pointer', border: 'none' }}>Register to Cycle</button>
                                     <Link to="/raffle/step/1" className="shimmer-btn shimmer-btn--amber">Buy Raffle Tickets</Link>
                                 </div>
                             </div>
@@ -479,6 +481,8 @@ const HomePage = () => {
                 </section>
 
             </div>
+
+            {showRegModal && <RegistrationClosedModal onClose={() => setShowRegModal(false)} />}
         </>
     );
 };
