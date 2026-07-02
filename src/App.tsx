@@ -12,6 +12,7 @@ import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
 import RegistrationClosedPage from './pages/RegistrationClosedPage';
 import NotifyPage from './pages/NotifyPage';
+import FeedbackPage from './pages/FeedbackPage';
 import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
 import SearchPage from './pages/SearchPage';
@@ -54,6 +55,7 @@ const App = () => {
         <Route path="/gallery" element={<Layout isFullWidth><Gallery /></Layout>} />
         <Route path="/faqs" element={<Layout isFullWidth><Faqs /></Layout>} />
         <Route path="/donate" element={<DonatePage />} />
+        <Route path="/feedback" element={<FeedbackPage />} />
 
         {/* Registration Flow — closed; redirect all register paths to closed page */}
         <Route path="/register/closed" element={<RegistrationClosedPage />} />
