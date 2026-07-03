@@ -30,7 +30,7 @@ const ProfilePage = () => {
     return (
         <ProfileView
             registration={foundRegistration}
-            onBack={() => navigate('/search')}
+            onBack={() => navigate('/')}
         />
     );
 };

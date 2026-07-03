@@ -372,7 +372,7 @@ const RaffleTicketView = ({ ticket, onBack }: RaffleTicketViewProps) => {
                 <div className="pv-topbar no-print">
                     <button onClick={onBack} className="pv-back-btn">
                         <AiOutlineArrowLeft />
-                        Back to Search
+                        Back to Home
                     </button>
                     <div className="flex items-center gap-3">
                         <button onClick={handleShare} className="pv-action-btn ghost">

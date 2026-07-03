@@ -70,12 +70,13 @@ const ProfileLookup = ({ onFound, onRaffleFound }: ProfileLookupProps) => {
             }
             else if (raffleTicket) { 
                 onRaffleFound(raffleTicket); 
-                // For email or phone searches, it's better to show the consolidated list page
-                if (searchType === 'email' || searchType === 'phone') {
-                    const targetEmail = raffleTicket.email || searchValue.trim();
+                // For email searches we know the real email, so show the consolidated list page.
+                // The email in the response is masked, so it can't be used for navigation.
+                const targetEmail = searchType === 'email' ? searchValue.trim() : raffleTicket.email;
+                if (targetEmail && !targetEmail.includes('****')) {
                     navigate(`/raffle/profile/email/${encodeURIComponent(targetEmail)}`);
                 } else {
-                    navigate(`/raffle/profile/${raffleTicket.id}`); 
+                    navigate(`/raffle/profile/${raffleTicket.id}`);
                 }
             }
             else setError('Nothing found matching your search. Please try again.');

@@ -26,7 +26,7 @@ const RaffleProfilePage = () => {
             .finally(() => setLoading(false));
     }, [id]);
 
-    if (!id) return <Navigate to="/search" replace />;
+    if (!id) return <Navigate to="/" replace />;
 
     if (loading) {
         return (
@@ -52,10 +52,10 @@ const RaffleProfilePage = () => {
                     <h2 className="text-xl font-black text-neutral-900 dark:text-white">Ticket Not Found</h2>
                     <p className="text-sm text-neutral-500 dark:text-neutral-400">{error}</p>
                     <button
-                        onClick={() => navigate('/search')}
+                        onClick={() => navigate('/')}
                         className="px-6 py-3 rounded-2xl bg-primary text-white font-bold text-sm hover:bg-primary-dark transition-all"
                     >
-                        Search Again
+                        Back to Home
                     </button>
                 </div>
             </Layout>
@@ -66,7 +66,7 @@ const RaffleProfilePage = () => {
         <Layout maxWidth="max-w-5xl">
             <RaffleTicketView
                 ticket={ticket}
-                onBack={() => navigate('/search')}
+                onBack={() => navigate('/')}
             />
         </Layout>
     );

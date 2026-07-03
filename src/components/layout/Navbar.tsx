@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import RegistrationClosedModal from '../common/RegistrationClosedModal';
-import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import logoRegular from '../../assets/logos/logo.png';
 import logoWhite from '../../assets/logos/logo_white.png';
 
@@ -518,11 +518,6 @@ const Navbar = () => {
                             <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
                         </button>
 
-                        {/* Search */}
-                        <Link to="/search" className="nav-icon-btn" title="Search Registrations">
-                            <AiOutlineSearch size={16} />
-                        </Link>
-
                         <div className="nav-divider" />
 
                         {/* CTAs */}
@@ -540,10 +535,6 @@ const Navbar = () => {
                         >
                             {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
                         </button>
-                        {/* Search */}
-                        <Link to="/search" className="nav-icon-btn">
-                            <AiOutlineSearch size={16} />
-                        </Link>
                         {/* Hamburger */}
                         <button
                             className="nav-icon-btn"

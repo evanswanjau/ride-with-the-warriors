@@ -718,7 +718,7 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                     <div className="pv-topbar no-print">
                         <button onClick={onBack} className="pv-back-btn">
                             <AiOutlineArrowLeft />
-                            Back to Search
+                            Back to Home
                         </button>
                         <div className="pv-topbar-actions">
                             <button onClick={handleShare} className="pv-action-btn ghost">
@@ -875,8 +875,14 @@ const ProfileView = ({ registration, onBack }: ProfileViewProps) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button 
-                                                onClick={() => navigate(`/raffle/profile/email/${encodeURIComponent(registration.email)}`)}
+                                            <button
+                                                onClick={() => {
+                                                    if (registration.email && !registration.email.includes('****')) {
+                                                        navigate(`/raffle/profile/email/${encodeURIComponent(registration.email)}`);
+                                                    } else if (allRaffleTickets && allRaffleTickets.length > 0) {
+                                                        navigate(`/raffle/profile/${allRaffleTickets[0].id}`);
+                                                    }
+                                                }}
                                                 className="px-3 py-1.5 bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-amber-600 transition-colors flex items-center gap-2"
                                                 style={{ clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))' }}
                                             >

@@ -99,10 +99,10 @@ const RaffleEmailProfilePage = () => {
                     <h2 className="display-heading text-4xl mb-4 text-neutral-900 dark:text-white">No Tickets Found</h2>
                     <p className="text-neutral-500 dark:text-white/60 mb-8 max-w-sm">{error}</p>
                     <button
-                        onClick={() => navigate('/search')}
+                        onClick={() => navigate('/')}
                         className="shimmer-btn shimmer-btn--primary"
                     >
-                        Back to Search
+                        Back to Home
                     </button>
                 </div>
             </Layout>
@@ -171,12 +171,12 @@ const RaffleEmailProfilePage = () => {
     return (
         <Layout maxWidth="max-w-7xl">
             <div className="py-12">
-                <button 
-                    onClick={() => navigate('/search')}
+                <button
+                    onClick={() => navigate('/')}
                     className="flex items-center gap-2 section-label hover:text-primary transition-colors mb-12 group"
                 >
                     <AiOutlineArrowLeft className="group-hover:-translate-x-1 transition-transform" />
-                    Back to Search
+                    Back to Home
                 </button>
 
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">

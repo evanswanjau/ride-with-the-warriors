@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { RegistrationProvider, useRegistration } from './context/RegistrationContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
@@ -15,7 +15,6 @@ import NotifyPage from './pages/NotifyPage';
 import FeedbackPage from './pages/FeedbackPage';
 import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
-import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
 import AdminPage from './pages/AdminPage';
 import RafflePage from './pages/RafflePage';
@@ -67,8 +66,8 @@ const App = () => {
         <Route path="/payment/:regId" element={<PaymentPage />} />
         <Route path="/success/:regId" element={<SuccessPage />} />
 
-        {/* Profile & Search */}
-        <Route path="/search" element={<SearchPage />} />
+        {/* Profile — search is disabled; profiles remain reachable by direct URL */}
+        <Route path="/search" element={<Navigate to="/" replace />} />
         <Route path="/profile/:id" element={<Layout><ProfilePage /></Layout>} />
 
         {/* Raffle Flow */}
