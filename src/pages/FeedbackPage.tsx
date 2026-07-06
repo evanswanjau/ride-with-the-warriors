@@ -15,6 +15,10 @@ const ROLES: { value: Role; label: string; description: string }[] = [
 const RATING_LABELS = ['', 'Poor', 'Fair', 'Good', 'Great', 'Outstanding'];
 
 const FeedbackPage = () => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [notifyFor2027, setNotifyFor2027] = useState(false);
+    const [email, setEmail] = useState('');
     const [role, setRole] = useState<Role | null>(null);
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
@@ -22,6 +26,7 @@ const FeedbackPage = () => {
     const [improvements, setImprovements] = useState('');
     const [status, setStatus] = useState<'idle' | 'submitting' | 'done' | 'error'>('idle');
     const [errorMsg, setErrorMsg] = useState('');
+    const [notifyRegistered, setNotifyRegistered] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,6 +40,11 @@ const FeedbackPage = () => {
             setStatus('error');
             return;
         }
+        if (notifyFor2027 && !email.trim()) {
+            setErrorMsg('Please enter your email to be notified for 2027.');
+            setStatus('error');
+            return;
+        }
         setStatus('submitting');
         setErrorMsg('');
         try {
@@ -44,14 +54,19 @@ const FeedbackPage = () => {
                 body: JSON.stringify({
                     role,
                     rating,
+                    firstName: firstName.trim() || undefined,
+                    lastName: lastName.trim() || undefined,
                     highlights: highlights.trim() || undefined,
                     improvements: improvements.trim() || undefined,
+                    notifyEmail: notifyFor2027 ? email.trim() : undefined,
                 }),
             });
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}));
                 throw new Error(data?.error || 'Something went wrong');
             }
+            const data = await res.json().catch(() => ({}));
+            setNotifyRegistered(Boolean(data?.notifyRegistered));
             setStatus('done');
         } catch (err) {
             setErrorMsg(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
@@ -154,12 +169,17 @@ const FeedbackPage = () => {
                             <p style={{ color: 'var(--p-text-2, rgba(255,255,255,0.58))', fontSize: '0.9rem', lineHeight: 1.6 }}>
                                 Your feedback has been received. It goes straight to the team planning
                                 Ride With The Warriors 2027 — riding with honour, and getting better every year.
+                                {notifyRegistered && (
+                                    <> We'll also email you when registration opens for 2027.</>
+                                )}
                             </p>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-                            <Link to="/register/notify" className="shimmer-btn shimmer-btn--primary">
-                                Notify Me for 2027
-                            </Link>
+                            {!notifyRegistered && (
+                                <Link to="/register/notify" className="shimmer-btn shimmer-btn--primary">
+                                    Notify Me for 2027
+                                </Link>
+                            )}
                             <Link to="/" className="shimmer-btn shimmer-btn--ghost">
                                 Back to Home
                             </Link>
@@ -167,6 +187,32 @@ const FeedbackPage = () => {
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+
+                        {/* Optional name */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                            <div>
+                                <label style={labelStyle}>First Name <span style={{ color: 'var(--p-text-3, rgba(255,255,255,0.33))', fontWeight: 400 }}>(optional)</span></label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. James"
+                                    value={firstName}
+                                    onChange={e => setFirstName(e.target.value)}
+                                    maxLength={100}
+                                    style={inputStyle}
+                                />
+                            </div>
+                            <div>
+                                <label style={labelStyle}>Last Name <span style={{ color: 'var(--p-text-3, rgba(255,255,255,0.33))', fontWeight: 400 }}>(optional)</span></label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Mwangi"
+                                    value={lastName}
+                                    onChange={e => setLastName(e.target.value)}
+                                    maxLength={100}
+                                    style={inputStyle}
+                                />
+                            </div>
+                        </div>
 
                         {/* Stakeholder role */}
                         <div>
@@ -280,6 +326,85 @@ const FeedbackPage = () => {
                                 maxLength={2000}
                                 style={textareaStyle}
                             />
+                        </div>
+
+                        {/* Notify for 2027 */}
+                        <div style={{
+                            padding: '16px',
+                            border: '1px solid var(--p-input-bd, rgba(255,255,255,0.09))',
+                            background: notifyFor2027 ? 'rgba(45,106,45,0.08)' : 'var(--p-input-bg, #0e0e0e)',
+                            transition: 'background 0.15s ease, border-color 0.15s ease',
+                        }}>
+                            <label style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: '16px',
+                                cursor: 'pointer',
+                                marginBottom: notifyFor2027 ? '14px' : 0,
+                            }}>
+                                <span style={{
+                                    fontFamily: "'Barlow Condensed', sans-serif",
+                                    fontSize: '0.85rem', fontWeight: 700,
+                                    letterSpacing: '0.1em', textTransform: 'uppercase',
+                                    color: 'var(--p-text-1, #fff)',
+                                }}>
+                                    Notify Me for 2027
+                                </span>
+                                <button
+                                    type="button"
+                                    role="switch"
+                                    aria-checked={notifyFor2027}
+                                    onClick={() => setNotifyFor2027(v => !v)}
+                                    style={{
+                                        position: 'relative',
+                                        width: '44px',
+                                        height: '24px',
+                                        flexShrink: 0,
+                                        border: '1px solid',
+                                        borderColor: notifyFor2027
+                                            ? 'var(--color-primary-light, #4caf50)'
+                                            : 'var(--p-input-bd, rgba(255,255,255,0.09))',
+                                        background: notifyFor2027
+                                            ? 'var(--color-primary, #2d6a2d)'
+                                            : 'var(--p-input-bg, #0e0e0e)',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.15s ease, border-color 0.15s ease',
+                                        padding: 0,
+                                    }}
+                                >
+                                    <span style={{
+                                        position: 'absolute',
+                                        top: '2px',
+                                        left: notifyFor2027 ? '22px' : '2px',
+                                        width: '18px',
+                                        height: '18px',
+                                        background: '#fff',
+                                        transition: 'left 0.15s ease',
+                                    }} />
+                                </button>
+                            </label>
+                            {notifyFor2027 && (
+                                <div>
+                                    <label style={labelStyle}>Email Address <span style={{ color: 'var(--color-accent, #f59e0b)' }}>*</span></label>
+                                    <input
+                                        type="email"
+                                        placeholder="e.g. james@example.com"
+                                        value={email}
+                                        onChange={e => setEmail(e.target.value)}
+                                        required={notifyFor2027}
+                                        style={inputStyle}
+                                    />
+                                    <p style={{
+                                        margin: '8px 0 0',
+                                        fontSize: '0.78rem',
+                                        lineHeight: 1.5,
+                                        color: 'var(--p-text-2, rgba(255,255,255,0.58))',
+                                    }}>
+                                        We'll let you know when registration opens for the 2027 edition.
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                         {status === 'error' && (

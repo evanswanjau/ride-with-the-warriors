@@ -5,12 +5,12 @@ interface Props {
     onClose: () => void;
 }
 
-const RegistrationClosedModal = ({ onClose }: Props) => {
+const RaffleClosedModal = ({ onClose }: Props) => {
     const navigate = useNavigate();
 
     const handleDismiss = () => {
         onClose();
-        navigate('/register/closed');
+        navigate('/raffle/closed');
     };
 
     const handleFeedback = () => {
@@ -64,7 +64,6 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
                     }
                 `}</style>
 
-                {/* Close button */}
                 <button
                     onClick={handleDismiss}
                     aria-label="Close"
@@ -81,7 +80,6 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
                     ✕
                 </button>
 
-                {/* Eyebrow */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.25rem' }}>
                     <div style={{ height: '1px', width: '24px', background: 'var(--color-accent, #f59e0b)', flexShrink: 0 }} />
                     <span style={{
@@ -90,12 +88,11 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
                         letterSpacing: '0.28em', textTransform: 'uppercase',
                         color: 'var(--color-accent, #f59e0b)',
                     }}>
-                        Registration Closed
+                        Raffle Closed
                     </span>
                     <div style={{ height: '1px', width: '24px', background: 'var(--color-accent, #f59e0b)', flexShrink: 0 }} />
                 </div>
 
-                {/* Heading */}
                 <h2 style={{
                     fontFamily: "'Barlow Condensed', sans-serif",
                     fontSize: '1.7rem', fontWeight: 700,
@@ -103,24 +100,22 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
                     color: 'var(--p-text-1, #fff)',
                     marginBottom: '1rem', lineHeight: 1.2,
                 }}>
-                    Cyclist Registration<br />Is Now Closed
+                    Raffle Ticket Sales<br />Are Now Closed
                 </h2>
 
-                {/* Body */}
                 <p style={{
                     color: 'var(--p-text-2, rgba(255,255,255,0.58))',
                     lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '0.6rem',
                 }}>
-                    Cyclist registration for Ride With The Warriors 2026 has closed.
+                    Raffle ticket sales for Ride With The Warriors 2026 have closed.
                 </p>
                 <p style={{
                     color: 'var(--p-text-2, rgba(255,255,255,0.58))',
                     lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '2rem',
                 }}>
-                    Thank you for your interest. Share your experience and sign up to be notified when registration opens for 2027.
+                    Thank you for your support. Share your experience and sign up to be notified when registration opens for 2027.
                 </p>
 
-                {/* CTAs */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <button
                         onClick={handleFeedback}
@@ -142,4 +137,4 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
     );
 };
 
-export default RegistrationClosedModal;
+export default RaffleClosedModal;

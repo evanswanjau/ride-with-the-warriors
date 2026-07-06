@@ -12,6 +12,8 @@ const metaMap: Record<string, { title: string, description: string }> = {
     '/gallery': { title: 'Gallery', description: 'View incredible photos and highlights from previous Ride With The Warriors events.' },
     '/faqs': { title: 'Frequently Asked Questions', description: 'Find answers to common questions about Ride With The Warriors 2026 registration, routes, and more.' },
     '/feedback': { title: 'Event Feedback', description: 'Share your experience of Ride With The Warriors 2026 — as a cyclist, attendee, sponsor or organiser — and help us make 2027 even better.' },
+    '/register/closed': { title: 'Registration Closed', description: 'Cyclist registration for Ride With The Warriors 2026 has closed. Share your feedback and sign up to be notified for 2027.' },
+    '/raffle/closed': { title: 'Raffle Closed', description: 'Raffle ticket sales for Ride With The Warriors 2026 have closed. Share your feedback and sign up to be notified for 2027.' },
     '/terms-and-conditions': { title: 'Terms & Conditions', description: 'Review the terms and conditions for participating in Ride With The Warriors 2026.' },
     '/privacy-policy': { title: 'Privacy Policy', description: 'Read our privacy policy and understand how we protect your personal data.' },
     '/admin': { title: 'Admin Dashboard', description: 'Ride With The Warriors Admin Dashboard.' },
@@ -40,9 +42,8 @@ const PageTitle = () => {
         description = 'Register for Ride With The Warriors 2026.';
     }
     else if (path.startsWith('/raffle/step/')) {
-        const step = path.split('/').pop();
-        title = `Raffle – Step ${step}`;
-        description = 'Enter the Grand Raffle and win amazing prizes.';
+        title = 'Raffle Closed';
+        description = 'Raffle ticket sales for Ride With The Warriors 2026 have closed.';
     }
     else if (path.startsWith('/payment/')) {
         title = 'Payment';

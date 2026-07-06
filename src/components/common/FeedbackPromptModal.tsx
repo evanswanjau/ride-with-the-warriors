@@ -1,26 +1,24 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+export const FEEDBACK_PROMPT_STORAGE_KEY = 'rwtw-feedback-prompt-dismissed';
+
 interface Props {
     onClose: () => void;
 }
 
-const RegistrationClosedModal = ({ onClose }: Props) => {
+const FeedbackPromptModal = ({ onClose }: Props) => {
     const navigate = useNavigate();
 
     const handleDismiss = () => {
+        localStorage.setItem(FEEDBACK_PROMPT_STORAGE_KEY, '1');
         onClose();
-        navigate('/register/closed');
     };
 
-    const handleFeedback = () => {
+    const handleGoToFeedback = () => {
+        localStorage.setItem(FEEDBACK_PROMPT_STORAGE_KEY, '1');
         onClose();
         navigate('/feedback');
-    };
-
-    const handleNotify = () => {
-        onClose();
-        navigate('/register/notify');
     };
 
     useEffect(() => {
@@ -53,18 +51,17 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
                     background: 'var(--p-card, #141414)',
                     border: '1px solid var(--p-border-2, rgba(255,255,255,0.13))',
                     padding: '2.5rem 2rem 2rem',
-                    animation: 'rcmFadeUp 0.22s cubic-bezier(0.34,1.2,0.64,1) forwards',
+                    animation: 'fpmFadeUp 0.22s cubic-bezier(0.34,1.2,0.64,1) forwards',
                 }}
                 onClick={e => e.stopPropagation()}
             >
                 <style>{`
-                    @keyframes rcmFadeUp {
+                    @keyframes fpmFadeUp {
                         from { opacity: 0; transform: translateY(18px) scale(0.97); }
                         to   { opacity: 1; transform: translateY(0) scale(1); }
                     }
                 `}</style>
 
-                {/* Close button */}
                 <button
                     onClick={handleDismiss}
                     aria-label="Close"
@@ -81,21 +78,19 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
                     ✕
                 </button>
 
-                {/* Eyebrow */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.25rem' }}>
-                    <div style={{ height: '1px', width: '24px', background: 'var(--color-accent, #f59e0b)', flexShrink: 0 }} />
+                    <div style={{ height: '1px', width: '24px', background: 'var(--color-primary-light, #4caf50)', flexShrink: 0 }} />
                     <span style={{
                         fontFamily: "'Barlow Condensed', sans-serif",
                         fontSize: '0.6rem', fontWeight: 700,
                         letterSpacing: '0.28em', textTransform: 'uppercase',
-                        color: 'var(--color-accent, #f59e0b)',
+                        color: 'var(--color-primary-light, #4caf50)',
                     }}>
-                        Registration Closed
+                        Post-Event Survey
                     </span>
-                    <div style={{ height: '1px', width: '24px', background: 'var(--color-accent, #f59e0b)', flexShrink: 0 }} />
+                    <div style={{ height: '1px', width: '24px', background: 'var(--color-primary-light, #4caf50)', flexShrink: 0 }} />
                 </div>
 
-                {/* Heading */}
                 <h2 style={{
                     fontFamily: "'Barlow Condensed', sans-serif",
                     fontSize: '1.7rem', fontWeight: 700,
@@ -103,38 +98,32 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
                     color: 'var(--p-text-1, #fff)',
                     marginBottom: '1rem', lineHeight: 1.2,
                 }}>
-                    Cyclist Registration<br />Is Now Closed
+                    How Was Your<br />Experience?
                 </h2>
 
-                {/* Body */}
-                <p style={{
-                    color: 'var(--p-text-2, rgba(255,255,255,0.58))',
-                    lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '0.6rem',
-                }}>
-                    Cyclist registration for Ride With The Warriors 2026 has closed.
-                </p>
                 <p style={{
                     color: 'var(--p-text-2, rgba(255,255,255,0.58))',
                     lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '2rem',
                 }}>
-                    Thank you for your interest. Share your experience and sign up to be notified when registration opens for 2027.
+                    Thank you for being part of Ride With The Warriors 2026. Whether you rode,
+                    cheered, sponsored or organised — your honest feedback shapes a better ride in 2027.
+                    It takes less than a minute.
                 </p>
 
-                {/* CTAs */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <button
-                        onClick={handleFeedback}
+                        onClick={handleGoToFeedback}
                         className="shimmer-btn shimmer-btn--primary"
                         style={{ width: '100%', justifyContent: 'center', border: 'none', cursor: 'pointer' }}
                     >
                         Share Feedback
                     </button>
                     <button
-                        onClick={handleNotify}
+                        onClick={handleDismiss}
                         className="shimmer-btn shimmer-btn--ghost"
                         style={{ width: '100%', justifyContent: 'center', border: '1px solid var(--p-border-2)', cursor: 'pointer' }}
                     >
-                        Notify Me for 2027
+                        Maybe Later
                     </button>
                 </div>
             </div>
@@ -142,4 +131,4 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
     );
 };
 
-export default RegistrationClosedModal;
+export default FeedbackPromptModal;

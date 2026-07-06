@@ -119,8 +119,8 @@ const NotifyPage = () => {
                             </p>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-                            <Link to="/raffle/step/1" className="shimmer-btn shimmer-btn--amber">
-                                Buy a Raffle Ticket
+                            <Link to="/feedback" className="shimmer-btn shimmer-btn--primary">
+                                Share Feedback
                             </Link>
                             <Link to="/" className="shimmer-btn shimmer-btn--ghost">
                                 Back to Home

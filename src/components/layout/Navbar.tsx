@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import RegistrationClosedModal from '../common/RegistrationClosedModal';
+import RaffleClosedModal from '../common/RaffleClosedModal';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import logoRegular from '../../assets/logos/logo.png';
 import logoWhite from '../../assets/logos/logo_white.png';
@@ -26,6 +27,7 @@ const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [showRegModal, setShowRegModal] = useState(false);
+    const [showRaffleModal, setShowRaffleModal] = useState(false);
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined') {
             return localStorage.getItem('rwtw-theme') || 'dark';
@@ -521,8 +523,9 @@ const Navbar = () => {
                         <div className="nav-divider" />
 
                         {/* CTAs */}
+                        <Link to="/feedback" className="nav-cta black-white">Share Feedback</Link>
                         <button onClick={() => setShowRegModal(true)} className="nav-cta green" style={{ cursor: 'pointer' }}>Register</button>
-                        <Link to="/raffle/step/1" className="nav-cta amber">Raffle Tickets</Link>
+                        <button onClick={() => setShowRaffleModal(true)} className="nav-cta amber" style={{ cursor: 'pointer', border: 'none' }}>Raffle Tickets</button>
                     </div>
 
                     {/* Mobile controls */}
@@ -582,6 +585,13 @@ const Navbar = () => {
 
                 {/* CTAs */}
                 <div className="nav-mobile-ctas">
+                    <Link
+                        to="/feedback"
+                        className="nav-mobile-cta black-white"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Share Feedback
+                    </Link>
                     <button
                         className="nav-mobile-cta green"
                         style={{ cursor: 'pointer', border: 'none' }}
@@ -589,13 +599,13 @@ const Navbar = () => {
                     >
                         Register to Cycle
                     </button>
-                    <Link
-                        to="/raffle/step/1"
+                    <button
                         className="nav-mobile-cta amber"
-                        onClick={() => setIsMenuOpen(false)}
+                        style={{ cursor: 'pointer', border: 'none' }}
+                        onClick={() => { setIsMenuOpen(false); setShowRaffleModal(true); }}
                     >
                         Buy Raffle Tickets
-                    </Link>
+                    </button>
                     <Link
                         to="/donate"
                         className="nav-mobile-cta black-white"
@@ -607,6 +617,7 @@ const Navbar = () => {
             </div>
 
             {showRegModal && <RegistrationClosedModal onClose={() => setShowRegModal(false)} />}
+            {showRaffleModal && <RaffleClosedModal onClose={() => setShowRaffleModal(false)} />}
         </>
     );
 };

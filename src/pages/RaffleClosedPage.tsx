@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const RegistrationClosedPage = () => {
+const RaffleClosedPage = () => {
     return (
         <div style={{
             fontFamily: "'Barlow', sans-serif",
@@ -16,7 +16,6 @@ const RegistrationClosedPage = () => {
                 textAlign: 'center',
             }}>
 
-                {/* Eyebrow */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '2rem' }}>
                     <div style={{ height: '1px', width: '32px', background: 'var(--color-accent, #f59e0b)', flexShrink: 0 }} />
                     <span style={{
@@ -25,12 +24,11 @@ const RegistrationClosedPage = () => {
                         letterSpacing: '0.28em', textTransform: 'uppercase',
                         color: 'var(--color-accent, #f59e0b)',
                     }}>
-                        Registration Closed
+                        Raffle Closed
                     </span>
                     <div style={{ height: '1px', width: '32px', background: 'var(--color-accent, #f59e0b)', flexShrink: 0 }} />
                 </div>
 
-                {/* Heading */}
                 <h1 style={{
                     fontFamily: "'Barlow Condensed', sans-serif",
                     fontSize: 'clamp(2rem, 5vw, 2.8rem)',
@@ -39,29 +37,26 @@ const RegistrationClosedPage = () => {
                     marginBottom: '1.25rem',
                     color: 'var(--p-text-1, #fff)',
                 }}>
-                    Cyclist Registration<br />Is Now Closed
+                    Raffle Ticket Sales<br />Are Now Closed
                 </h1>
 
-                {/* Divider */}
                 <div style={{ width: '40px', height: '2px', background: 'var(--color-primary-light, #4caf50)', marginBottom: '1.5rem' }} />
 
-                {/* Body */}
                 <p style={{
                     color: 'var(--p-text-2, rgba(255,255,255,0.58))',
                     fontSize: '1rem', lineHeight: 1.75,
                     marginBottom: '0.75rem', maxWidth: '440px',
                 }}>
-                    Cyclist registration for Ride With The Warriors 2026 has officially closed.
+                    Raffle ticket sales for Ride With The Warriors 2026 have officially closed.
                 </p>
                 <p style={{
                     color: 'var(--p-text-2, rgba(255,255,255,0.58))',
                     fontSize: '1rem', lineHeight: 1.75,
                     marginBottom: '2.5rem', maxWidth: '440px',
                 }}>
-                    Thank you for your interest. Share your experience and sign up to be notified when registration opens for 2027.
+                    Thank you for your support. Share your experience with us and sign up to be notified when registration opens for 2027.
                 </p>
 
-                {/* CTAs */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center', marginBottom: '3rem' }}>
                     <Link to="/feedback" className="shimmer-btn shimmer-btn--primary">
                         Share Feedback
@@ -71,7 +66,6 @@ const RegistrationClosedPage = () => {
                     </Link>
                 </div>
 
-                {/* Footer note */}
                 <p style={{
                     color: 'var(--p-text-3, rgba(255,255,255,0.33))',
                     fontSize: '0.8rem', letterSpacing: '0.04em',
@@ -89,4 +83,4 @@ const RegistrationClosedPage = () => {
     );
 };
 
-export default RegistrationClosedPage;
+export default RaffleClosedPage;

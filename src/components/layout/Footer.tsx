@@ -343,14 +343,17 @@ const Footer = () => {
                     {/* ── CTAs ── */}
                     <div className="footer-cta-col">
                         <div className="footer-col-label">Get Involved</div>
-                        <Link to="/register/step/1" className="footer-cta-btn green">
+                        <Link to="/register/closed" className="footer-cta-btn green">
                             Register to Cycle
                         </Link>
-                        <Link to="/raffle/step/1" className="footer-cta-btn amber">
+                        <Link to="/raffle/closed" className="footer-cta-btn amber">
                             Buy Raffle Tickets
                         </Link>
                         <Link to="/donate" className="footer-cta-btn amber">
                             Donate
+                        </Link>
+                        <Link to="/feedback" className="footer-cta-btn green">
+                            Share Your Feedback
                         </Link>
                     </div>
 

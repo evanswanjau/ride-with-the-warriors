@@ -17,7 +17,7 @@ import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
 import ProfilePage from './pages/ProfilePage';
 import AdminPage from './pages/AdminPage';
-import RafflePage from './pages/RafflePage';
+import RaffleClosedPage from './pages/RaffleClosedPage';
 import RaffleSuccessPage from './pages/RaffleSuccessPage';
 import RaffleProfilePage from './pages/RaffleProfilePage';
 import RaffleEmailProfilePage from './pages/RaffleEmailProfilePage';
@@ -70,8 +70,9 @@ const App = () => {
         <Route path="/search" element={<Navigate to="/" replace />} />
         <Route path="/profile/:id" element={<Layout><ProfilePage /></Layout>} />
 
-        {/* Raffle Flow */}
-        <Route path="/raffle/step/:stepId" element={<RafflePage />} />
+        {/* Raffle Flow — closed; profiles and payments for existing tickets remain reachable */}
+        <Route path="/raffle/closed" element={<RaffleClosedPage />} />
+        <Route path="/raffle/step/*" element={<RaffleClosedPage />} />
         <Route path="/raffle/payment/:id" element={<RafflePaymentPageRoute />} />
         <Route path="/raffle/success/:id" element={<RaffleSuccessPage />} />
         <Route path="/raffle/profile/:id" element={<RaffleProfilePage />} />

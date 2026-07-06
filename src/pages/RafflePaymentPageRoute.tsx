@@ -6,7 +6,7 @@ const RafflePaymentPageRoute = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    if (!id) return <Navigate to="/raffle/step/1" replace />;
+    if (!id) return <Navigate to="/raffle/closed" replace />;
 
     const queryParams = new URLSearchParams(location.search);
     const queryIds = queryParams.get('ids');
@@ -37,7 +37,7 @@ const RafflePaymentPageRoute = () => {
             email={email}
             phoneNumber={phoneNumber}
             amount={calculatedAmount}
-            onBack={() => navigate(`/raffle/step/2`, { state: location.state })}
+            onBack={() => navigate('/raffle/closed', { state: location.state })}
             onSuccess={() => navigate(`/raffle/success/${id === 'bulk' ? ticketIdsToUse[0] : id}`, { state: { ticketIds: ticketIdsToUse } })}
         />
     );

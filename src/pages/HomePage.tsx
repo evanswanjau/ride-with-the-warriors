@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import RegistrationClosedModal from '../components/common/RegistrationClosedModal';
+import RaffleClosedModal from '../components/common/RaffleClosedModal';
 import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineTeam, AiOutlineTrophy, AiOutlineTags, AiOutlineArrowRight } from 'react-icons/ai';
 import heroImage from '../assets/images/hero.jpeg';
 import highlightImage1 from '../assets/images/gallery/Ride-With-The-Warriors-2025/296A0069-28-min.jpeg';
@@ -90,6 +91,7 @@ const TestimonialsSection = () => {
 const HomePage = () => {
     const heroRef = useRef<HTMLImageElement>(null);
     const [showRegModal, setShowRegModal] = useState(false);
+    const [showRaffleModal, setShowRaffleModal] = useState(false);
 
     useEffect(() => {
         let ticking = false;
@@ -162,7 +164,7 @@ const HomePage = () => {
                                 </p>
                                 <div className="flex flex-wrap gap-4 md:ml-auto md:pb-1">
                                     <button onClick={() => setShowRegModal(true)} className="shimmer-btn shimmer-btn--primary" style={{ cursor: 'pointer', border: 'none' }}>Register to Cycle</button>
-                                    <Link to="/raffle/step/1" className="shimmer-btn shimmer-btn--amber">Buy Raffle Tickets</Link>
+                                    <button onClick={() => setShowRaffleModal(true)} className="shimmer-btn shimmer-btn--amber" style={{ cursor: 'pointer', border: 'none' }}>Buy Raffle Tickets</button>
                                 </div>
                             </div>
                             <div className="mt-12 flex items-center gap-4">
@@ -347,11 +349,16 @@ const HomePage = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <Link to="/raffle/step/1" className="raffle-cta-btn w-full sm:w-auto flex justify-center">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowRaffleModal(true)}
+                                        className="raffle-cta-btn w-full sm:w-auto flex justify-center"
+                                        style={{ cursor: 'pointer', border: 'none' }}
+                                    >
                                         <span className="sm:hidden">Buy Tickets Now</span>
                                         <span className="hidden sm:inline">Get Your Tickets Now</span>
                                         <AiOutlineArrowRight className="text-lg" />
-                                    </Link>
+                                    </button>
                                 </div>
                             </div>
                             <div className="lg:col-span-2 raffle-ticket-visual-light min-h-[360px] flex flex-col items-center justify-center gap-8 p-12">
@@ -409,13 +416,13 @@ const HomePage = () => {
                                     <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>For Cyclists</div>
                                     <div className="display-heading text-3xl mb-4" style={{ color: 'var(--text-1)' }}>Enter The Race</div>
                                     <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>Four circuits. One mission.  One Goal. Choose your challenge.</p>
-                                    <Link to="/register/step/1" className="shimmer-btn shimmer-btn--primary w-full text-center">Register to Cycle</Link>
+                                    <button onClick={() => setShowRegModal(true)} className="shimmer-btn shimmer-btn--primary w-full text-center" style={{ cursor: 'pointer', border: 'none' }}>Register to Cycle</button>
                                 </div>
                                 <div className="border p-8 flex-1" style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)', borderColor: 'var(--border-1)', background: 'var(--cta-card-bg)', transition: 'background 0.3s' }}>
                                     <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>For Supporters</div>
                                     <div className="display-heading text-3xl mb-4" style={{ color: 'var(--text-1)' }}>Win Big, Give Back</div>
                                     <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>Buy a raffle ticket and support the warriors' families.</p>
-                                    <Link to="/raffle/step/1" className="shimmer-btn shimmer-btn--amber w-full text-center">Buy Raffle Tickets</Link>
+                                    <button onClick={() => setShowRaffleModal(true)} className="shimmer-btn shimmer-btn--amber w-full text-center" style={{ cursor: 'pointer', border: 'none' }}>Buy Raffle Tickets</button>
                                 </div>
                             </div>
                         </div>
@@ -483,6 +490,7 @@ const HomePage = () => {
             </div>
 
             {showRegModal && <RegistrationClosedModal onClose={() => setShowRegModal(false)} />}
+            {showRaffleModal && <RaffleClosedModal onClose={() => setShowRaffleModal(false)} />}
         </>
     );
 };

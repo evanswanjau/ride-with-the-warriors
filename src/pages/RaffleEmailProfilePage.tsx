@@ -254,7 +254,7 @@ const RaffleEmailProfilePage = () => {
                 {tickets.length === 0 && !loading && (
                     <div className="text-center py-24 border border-dashed border-neutral-200 dark:border-white/10 rounded-2xl bg-neutral-50/30 dark:bg-white/[0.01]">
                         <p className="section-label opacity-40">No entries recorded under this account.</p>
-                        <Link to="/raffle/step/1" className="shimmer-btn shimmer-btn--primary mt-10">Purchase Tickets</Link>
+                        <Link to="/raffle/closed" className="shimmer-btn shimmer-btn--primary mt-10">Raffle Sales Closed</Link>
                     </div>
                 )}
             </div>

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import TopBar from './TopBar';
 import Footer from './Footer';
+import FeedbackPromptModal, { FEEDBACK_PROMPT_STORAGE_KEY } from '../common/FeedbackPromptModal';
 
 const useTheme = () => {
     const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -30,6 +32,19 @@ interface LayoutProps {
 
 const Layout = ({ children, registrationType, isFullWidth = false, maxWidth = 'max-w-6xl' }: LayoutProps) => {
     const theme = useTheme();
+    const location = useLocation();
+    const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
+
+    useEffect(() => {
+        const dismissed = localStorage.getItem(FEEDBACK_PROMPT_STORAGE_KEY);
+        const isFeedbackPage = location.pathname === '/feedback';
+        const isAdmin = location.pathname.startsWith('/admin');
+        if (!dismissed && !isFeedbackPage && !isAdmin) {
+            setShowFeedbackPrompt(true);
+        } else {
+            setShowFeedbackPrompt(false);
+        }
+    }, [location.pathname]);
 
     return (
         <div
@@ -76,6 +91,9 @@ const Layout = ({ children, registrationType, isFullWidth = false, maxWidth = 'm
                 </div>
             </main>
             <Footer />
+            {showFeedbackPrompt && (
+                <FeedbackPromptModal onClose={() => setShowFeedbackPrompt(false)} />
+            )}
         </div>
     );
 };

@@ -6,7 +6,7 @@ const STORAGE_KEY = 'rwtw_ref';
 
 /**
  * Invisible component that captures referral codes from the URL.
- * Reads `?ref=CODE` → stores in localStorage → fires click tracking → redirects to raffle.
+ * Reads `?ref=CODE` → stores in localStorage → fires click tracking → redirects to raffle closed page.
  * Mount once at the top level of the app.
  */
 const ReferralCapture = () => {
@@ -24,7 +24,7 @@ const ReferralCapture = () => {
         localStorage.setItem(STORAGE_KEY, code);
 
         // Redirect to raffle ticket page
-        navigate('/raffle/step/1', { replace: true });
+        navigate('/raffle/closed', { replace: true });
 
         // Fire click tracking (fire-and-forget)
         fetch(`${API_BASE_URL}/referrals/click`, {
