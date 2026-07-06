@@ -1,14 +1,93 @@
-import React, { useState } from 'react';
-import { AiOutlineExclamationCircle, AiOutlineReload } from 'react-icons/ai';
-import { API_BASE_URL } from '../../config';
+import React, { useState, useRef } from 'react';
+import { AiOutlineExclamationCircle, AiOutlineReload, AiOutlineUpload, AiOutlineDownload } from 'react-icons/ai';
+import { API_BASE_URL, SITE_URL } from '../../config';
+
+type CsvRecipient = { firstName: string; lastName?: string; email: string; phone?: string };
+
+const CSV_TEMPLATE = `firstName,email
+James,james@example.com
+Sarah,sarah@example.com`;
+
+function parseCsvRecipients(text: string): { recipients: CsvRecipient[]; errors: string[] } {
+    const lines = text.trim().split(/\r?\n/).filter(line => line.trim());
+    const errors: string[] = [];
+    if (lines.length < 2) {
+        return { recipients: [], errors: ['CSV must include a header row and at least one data row.'] };
+    }
+
+    const splitRow = (row: string) => {
+        const cells: string[] = [];
+        let current = '';
+        let inQuotes = false;
+        for (let i = 0; i < row.length; i++) {
+            const ch = row[i];
+            if (ch === '"') {
+                inQuotes = !inQuotes;
+                continue;
+            }
+            if (ch === ',' && !inQuotes) {
+                cells.push(current.trim());
+                current = '';
+                continue;
+            }
+            current += ch;
+        }
+        cells.push(current.trim());
+        return cells;
+    };
+
+    const headers = splitRow(lines[0]).map(h => h.toLowerCase().replace(/^\ufeff/, ''));
+    const firstNameIdx = headers.findIndex(h => ['firstname', 'first name', 'first_name', 'name'].includes(h));
+    const lastNameIdx = headers.findIndex(h => ['lastname', 'last name', 'last_name', 'surname'].includes(h));
+    const emailIdx = headers.findIndex(h => ['email', 'email address', 'email_address'].includes(h));
+    const phoneIdx = headers.findIndex(h => ['phone', 'phone number', 'phonenumber', 'mobile'].includes(h));
+
+    if (emailIdx === -1) {
+        return { recipients: [], errors: ['CSV must include an "email" column.'] };
+    }
+    if (firstNameIdx === -1) {
+        return { recipients: [], errors: ['CSV must include a "firstName" column.'] };
+    }
+
+    const recipients: CsvRecipient[] = [];
+    for (let i = 1; i < lines.length; i++) {
+        const cols = splitRow(lines[i]);
+        const email = (cols[emailIdx] || '').trim().toLowerCase();
+        const firstName = (cols[firstNameIdx] || '').trim();
+        const lastName = lastNameIdx >= 0 ? (cols[lastNameIdx] || '').trim() : '';
+        const phone = phoneIdx >= 0 ? (cols[phoneIdx] || '').trim() : '';
+
+        if (!email) {
+            errors.push(`Row ${i + 1}: missing email — skipped.`);
+            continue;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errors.push(`Row ${i + 1}: invalid email "${email}" — skipped.`);
+            continue;
+        }
+
+        recipients.push({
+            firstName: firstName || 'Friend',
+            lastName: lastName || undefined,
+            email,
+            phone: phone || undefined,
+        });
+    }
+
+    return { recipients, errors };
+}
 
 export const AdminCommunications: React.FC = () => {
-    const [mode, setMode] = useState<'sms' | 'email' | 'both'>('sms');
-    const [targetEntity, setTargetEntity] = useState<'cyclist' | 'raffle' | 'donor' | 'custom'>('cyclist');
+    const [mode, setMode] = useState<'sms' | 'email' | 'both'>('email');
+    const [targetEntity, setTargetEntity] = useState<'cyclist' | 'raffle' | 'donor' | 'custom' | 'csv'>('cyclist');
     const [targetStatus, setTargetStatus] = useState<'all' | 'paid' | 'unpaid'>('all');
     
     const [customPhones, setCustomPhones] = useState('');
     const [customEmails, setCustomEmails] = useState('');
+    const [csvRecipients, setCsvRecipients] = useState<CsvRecipient[]>([]);
+    const [csvFileName, setCsvFileName] = useState('');
+    const [csvErrors, setCsvErrors] = useState<string[]>([]);
+    const csvInputRef = useRef<HTMLInputElement>(null);
 
     const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
@@ -44,6 +123,28 @@ export const AdminCommunications: React.FC = () => {
         fetchBalance();
     }, []);
 
+    const handleCsvFile = async (file: File | null) => {
+        if (!file) return;
+        setCsvFileName(file.name);
+        const text = await file.text();
+        const { recipients, errors } = parseCsvRecipients(text);
+        setCsvRecipients(recipients);
+        setCsvErrors(errors);
+        if (recipients.length === 0 && errors.length === 0) {
+            setCsvErrors(['No valid rows found in the CSV file.']);
+        }
+    };
+
+    const downloadCsvTemplate = () => {
+        const blob = new Blob([CSV_TEMPLATE], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'communications-recipients-template.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
     const handleSend = async () => {
         setErrorMsg(null);
         setSuccessMsg(null);
@@ -66,6 +167,16 @@ export const AdminCommunications: React.FC = () => {
                 return;
             }
         }
+        if (targetEntity === 'csv') {
+            if (csvRecipients.length === 0) {
+                setErrorMsg('Please upload a CSV with at least one valid firstName and email row.');
+                return;
+            }
+            if ((mode === 'sms' || mode === 'both') && !csvRecipients.some(r => r.phone)) {
+                setErrorMsg('CSV SMS requires a phone column with at least one number. Use Email mode or add phone numbers to your CSV.');
+                return;
+            }
+        }
 
         const confirmMsg = testMode 
             ? 'This will run in test mode and only return a preview.' 
@@ -82,6 +193,7 @@ export const AdminCommunications: React.FC = () => {
                 targetStatus,
                 customPhones,
                 customEmails,
+                csvRecipients: targetEntity === 'csv' ? csvRecipients : undefined,
                 message,
                 subject,
                 testMode
@@ -231,15 +343,20 @@ export const AdminCommunications: React.FC = () => {
 
                             <div className="ad-filter-group" style={{ flex: 1 }}>
                                 <label className="ad-filter-label">Target Group</label>
-                                <select className="ad-select" value={targetEntity} onChange={(e) => setTargetEntity(e.target.value as any)}>
+                                <select className="ad-select" value={targetEntity} onChange={(e) => {
+                                    const value = e.target.value as typeof targetEntity;
+                                    setTargetEntity(value);
+                                    if (value === 'csv') setMode('email');
+                                }}>
                                     <option value="cyclist">Cyclists</option>
                                     <option value="raffle">Raffle Entries</option>
                                     <option value="donor">Donors</option>
                                     <option value="custom">Custom (Manual Entry)</option>
+                                    <option value="csv">CSV Upload</option>
                                 </select>
                             </div>
 
-                            {targetEntity !== 'custom' && (
+                            {targetEntity !== 'custom' && targetEntity !== 'csv' && (
                                 <div className="ad-filter-group" style={{ flex: 1 }}>
                                     <label className="ad-filter-label">Payment Status</label>
                                     <select className="ad-select" value={targetStatus} onChange={(e) => setTargetStatus(e.target.value as any)}>
@@ -250,6 +367,74 @@ export const AdminCommunications: React.FC = () => {
                                 </div>
                             )}
                         </div>
+
+                        {targetEntity === 'csv' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: 'var(--ad-bg)', padding: '14px', borderRadius: '4px', border: '1px solid var(--ad-border)' }}>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+                                    <input
+                                        ref={csvInputRef}
+                                        type="file"
+                                        accept=".csv,text/csv"
+                                        style={{ display: 'none' }}
+                                        onChange={e => handleCsvFile(e.target.files?.[0] || null)}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="ad-hbtn ad-hbtn-primary"
+                                        onClick={() => csvInputRef.current?.click()}
+                                    >
+                                        <AiOutlineUpload /> Upload CSV
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="ad-hbtn"
+                                        onClick={downloadCsvTemplate}
+                                        style={{ border: '1px solid var(--ad-border)', background: 'transparent' }}
+                                    >
+                                        <AiOutlineDownload /> Download Template
+                                    </button>
+                                    {csvFileName && (
+                                        <span style={{ fontSize: '0.8rem', color: 'var(--ad-t2)' }}>
+                                            {csvFileName} · {csvRecipients.length} recipient{csvRecipients.length === 1 ? '' : 's'}
+                                        </span>
+                                    )}
+                                </div>
+                                <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--ad-t3)', lineHeight: 1.5 }}>
+                                    CSV columns: <code>firstName</code>, <code>email</code> (required). Optional: <code>lastName</code>, <code>phone</code>.
+                                    Use <code>{'{firstName}'}</code> and <code>{'{link}'}</code> in your message — link defaults to the feedback page.
+                                </p>
+                                {csvErrors.length > 0 && (
+                                    <div style={{ fontSize: '0.75rem', color: 'var(--ad-accent)', lineHeight: 1.5 }}>
+                                        {csvErrors.slice(0, 5).map((err, i) => <div key={i}>{err}</div>)}
+                                        {csvErrors.length > 5 && <div>…and {csvErrors.length - 5} more</div>}
+                                    </div>
+                                )}
+                                {csvRecipients.length > 0 && (
+                                    <div style={{ maxHeight: '120px', overflowY: 'auto', border: '1px solid var(--ad-border)', borderRadius: '4px' }}>
+                                        <table className="ad-table" style={{ minWidth: '100%' }}>
+                                            <thead>
+                                                <tr>
+                                                    {['First Name', 'Email'].map(h => <th key={h} className="ad-th">{h}</th>)}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {csvRecipients.slice(0, 5).map((r, i) => (
+                                                    <tr key={i} className="ad-tr">
+                                                        <td className="ad-td">{r.firstName}</td>
+                                                        <td className="ad-td ad-mono" style={{ fontSize: '0.75rem' }}>{r.email}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                        {csvRecipients.length > 5 && (
+                                            <div style={{ padding: '8px 12px', fontSize: '0.72rem', color: 'var(--ad-t3)' }}>
+                                                + {csvRecipients.length - 5} more rows
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         {targetEntity === 'custom' && (
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', background: 'var(--ad-bg)', padding: '12px', borderRadius: '4px', border: '1px solid var(--ad-border)' }}>
@@ -284,7 +469,8 @@ export const AdminCommunications: React.FC = () => {
                         <div className="ad-filter-group">
                             <label className="ad-filter-label">Message Content</label>
                             <div style={{ fontSize: '0.75rem', color: 'var(--ad-t3)', marginBottom: '6px' }}>
-                                Variables: <code>{'{firstName}'}</code>, <code>{'{lastName}'}</code>, <code>{'{bibNumber}'}</code>
+                                Variables: <code>{'{firstName}'}</code>, <code>{'{lastName}'}</code>, <code>{'{bibNumber}'}</code>, <code>{'{link}'}</code>
+                                {targetEntity === 'csv' && <> · Feedback link: <code>{SITE_URL}/feedback</code></>}
                             </div>
                             <textarea 
                                 className="ad-input" 
