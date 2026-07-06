@@ -77,6 +77,7 @@ const PageTitle = () => {
             'bibs': 'Bibs',
             'payments': 'Payments',
             'raffle': 'Raffle',
+            'feedback': 'Feedback',
             'pricing': 'Pricing'
         };
         const view = path.split('/')[2] || 'overview';

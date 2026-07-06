@@ -7,7 +7,7 @@ import {
     AiOutlineLeft, AiOutlineRight, AiOutlineStar, AiOutlineClose,
     AiOutlinePrinter, AiOutlineDashboard, AiOutlineHistory,
     AiOutlineArrowUp, AiOutlineArrowDown, AiOutlineBarChart, AiOutlineHeart, AiOutlineMessage, AiOutlineLink,
-    AiOutlineCheckCircle
+    AiOutlineCheckCircle, AiOutlineComment
 } from 'react-icons/ai';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -19,6 +19,7 @@ import AdminRaffleTicketsPrint from './AdminRaffleTicketsPrint';
 import AdminBibVisual from './AdminBibVisual';
 import { AdminCommunications } from './AdminCommunications';
 import AdminBikeHires from './AdminBikeHires';
+import AdminFeedback from './AdminFeedback';
 import logo from '../../assets/logos/logo.png';
 import { CIRCUITS } from '../../constants';
 import { API_BASE_URL, SITE_URL } from '../../config';
@@ -32,10 +33,10 @@ interface AdminDashboardProps {
 
 
 const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
-    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs' | 'donations' | 'communications' | 'referrals' | 'bike-hires';
+    type ViewType = 'overview' | 'analytics' | 'registrations' | 'pricing' | 'payments' | 'raffle' | 'bibs' | 'donations' | 'communications' | 'referrals' | 'bike-hires' | 'feedback';
     const { "*": viewParam } = useParams();
     const navigate = useNavigate();
-    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs', 'donations', 'communications', 'referrals', 'bike-hires'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
+    const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs', 'donations', 'communications', 'referrals', 'bike-hires', 'feedback'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
     const [dashboardData, setDashboardData] = useState<any>(null);
     const [registrations, setRegistrations] = useState<any[]>([]);
     const [pricingCategories, setPricingCategories] = useState<any[]>([]);
@@ -548,6 +549,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         { id: 'raffle', label: 'Raffle', icon: AiOutlineHistory },
         { id: 'payments', label: 'Payments', icon: AiOutlineDollar },
         { id: 'donations', label: 'Donations', icon: AiOutlineHeart },
+        { id: 'feedback', label: 'Feedback', icon: AiOutlineComment },
         { id: 'bibs', label: 'Bibs', icon: AiOutlineStar },
         { id: 'bike-hires', label: 'Bike Hires', icon: AiOutlineStar },
         { id: 'communications', label: 'Communications', icon: AiOutlineMessage },
@@ -2000,6 +2002,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
 
                         {activeView === 'bike-hires' && (
                             <AdminBikeHires />
+                        )}
+
+                        {activeView === 'feedback' && (
+                            <AdminFeedback />
                         )}
 
                         {/* ══════════════════════════════════════════════ PRICING ══ */}
