@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { AiOutlineExclamationCircle, AiOutlineReload, AiOutlineUpload, AiOutlineDownload } from 'react-icons/ai';
-import { API_BASE_URL, SITE_URL } from '../../config';
+import { API_BASE_URL } from '../../config';
 
 type CsvRecipient = { firstName: string; lastName?: string; email: string; phone?: string };
 
@@ -401,7 +401,7 @@ export const AdminCommunications: React.FC = () => {
                                 </div>
                                 <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--ad-t3)', lineHeight: 1.5 }}>
                                     CSV columns: <code>firstName</code>, <code>email</code> (required). Optional: <code>lastName</code>, <code>phone</code>.
-                                    Use <code>{'{firstName}'}</code> and <code>{'{link}'}</code> in your message — link defaults to the feedback page.
+                                    Use <code>{'{firstName}'}</code> in your message for personalisation.
                                 </p>
                                 {csvErrors.length > 0 && (
                                     <div style={{ fontSize: '0.75rem', color: 'var(--ad-accent)', lineHeight: 1.5 }}>
@@ -469,13 +469,15 @@ export const AdminCommunications: React.FC = () => {
                         <div className="ad-filter-group">
                             <label className="ad-filter-label">Message Content</label>
                             <div style={{ fontSize: '0.75rem', color: 'var(--ad-t3)', marginBottom: '6px' }}>
-                                Variables: <code>{'{firstName}'}</code>, <code>{'{lastName}'}</code>, <code>{'{bibNumber}'}</code>, <code>{'{link}'}</code>
-                                {targetEntity === 'csv' && <> · Feedback link: <code>{SITE_URL}/feedback</code></>}
+                                Variables: <code>{'{firstName}'}</code>, <code>{'{lastName}'}</code>, <code>{'{bibNumber}'}</code>
+                                {(mode === 'email' || mode === 'both') && (
+                                    <> · Paste full URLs (e.g. <code>https://…</code>) — they will be clickable in email.</>
+                                )}
                             </div>
                             <textarea 
                                 className="ad-input" 
                                 style={{ minHeight: '180px', resize: 'vertical' }}
-                                placeholder="Type your message here..."
+                                placeholder={`Hi {firstName},\n\nThank you for being part of Ride With The Warriors 2026...\n\nShare your experience: https://airbornefraternity.org/ride-with-the-warriors/feedback\n\nCheck raffle results: https://airbornefraternity.org/raffle/`}
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                             />
