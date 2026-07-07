@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
-import TopBar from './TopBar';
 import Footer from './Footer';
 import FeedbackPromptModal, { FEEDBACK_PROMPT_STORAGE_KEY } from '../common/FeedbackPromptModal';
 
@@ -83,9 +82,9 @@ const Layout = ({ children, registrationType, isFullWidth = false, maxWidth = 'm
                     --border-2: rgba(0,0,0,0.16);
                 }
             `}</style>
-            <TopBar />
+            {/* <TopBar /> */}
             <Navbar />
-            <main className={`flex flex-1 flex-col ${isFullWidth ? '' : 'pt-[110px] md:pt-[120px] lg:pt-[136px]'}`}>
+            <main className={`flex flex-1 flex-col ${isFullWidth ? '' : 'pt-[80px] md:pt-[90px] lg:pt-[104px]'}`}>
                 <div className={`w-full ${isFullWidth ? '' : `${maxWidth} mx-auto px-4 pb-12`}`}>
                     {children}
                 </div>

@@ -77,7 +77,6 @@ const Navbar = () => {
         { name: 'Home', path: '/' },
         { name: 'About', path: '/about' },
         { name: 'Gallery', path: '/gallery' },
-        { name: 'Results', path: '/results' },
         { name: 'FAQs', path: '/faqs' },
         { name: 'Contact', path: '/contact' },
     ];
@@ -130,10 +129,10 @@ const Navbar = () => {
                 /* ── Navbar base ── */
                 .rwtw-nav {
                     position: fixed;
-                    top: ${isScrolled ? '0' : '26px'};
+                    top: 0;
                     width: 100%;
                     z-index: 100;
-                    transition: top 0.3s ease, background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
+                    transition: background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
                     font-family: 'Barlow', sans-serif;
                 }
                 .rwtw-nav.is-solid {
@@ -277,7 +276,7 @@ const Navbar = () => {
                     letter-spacing: 0.15em;
                     text-transform: uppercase;
                     text-decoration: none;
-                    overflow: hidden;
+                    overflow: visible;
                     transition: transform 0.2s, box-shadow 0.2s;
                     clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
                     white-space: nowrap;
@@ -302,11 +301,40 @@ const Navbar = () => {
                     box-shadow: 0 0 0 transparent;
                 }
                 .nav-cta.green:hover { box-shadow: 0 8px 20px rgba(45,106,45,0.35); }
+                .nav-cta.nav-cta-red-shadow {
+                    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5), 0 0 30px rgba(239, 68, 68, 0.3);
+                }
                 .nav-cta.amber {
                     background: #f59e0b;
                     color: #111;
                 }
                 .nav-cta.amber:hover { box-shadow: 0 8px 20px rgba(245,158,11,0.35); }
+
+                /* ── CTA Glow Effect ── */
+                .nav-cta-glow {
+                    position: relative;
+                    animation: glow-pulse 2s ease-in-out infinite;
+                }
+                .nav-cta-glow::before {
+                    content: '';
+                    position: absolute;
+                    inset: -2px;
+                    background: linear-gradient(45deg, #2d6a2d, #4caf50, #2d6a2d, #1e4d1e, #2d6a2d);
+                    background-size: 400% 400%;
+                    border-radius: inherit;
+                    z-index: -1;
+                    animation: glow-border 3s ease infinite;
+                    opacity: 0.7;
+                }
+                @keyframes glow-pulse {
+                    0%, 100% { box-shadow: 0 0 25px rgba(45, 106, 45, 0.5), 0 0 50px rgba(45, 106, 45, 0.3); }
+                    50% { box-shadow: 0 0 35px rgba(45, 106, 45, 0.7), 0 0 70px rgba(45, 106, 45, 0.5); }
+                }
+                @keyframes glow-border {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
 
                 .nav-cta.black-white {
                     background: #111;
@@ -431,6 +459,24 @@ const Navbar = () => {
                 }
                 .nav-mobile-cta.green { background: var(--color-primary, #2d6a2d); color: #fff; }
                 .nav-mobile-cta.amber { background: #f59e0b; color: #111; }
+
+                /* ── Mobile CTA Glow Effect ── */
+                .nav-mobile-cta-glow {
+                    position: relative;
+                    animation: glow-pulse 2s ease-in-out infinite;
+                }
+                .nav-mobile-cta-glow::before {
+                    content: '';
+                    position: absolute;
+                    inset: -2px;
+                    background: linear-gradient(45deg, #2d6a2d, #4caf50, #2d6a2d, #1e4d1e, #2d6a2d);
+                    background-size: 400% 400%;
+                    border-radius: inherit;
+                    z-index: -1;
+                    animation: glow-border 3s ease infinite;
+                    opacity: 0.7;
+                }
+
                 .nav-mobile-cta.black-white {
                     background: #111;
                     color: #fff;
@@ -524,9 +570,11 @@ const Navbar = () => {
                         <div className="nav-divider" />
 
                         {/* CTAs */}
-                        <Link to="/feedback" className="nav-cta black-white">Share Feedback</Link>
-                        <button onClick={() => setShowRegModal(true)} className="nav-cta green" style={{ cursor: 'pointer' }}>Register</button>
-                        <button onClick={() => setShowRaffleModal(true)} className="nav-cta amber" style={{ cursor: 'pointer', border: 'none' }}>Raffle Tickets</button>
+                        <Link to="/feedback" className="nav-cta black-white">Feedback</Link>
+                        <Link to="/raffle-winners" className="nav-cta amber" style={{ border: 'none' }}>
+                            Raffle Winners
+                        </Link>
+                        <Link to="/results" className="nav-cta green nav-cta-red-shadow">Race Results</Link>
                     </div>
 
                     {/* Mobile controls */}
@@ -591,28 +639,22 @@ const Navbar = () => {
                         className="nav-mobile-cta black-white"
                         onClick={() => setIsMenuOpen(false)}
                     >
-                        Share Feedback
+                        Feedback
                     </Link>
-                    <button
-                        className="nav-mobile-cta green"
-                        style={{ cursor: 'pointer', border: 'none' }}
-                        onClick={() => { setIsMenuOpen(false); setShowRegModal(true); }}
-                    >
-                        Register to Cycle
-                    </button>
-                    <button
-                        className="nav-mobile-cta amber"
-                        style={{ cursor: 'pointer', border: 'none' }}
-                        onClick={() => { setIsMenuOpen(false); setShowRaffleModal(true); }}
-                    >
-                        Buy Raffle Tickets
-                    </button>
                     <Link
-                        to="/donate"
-                        className="nav-mobile-cta black-white"
+                        to="/raffle-winners"
+                        className="nav-mobile-cta amber"
+                        style={{ border: 'none' }}
                         onClick={() => setIsMenuOpen(false)}
                     >
-                        Donate
+                        Raffle Winners
+                    </Link>
+                    <Link
+                        to="/results"
+                        className="nav-mobile-cta green"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Race Results
                     </Link>
                 </div>
             </div>

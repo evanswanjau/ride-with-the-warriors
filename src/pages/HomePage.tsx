@@ -163,8 +163,10 @@ const HomePage = () => {
                                     <span className="text-white/90 font-semibold"> supporting the widows</span> of our fallen heroes.
                                 </p>
                                 <div className="flex flex-wrap gap-4 md:ml-auto md:pb-1">
-                                    <button onClick={() => setShowRegModal(true)} className="shimmer-btn shimmer-btn--primary" style={{ cursor: 'pointer', border: 'none' }}>Register to Cycle</button>
-                                    <button onClick={() => setShowRaffleModal(true)} className="shimmer-btn shimmer-btn--amber" style={{ cursor: 'pointer', border: 'none' }}>Buy Raffle Tickets</button>
+                                    <Link to="/raffle-winners" className="shimmer-btn shimmer-btn--amber" style={{ border: 'none' }}>
+                                        Raffle Winners
+                                    </Link>
+                                    <Link to="/results" className="shimmer-btn shimmer-btn--primary">Race Results</Link>
                                 </div>
                             </div>
                             <div className="mt-12 flex items-center gap-4">
@@ -413,16 +415,18 @@ const HomePage = () => {
                             </div>
                             <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 lg:flex-col xl:flex-row">
                                 <div className="border p-8 flex-1" style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)', borderColor: 'var(--border-1)', background: 'var(--cta-card-bg)', transition: 'background 0.3s' }}>
-                                    <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>For Cyclists</div>
-                                    <div className="display-heading text-3xl mb-4" style={{ color: 'var(--text-1)' }}>Enter The Race</div>
-                                    <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>Four circuits. One mission.  One Goal. Choose your challenge.</p>
-                                    <button onClick={() => setShowRegModal(true)} className="shimmer-btn shimmer-btn--primary w-full text-center" style={{ cursor: 'pointer', border: 'none' }}>Register to Cycle</button>
+                                    <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>For Supporters</div>
+                                    <div className="display-heading text-3xl mb-4" style={{ color: 'var(--text-1)' }}>Raffle Winners</div>
+                                    <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>See who won in the grand raffle draw.</p>
+                                    <Link to="/raffle-winners" className="shimmer-btn shimmer-btn--amber w-full text-center" style={{ border: 'none' }}>
+                                        Raffle Winners
+                                    </Link>
                                 </div>
                                 <div className="border p-8 flex-1" style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)', borderColor: 'var(--border-1)', background: 'var(--cta-card-bg)', transition: 'background 0.3s' }}>
-                                    <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>For Supporters</div>
-                                    <div className="display-heading text-3xl mb-4" style={{ color: 'var(--text-1)' }}>Win Big, Give Back</div>
-                                    <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>Buy a raffle ticket and support the warriors' families.</p>
-                                    <button onClick={() => setShowRaffleModal(true)} className="shimmer-btn shimmer-btn--amber w-full text-center" style={{ cursor: 'pointer', border: 'none' }}>Buy Raffle Tickets</button>
+                                    <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>For Cyclists</div>
+                                    <div className="display-heading text-3xl mb-4" style={{ color: 'var(--text-1)' }}>Race Results</div>
+                                    <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>Check out the race results from the 2026 edition.</p>
+                                    <Link to="/results" className="shimmer-btn shimmer-btn--primary w-full text-center">Race Results</Link>
                                 </div>
                             </div>
                         </div>

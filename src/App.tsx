@@ -24,6 +24,7 @@ import RaffleEmailProfilePage from './pages/RaffleEmailProfilePage';
 import RafflePaymentPageRoute from './pages/RafflePaymentPageRoute';
 import DonatePage from './pages/DonatePage';
 import ResultsPage from './pages/ResultsPage';
+import RaffleWinnersPage from './pages/RaffleWinnersPage';
 
 import ScrollToTop from './utils/ScrollToTop';
 import PageTitle from './utils/PageTitle';
@@ -57,6 +58,7 @@ const App = () => {
         <Route path="/donate" element={<DonatePage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/results" element={<Layout isFullWidth><ResultsPage /></Layout>} />
+        <Route path="/raffle-winners" element={<Layout isFullWidth><RaffleWinnersPage /></Layout>} />
 
         {/* Registration Flow — closed; redirect all register paths to closed page */}
         <Route path="/register/closed" element={<RegistrationClosedPage />} />
