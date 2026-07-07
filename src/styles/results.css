@@ -1,0 +1,476 @@
+/* ══════════════════════════════════════════════════════════
+   results.css  — ResultsPage page-specific styles
+   Shared theme vars and utilities come from pages.css
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Page Section Overrides ───────────────────────────────── */
+.page-section:first-of-type {
+    margin-bottom: 24px;
+}
+
+/* ── Search Section ───────────────────────────────────────── */
+.search-section {
+    background: var(--p-card);
+    border: 1px solid var(--p-border);
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ── Search Row (input + filters + reset, all on one line) ──── */
+.search-form {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    width: 280px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    color: var(--p-text-3);
+    font-size: 1.1rem;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    color: var(--p-text-1);
+    background: var(--p-input-bg);
+    border: 1px solid var(--p-input-bd);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input::placeholder {
+    color: var(--p-placeholder);
+}
+
+.search-input:focus {
+    border-color: var(--color-primary);
+}
+
+/* ── Search Buttons ────────────────────────────────────────── */
+.search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 24px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.search-button-primary {
+    background: var(--color-primary);
+    color: white;
+}
+
+.search-button-primary:hover:not(:disabled) {
+    background: var(--color-primary-dark);
+}
+
+.search-button-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.search-button-secondary {
+    background: transparent;
+    color: var(--p-text-1);
+    border: 1px solid var(--p-border);
+}
+
+.search-button-secondary:hover {
+    background: var(--p-raised);
+    border-color: var(--p-border-2);
+}
+
+.search-button-reset {
+    background: rgba(220, 38, 38, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.search-button-reset:hover {
+    background: rgba(220, 38, 38, 0.2);
+    border-color: rgba(220, 38, 38, 0.5);
+}
+
+/* ── Filters Right Group (gender + category + reset) ───────── */
+.filters-right {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+/* ── Filter Groups (within search form) ─────────────────────── */
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 0 0 auto;
+    min-width: 140px;
+}
+
+.filter-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--p-text-3);
+}
+
+.filter-select {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    color: var(--p-text-1);
+    background: var(--p-input-bg);
+    border: 1px solid var(--p-input-bd);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.filter-select:focus {
+    border-color: var(--color-primary);
+}
+
+.filter-select option {
+    background: var(--p-raised);
+    color: var(--p-text-1);
+}
+
+/* ── Error Message ───────────────────────────────────────── */
+.error-message {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    color: #fca5a5;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    text-align: center;
+    font-family: 'Barlow', sans-serif;
+}
+
+/* ── Results Table Section ───────────────────────────────── */
+.results-table-section {
+    background: var(--p-card);
+    border: 1px solid var(--p-border);
+    overflow: hidden;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    /* smoother touch scroll on mobile */
+    -webkit-overflow-scrolling: touch;
+}
+
+.results-table {
+    width: 100%;
+    min-width: 720px; /* forces horizontal scroll instead of column-squeezing on small screens */
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-family: 'Barlow', sans-serif;
+}
+
+/* Fixed column widths so nothing compresses/misaligns */
+.results-table col.col-position   { width: 76px; }
+.results-table col.col-bib        { width: 100px; }
+.results-table col.col-name       { width: 200px; }   /* takes remaining space */
+.results-table col.col-circuit    { width: 150px; }
+.results-table col.col-category   { width: 150px; }
+.results-table col.col-time       { width: 150px; }
+.results-table col.col-status     { width: 110px; }
+
+.results-table thead {
+    background: var(--p-raised);
+    border-bottom: 1px solid var(--p-border);
+}
+
+.results-table th {
+    padding: 16px;
+    text-align: left;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--p-text-2);
+    white-space: nowrap;
+}
+
+.results-table tbody tr {
+    border-bottom: 1px solid var(--p-border);
+    transition: background-color 0.2s;
+}
+
+.results-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.results-table tbody tr:hover {
+    background: var(--p-raised);
+}
+
+.row-even {
+    background: transparent;
+}
+
+.row-odd {
+    background: var(--p-raised);
+}
+
+.results-table td {
+    padding: 16px;
+    font-size: 0.95rem;
+    color: var(--p-text-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.position-cell {
+    text-align: left;
+}
+
+.position-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--color-primary);
+    color: white;
+    font-weight: 700;
+    font-size: 0.875rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.bib-cell {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.name-cell {
+    font-weight: 500;
+    max-width: 0; /* allows ellipsis to work with table-layout: fixed */
+}
+
+.circuit-cell {
+    color: var(--p-text-2);
+}
+
+.category-cell {
+    color: var(--p-text-3);
+}
+
+.time-cell {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.status-cell {
+    overflow: visible; /* let the pill render fully, don't ellipsis it */
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 9999px;
+    white-space: nowrap;
+}
+
+.status-finished {
+    background: rgba(22, 163, 74, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(22, 163, 74, 0.3);
+}
+
+.status-dq {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.status-dns {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+/* ── No Results ───────────────────────────────────────────── */
+.no-results {
+    padding: 64px 32px;
+    text-align: center;
+    color: var(--p-text-3);
+    font-size: 1.125rem;
+    font-family: 'Barlow', sans-serif;
+}
+
+/* ── Table Footer: results count (left) + pagination (right) ── */
+.table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--p-border);
+}
+
+.results-count {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.875rem;
+    color: var(--p-text-3);
+    white-space: nowrap;
+}
+
+/* ── Pagination ──────────────────────────────────────────── */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.pagination-button {
+    padding: 8px 18px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--p-text-1);
+    background: var(--p-raised);
+    border: 1px solid var(--p-border);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background: var(--p-border);
+    border-color: var(--p-border-2);
+}
+
+.pagination-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.875rem;
+    color: var(--p-text-2);
+    white-space: nowrap;
+}
+
+/* ── Responsive Design ───────────────────────────────────── */
+@media (max-width: 1024px) {
+    .results-table th,
+    .results-table td {
+        padding: 12px;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+    }
+
+    .filters-right {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filter-group {
+        min-width: 100%;
+    }
+
+    .search-button {
+        width: 100%;
+        padding: 12px 24px;
+    }
+
+    .table-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .results-count {
+        text-align: center;
+    }
+
+    .pagination {
+        justify-content: center;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .search-section {
+        padding: 18px;
+    }
+
+    .results-table th,
+    .results-table td {
+        padding: 10px 8px;
+        font-size: 0.8rem;
+    }
+
+    .position-badge {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    .status-badge {
+        padding: 3px 8px;
+        font-size: 0.625rem;
+    }
+
+    .pagination-button {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+}

@@ -125,4 +125,10 @@ export const api = {
         const response = await fetch(`${API_BASE_URL}/admin/registrations`);
         return handleResponse<{ registrations: any[] }>(response);
     },
+
+    async getResults(params: { name?: string; bibNumber?: string } = {}) {
+        const queryString = new URLSearchParams(params).toString();
+        const response = await fetch(`${API_BASE_URL}/results?${queryString}`);
+        return handleResponse<{ results: any[] }>(response);
+    },
 };
