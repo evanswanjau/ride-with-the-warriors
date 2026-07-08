@@ -5285,7 +5285,7 @@
       {
         "first_name": "David",
         "last_name": "Mathai",
-        "rider_code": "0010 -3",
+        "rider_code": "0010-3",
         "team": "Nyahururu Cycling Team",
         "position": "1",
         "duration": 5984.59,
@@ -5294,7 +5294,7 @@
       {
         "first_name": "Mevin",
         "last_name": "Njuguna",
-        "rider_code": "0012 -2",
+        "rider_code": "0012-2",
         "team": "Joyriders Kenya",
         "position": "2",
         "duration": 5987.0,
@@ -5303,7 +5303,7 @@
       {
         "first_name": "Sifa",
         "last_name": "Kuruga",
-        "rider_code": "0011 -5",
+        "rider_code": "0011-5",
         "team": "Rongai cyclers racing",
         "position": "3",
         "duration": 6052.0,
@@ -5312,7 +5312,7 @@
       {
         "first_name": "Samuel",
         "last_name": "Njau",
-        "rider_code": "0007 -1",
+        "rider_code": "0007-1",
         "team": "Airpocket",
         "position": "4",
         "duration": 6071.03,
@@ -5321,7 +5321,7 @@
       {
         "first_name": "Michael",
         "last_name": "Matindi",
-        "rider_code": "0012 -3",
+        "rider_code": "0012-3",
         "team": "Joyriders Kenya",
         "position": "5",
         "duration": 6107.0,
@@ -5339,7 +5339,7 @@
       {
         "first_name": "Gerald",
         "last_name": "Njinju",
-        "rider_code": "0010 -2",
+        "rider_code": "0010-2",
         "team": "Nyahururu Cycling Team",
         "position": "7",
         "duration": 6483.0,
@@ -5348,7 +5348,7 @@
       {
         "first_name": "Kelvin",
         "last_name": "Maina",
-        "rider_code": "0011 -3",
+        "rider_code": "0011-3",
         "team": "Rongai cyclers racing",
         "position": "8",
         "duration": 6553.0,
@@ -5357,7 +5357,7 @@
       {
         "first_name": "Titus",
         "last_name": "Mworia",
-        "rider_code": "0008 -1",
+        "rider_code": "0008-1",
         "team": "KAF TIGERS",
         "position": "9",
         "duration": 6568.03,
@@ -5366,7 +5366,7 @@
       {
         "first_name": "Eric",
         "last_name": "Wallace",
-        "rider_code": "0008 -3",
+        "rider_code": "0008-3",
         "team": "KAF TIGERS",
         "position": "10",
         "duration": 6584.5,
@@ -5375,7 +5375,7 @@
       {
         "first_name": "Victor",
         "last_name": "Ngugi",
-        "rider_code": "0007 -2",
+        "rider_code": "0007-2",
         "team": "Airpocket",
         "position": "11",
         "duration": 6624.0,
@@ -5384,7 +5384,7 @@
       {
         "first_name": "Morris",
         "last_name": "Nyakundi",
-        "rider_code": "0008 -4",
+        "rider_code": "0008-4",
         "team": "KAF TIGERS",
         "position": "12",
         "duration": 6635.36,
@@ -5393,7 +5393,7 @@
       {
         "first_name": "Kelvin",
         "last_name": "Kamore",
-        "rider_code": "0012 -4",
+        "rider_code": "0012-4",
         "team": "Joyriders Kenya",
         "position": "13",
         "duration": 6689.91,
@@ -5402,7 +5402,7 @@
       {
         "first_name": "Allan",
         "last_name": "Maina",
-        "rider_code": "0007 -4",
+        "rider_code": "0007-4",
         "team": "Airpocket",
         "position": "14",
         "duration": 6852.45,
@@ -5411,7 +5411,7 @@
       {
         "first_name": "Amon",
         "last_name": "Nango",
-        "rider_code": "0008 -5",
+        "rider_code": "0008-5",
         "team": "KAF TIGERS",
         "position": "15",
         "duration": 7170.27,
@@ -5420,7 +5420,7 @@
       {
         "first_name": "Adriano",
         "last_name": "Mwiti",
-        "rider_code": "0011 -2",
+        "rider_code": "0011-2",
         "team": "Rongai cyclers racing",
         "position": "16",
         "duration": 7170.82,
@@ -5429,7 +5429,7 @@
       {
         "first_name": "David",
         "last_name": "Kabira",
-        "rider_code": "0010 -1",
+        "rider_code": "0010-1",
         "team": "Nyahururu Cycling Team",
         "position": "17",
         "duration": 7238.75,
@@ -5438,7 +5438,7 @@
       {
         "first_name": "Kevin",
         "last_name": "Waithendia",
-        "rider_code": "0009 -5",
+        "rider_code": "0009-5",
         "team": "TIP OF THE SPEAR",
         "position": "18",
         "duration": 7313.08,
@@ -5447,7 +5447,7 @@
       {
         "first_name": "Wambui",
         "last_name": "Kamau",
-        "rider_code": "0012 -5",
+        "rider_code": "0012-5",
         "team": "Joyriders Kenya",
         "position": "19",
         "duration": 7646.79,
@@ -5456,7 +5456,7 @@
       {
         "first_name": "James",
         "last_name": "Mwangi",
-        "rider_code": "0010 -5",
+        "rider_code": "0010-5",
         "team": "Nyahururu Cycling Team",
         "position": "20",
         "duration": 7836.58,
@@ -5465,7 +5465,7 @@
       {
         "first_name": "Jackson",
         "last_name": "Otieno",
-        "rider_code": "0009 -4",
+        "rider_code": "0009-4",
         "team": "TIP OF THE SPEAR",
         "position": "21",
         "duration": 7856.01,
@@ -5474,7 +5474,7 @@
       {
         "first_name": "Margaret",
         "last_name": "Mutuku",
-        "rider_code": "0007 -5",
+        "rider_code": "0007-5",
         "team": "Airpocket",
         "position": "22",
         "duration": 8023.36,
@@ -5483,7 +5483,7 @@
       {
         "first_name": "John",
         "last_name": "Masila",
-        "rider_code": "0002 -2",
+        "rider_code": "0002-2",
         "team": "Sea Riders B",
         "position": "23",
         "duration": 8043.25,
@@ -5492,7 +5492,7 @@
       {
         "first_name": "Perez",
         "last_name": "Otieno",
-        "rider_code": "0004 -1",
+        "rider_code": "0004-1",
         "team": "Loop Squad Cyclists",
         "position": "24",
         "duration": 8431.26,
@@ -5501,7 +5501,7 @@
       {
         "first_name": "Span",
         "last_name": "Emmanuel",
-        "rider_code": "0001 -4",
+        "rider_code": "0001-4",
         "team": "Sea Riders",
         "position": "25",
         "duration": 8524.82,
@@ -5510,7 +5510,7 @@
       {
         "first_name": "Catherine",
         "last_name": "Kariuki",
-        "rider_code": "0008 -2",
+        "rider_code": "0008-2",
         "team": "KAF TIGERS",
         "position": "26",
         "duration": 8671.44,
@@ -5519,7 +5519,7 @@
       {
         "first_name": "Paul",
         "last_name": "Ichoho",
-        "rider_code": "0009 -1",
+        "rider_code": "0009-1",
         "team": "TIP OF THE SPEAR",
         "position": "27",
         "duration": 9304.82,
@@ -5528,7 +5528,7 @@
       {
         "first_name": "Bob",
         "last_name": "Mutua",
-        "rider_code": "0004 -2",
+        "rider_code": "0004-2",
         "team": "Loop Squad Cyclists",
         "position": "28",
         "duration": 9369.23,
@@ -5537,7 +5537,7 @@
       {
         "first_name": "Jordan",
         "last_name": "Makana",
-        "rider_code": "0001 -5",
+        "rider_code": "0001-5",
         "team": "Sea Riders",
         "position": "29",
         "duration": 9634.7,
@@ -5546,7 +5546,7 @@
       {
         "first_name": "Stephen",
         "last_name": "Ondieki",
-        "rider_code": "0004 -4",
+        "rider_code": "0004-4",
         "team": "Loop Squad Cyclists",
         "position": "30",
         "duration": 9642.87,
@@ -5555,7 +5555,7 @@
       {
         "first_name": "Ann",
         "last_name": "Ng'ang'a",
-        "rider_code": "0009 -2",
+        "rider_code": "0009-2",
         "team": "TIP OF THE SPEAR",
         "position": "31",
         "duration": 9791.11,
@@ -5564,7 +5564,7 @@
       {
         "first_name": "Morris",
         "last_name": "Mutwiri",
-        "rider_code": "0002 -4",
+        "rider_code": "0002-4",
         "team": "Sea Riders B",
         "position": "32",
         "duration": 10708.38,
@@ -5573,7 +5573,7 @@
       {
         "first_name": "Tiberius",
         "last_name": "Odhiambo",
-        "rider_code": "0006 -2",
+        "rider_code": "0006-2",
         "team": "Landscape Alliance Cycling Team",
         "position": "33",
         "duration": 11709.09,
@@ -5582,7 +5582,7 @@
       {
         "first_name": "Kyalo",
         "last_name": "Mutua",
-        "rider_code": "0006 -3",
+        "rider_code": "0006-3",
         "team": "Landscape Alliance Cycling Team",
         "position": "34",
         "duration": 12508.48,
@@ -5591,7 +5591,7 @@
       {
         "first_name": "Hillary",
         "last_name": "Siego",
-        "rider_code": "0009 -3",
+        "rider_code": "0009-3",
         "team": "TIP OF THE SPEAR",
         "position": "35",
         "duration": 12776.28,
@@ -5600,7 +5600,7 @@
       {
         "first_name": "Ryan",
         "last_name": "Kamau",
-        "rider_code": "0007 -3",
+        "rider_code": "0007-3",
         "team": "Airpocket",
         "position": "36",
         "duration": 12899.03,
@@ -5609,7 +5609,7 @@
       {
         "first_name": "Patrick",
         "last_name": "Sando",
-        "rider_code": "0006 -4",
+        "rider_code": "0006-4",
         "team": "Landscape Alliance Cycling Team",
         "position": "37",
         "duration": 13503.21,
@@ -5618,7 +5618,7 @@
       {
         "first_name": "Akinyi",
         "last_name": "Onyuka",
-        "rider_code": "0004 -3",
+        "rider_code": "0004-3",
         "team": "Loop Squad Cyclists",
         "position": "38",
         "duration": 13561.08,
@@ -5627,7 +5627,7 @@
       {
         "first_name": "Salome",
         "last_name": "Musyoka",
-        "rider_code": "0001 -1",
+        "rider_code": "0001-1",
         "team": "Sea Riders",
         "position": "39",
         "duration": 13716.71,
@@ -5636,7 +5636,7 @@
       {
         "first_name": "Jan",
         "last_name": "Anderson",
-        "rider_code": "0011 -1",
+        "rider_code": "0011-1",
         "team": "Rongai cyclers racing",
         "position": "40",
         "duration": 14079.01,
@@ -5645,7 +5645,7 @@
       {
         "first_name": "Cosmus",
         "last_name": "Musango",
-        "rider_code": "0004 -5",
+        "rider_code": "0004-5",
         "team": "Loop Squad Cyclists",
         "position": "41",
         "duration": 14544.78,
@@ -5654,7 +5654,7 @@
       {
         "first_name": "Brian",
         "last_name": "Ndirangu",
-        "rider_code": "0006 -1",
+        "rider_code": "0006-1",
         "team": "Landscape Alliance Cycling Team",
         "position": "42",
         "duration": 17054.57,
@@ -5663,7 +5663,7 @@
       {
         "first_name": "Paige",
         "last_name": "Wanjau",
-        "rider_code": "0006 -5",
+        "rider_code": "0006-5",
         "team": "Landscape Alliance Cycling Team",
         "position": "43",
         "duration": 18195.2,
@@ -5672,7 +5672,7 @@
       {
         "first_name": "Eddi",
         "last_name": "Odhiambo",
-        "rider_code": "0005 -2",
+        "rider_code": "0005-2",
         "team": "DEDSILVA INTERNATIONAL LTD RECON RIDERS",
         "position": null,
         "duration": null,
@@ -5681,7 +5681,7 @@
       {
         "first_name": "kennedy",
         "last_name": "musyoka Mutuku",
-        "rider_code": "0005 -3",
+        "rider_code": "0005-3",
         "team": "DEDSILVA INTERNATIONAL LTD RECON RIDERS",
         "position": null,
         "duration": null,
@@ -5690,7 +5690,7 @@
       {
         "first_name": "Lucy",
         "last_name": "Njoki",
-        "rider_code": "0002 -3",
+        "rider_code": "0002-3",
         "team": "Sea Riders B",
         "position": null,
         "duration": null,
@@ -5699,7 +5699,7 @@
       {
         "first_name": "Brian",
         "last_name": "Shan",
-        "rider_code": "0005 -2",
+        "rider_code": "0005-2",
         "team": "DEDSILVA INTERNATIONAL LTD RECON RIDERS",
         "position": null,
         "duration": null,
@@ -5708,7 +5708,7 @@
       {
         "first_name": "Briton",
         "last_name": "Jimbi",
-        "rider_code": "0002 -5",
+        "rider_code": "0002-5",
         "team": "Sea Riders B",
         "position": null,
         "duration": null,
@@ -5717,7 +5717,7 @@
       {
         "first_name": "Jecinta",
         "last_name": "Wanjiku",
-        "rider_code": "0011 -4",
+        "rider_code": "0011-4",
         "team": "Rongai cyclers racing",
         "position": null,
         "duration": null,
@@ -5726,7 +5726,7 @@
       {
         "first_name": "Joshua",
         "last_name": "Muchui",
-        "rider_code": "0001 -3",
+        "rider_code": "0001-3",
         "team": "Sea Riders",
         "position": null,
         "duration": null,
@@ -5735,7 +5735,7 @@
       {
         "first_name": "Brian",
         "last_name": "Nzomo",
-        "rider_code": "0005 -5",
+        "rider_code": "0005-5",
         "team": "DEDSILVA INTERNATIONAL LTD RECON RIDERS",
         "position": null,
         "duration": null,
@@ -5762,7 +5762,7 @@
       {
         "first_name": "Kibwi",
         "last_name": "Brenda Wangari",
-        "rider_code": "0005 -4",
+        "rider_code": "0005-4",
         "team": "DEDSILVA INTERNATIONAL LTD RECON RIDERS",
         "position": null,
         "duration": null,
@@ -5771,7 +5771,7 @@
       {
         "first_name": "Jennifer",
         "last_name": "Njeri",
-        "rider_code": "0010 -4",
+        "rider_code": "0010-4",
         "team": "Nyahururu Cycling Team",
         "position": null,
         "duration": null,
