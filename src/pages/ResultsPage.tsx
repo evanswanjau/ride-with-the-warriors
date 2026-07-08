@@ -283,24 +283,11 @@ const ResultsPage = () => {
                                         className="filter-select clip-sm"
                                     >
                                         <option value="All">All Circuits</option>
-                                        <option value="Blitz">Blitz</option>
                                         <option value="Recon">Recon</option>
                                         <option value="Corporate">Corporate</option>
                                     </select>
                                 </div>
 
-                                <div className="filter-group">
-                                    <span className="filter-label">Type</span>
-                                    <select
-                                        value={selectedType}
-                                        onChange={(e) => handleTypeChange(e.target.value as ResultType)}
-                                        className="filter-select clip-sm"
-                                        disabled={selectedCircuit === 'Corporate' || (selectedCircuit === 'All' && circuitsWithTeams.size === 0)}
-                                    >
-                                        <option value="Individual">Individual</option>
-                                        <option value="Team">Team</option>
-                                    </select>
-                                </div>
 
                                 {!isTeamView && (
                                     <>
