@@ -106,7 +106,7 @@ const ContactUs = () => {
                                             </div>
                                             <div style={{ flex: 1 }}>
                                                 <div className="ct-contact-label">{card.title}</div>
-                                                {card.details.map((emailItem, emailIdx) => (
+                                                {card.details?.map((emailItem, emailIdx) => (
                                                     <div key={emailIdx} style={{ marginTop: emailIdx > 0 ? '6px' : '0' }}>
                                                         <div className="ct-contact-detail-label">{emailItem.label}</div>
                                                         <a href={emailItem.link} className="ct-contact-detail" style={{ color: 'var(--ct-text-1)' }}>

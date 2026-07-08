@@ -4,19 +4,15 @@
       "first_name": "Dinnah",
       "last_name": "Safari",
       "bib_number": "5017",
-      "team": "individual",
-      "position": "1",
-      "duration": 13876.625,
-      "time": "3 hrs 51 mins"
+      "position": 1,
+      "time": "3:51:17"
     },
     {
       "first_name": "Hannah",
       "last_name": "Kibet",
       "bib_number": "5014",
-      "team": "individual",
-      "position": "2",
-      "duration": 16097.4,
-      "time": "4 hrs 28 mins"
+      "position": 2,
+      "time": "4:28:17"
     }
   ],
   "BLITZ I MALE": [
@@ -24,91 +20,71 @@
       "first_name": "Lorot",
       "last_name": "Lawrence",
       "bib_number": "5013",
-      "team": "individual",
-      "position": "1",
-      "duration": 11351.7,
-      "time": "3 hrs 9 mins"
+      "position": 1,
+      "time": "3:09:12"
     },
     {
       "first_name": "Dedan",
       "last_name": "Njuguna",
       "bib_number": "5018",
-      "team": "individual",
-      "position": "2",
-      "duration": 12702.78,
-      "time": "3 hrs 32 mins"
+      "position": 2,
+      "time": "3:31:43"
     },
     {
       "first_name": "Eric",
       "last_name": "Kilonzo",
       "bib_number": "5006",
-      "team": "individual",
-      "position": "3",
-      "duration": 14045.82,
-      "time": "3 hrs 54 mins"
+      "position": 3,
+      "time": "3:54:06"
     },
     {
       "first_name": "Fredrick",
       "last_name": "Mathias",
       "bib_number": "5003",
-      "team": "individual",
-      "position": "4",
-      "duration": 14359.8,
-      "time": "3 hrs 59 mins"
+      "position": 4,
+      "time": "3:59:20"
     },
     {
       "first_name": "Collins",
       "last_name": "Munene",
       "bib_number": "5001",
-      "team": "individual",
-      "position": "5",
-      "duration": 14866.35,
-      "time": "4 hrs 8 mins"
+      "position": 5,
+      "time": "4:07:46"
     },
     {
       "first_name": "John",
       "last_name": "Mutembei",
       "bib_number": "5007",
-      "team": "individual",
-      "position": "6",
-      "duration": 19472.14,
-      "time": "5 hrs 25 mins"
+      "position": 6,
+      "time": "5:24:32"
     },
     {
       "first_name": "Michael",
       "last_name": "Kihara",
       "bib_number": "5011",
-      "team": "individual",
-      "position": "7",
-      "duration": 19738.34,
-      "time": "5 hrs 29 mins"
+      "position": 7,
+      "time": "5:28:58"
     },
     {
       "first_name": "Alex",
       "last_name": "Wangwe",
       "bib_number": "5005",
-      "team": "individual",
-      "position": "8",
-      "duration": 21781.95,
-      "time": "6 hrs 3 mins"
+      "position": 8,
+      "time": "6:03:02"
     },
     {
       "first_name": "Kyle",
       "last_name": "Ogolla",
       "bib_number": "5015",
-      "team": "individual",
-      "position": "9",
-      "duration": 22928.51,
-      "time": "6 hrs 22 mins"
+      "position": 9,
+      "time": "6:22:09"
     },
     {
       "first_name": "Mark",
       "last_name": "Boinet",
       "bib_number": "5009",
-      "team": "individual",
       "position": "DQ",
-      "duration": 16722.82,
-      "time": "4 hrs 39 mins"
+      "time": "4:38:43"
     }
   ],
   "BLITZ II FEMALE": [
@@ -116,28 +92,22 @@
       "first_name": "Ivy",
       "last_name": "Murithi",
       "bib_number": "4006",
-      "team": "individual",
-      "position": "1",
-      "duration": 16946.08,
-      "time": "4 hrs 42 mins"
+      "position": 1,
+      "time": "4:42:26"
     },
     {
       "first_name": "Valentine",
       "last_name": "Eshiwani",
       "bib_number": "4007",
-      "team": "individual",
-      "position": "2",
-      "duration": 22129.23,
-      "time": "6 hrs 9 mins"
+      "position": 2,
+      "time": "6:08:49"
     },
     {
       "first_name": "Nancy",
       "last_name": "Akinyi",
       "bib_number": "4045",
-      "team": "individual",
       "position": "DQ",
-      "duration": 15117.17,
-      "time": "4 hrs 12 mins"
+      "time": "4:11:57"
     }
   ],
   "BLITZ II MALE": [
@@ -145,549 +115,427 @@
       "first_name": "Charles",
       "last_name": "Kagimu",
       "bib_number": "4046",
-      "team": "individual",
-      "position": "1",
-      "duration": 11787.0,
-      "time": "3 hrs 16 mins"
+      "position": 1,
+      "time": "3:16:27"
     },
     {
       "first_name": "Jean",
       "last_name": "Newbery",
       "bib_number": "4002",
-      "team": "individual",
-      "position": "2",
-      "duration": 12572.78,
-      "time": "3 hrs 30 mins"
+      "position": 2,
+      "time": "3:29:33"
     },
     {
       "first_name": "Alex",
       "last_name": "Gachie",
       "bib_number": "4012",
-      "team": "individual",
-      "position": "3",
-      "duration": 12885.1,
-      "time": "3 hrs 35 mins"
+      "position": 3,
+      "time": "3:34:45"
     },
     {
       "first_name": "AbdulFatah",
       "last_name": "Cassim",
       "bib_number": "4068",
-      "team": "individual",
-      "position": "4",
-      "duration": 12930.9,
-      "time": "3 hrs 36 mins"
+      "position": 4,
+      "time": "3:35:31"
     },
     {
       "first_name": "Daniel",
       "last_name": "Gitonga",
       "bib_number": "4053",
-      "team": "individual",
-      "position": "5",
-      "duration": 14482.78,
-      "time": "4 hrs 1 mins"
+      "position": 5,
+      "time": "4:01:23"
     },
     {
       "first_name": "Jesse",
       "last_name": "Bonwitt",
       "bib_number": "4004",
-      "team": "individual",
-      "position": "6",
-      "duration": 14628.34,
-      "time": "4 hrs 4 mins"
+      "position": 6,
+      "time": "4:03:48"
     },
     {
       "first_name": "Joseph",
       "last_name": "Kariuki",
       "bib_number": "4049",
-      "team": "individual",
-      "position": "7",
-      "duration": 15142.88,
-      "time": "4 hrs 12 mins"
+      "position": 7,
+      "time": "4:12:23"
     },
     {
       "first_name": "Iman",
       "last_name": "Haaji",
       "bib_number": "4063",
-      "team": "individual",
-      "position": "8",
-      "duration": 15300.23,
-      "time": "4 hrs 15 mins"
+      "position": 8,
+      "time": "4:15:00"
     },
     {
       "first_name": "Michael",
       "last_name": "Kimani",
       "bib_number": "4017",
-      "team": "individual",
-      "position": "9",
-      "duration": 15369.31,
-      "time": "4 hrs 16 mins"
+      "position": 9,
+      "time": "4:16:09"
     },
     {
       "first_name": "Timothy",
       "last_name": "Shiombe",
       "bib_number": "4020",
-      "team": "individual",
-      "position": "10",
-      "duration": 16334.81,
-      "time": "4 hrs 32 mins"
+      "position": 10,
+      "time": "4:32:15"
     },
     {
       "first_name": "Jim",
       "last_name": "Blair",
       "bib_number": "4071",
-      "team": "individual",
-      "position": "11",
-      "duration": 16357.12,
-      "time": "4 hrs 33 mins"
+      "position": 11,
+      "time": "4:32:37"
     },
     {
       "first_name": "Bildad",
       "last_name": "Njuguna",
       "bib_number": "4043",
-      "team": "individual",
-      "position": "12",
-      "duration": 16701.61,
-      "time": "4 hrs 38 mins"
+      "position": 12,
+      "time": "4:38:22"
     },
     {
       "first_name": "Alex",
       "last_name": "Abuya Bichang'a",
       "bib_number": "4052",
-      "team": "individual",
-      "position": "13",
-      "duration": 16762.08,
-      "time": "4 hrs 39 mins"
+      "position": 13,
+      "time": "4:39:22"
     },
     {
       "first_name": "Oscar",
       "last_name": "Kipkoskey",
       "bib_number": "4031",
-      "team": "individual",
-      "position": "14",
-      "duration": 17139.25,
-      "time": "4 hrs 46 mins"
+      "position": 14,
+      "time": "4:45:39"
     },
     {
       "first_name": "Nicholas",
       "last_name": "Kerr",
       "bib_number": "4032",
-      "team": "individual",
-      "position": "15",
-      "duration": 18322.72,
-      "time": "5 hrs 5 mins"
+      "position": 15,
+      "time": "5:05:23"
     },
     {
       "first_name": "Solomon",
       "last_name": "Muema",
       "bib_number": "4025",
-      "team": "individual",
-      "position": "16",
-      "duration": 18654.48,
-      "time": "5 hrs 11 mins"
+      "position": 16,
+      "time": "5:10:54"
     },
     {
       "first_name": "THUITA",
       "last_name": "MAINA",
       "bib_number": "4070",
-      "team": "individual",
-      "position": "17",
-      "duration": 19073.46,
-      "time": "5 hrs 18 mins"
+      "position": 17,
+      "time": "5:17:53"
     },
     {
       "first_name": "Kevin",
       "last_name": "Owaga",
       "bib_number": "4072",
-      "team": "individual",
-      "position": "18",
-      "duration": 19079.07,
-      "time": "5 hrs 18 mins"
+      "position": 18,
+      "time": "5:17:59"
     },
     {
       "first_name": "Victor",
       "last_name": "Fadhili",
       "bib_number": "4022",
-      "team": "individual",
-      "position": "19",
-      "duration": 19513.3,
-      "time": "5 hrs 25 mins"
+      "position": 19,
+      "time": "5:25:13"
     },
     {
       "first_name": "Max",
       "last_name": "Maina",
       "bib_number": "4014",
-      "team": "individual",
-      "position": "20",
-      "duration": 20129.92,
-      "time": "5 hrs 35 mins"
+      "position": 20,
+      "time": "5:35:30"
     },
     {
       "first_name": "samuel",
       "last_name": "kamau",
       "bib_number": "4060",
-      "team": "individual",
-      "position": "21",
-      "duration": 20664.02,
-      "time": "5 hrs 44 mins"
+      "position": 21,
+      "time": "5:44:24"
     },
     {
       "first_name": "Samuel",
       "last_name": "Wanjugu",
       "bib_number": "4069",
-      "team": "individual",
-      "position": "22",
-      "duration": 20860.54,
-      "time": "5 hrs 48 mins"
+      "position": 22,
+      "time": "5:47:41"
     },
     {
       "first_name": "Charles",
       "last_name": "Ogolla",
       "bib_number": "4019",
-      "team": "individual",
-      "position": "23",
-      "duration": 21005.41,
-      "time": "5 hrs 50 mins"
+      "position": 23,
+      "time": "5:50:05"
     },
     {
       "first_name": "titus",
       "last_name": "masai",
       "bib_number": "4047",
-      "team": "individual",
-      "position": "24",
-      "duration": 21012.8,
-      "time": "5 hrs 50 mins"
+      "position": 24,
+      "time": "5:50:13"
     },
     {
       "first_name": "Steve",
       "last_name": "Juma",
       "bib_number": "4062",
-      "team": "individual",
-      "position": "25",
-      "duration": 21329.43,
-      "time": "5 hrs 55 mins"
+      "position": 25,
+      "time": "5:55:29"
     },
     {
       "first_name": "Dominic",
       "last_name": "Muchiri",
       "bib_number": "4023",
-      "team": "individual",
-      "position": "26",
-      "duration": 21515.9,
-      "time": "5 hrs 59 mins"
+      "position": 26,
+      "time": "5:58:36"
     },
     {
       "first_name": "Stephen",
       "last_name": "Ayonga",
       "bib_number": "4018",
-      "team": "individual",
-      "position": "27",
-      "duration": 21954.11,
-      "time": "6 hrs 6 mins"
+      "position": 27,
+      "time": "6:05:54"
     },
     {
       "first_name": "Abhinav",
       "last_name": "Shah",
       "bib_number": "4030",
-      "team": "individual",
-      "position": "28",
-      "duration": 22325.58,
-      "time": "6 hrs 12 mins"
+      "position": 28,
+      "time": "6:12:06"
     },
     {
       "first_name": "Nicholas",
       "last_name": "Korio",
       "bib_number": "4028",
-      "team": "individual",
-      "position": "29",
-      "duration": 22863.07,
-      "time": "6 hrs 21 mins"
+      "position": 29,
+      "time": "6:21:03"
     },
     {
       "first_name": "Elias",
       "last_name": "GATHUKU",
       "bib_number": "4015",
-      "team": "individual",
-      "position": "30",
-      "duration": 22959.4,
-      "time": "6 hrs 23 mins"
+      "position": 30,
+      "time": "6:22:39"
     },
     {
       "first_name": "Evans",
       "last_name": "Wambani",
       "bib_number": "4059",
-      "team": "individual",
-      "position": "31",
-      "duration": 23490.64,
-      "time": "6 hrs 32 mins"
+      "position": 31,
+      "time": "6:31:31"
     },
     {
       "first_name": "Douglas",
       "last_name": "Gitonga",
       "bib_number": "4055",
-      "team": "individual",
-      "position": "32",
-      "duration": 24341.41,
-      "time": "6 hrs 46 mins"
+      "position": 32,
+      "time": "6:45:41"
     },
     {
       "first_name": "Brian",
       "last_name": "Omondi",
       "bib_number": "4050",
-      "team": "individual",
-      "position": "33",
-      "duration": 25030.09,
-      "time": "6 hrs 57 mins"
+      "position": 33,
+      "time": "6:57:10"
     },
     {
       "first_name": "Edwin",
       "last_name": "Owuor",
       "bib_number": "4029",
-      "team": "individual",
-      "position": "34",
-      "duration": 25448.96,
-      "time": "7 hrs 4 mins"
+      "position": 34,
+      "time": "7:04:09"
     },
     {
       "first_name": "Solomon",
       "last_name": "Kamau",
       "bib_number": "4008",
-      "team": "individual",
-      "position": "35",
-      "duration": 25615.34,
-      "time": "7 hrs 7 mins"
+      "position": 35,
+      "time": "7:06:55"
     },
     {
       "first_name": "Bob",
       "last_name": "Omondi",
       "bib_number": "4066",
-      "team": "individual",
-      "position": "36",
-      "duration": 25681.97,
-      "time": "7 hrs 8 mins"
+      "position": 36,
+      "time": "7:08:02"
     },
     {
       "first_name": "Christopher",
       "last_name": "Nyandoro",
       "bib_number": "4003",
-      "team": "individual",
-      "position": "37",
-      "duration": 26084.01,
-      "time": "7 hrs 15 mins"
+      "position": 37,
+      "time": "7:14:44"
     },
     {
       "first_name": "BONFACE",
       "last_name": "MUTHAKA",
       "bib_number": "4036",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Ngochi",
       "last_name": "Morani",
       "bib_number": "4038",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Samuel",
       "last_name": "Doe",
       "bib_number": "4039",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Stanley",
       "last_name": "Thogori",
       "bib_number": "4067",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Nzonzi",
       "last_name": "Kimanzi",
       "bib_number": "4042",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Hillary",
       "last_name": "Mwenda Muchemi",
       "bib_number": "4044",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Benson",
       "last_name": "Gichobi",
       "bib_number": "4057",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Clarence",
       "last_name": "Lilumbi",
       "bib_number": "4048",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Ibrahim",
       "last_name": "Rajab",
       "bib_number": "4065",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Lodin",
       "last_name": "Agesa",
       "bib_number": "4024",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "bryson",
       "last_name": "Mwandawiro",
       "bib_number": "4056",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Safari",
       "last_name": "Karisa",
       "bib_number": "4026",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Mandela",
       "last_name": "Kimankusi",
       "bib_number": "4021",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Juma",
       "last_name": "Chanda",
       "bib_number": "4016",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Paul",
       "last_name": "Ogutu",
       "bib_number": "4013",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Victor",
       "last_name": "Ereng",
       "bib_number": "4011",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Timothy",
       "last_name": "Rono",
       "bib_number": "4010",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Pius",
       "last_name": "Mutinda",
       "bib_number": "4009",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Michael",
       "last_name": "Mumo",
       "bib_number": "4005",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "ROBERT",
       "last_name": "WAMBUI",
       "bib_number": "4034",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Joseph",
       "last_name": "Kanyi",
       "bib_number": "4035",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Kariuki",
       "last_name": "Waweru",
       "bib_number": "4001",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "John",
       "last_name": "Baraka",
       "bib_number": "4064",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Elvis",
       "last_name": "Murunga",
       "bib_number": "4061",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     }
   ],
@@ -696,45 +544,35 @@
       "first_name": "Berber",
       "last_name": "Kramer",
       "bib_number": "3037",
-      "team": "individual",
-      "position": "1",
-      "duration": 13816.63,
-      "time": "3 hrs 50 mins"
+      "position": 1,
+      "time": "3:50:17"
     },
     {
       "first_name": "Joyce",
       "last_name": "Matara",
       "bib_number": "3033",
-      "team": "individual",
-      "position": "2",
-      "duration": 17245.8,
-      "time": "4 hrs 47 mins"
+      "position": 2,
+      "time": "4:47:26"
     },
     {
       "first_name": "Morine",
       "last_name": "Sirera",
       "bib_number": "3009",
-      "team": "individual",
-      "position": "3",
-      "duration": 21042.14,
-      "time": "5 hrs 51 mins"
+      "position": 3,
+      "time": "5:50:42"
     },
     {
       "first_name": "Iris",
       "last_name": "Karanja",
       "bib_number": "3034",
-      "team": "individual",
       "position": "DQ",
-      "duration": 19473.11,
-      "time": "5.41"
+      "time": "5:24:33"
     },
     {
       "first_name": "Julia",
       "last_name": "Kerr",
       "bib_number": "6005",
-      "team": "individual",
       "position": "DQ",
-      "duration": null,
       "time": "0.00"
     }
   ],
@@ -743,361 +581,274 @@
       "first_name": "Kennedy",
       "last_name": "Ndigia",
       "bib_number": "3035",
-      "team": "individual",
-      "position": "1",
-      "duration": 13529.29,
-      "time": "3 hrs 45 mins"
+      "position": 1,
+      "time": "3:45:29"
     },
     {
       "first_name": "Austine",
       "last_name": "Ouma",
       "bib_number": "3020",
-      "team": "individual",
-      "position": "2",
-      "duration": 14091.29,
-      "time": "3 hrs 55 mins"
+      "position": 2,
+      "time": "3:54:51"
     },
     {
       "first_name": "Peter",
       "last_name": "Ruara",
       "bib_number": "3017",
-      "team": "individual",
-      "position": "3",
-      "duration": 15140.39,
-      "time": "4 hrs 12 mins"
+      "position": 3,
+      "time": "4:12:20"
     },
     {
       "first_name": "Troy",
       "last_name": "Barrie",
       "bib_number": "3032",
-      "team": "individual",
-      "position": "4",
-      "duration": 15245.66,
-      "time": "4 hrs 14 mins"
+      "position": 4,
+      "time": "4:14:06"
     },
     {
       "first_name": "Ridhwan",
       "last_name": "Sayyed",
       "bib_number": "6006",
-      "team": "individual",
-      "position": "5",
-      "duration": 15274.14,
-      "time": "4 hrs 15 mins"
+      "position": 5,
+      "time": "4:14:34"
     },
     {
       "first_name": "Phillip",
       "last_name": "Omari",
       "bib_number": "3019",
-      "team": "individual",
-      "position": "6",
-      "duration": 15946.0,
-      "time": "4 hrs 26 mins"
+      "position": 6,
+      "time": "4:26:05"
     },
     {
       "first_name": "Jimmy",
       "last_name": "Mungai",
       "bib_number": "3013",
-      "team": "individual",
-      "position": "7",
-      "duration": 16113.47,
-      "time": "4 hrs 29 mins"
+      "position": 7,
+      "time": "4:28:33"
     },
     {
       "first_name": "Samwel",
       "last_name": "Okute",
       "bib_number": "3022",
-      "team": "individual",
-      "position": "8",
-      "duration": 16963.39,
-      "time": "4 hrs 43 mins"
+      "position": 8,
+      "time": "4:42:43"
     },
     {
       "first_name": "Fredrick",
       "last_name": "Awinyo",
       "bib_number": "3029",
-      "team": "individual",
-      "position": "9",
-      "duration": 16981.49,
-      "time": "4 hrs 43 mins"
+      "position": 9,
+      "time": "4:43:01"
     },
     {
       "first_name": "Andrew",
       "last_name": "Atina",
       "bib_number": "3027",
-      "team": "individual",
-      "position": "10",
-      "duration": 17088.47,
-      "time": "4 hrs 45 mins"
+      "position": 10,
+      "time": "4:44:48"
     },
     {
       "first_name": "Mwangi",
       "last_name": "Samwel",
       "bib_number": "3011",
-      "team": "individual",
-      "position": "11",
-      "duration": 17111.05,
-      "time": "4 hrs 45 mins"
+      "position": 11,
+      "time": "4:45:11"
     },
     {
       "first_name": "Jesse",
       "last_name": "Njue Ndiga",
       "bib_number": "3014",
-      "team": "individual",
-      "position": "12",
-      "duration": 17709.52,
-      "time": "4 hrs 55 mins"
+      "position": 12,
+      "time": "4:55:10"
     },
     {
       "first_name": "John",
       "last_name": "Tabani",
       "bib_number": "3003",
-      "team": "individual",
-      "position": "13",
-      "duration": 18356.43,
-      "time": "5 hrs 6 mins"
+      "position": 13,
+      "time": "5:05:56"
     },
     {
       "first_name": "Sammy",
       "last_name": "Kabesa",
       "bib_number": "3016",
-      "team": "individual",
-      "position": "14",
-      "duration": 18408.66,
-      "time": "5 hrs 7 mins"
+      "position": 14,
+      "time": "5:06:49"
     },
     {
       "first_name": "Devesh",
       "last_name": "Patel",
       "bib_number": "3036",
-      "team": "individual",
-      "position": "15",
-      "duration": 18409.2,
-      "time": "5 hrs 7 mins"
+      "position": 15,
+      "time": "5:06:49"
     },
     {
       "first_name": "Gedion",
       "last_name": "Kadu",
       "bib_number": "3018",
-      "team": "individual",
-      "position": "16",
-      "duration": 18951.41,
-      "time": "5 hrs 16 mins"
+      "position": 16,
+      "time": "5:15:51"
     },
     {
       "first_name": "Francis",
       "last_name": "Kiumbi",
       "bib_number": "6004",
-      "team": "individual",
-      "position": "17",
-      "duration": 19197.18,
-      "time": "5 hrs 20 mins"
+      "position": 17,
+      "time": "5:19:57"
     },
     {
       "first_name": "Amit",
       "last_name": "Pandya",
       "bib_number": "3025",
-      "team": "individual",
-      "position": "18",
-      "duration": 19471.92,
-      "time": "5 hrs 25 mins"
+      "position": 18,
+      "time": "5:24:32"
     },
     {
       "first_name": "Ahmed",
       "last_name": "Saman",
       "bib_number": "6001",
-      "team": "individual",
-      "position": "19",
-      "duration": 19562.22,
-      "time": "5 hrs 26 mins"
+      "position": 19,
+      "time": "5:26:02"
     },
     {
       "first_name": "Moses",
       "last_name": "Mwangi",
       "bib_number": "3010",
-      "team": "individual",
-      "position": "20",
-      "duration": 19738.99,
-      "time": "5 hrs 29 mins"
+      "position": 20,
+      "time": "5:28:59"
     },
     {
       "first_name": "Joshua",
       "last_name": "Munene",
       "bib_number": "3028",
-      "team": "individual",
-      "position": "21",
-      "duration": 19755.81,
-      "time": "5 hrs 29 mins"
+      "position": 21,
+      "time": "5:29:16"
     },
     {
       "first_name": "Abdallah",
       "last_name": "Yasin",
       "bib_number": "3026",
-      "team": "individual",
-      "position": "22",
-      "duration": 19987.1,
-      "time": "5 hrs 33 mins"
+      "position": 22,
+      "time": "5:33:07"
     },
     {
       "first_name": "Hashim",
       "last_name": "Zuzu Zuzu",
       "bib_number": "6003",
-      "team": "individual",
-      "position": "23",
-      "duration": 20509.27,
-      "time": "5 hrs 42 mins"
+      "position": 23,
+      "time": "5:41:49"
     },
     {
       "first_name": "Ali",
       "last_name": "Shee",
       "bib_number": "3007",
-      "team": "individual",
-      "position": "24",
-      "duration": 20884.28,
-      "time": "5 hrs 48 mins"
+      "position": 24,
+      "time": "5:48:04"
     },
     {
       "first_name": "Kevin",
       "last_name": "Ochieng",
       "bib_number": "3039",
-      "team": "individual",
-      "position": "25",
-      "duration": 20902.32,
-      "time": "5 hrs 48 mins"
+      "position": 25,
+      "time": "5:48:22"
     },
     {
       "first_name": "Charles",
       "last_name": "Wambui",
       "bib_number": "3023",
-      "team": "individual",
-      "position": "26",
-      "duration": 21660.71,
-      "time": "6 hrs 1 mins"
+      "position": 26,
+      "time": "6:01:01"
     },
     {
       "first_name": "Ally Hamud",
       "last_name": "Said",
       "bib_number": "3012",
-      "team": "individual",
-      "position": "27",
-      "duration": 21687.88,
-      "time": "6 hrs 1 mins"
+      "position": 27,
+      "time": "6:01:28"
     },
     {
       "first_name": "Douglas",
       "last_name": "Mwambuki",
       "bib_number": "3004",
-      "team": "individual",
-      "position": "28",
-      "duration": 24928.88,
-      "time": "6 hrs 55 mins"
+      "position": 28,
+      "time": "6:55:29"
     },
     {
       "first_name": "Brian",
       "last_name": "Awuor",
       "bib_number": "3031",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Alfred",
       "last_name": "Kibet",
       "bib_number": "3002",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Daniel",
       "last_name": "Wanyonyi",
       "bib_number": "3001",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "MUIRURI",
       "last_name": "DANSON",
       "bib_number": "3005",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Dennis",
       "last_name": "Muthike",
       "bib_number": "3006",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Tom",
       "last_name": "Jimbo",
       "bib_number": "3008",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Roeland",
       "last_name": "Monasch",
       "bib_number": "6002",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "YAGNESH",
       "last_name": "PATEL",
       "bib_number": "3015",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Hillary",
       "last_name": "Njiru",
       "bib_number": "3038",
-      "team": "individual",
       "position": null,
-      "duration": null,
-      "time": "0.00"
-    },
-    {
-      "first_name": "Phillip",
-      "last_name": "Omari",
-      "bib_number": "3019",
-      "team": "individual",
-      "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Phillip",
       "last_name": "Ochieng",
       "bib_number": "3024",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Tom",
       "last_name": "Ogega",
       "bib_number": "3021",
-      "team": "individual",
       "position": "DQ",
-      "duration": 12835.14,
-      "time": "3.57"
+      "time": "3:33:55"
     }
   ],
   "RECON FEMALE": [
@@ -1105,360 +856,280 @@
       "first_name": "Megan",
       "last_name": "Irungu",
       "bib_number": "2306",
-      "team": "individual",
-      "position": "1",
-      "duration": 7434.32,
-      "time": "2 hrs 4 mins"
+      "position": 1,
+      "time": "2:03:54"
     },
     {
       "first_name": "Eva",
       "last_name": "Wanjiru",
       "bib_number": "2313",
-      "team": "individual",
-      "position": "2",
-      "duration": 7653.11,
-      "time": "2 hrs 8 mins"
+      "position": 2,
+      "time": "2:07:33"
     },
     {
       "first_name": "Dahlia",
       "last_name": "Kimweli",
       "bib_number": "2280",
-      "team": "individual",
-      "position": "3",
-      "duration": 7960.0,
-      "time": "2 hrs 13 mins"
+      "position": 3,
+      "time": "2:12:40"
     },
     {
       "first_name": "yvonne",
       "last_name": "muinde",
       "bib_number": "2303",
-      "team": "individual",
-      "position": "4",
-      "duration": 8454.13,
-      "time": "2 hrs 21 mins"
+      "position": 4,
+      "time": "2:20:54"
     },
     {
       "first_name": "Debbie",
       "last_name": "Jepkorir",
       "bib_number": "2283",
-      "team": "individual",
-      "position": "5",
-      "duration": 9263.63,
-      "time": "2 hrs 34 mins"
+      "position": 5,
+      "time": "2:34:24"
     },
     {
       "first_name": "Joy",
       "last_name": "Ismael",
       "bib_number": "2344",
-      "team": "individual",
-      "position": "6",
-      "duration": 9854.36,
-      "time": "2 hrs 44 mins"
+      "position": 6,
+      "time": "2:44:14"
     },
     {
       "first_name": "June",
       "last_name": "Ondeng'",
       "bib_number": "2268",
-      "team": "individual",
-      "position": "7",
-      "duration": 9931.0,
-      "time": "2 hrs 46 mins"
+      "position": 7,
+      "time": "2:45:31"
     },
     {
       "first_name": "Judith",
       "last_name": "Ombuor",
       "bib_number": "2195",
-      "team": "individual",
-      "position": "8",
-      "duration": 9941.0,
-      "time": "2 hrs 46 mins"
+      "position": 8,
+      "time": "2:45:41"
     },
     {
       "first_name": "Elizabeth",
       "last_name": "Tate-Harte",
       "bib_number": "2307",
-      "team": "individual",
-      "position": "9",
-      "duration": 10002.1,
-      "time": "2 hrs 47 mins"
+      "position": 9,
+      "time": "2:46:42"
     },
     {
       "first_name": "Wairimu",
       "last_name": "Karugu",
       "bib_number": "2177",
-      "team": "individual",
-      "position": "10",
-      "duration": 10449.07,
-      "time": "2 hrs 54 mins"
+      "position": 10,
+      "time": "2:54:09"
     },
     {
       "first_name": "Eva",
       "last_name": "Kimemia",
       "bib_number": "2165",
-      "team": "individual",
-      "position": "11",
-      "duration": 10478.98,
-      "time": "2 hrs 55 mins"
+      "position": 11,
+      "time": "2:54:39"
     },
     {
       "first_name": "Carol",
       "last_name": "Mbutura",
       "bib_number": "2035",
-      "team": "individual",
-      "position": "12",
-      "duration": 10883.64,
-      "time": "3 hrs 1 mins"
+      "position": 12,
+      "time": "3:01:24"
     },
     {
       "first_name": "Huria",
       "last_name": "Karugu",
       "bib_number": "2182",
-      "team": "individual",
-      "position": "13",
-      "duration": 11095.97,
-      "time": "3 hrs 5 mins"
+      "position": 13,
+      "time": "3:04:56"
     },
     {
       "first_name": "Elizabeth",
       "last_name": "Kareri",
       "bib_number": "2267",
-      "team": "individual",
-      "position": "14",
-      "duration": 11128.08,
-      "time": "3 hrs 5 mins"
+      "position": 14,
+      "time": "3:05:28"
     },
     {
       "first_name": "Wangui",
       "last_name": "Munga",
       "bib_number": "2186",
-      "team": "individual",
-      "position": "15",
-      "duration": 11524.04,
-      "time": "3 hrs 12 mins"
+      "position": 15,
+      "time": "3:12:04"
     },
     {
       "first_name": "Sellah",
       "last_name": "Ouma",
       "bib_number": "2062",
-      "team": "individual",
-      "position": "16",
-      "duration": 11534.47,
-      "time": "3 hrs 12 mins"
+      "position": 16,
+      "time": "3:12:14"
     },
     {
       "first_name": "Khyati",
       "last_name": "Galaiya",
       "bib_number": "2296",
-      "team": "individual",
-      "position": "17",
-      "duration": 11907.65,
-      "time": "3 hrs 18 mins"
+      "position": 17,
+      "time": "3:18:28"
     },
     {
       "first_name": "zainab",
       "last_name": "kangale",
       "bib_number": "2297",
-      "team": "individual",
-      "position": "18",
-      "duration": 11982.46,
-      "time": "3 hrs 20 mins"
+      "position": 18,
+      "time": "3:19:42"
     },
     {
       "first_name": "Winnie",
       "last_name": "Achola",
       "bib_number": "2158",
-      "team": "individual",
-      "position": "19",
-      "duration": 12039.78,
-      "time": "3 hrs 21 mins"
+      "position": 19,
+      "time": "3:20:40"
     },
     {
       "first_name": "Paula",
       "last_name": "Karanja",
       "bib_number": "2338",
-      "team": "individual",
-      "position": "20",
-      "duration": 12062.93,
-      "time": "3 hrs 21 mins"
+      "position": 20,
+      "time": "3:21:03"
     },
     {
       "first_name": "Adell",
       "last_name": "Wamalwa",
       "bib_number": "2276",
-      "team": "individual",
-      "position": "21",
-      "duration": 12202.95,
-      "time": "3 hrs 23 mins"
+      "position": 21,
+      "time": "3:23:23"
     },
     {
       "first_name": "Sharon",
       "last_name": "Bitutu",
       "bib_number": "2094",
-      "team": "individual",
-      "position": "22",
-      "duration": 12265.12,
-      "time": "3 hrs 24 mins"
+      "position": 22,
+      "time": "3:24:25"
     },
     {
       "first_name": "Valentine",
       "last_name": "Nasimiyu",
       "bib_number": "2044",
-      "team": "individual",
-      "position": "23",
-      "duration": 12321.6,
-      "time": "3 hrs 25 mins"
+      "position": 23,
+      "time": "3:25:22"
     },
     {
       "first_name": "Susan",
       "last_name": "Araka",
       "bib_number": "2107",
-      "team": "individual",
-      "position": "24",
-      "duration": 12568.84,
-      "time": "3 hrs 29 mins"
+      "position": 24,
+      "time": "3:29:29"
     },
     {
       "first_name": "Ravinia",
       "last_name": "Wambui",
       "bib_number": "2362",
-      "team": "individual",
-      "position": "25",
-      "duration": 13041.99,
-      "time": "3 hrs 37 mins"
+      "position": 25,
+      "time": "3:37:22"
     },
     {
       "first_name": "Ivy",
       "last_name": "Lang'at",
       "bib_number": "2197",
-      "team": "individual",
-      "position": "26",
-      "duration": 13116.68,
-      "time": "3 hrs 39 mins"
+      "position": 26,
+      "time": "3:38:37"
     },
     {
       "first_name": "Christine",
       "last_name": "Owino",
       "bib_number": "2065",
-      "team": "individual",
-      "position": "27",
-      "duration": 13512.18,
-      "time": "3 hrs 45 mins"
+      "position": 27,
+      "time": "3:45:12"
     },
     {
       "first_name": "Kathleen",
       "last_name": "Karimi",
       "bib_number": "2225",
-      "team": "individual",
-      "position": "28",
-      "duration": 13626.43,
-      "time": "3 hrs 47 mins"
+      "position": 28,
+      "time": "3:47:06"
     },
     {
       "first_name": "Gloria",
       "last_name": "Obiny",
       "bib_number": "2262",
-      "team": "individual",
-      "position": "29",
-      "duration": 14062.59,
-      "time": "3 hrs 54 mins"
+      "position": 29,
+      "time": "3:54:23"
     },
     {
       "first_name": "Elizabeth",
       "last_name": "Mungai",
       "bib_number": "2265",
-      "team": "individual",
-      "position": "30",
-      "duration": 17850.89,
-      "time": "4 hrs 58 mins"
+      "position": 30,
+      "time": "4:57:31"
     },
     {
       "first_name": "Tessy",
       "last_name": "Owori",
       "bib_number": "2201",
-      "team": "individual",
-      "position": "31",
-      "duration": 17952.96,
-      "time": "4 hrs 59 mins"
+      "position": 31,
+      "time": "4:59:13"
     },
     {
       "first_name": "MONICA",
       "last_name": "WANJIKU",
       "bib_number": "2330",
-      "team": "individual",
-      "position": "32",
-      "duration": 17988.42,
-      "time": "5 hrs 0 mins"
+      "position": 32,
+      "time": "4:59:48"
     },
     {
       "first_name": "Annette",
       "last_name": "Ngao",
       "bib_number": "2231",
-      "team": "individual",
-      "position": "33",
-      "duration": 19935.0,
-      "time": "5 hrs 32 mins"
+      "position": 33,
+      "time": "5:32:15"
     },
     {
       "first_name": "Sylvia",
       "last_name": "Sengeny",
       "bib_number": "2132",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Cynthia",
       "last_name": "Mwavishi",
       "bib_number": "2221",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Sonnia",
       "last_name": "Gikaru",
       "bib_number": "2119",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Lilian",
       "last_name": "Chagarii",
       "bib_number": "2033",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Anne",
       "last_name": "Mburu",
       "bib_number": "2254",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Margaret",
       "last_name": "Mwangi",
       "bib_number": "2093",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Noella",
       "last_name": "Langat",
       "bib_number": "2360",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     }
   ],
@@ -1467,2538 +1138,1974 @@
       "first_name": "Nicholus",
       "last_name": "Kamau",
       "bib_number": "2256",
-      "team": "individual",
-      "position": "1",
-      "duration": 5751.99,
-      "time": "1 hrs 35 min"
+      "position": 1,
+      "time": "1:35:52"
     },
     {
       "first_name": "Peter",
       "last_name": "Mbugua",
       "bib_number": "2287",
-      "team": "individual",
-      "position": "2",
-      "duration": 6000.0,
-      "time": "1 hrs 40 min"
+      "position": 2,
+      "time": "1:40:00"
     },
     {
       "first_name": "Stephen",
       "last_name": "Kamau",
       "bib_number": "2347",
-      "team": "individual",
-      "position": "3",
-      "duration": 6010.83,
-      "time": "1 hrs 40 min"
+      "position": 3,
+      "time": "1:40:11"
     },
     {
       "first_name": "Goodwill",
       "last_name": "Mshindi",
       "bib_number": "2340",
-      "team": "individual",
-      "position": "4",
-      "duration": 6060.0,
-      "time": "1 hrs 41 min"
+      "position": 4,
+      "time": "1:41:00"
     },
     {
       "first_name": "Moses",
       "last_name": "Njuguna",
       "bib_number": "2329",
-      "team": "individual",
-      "position": "5",
-      "duration": 6080.35,
-      "time": "1 hrs 41 min"
+      "position": 5,
+      "time": "1:41:20"
     },
     {
       "first_name": "Charles",
       "last_name": "Wachuka",
       "bib_number": "2337",
-      "team": "individual",
-      "position": "6",
-      "duration": 6137.12,
-      "time": "1 hrs 42 min"
+      "position": 6,
+      "time": "1:42:17"
     },
     {
       "first_name": "Evans",
       "last_name": "Otieno",
       "bib_number": "2133",
-      "team": "individual",
-      "position": "7",
-      "duration": 6632.0,
-      "time": "1 hrs 50 min"
+      "position": 7,
+      "time": "1:50:32"
     },
     {
       "first_name": "Kevin",
       "last_name": "Bosire",
       "bib_number": "2081",
-      "team": "individual",
-      "position": "8",
-      "duration": 6634.0,
-      "time": "1 hrs 50 min"
+      "position": 8,
+      "time": "1:50:34"
     },
     {
       "first_name": "Daniel",
       "last_name": "Mbugua",
       "bib_number": "2353",
-      "team": "individual",
-      "position": "9",
-      "duration": 6636.97,
-      "time": "1 hrs 50 min"
+      "position": 9,
+      "time": "1:50:37"
     },
     {
       "first_name": "Murehia",
       "last_name": "Kingori",
       "bib_number": "2332",
-      "team": "individual",
-      "position": "10",
-      "duration": 6638.17,
-      "time": "1 hrs 50 min"
+      "position": 10,
+      "time": "1:50:38"
     },
     {
       "first_name": "Raul",
       "last_name": "Munyeria",
       "bib_number": "2361",
-      "team": "individual",
-      "position": "11",
-      "duration": 6640.0,
-      "time": "1 hrs 50 min"
+      "position": 11,
+      "time": "1:50:40"
     },
     {
       "first_name": "Angelo",
       "last_name": "Wachira",
       "bib_number": "2273",
-      "team": "individual",
-      "position": "12",
-      "duration": 6656.82,
-      "time": "1 hrs 50 min"
+      "position": 12,
+      "time": "1:50:57"
     },
     {
       "first_name": "Marvine",
       "last_name": "Mbutura",
       "bib_number": "2266",
-      "team": "individual",
-      "position": "13",
-      "duration": 6663.01,
-      "time": "1 hrs 51 min"
+      "position": 13,
+      "time": "1:51:03"
     },
     {
       "first_name": "Daniel",
       "last_name": "Nyangweso",
       "bib_number": "2202",
-      "team": "individual",
-      "position": "14",
-      "duration": 6667.19,
-      "time": "1 hrs 51 min"
+      "position": 14,
+      "time": "1:51:07"
     },
     {
       "first_name": "Alex",
       "last_name": "Kweya",
       "bib_number": "2075",
-      "team": "individual",
-      "position": "15",
-      "duration": 6670.9,
-      "time": "1 hrs 51 min"
+      "position": 15,
+      "time": "1:51:11"
     },
     {
       "first_name": "Robert",
       "last_name": "Seda",
       "bib_number": "2263",
-      "team": "individual",
-      "position": "16",
-      "duration": 6702.42,
-      "time": "1 hrs 51 min"
+      "position": 16,
+      "time": "1:51:42"
     },
     {
       "first_name": "Naftali",
       "last_name": "Chesiya",
       "bib_number": "2066",
-      "team": "individual",
-      "position": "17",
-      "duration": 6849.99,
-      "time": "1 hrs 54 min"
+      "position": 17,
+      "time": "1:54:10"
     },
     {
       "first_name": "Gabriel",
       "last_name": "Ambuko",
       "bib_number": "2011",
-      "team": "individual",
-      "position": "18",
-      "duration": 6851.6,
-      "time": "1 hrs 54 min"
+      "position": 18,
+      "time": "1:54:12"
     },
     {
       "first_name": "Meshack",
       "last_name": "Rono",
       "bib_number": "2012",
-      "team": "individual",
-      "position": "19",
-      "duration": 6851.75,
-      "time": "1 hrs 54 min"
+      "position": 19,
+      "time": "1:54:12"
     },
     {
       "first_name": "Ambrose",
       "last_name": "Kimathi",
       "bib_number": "2249",
-      "team": "individual",
-      "position": "20",
-      "duration": 6859.98,
-      "time": "1 hrs 54 min"
+      "position": 20,
+      "time": "1:54:20"
     },
     {
       "first_name": "Oscar",
       "last_name": "Odhiambo",
       "bib_number": "2247",
-      "team": "individual",
-      "position": "21",
-      "duration": 6870.91,
-      "time": "1 hrs 54 min"
+      "position": 21,
+      "time": "1:54:31"
     },
     {
       "first_name": "George",
       "last_name": "Githing'a",
       "bib_number": "2309",
-      "team": "individual",
-      "position": "22",
-      "duration": 6940.87,
-      "time": "1 hrs 55 min"
+      "position": 22,
+      "time": "1:55:41"
     },
     {
       "first_name": "Benson",
       "last_name": "Mwangi",
       "bib_number": "2191",
-      "team": "individual",
-      "position": "23",
-      "duration": 7000.25,
-      "time": "1 hrs 56 min"
+      "position": 23,
+      "time": "1:56:40"
     },
     {
       "first_name": "kenneth",
       "last_name": "ngure",
       "bib_number": "2260",
-      "team": "individual",
-      "position": "24",
-      "duration": 7008.18,
-      "time": "1 hrs 56 min"
+      "position": 24,
+      "time": "1:56:48"
     },
     {
       "first_name": "Vincent",
       "last_name": "Omondi",
       "bib_number": "2192",
-      "team": "individual",
-      "position": "25",
-      "duration": 7184.34,
-      "time": "1 hrs 59 min"
+      "position": 25,
+      "time": "1:59:44"
     },
     {
       "first_name": "Brian",
       "last_name": "Martin",
       "bib_number": "2091",
-      "team": "individual",
-      "position": "26",
-      "duration": 7185.58,
-      "time": "1 hrs 59 min"
+      "position": 26,
+      "time": "1:59:46"
     },
     {
       "first_name": "Moses",
       "last_name": "Maina",
       "bib_number": "2090",
-      "team": "individual",
-      "position": "27",
-      "duration": 7197.32,
-      "time": "1 hrs 59 min"
+      "position": 27,
+      "time": "1:59:57"
     },
     {
       "first_name": "Brian",
       "last_name": "Ochebo",
       "bib_number": "2292",
-      "team": "individual",
-      "position": "28",
-      "duration": 7241.19,
-      "time": "2 hrs 00 min"
+      "position": 28,
+      "time": "2:00:41"
     },
     {
       "first_name": "Brian",
       "last_name": "Omete",
       "bib_number": "2072",
-      "team": "individual",
-      "position": "29",
-      "duration": 7287.94,
-      "time": "2 hrs 01 min"
+      "position": 29,
+      "time": "2:01:28"
     },
     {
       "first_name": "Godwin",
       "last_name": "Odhiambo",
       "bib_number": "2331",
-      "team": "individual",
-      "position": "30",
-      "duration": 7298.43,
-      "time": "2 hrs 01 min"
+      "position": 30,
+      "time": "2:01:38"
     },
     {
       "first_name": "DENNIS",
       "last_name": "MIANO",
       "bib_number": "2357",
-      "team": "individual",
-      "position": "31",
-      "duration": 7316.7,
-      "time": "2 hrs 01 min"
+      "position": 31,
+      "time": "2:01:57"
     },
     {
       "first_name": "Oliver",
       "last_name": "Kiptoo",
       "bib_number": "2364",
-      "team": "individual",
-      "position": "32",
-      "duration": 7321.64,
-      "time": "2 hrs 02 min"
+      "position": 32,
+      "time": "2:02:02"
     },
     {
       "first_name": "Victor",
       "last_name": "Kip",
       "bib_number": "2227",
-      "team": "individual",
-      "position": "33",
-      "duration": 7334.95,
-      "time": "2 hrs 02 min"
+      "position": 33,
+      "time": "2:02:15"
     },
     {
       "first_name": "Erick",
       "last_name": "Wachira",
       "bib_number": "2162",
-      "team": "individual",
-      "position": "34",
-      "duration": 7346.78,
-      "time": "2 hrs 02 min"
+      "position": 34,
+      "time": "2:02:27"
     },
     {
       "first_name": "Daniel",
       "last_name": "Sangula",
       "bib_number": "2084",
-      "team": "individual",
-      "position": "35",
-      "duration": 7401.44,
-      "time": "2 hrs 03 min"
+      "position": 35,
+      "time": "2:03:21"
     },
     {
       "first_name": "Robert",
       "last_name": "Kimani",
       "bib_number": "2346",
-      "team": "individual",
-      "position": "36",
-      "duration": 7432.3,
-      "time": "2 hrs 03 min"
+      "position": 36,
+      "time": "2:03:52"
     },
     {
       "first_name": "Martin",
       "last_name": "Ngochi",
       "bib_number": "2288",
-      "team": "individual",
-      "position": "37",
-      "duration": 7450.16,
-      "time": "2 hrs 04 min"
+      "position": 37,
+      "time": "2:04:10"
     },
     {
       "first_name": "Martin",
       "last_name": "Mbutura",
       "bib_number": "2069",
-      "team": "individual",
-      "position": "38",
-      "duration": 7451.17,
-      "time": "2 hrs 04 min"
+      "position": 38,
+      "time": "2:04:11"
     },
     {
       "first_name": "Raymond",
       "last_name": "Mbutura",
       "bib_number": "2071",
-      "team": "individual",
-      "position": "39",
-      "duration": 7451.37,
-      "time": "2 hrs 04 min"
+      "position": 39,
+      "time": "2:04:11"
     },
     {
       "first_name": "Kennedy",
       "last_name": "Mfinyi Mhandisi",
       "bib_number": "2067",
-      "team": "individual",
-      "position": "40",
-      "duration": 7466.45,
-      "time": "2 hrs 04 min"
+      "position": 40,
+      "time": "2:04:26"
     },
     {
       "first_name": "Alex",
       "last_name": "Okumu",
       "bib_number": "2138",
-      "team": "individual",
-      "position": "41",
-      "duration": 7492.21,
-      "time": "2 hrs 04 min"
+      "position": 41,
+      "time": "2:04:52"
     },
     {
       "first_name": "Bullet",
       "last_name": "Macharia",
       "bib_number": "2121",
-      "team": "individual",
-      "position": "42",
-      "duration": 7527.37,
-      "time": "2 hrs 05 min"
+      "position": 42,
+      "time": "2:05:27"
     },
     {
       "first_name": "Eddy",
       "last_name": "Odhiambo",
       "bib_number": "2052",
-      "team": "individual",
-      "position": "43",
-      "duration": 7595.39,
-      "time": "2 hrs 06 min"
+      "position": 43,
+      "time": "2:06:35"
     },
     {
       "first_name": "Kelvin",
       "last_name": "Ngware",
       "bib_number": "2224",
-      "team": "individual",
-      "position": "44",
-      "duration": 7595.78,
-      "time": "2 hrs 06 min"
+      "position": 44,
+      "time": "2:06:36"
     },
     {
       "first_name": "Josphat",
       "last_name": "Kamau",
       "bib_number": "2102",
-      "team": "individual",
-      "position": "45",
-      "duration": 7601.0,
-      "time": "2 hrs 06 min"
+      "position": 45,
+      "time": "2:06:41"
     },
     {
       "first_name": "Namwel",
       "last_name": "Mariko",
       "bib_number": "2281",
-      "team": "individual",
-      "position": "46",
-      "duration": 7603.99,
-      "time": "2 hrs 06 min"
+      "position": 46,
+      "time": "2:06:44"
     },
     {
       "first_name": "Austin",
       "last_name": "Waithaka",
       "bib_number": "2294",
-      "team": "individual",
-      "position": "47",
-      "duration": 7630.04,
-      "time": "2 hrs 07 min"
+      "position": 47,
+      "time": "2:07:10"
     },
     {
       "first_name": "PAUL",
       "last_name": "Sila",
       "bib_number": "2059",
-      "team": "individual",
-      "position": "48",
-      "duration": 7645.99,
-      "time": "2 hrs 07 min"
+      "position": 48,
+      "time": "2:07:26"
     },
     {
       "first_name": "Abraham",
       "last_name": "Lincoln Odenyo",
       "bib_number": "2088",
-      "team": "individual",
-      "position": "49",
-      "duration": 7758.01,
-      "time": "2 hrs 09 min"
+      "position": 49,
+      "time": "2:09:18"
     },
     {
       "first_name": "MARTIN",
       "last_name": "KIPTOO",
       "bib_number": "2210",
-      "team": "individual",
-      "position": "50",
-      "duration": 7772.47,
-      "time": "2 hrs 09 min"
+      "position": 50,
+      "time": "2:09:32"
     },
     {
       "first_name": "Morris",
       "last_name": "Mugo",
       "bib_number": "2013",
-      "team": "individual",
-      "position": "51",
-      "duration": 7777.64,
-      "time": "2 hrs 09 min"
+      "position": 51,
+      "time": "2:09:38"
     },
     {
       "first_name": "Alvis",
       "last_name": "Kimani",
       "bib_number": "2298",
-      "team": "individual",
-      "position": "52",
-      "duration": 7787.62,
-      "time": "2 hrs 09 min"
+      "position": 52,
+      "time": "2:09:48"
     },
     {
       "first_name": "dennis",
       "last_name": "munyasi",
       "bib_number": "2345",
-      "team": "individual",
-      "position": "53",
-      "duration": 7835.35,
-      "time": "2 hrs 10 min"
+      "position": 53,
+      "time": "2:10:35"
     },
     {
       "first_name": "Jozzy",
       "last_name": "Nguyo",
       "bib_number": "2087",
-      "team": "individual",
-      "position": "54",
-      "duration": 7884.0,
-      "time": "2 hrs 11 min"
+      "position": 54,
+      "time": "2:11:24"
     },
     {
       "first_name": "Carl",
       "last_name": "Rutto",
       "bib_number": "2320",
-      "team": "individual",
-      "position": "55",
-      "duration": 7908.37,
-      "time": "2 hrs 11 min"
+      "position": 55,
+      "time": "2:11:48"
     },
     {
       "first_name": "PETER",
       "last_name": "OYATA",
       "bib_number": "2164",
-      "team": "individual",
-      "position": "56",
-      "duration": 7921.64,
-      "time": "2 hrs 12 min"
+      "position": 56,
+      "time": "2:12:02"
     },
     {
       "first_name": "Koech",
       "last_name": "Kiplagat",
       "bib_number": "2041",
-      "team": "individual",
-      "position": "57",
-      "duration": 7925.68,
-      "time": "2 hrs 12 min"
+      "position": 57,
+      "time": "2:12:06"
     },
     {
       "first_name": "George",
       "last_name": "Thuo",
       "bib_number": "2039",
-      "team": "individual",
-      "position": "58",
-      "duration": 7931.05,
-      "time": "2 hrs 12 min"
+      "position": 58,
+      "time": "2:12:11"
     },
     {
       "first_name": "Kuria",
-      "last_name": "Ndung'u",
+      "last_name": "Ndung’u",
       "bib_number": "2314",
-      "team": "individual",
-      "position": "59",
-      "duration": 7945.48,
-      "time": "2 hrs 12 min"
+      "position": 59,
+      "time": "2:12:25"
     },
     {
       "first_name": "Arnold",
       "last_name": "Alfred",
       "bib_number": "2354",
-      "team": "individual",
-      "position": "60",
-      "duration": 7947.33,
-      "time": "2 hrs 12 min"
+      "position": 60,
+      "time": "2:12:27"
     },
     {
       "first_name": "Stephen",
       "last_name": "Waithaka",
       "bib_number": "2089",
-      "team": "individual",
-      "position": "61",
-      "duration": 8020.48,
-      "time": "2 hrs 13 min"
+      "position": 61,
+      "time": "2:13:40"
     },
     {
       "first_name": "Paul",
       "last_name": "Onguru",
       "bib_number": "2304",
-      "team": "individual",
-      "position": "62",
-      "duration": 8022.37,
-      "time": "2 hrs 13 min"
+      "position": 62,
+      "time": "2:13:42"
     },
     {
       "first_name": "Jacob",
       "last_name": "Otiato",
       "bib_number": "2010",
-      "team": "individual",
-      "position": "63",
-      "duration": 8101.12,
-      "time": "2 hrs 15 min"
+      "position": 63,
+      "time": "2:15:01"
     },
     {
       "first_name": "Silas",
       "last_name": "Mugo",
       "bib_number": "2095",
-      "team": "individual",
-      "position": "64",
-      "duration": 8136.03,
-      "time": "2 hrs 15 min"
+      "position": 64,
+      "time": "2:15:36"
     },
     {
       "first_name": "Charles",
       "last_name": "Andere",
       "bib_number": "2235",
-      "team": "individual",
-      "position": "65",
-      "duration": 8181.27,
-      "time": "2 hrs 16 min"
+      "position": 65,
+      "time": "2:16:21"
     },
     {
       "first_name": "Nelson",
       "last_name": "Anyona",
       "bib_number": "2122",
-      "team": "individual",
-      "position": "66",
-      "duration": 8229.41,
-      "time": "2 hrs 17 min"
+      "position": 66,
+      "time": "2:17:09"
     },
     {
       "first_name": "HALLANS",
       "last_name": "KAINDAH",
       "bib_number": "2004",
-      "team": "individual",
-      "position": "67",
-      "duration": 8256.23,
-      "time": "2 hrs 17 min"
+      "position": 67,
+      "time": "2:17:36"
     },
     {
       "first_name": "Samuel",
       "last_name": "Njagi",
       "bib_number": "2036",
-      "team": "individual",
-      "position": "68",
-      "duration": 8297.23,
-      "time": "2 hrs 18 min"
+      "position": 68,
+      "time": "2:18:17"
     },
     {
       "first_name": "Michael",
       "last_name": "Etale",
       "bib_number": "2030",
-      "team": "individual",
-      "position": "69",
-      "duration": 8314.31,
-      "time": "2 hrs 18 min"
+      "position": 69,
+      "time": "2:18:34"
     },
     {
       "first_name": "PATRICK",
       "last_name": "Wamathai",
       "bib_number": "2257",
-      "team": "individual",
-      "position": "70",
-      "duration": 8340.45,
-      "time": "2 hrs 19 min"
+      "position": 70,
+      "time": "2:19:00"
     },
     {
       "first_name": "Josh",
       "last_name": "Ngumo",
       "bib_number": "2285",
-      "team": "individual",
-      "position": "71",
-      "duration": 8341.55,
-      "time": "2 hrs 19 min"
+      "position": 71,
+      "time": "2:19:02"
     },
     {
       "first_name": "Peter",
       "last_name": "Kamunyo",
       "bib_number": "2241",
-      "team": "individual",
-      "position": "72",
-      "duration": 8348.5,
-      "time": "2 hrs 19 min"
+      "position": 72,
+      "time": "2:19:09"
     },
     {
       "first_name": "Kephas",
       "last_name": "Ojiema",
       "bib_number": "2176",
-      "team": "individual",
-      "position": "73",
-      "duration": 8351.31,
-      "time": "2 hrs 19 min"
+      "position": 73,
+      "time": "2:19:11"
     },
     {
       "first_name": "Abraham",
       "last_name": "Chirkil",
       "bib_number": "2042",
-      "team": "individual",
-      "position": "74",
-      "duration": 8353.71,
-      "time": "2 hrs 19 min"
+      "position": 74,
+      "time": "2:19:14"
     },
     {
       "first_name": "Brian",
       "last_name": "Bawa",
       "bib_number": "2137",
-      "team": "individual",
-      "position": "75",
-      "duration": 8370.39,
-      "time": "2 hrs 19 min"
+      "position": 75,
+      "time": "2:19:30"
     },
     {
       "first_name": "REAGAN",
       "last_name": "MAINA",
       "bib_number": "2038",
-      "team": "individual",
-      "position": "76",
-      "duration": 8371.38,
-      "time": "2 hrs 19 min"
+      "position": 76,
+      "time": "2:19:31"
     },
     {
       "first_name": "Andrew",
       "last_name": "Koros",
       "bib_number": "2284",
-      "team": "individual",
-      "position": "77",
-      "duration": 8441.13,
-      "time": "2 hrs 20 min"
+      "position": 77,
+      "time": "2:20:41"
     },
     {
       "first_name": "Ted",
       "last_name": "Gitonga",
       "bib_number": "2130",
-      "team": "individual",
-      "position": "78",
-      "duration": 8444.56,
-      "time": "2 hrs 20 min"
+      "position": 78,
+      "time": "2:20:45"
     },
     {
       "first_name": "MARKSPENCE",
       "last_name": "MURSI",
       "bib_number": "2131",
-      "team": "individual",
-      "position": "79",
-      "duration": 8498.25,
-      "time": "2 hrs 21 min"
+      "position": 79,
+      "time": "2:21:38"
     },
     {
       "first_name": "gabriel",
       "last_name": "loturoomom",
       "bib_number": "2341",
-      "team": "individual",
-      "position": "80",
-      "duration": 8527.47,
-      "time": "2 hrs 22 min"
+      "position": 80,
+      "time": "2:22:07"
     },
     {
       "first_name": "David",
       "last_name": "Ndatha",
       "bib_number": "2015",
-      "team": "individual",
-      "position": "81",
-      "duration": 8529.07,
-      "time": "2 hrs 22 min"
+      "position": 81,
+      "time": "2:22:09"
     },
     {
       "first_name": "Andrew",
       "last_name": "Murefu",
       "bib_number": "2335",
-      "team": "individual",
-      "position": "82",
-      "duration": 8560.7,
-      "time": "2 hrs 22 min"
+      "position": 82,
+      "time": "2:22:41"
     },
     {
       "first_name": "Robert",
       "last_name": "Kibet",
       "bib_number": "2359",
-      "team": "individual",
-      "position": "83",
-      "duration": 8565.1,
-      "time": "2 hrs 22 min"
+      "position": 83,
+      "time": "2:22:45"
     },
     {
       "first_name": "Carl",
       "last_name": "Ngovi",
       "bib_number": "2218",
-      "team": "individual",
-      "position": "84",
-      "duration": 8593.51,
-      "time": "2 hrs 23 min"
+      "position": 84,
+      "time": "2:23:14"
     },
     {
       "first_name": "Daniel",
       "last_name": "Kariuki",
       "bib_number": "2295",
-      "team": "individual",
-      "position": "85",
-      "duration": 8596.74,
-      "time": "2 hrs 23 min"
+      "position": 85,
+      "time": "2:23:17"
     },
     {
       "first_name": "Victor",
       "last_name": "Kibiwot",
       "bib_number": "2365",
-      "team": "individual",
-      "position": "86",
-      "duration": 8602.1,
-      "time": "2 hrs 23 min"
+      "position": 86,
+      "time": "2:23:22"
     },
     {
       "first_name": "PETE",
       "last_name": "WAITHAKA",
       "bib_number": "2239",
-      "team": "individual",
-      "position": "87",
-      "duration": 8613.47,
-      "time": "2 hrs 23 min"
+      "position": 87,
+      "time": "2:23:33"
     },
     {
       "first_name": "Alex",
       "last_name": "Mwaniki",
       "bib_number": "2112",
-      "team": "individual",
-      "position": "88",
-      "duration": 8651.41,
-      "time": "2 hrs 24 min"
+      "position": 88,
+      "time": "2:24:11"
     },
     {
       "first_name": "Timothy",
       "last_name": "Njeru",
       "bib_number": "2172",
-      "team": "individual",
-      "position": "89",
-      "duration": 8658.02,
-      "time": "2 hrs 24 min"
+      "position": 89,
+      "time": "2:24:18"
     },
     {
       "first_name": "Ian",
       "last_name": "Ongeso",
       "bib_number": "2019",
-      "team": "individual",
-      "position": "90",
-      "duration": 8662.42,
-      "time": "2 hrs 24 min"
+      "position": 90,
+      "time": "2:24:22"
     },
     {
       "first_name": "Mike",
       "last_name": "Imende",
       "bib_number": "2253",
-      "team": "individual",
-      "position": "91",
-      "duration": 8663.26,
-      "time": "2 hrs 24 min"
+      "position": 91,
+      "time": "2:24:23"
     },
     {
       "first_name": "Collins",
       "last_name": "Mahianyu",
       "bib_number": "2034",
-      "team": "individual",
-      "position": "92",
-      "duration": 8665.23,
-      "time": "2 hrs 24 min"
+      "position": 92,
+      "time": "2:24:25"
     },
     {
       "first_name": "victor",
       "last_name": "Mutinda Muendo",
       "bib_number": "2334",
-      "team": "individual",
-      "position": "93",
-      "duration": 8667.44,
-      "time": "2 hrs 24 min"
+      "position": 93,
+      "time": "2:24:27"
     },
     {
       "first_name": "Nicholas",
       "last_name": "Mwachiro",
       "bib_number": "2007",
-      "team": "individual",
-      "position": "94",
-      "duration": 8672.1,
-      "time": "2 hrs 24 min"
+      "position": 94,
+      "time": "2:24:32"
     },
     {
       "first_name": "Immanuel",
       "last_name": "Njeru",
       "bib_number": "2174",
-      "team": "individual",
-      "position": "95",
-      "duration": 8697.27,
-      "time": "2 hrs 24 min"
+      "position": 95,
+      "time": "2:24:57"
     },
     {
       "first_name": "Baron",
       "last_name": "Kemboi",
       "bib_number": "2127",
-      "team": "individual",
-      "position": "96",
-      "duration": 8698.87,
-      "time": "2 hrs 24 min"
+      "position": 96,
+      "time": "2:24:59"
     },
     {
       "first_name": "Moses",
       "last_name": "Atenya",
       "bib_number": "2293",
-      "team": "individual",
-      "position": "97",
-      "duration": 8712.45,
-      "time": "2 hrs 25 min"
+      "position": 97,
+      "time": "2:25:12"
     },
     {
       "first_name": "Frederick",
       "last_name": "Hinga",
       "bib_number": "2189",
-      "team": "individual",
-      "position": "98",
-      "duration": 8787.88,
-      "time": "2 hrs 26 min"
+      "position": 98,
+      "time": "2:26:28"
     },
     {
       "first_name": "Benard",
       "last_name": "Rono",
       "bib_number": "2076",
-      "team": "individual",
-      "position": "99",
-      "duration": 8788.08,
-      "time": "2 hrs 26 min"
+      "position": 99,
+      "time": "2:26:28"
     },
     {
       "first_name": "Enock",
       "last_name": "Omwoyo",
       "bib_number": "2032",
-      "team": "individual",
-      "position": "100",
-      "duration": 8802.56,
-      "time": "2 hrs 26 min"
+      "position": 100,
+      "time": "2:26:43"
     },
     {
       "first_name": "Kennedy",
       "last_name": "Musyoka",
       "bib_number": "2208",
-      "team": "individual",
-      "position": "101",
-      "duration": 8807.58,
-      "time": "2 hrs 26 min"
+      "position": 101,
+      "time": "2:26:48"
     },
     {
       "first_name": "Fidel",
       "last_name": "Kimeu",
       "bib_number": "2349",
-      "team": "individual",
-      "position": "102",
-      "duration": 8820.44,
-      "time": "2 hrs 27 min"
+      "position": 102,
+      "time": "2:27:00"
     },
     {
       "first_name": "Pius",
       "last_name": "Mugo",
       "bib_number": "2200",
-      "team": "individual",
-      "position": "103",
-      "duration": 8853.25,
-      "time": "2 hrs 27 min"
+      "position": 103,
+      "time": "2:27:33"
     },
     {
       "first_name": "John",
       "last_name": "Ateru",
       "bib_number": "2194",
-      "team": "individual",
-      "position": "104",
-      "duration": 8856.06,
-      "time": "2 hrs 27 min"
+      "position": 104,
+      "time": "2:27:36"
     },
     {
       "first_name": "David",
       "last_name": "Wairia",
       "bib_number": "2209",
-      "team": "individual",
-      "position": "105",
-      "duration": 8877.78,
-      "time": "2 hrs 27 min"
+      "position": 105,
+      "time": "2:27:58"
     },
     {
       "first_name": "Alfred",
       "last_name": "Kimweli",
       "bib_number": "2048",
-      "team": "individual",
-      "position": "106",
-      "duration": 8892.66,
-      "time": "2 hrs 28 min"
+      "position": 106,
+      "time": "2:28:13"
     },
     {
       "first_name": "Victor",
       "last_name": "Kamau",
       "bib_number": "2022",
-      "team": "individual",
-      "position": "107",
-      "duration": 8907.33,
-      "time": "2 hrs 28 min"
+      "position": 107,
+      "time": "2:28:27"
     },
     {
       "first_name": "raphael",
       "last_name": "malebo Sirengo",
       "bib_number": "2161",
-      "team": "individual",
-      "position": "108",
-      "duration": 8908.16,
-      "time": "2 hrs 28 min"
+      "position": 108,
+      "time": "2:28:28"
     },
     {
       "first_name": "Stephen",
       "last_name": "Gikundi",
       "bib_number": "2028",
-      "team": "individual",
-      "position": "109",
-      "duration": 8910.55,
-      "time": "2 hrs 28 min"
+      "position": 109,
+      "time": "2:28:31"
     },
     {
       "first_name": "Taofik",
       "last_name": "Oloruko-oba",
       "bib_number": "2302",
-      "team": "individual",
-      "position": "110",
-      "duration": 8910.57,
-      "time": "2 hrs 28 min"
+      "position": 110,
+      "time": "2:28:31"
     },
     {
       "first_name": "Linas",
       "last_name": "Namudeche",
       "bib_number": "2037",
-      "team": "individual",
-      "position": "111",
-      "duration": 8911.03,
-      "time": "2 hrs 28 min"
+      "position": 111,
+      "time": "2:28:31"
     },
     {
       "first_name": "John",
       "last_name": "Kariuki",
       "bib_number": "2240",
-      "team": "individual",
-      "position": "112",
-      "duration": 8949.36,
-      "time": "2 hrs 29 min"
+      "position": 112,
+      "time": "2:29:09"
     },
     {
       "first_name": "FREDRICK",
       "last_name": "WAORE",
       "bib_number": "2029",
-      "team": "individual",
-      "position": "113",
-      "duration": 8958.49,
-      "time": "2 hrs 29 min"
+      "position": 113,
+      "time": "2:29:18"
     },
     {
       "first_name": "Hamza",
       "last_name": "Bashir",
       "bib_number": "2269",
-      "team": "individual",
-      "position": "114",
-      "duration": 8972.59,
-      "time": "2 hrs 29 min"
+      "position": 114,
+      "time": "2:29:33"
     },
     {
       "first_name": "Ramadhan",
       "last_name": "Omar",
       "bib_number": "2324",
-      "team": "individual",
-      "position": "115",
-      "duration": 8991.02,
-      "time": "2 hrs 29 min"
+      "position": 115,
+      "time": "2:29:51"
     },
     {
       "first_name": "Onesmus",
       "last_name": "Kirimi",
       "bib_number": "2311",
-      "team": "individual",
-      "position": "116",
-      "duration": 9011.36,
-      "time": "2 hrs 30 min"
+      "position": 116,
+      "time": "2:30:11"
     },
     {
       "first_name": "Elijah",
       "last_name": "Musembi",
       "bib_number": "2370",
-      "team": "individual",
-      "position": "117",
-      "duration": 9013.89,
-      "time": "2 hrs 30 min"
+      "position": 117,
+      "time": "2:30:14"
     },
     {
       "first_name": "Antony",
       "last_name": "Mbugua",
       "bib_number": "2109",
-      "team": "individual",
-      "position": "118",
-      "duration": 9030.13,
-      "time": "2 hrs 30 min"
+      "position": 118,
+      "time": "2:30:30"
     },
     {
       "first_name": "Daniel",
       "last_name": "Macharia",
       "bib_number": "2100",
-      "team": "individual",
-      "position": "119",
-      "duration": 9040.68,
-      "time": "2 hrs 30 min"
+      "position": 119,
+      "time": "2:30:41"
     },
     {
       "first_name": "KINUTHIA",
       "last_name": "DENNIS",
       "bib_number": "2020",
-      "team": "individual",
-      "position": "120",
-      "duration": 9083.04,
-      "time": "2 hrs 31 min"
+      "position": 120,
+      "time": "2:31:23"
     },
     {
       "first_name": "Kinuthia",
       "last_name": "Gathigi",
       "bib_number": "2141",
-      "team": "individual",
-      "position": "121",
-      "duration": 9091.08,
-      "time": "2 hrs 31 min"
+      "position": 121,
+      "time": "2:31:31"
     },
     {
       "first_name": "Geofrrey",
       "last_name": "Chege",
       "bib_number": "2073",
-      "team": "individual",
-      "position": "122",
-      "duration": 9102.44,
-      "time": "2 hrs 31 min"
+      "position": 122,
+      "time": "2:31:42"
     },
     {
       "first_name": "Samuel",
       "last_name": "Mwayaya",
       "bib_number": "2025",
-      "team": "individual",
-      "position": "123",
-      "duration": 9225.11,
-      "time": "2 hrs 33 min"
+      "position": 123,
+      "time": "2:33:45"
     },
     {
       "first_name": "Edward",
       "last_name": "Wambua",
       "bib_number": "2063",
-      "team": "individual",
-      "position": "124",
-      "duration": 9246.04,
-      "time": "2 hrs 34 min"
+      "position": 124,
+      "time": "2:34:06"
     },
     {
       "first_name": "CLIFF",
       "last_name": "NYABUTI",
       "bib_number": "2175",
-      "team": "individual",
-      "position": "125",
-      "duration": 9249.2,
-      "time": "2 hrs 34 min"
+      "position": 125,
+      "time": "2:34:09"
     },
     {
       "first_name": "Anthony",
       "last_name": "Njogu",
       "bib_number": "2040",
-      "team": "individual",
-      "position": "126",
-      "duration": 9275.79,
-      "time": "2 hrs 34 min"
+      "position": 126,
+      "time": "2:34:36"
     },
     {
       "first_name": "Samuel",
       "last_name": "Gichuki",
       "bib_number": "2291",
-      "team": "individual",
-      "position": "127",
-      "duration": 9390.75,
-      "time": "2 hrs 36 min"
+      "position": 127,
+      "time": "2:36:31"
     },
     {
       "first_name": "thompson",
       "last_name": "otieno",
       "bib_number": "2009",
-      "team": "individual",
-      "position": "128",
-      "duration": 9406.65,
-      "time": "2 hrs 36 min"
+      "position": 128,
+      "time": "2:36:47"
     },
     {
       "first_name": "Richard",
       "last_name": "Kuria",
       "bib_number": "2220",
-      "team": "individual",
-      "position": "129",
-      "duration": 9444.54,
-      "time": "2 hrs 37 min"
+      "position": 129,
+      "time": "2:37:25"
     },
     {
       "first_name": "Henry",
       "last_name": "Thuku",
       "bib_number": "2279",
-      "team": "individual",
-      "position": "130",
-      "duration": 9446.91,
-      "time": "2 hrs 37 min"
+      "position": 130,
+      "time": "2:37:27"
     },
     {
       "first_name": "Elvis",
       "last_name": "Obara",
       "bib_number": "2031",
-      "team": "individual",
-      "position": "131",
-      "duration": 9456.15,
-      "time": "2 hrs 37 min"
+      "position": 131,
+      "time": "2:37:36"
     },
     {
       "first_name": "Fred",
       "last_name": "Ogega",
       "bib_number": "2322",
-      "team": "individual",
-      "position": "132",
-      "duration": 9568.12,
-      "time": "2 hrs 39 min"
+      "position": 132,
+      "time": "2:39:28"
     },
     {
       "first_name": "Paul",
       "last_name": "Kamau",
       "bib_number": "2251",
-      "team": "individual",
-      "position": "133",
-      "duration": 9627.17,
-      "time": "2 hrs 40 min"
+      "position": 133,
+      "time": "2:40:27"
     },
     {
       "first_name": "Mercel",
       "last_name": "Baraza",
       "bib_number": "2308",
-      "team": "individual",
-      "position": "134",
-      "duration": 9647.67,
-      "time": "2 hrs 40 min"
+      "position": 134,
+      "time": "2:40:48"
     },
     {
       "first_name": "Koech",
       "last_name": "Israel Zaddock",
       "bib_number": "2023",
-      "team": "individual",
-      "position": "135",
-      "duration": 9651.26,
-      "time": "2 hrs 40 min"
+      "position": 135,
+      "time": "2:40:51"
     },
     {
       "first_name": "Alvin",
       "last_name": "Ojala",
       "bib_number": "2234",
-      "team": "individual",
-      "position": "136",
-      "duration": 9749.19,
-      "time": "2 hrs 42 min"
+      "position": 136,
+      "time": "2:42:29"
     },
     {
       "first_name": "James",
       "last_name": "Mwangi",
       "bib_number": "2027",
-      "team": "individual",
-      "position": "137",
-      "duration": 9790.34,
-      "time": "2 hrs 43 min"
+      "position": 137,
+      "time": "2:43:10"
     },
     {
       "first_name": "VINCENT",
       "last_name": "KIPNGETICH",
       "bib_number": "2086",
-      "team": "individual",
-      "position": "138",
-      "duration": 9792.4,
-      "time": "2 hrs 43 min"
+      "position": 138,
+      "time": "2:43:12"
     },
     {
       "first_name": "Wilfred",
       "last_name": "Nyabuga",
       "bib_number": "2151",
-      "team": "individual",
-      "position": "139",
-      "duration": 9793.03,
-      "time": "2 hrs 43 min"
+      "position": 139,
+      "time": "2:43:13"
     },
     {
       "first_name": "Isaac",
       "last_name": "Matubia",
       "bib_number": "2105",
-      "team": "individual",
-      "position": "140",
-      "duration": 9817.68,
-      "time": "2 hrs 43 min"
+      "position": 140,
+      "time": "2:43:38"
     },
     {
       "first_name": "Paul",
       "last_name": "Olumbe",
       "bib_number": "2250",
-      "team": "individual",
-      "position": "141",
-      "duration": 9837.16,
-      "time": "2 hrs 43 min"
+      "position": 141,
+      "time": "2:43:57"
     },
     {
       "first_name": "Alex",
       "last_name": "Hinga",
       "bib_number": "2366",
-      "team": "individual",
-      "position": "142",
-      "duration": 9871.84,
-      "time": "2 hrs 44 min"
+      "position": 142,
+      "time": "2:44:32"
     },
     {
       "first_name": "Gitau",
       "last_name": "Kariuki",
       "bib_number": "2286",
-      "team": "individual",
-      "position": "143",
-      "duration": 9902.75,
-      "time": "2 hrs 45 min"
+      "position": 143,
+      "time": "2:45:03"
     },
     {
       "first_name": "Victor",
       "last_name": "Toweet",
       "bib_number": "2226",
-      "team": "individual",
-      "position": "144",
-      "duration": 9934.91,
-      "time": "2 hrs 45 min"
+      "position": 144,
+      "time": "2:45:35"
     },
     {
       "first_name": "Musyoki",
       "last_name": "Mbathi",
       "bib_number": "2290",
-      "team": "individual",
-      "position": "145",
-      "duration": 9934.98,
-      "time": "2 hrs 45 min"
+      "position": 145,
+      "time": "2:45:35"
     },
     {
       "first_name": "Andrew",
       "last_name": "Kerr",
       "bib_number": "2243",
-      "team": "individual",
-      "position": "146",
-      "duration": 10028.12,
-      "time": "2 hrs 47 min"
+      "position": 146,
+      "time": "2:47:08"
     },
     {
       "first_name": "Alex",
       "last_name": "Gitonga",
       "bib_number": "2275",
-      "team": "individual",
-      "position": "147",
-      "duration": 10039.27,
-      "time": "2 hrs 47 min"
+      "position": 147,
+      "time": "2:47:19"
     },
     {
       "first_name": "Basil",
       "last_name": "Ndaraya",
       "bib_number": "2050",
-      "team": "individual",
-      "position": "148",
-      "duration": 10054.95,
-      "time": "2 hrs 47 min"
+      "position": 148,
+      "time": "2:47:35"
     },
     {
       "first_name": "Brian",
       "last_name": "Dan",
       "bib_number": "2140",
-      "team": "individual",
-      "position": "149",
-      "duration": 10100.73,
-      "time": "2 hrs 48 min"
+      "position": 149,
+      "time": "2:48:21"
     },
     {
       "first_name": "Martin",
       "last_name": "Kamau kigotho",
       "bib_number": "2363",
-      "team": "individual",
-      "position": "150",
-      "duration": 10131.47,
-      "time": "2 hrs 48 min"
+      "position": 150,
+      "time": "2:48:51"
     },
     {
       "first_name": "David",
       "last_name": "Ogoti",
       "bib_number": "2051",
-      "team": "individual",
-      "position": "151",
-      "duration": 10132.93,
-      "time": "2 hrs 48 min"
+      "position": 151,
+      "time": "2:48:53"
     },
     {
       "first_name": "Alex",
       "last_name": "Barasa",
       "bib_number": "2356",
-      "team": "individual",
-      "position": "152",
-      "duration": 10136.5,
-      "time": "2 hrs 48 min"
+      "position": 152,
+      "time": "2:48:57"
     },
     {
       "first_name": "Hisa",
       "last_name": "Mureithi",
       "bib_number": "2111",
-      "team": "individual",
-      "position": "153",
-      "duration": 10145.0,
-      "time": "2 hrs 49 min"
+      "position": 153,
+      "time": "2:49:05"
     },
     {
       "first_name": "John",
       "last_name": "Wangai",
       "bib_number": "2233",
-      "team": "individual",
-      "position": "154",
-      "duration": 10199.87,
-      "time": "2 hrs 50 min"
+      "position": 154,
+      "time": "2:50:00"
     },
     {
       "first_name": "Prince",
       "last_name": "Munyi",
       "bib_number": "2047",
-      "team": "individual",
-      "position": "155",
-      "duration": 10261.69,
-      "time": "2 hrs 51 min"
+      "position": 155,
+      "time": "2:51:02"
     },
     {
       "first_name": "George",
       "last_name": "Nyangena",
       "bib_number": "2315",
-      "team": "individual",
-      "position": "156",
-      "duration": 10359.57,
-      "time": "2 hrs 52 min"
+      "position": 156,
+      "time": "2:52:40"
     },
     {
       "first_name": "Joseph",
       "last_name": "Mutinda",
       "bib_number": "2328",
-      "team": "individual",
-      "position": "157",
-      "duration": 10417.38,
-      "time": "2 hrs 53 min"
+      "position": 157,
+      "time": "2:53:37"
     },
     {
       "first_name": "Morris",
       "last_name": "Mwaniki",
       "bib_number": "2150",
-      "team": "individual",
-      "position": "158",
-      "duration": 10526.46,
-      "time": "2 hrs 55 min"
+      "position": 158,
+      "time": "2:55:26"
     },
     {
       "first_name": "BERNARD",
       "last_name": "RONO",
       "bib_number": "2103",
-      "team": "individual",
-      "position": "159",
-      "duration": 10529.46,
-      "time": "2 hrs 55 min"
+      "position": 159,
+      "time": "2:55:29"
     },
     {
       "first_name": "David",
       "last_name": "Ndururi",
       "bib_number": "2134",
-      "team": "individual",
-      "position": "160",
-      "duration": 10576.79,
-      "time": "2 hrs 56 min"
+      "position": 160,
+      "time": "2:56:17"
     },
     {
       "first_name": "Richard",
       "last_name": "Ahenda",
       "bib_number": "2351",
-      "team": "individual",
-      "position": "161",
-      "duration": 10589.55,
-      "time": "2 hrs 56 min"
+      "position": 161,
+      "time": "2:56:30"
     },
     {
       "first_name": "Jaidel",
       "last_name": "Kipngetich",
       "bib_number": "2323",
-      "team": "individual",
-      "position": "162",
-      "duration": 10625.34,
-      "time": "2 hrs 57 min"
+      "position": 162,
+      "time": "2:57:05"
     },
     {
       "first_name": "Brian",
       "last_name": "Karoney",
       "bib_number": "2070",
-      "team": "individual",
-      "position": "163",
-      "duration": 10625.34,
-      "time": "2 hrs 57 min"
+      "position": 163,
+      "time": "2:57:05"
     },
     {
       "first_name": "Duncan",
       "last_name": "maina",
       "bib_number": "2264",
-      "team": "individual",
-      "position": "164",
-      "duration": 10643.17,
-      "time": "2 hrs 57 min"
+      "position": 164,
+      "time": "2:57:23"
     },
     {
       "first_name": "Enock",
       "last_name": "Mutogoh",
       "bib_number": "2193",
-      "team": "individual",
-      "position": "165",
-      "duration": 10801.85,
-      "time": "3 hrs 00 min"
+      "position": 165,
+      "time": "3:00:02"
     },
     {
       "first_name": "Howard",
       "last_name": "Mugambi",
       "bib_number": "2190",
-      "team": "individual",
-      "position": "166",
-      "duration": 10841.98,
-      "time": "3 hrs 00 min"
+      "position": 166,
+      "time": "3:00:42"
     },
     {
       "first_name": "George",
       "last_name": "Kabiru",
       "bib_number": "2259",
-      "team": "individual",
-      "position": "167",
-      "duration": 10864.18,
-      "time": "3 hrs 01 min"
+      "position": 167,
+      "time": "3:01:04"
     },
     {
       "first_name": "Wilson",
       "last_name": "Karu",
       "bib_number": "2116",
-      "team": "individual",
-      "position": "168",
-      "duration": 10883.87,
-      "time": "3 hrs 01 min"
+      "position": 168,
+      "time": "3:01:24"
     },
     {
       "first_name": "Kiruri",
       "last_name": "Kabucho",
       "bib_number": "2061",
-      "team": "individual",
-      "position": "169",
-      "duration": 11051.19,
-      "time": "3 hrs 04 min"
+      "position": 169,
+      "time": "3:04:11"
     },
     {
       "first_name": "Robbinson",
       "last_name": "Thindiu",
       "bib_number": "2318",
-      "team": "individual",
-      "position": "170",
-      "duration": 11083.2,
-      "time": "3 hrs 04 min"
+      "position": 170,
+      "time": "3:04:43"
     },
     {
       "first_name": "Kenneth",
       "last_name": "Ndirangu",
       "bib_number": "2278",
-      "team": "individual",
-      "position": "171",
-      "duration": 11092.37,
-      "time": "3 hrs 04 min"
+      "position": 171,
+      "time": "3:04:52"
     },
     {
       "first_name": "Brian",
       "last_name": "Simiyu",
       "bib_number": "2312",
-      "team": "individual",
-      "position": "172",
-      "duration": 11186.09,
-      "time": "3 hrs 06 min"
+      "position": 172,
+      "time": "3:06:26"
     },
     {
       "first_name": "Marcel",
       "last_name": "Owino",
       "bib_number": "2238",
-      "team": "individual",
-      "position": "173",
-      "duration": 11311.51,
-      "time": "3 hrs 08 min"
+      "position": 173,
+      "time": "3:08:32"
     },
     {
       "first_name": "Peter",
       "last_name": "Kwendo",
       "bib_number": "2274",
-      "team": "individual",
-      "position": "174",
-      "duration": 11378.96,
-      "time": "3 hrs 09 min"
+      "position": 174,
+      "time": "3:09:39"
     },
     {
       "first_name": "Denis",
       "last_name": "Kaimenyi",
       "bib_number": "2096",
-      "team": "individual",
-      "position": "175",
-      "duration": 11453.21,
-      "time": "3 hrs 10 min"
+      "position": 175,
+      "time": "3:10:53"
     },
     {
       "first_name": "Dennis",
       "last_name": "Ndero",
       "bib_number": "2236",
-      "team": "individual",
-      "position": "176",
-      "duration": 11529.06,
-      "time": "3 hrs 12 min"
+      "position": 176,
+      "time": "3:12:09"
     },
     {
       "first_name": "Leone",
       "last_name": "Marwa",
       "bib_number": "2168",
-      "team": "individual",
-      "position": "177",
-      "duration": 11632.18,
-      "time": "3 hrs 13 min"
+      "position": 177,
+      "time": "3:13:52"
     },
     {
       "first_name": "David",
       "last_name": "KIINGI",
       "bib_number": "2343",
-      "team": "individual",
-      "position": "178",
-      "duration": 11675.38,
-      "time": "3 hrs 14 min"
+      "position": 178,
+      "time": "3:14:35"
     },
     {
       "first_name": "Phelix",
       "last_name": "Oywer",
       "bib_number": "2350",
-      "team": "individual",
-      "position": "179",
-      "duration": 11775.07,
-      "time": "3 hrs 16 min"
+      "position": 179,
+      "time": "3:16:15"
     },
     {
       "first_name": "Onesmus",
       "last_name": "Mutua",
       "bib_number": "2098",
-      "team": "individual",
-      "position": "180",
-      "duration": 11798.85,
-      "time": "3 hrs 16 min"
+      "position": 180,
+      "time": "3:16:39"
     },
     {
       "first_name": "Derrick",
       "last_name": "Oduor",
       "bib_number": "2246",
-      "team": "individual",
-      "position": "181",
-      "duration": 11819.93,
-      "time": "3 hrs 17 min"
+      "position": 181,
+      "time": "3:17:00"
     },
     {
       "first_name": "Nicanor",
       "last_name": "Ochieng",
       "bib_number": "2017",
-      "team": "individual",
-      "position": "182",
-      "duration": 11821.97,
-      "time": "3 hrs 17 min"
+      "position": 182,
+      "time": "3:17:02"
     },
     {
       "first_name": "Mwaura",
       "last_name": "Innocent",
       "bib_number": "2068",
-      "team": "individual",
-      "position": "183",
-      "duration": 11836.1,
-      "time": "3 hrs 17 min"
+      "position": 183,
+      "time": "3:17:16"
     },
     {
       "first_name": "David",
       "last_name": "Kiogora",
       "bib_number": "2184",
-      "team": "individual",
-      "position": "184",
-      "duration": 11941.15,
-      "time": "3 hrs 19 min"
+      "position": 184,
+      "time": "3:19:01"
     },
     {
       "first_name": "Jeremy",
       "last_name": "Nguru",
       "bib_number": "2118",
-      "team": "individual",
-      "position": "185",
-      "duration": 12196.39,
-      "time": "3 hrs 23 min"
+      "position": 185,
+      "time": "3:23:16"
     },
     {
       "first_name": "Dennis",
       "last_name": "M",
       "bib_number": "2057",
-      "team": "individual",
-      "position": "186",
-      "duration": 12241.99,
-      "time": "3 hrs 24 min"
+      "position": 186,
+      "time": "3:24:02"
     },
     {
       "first_name": "joseph",
       "last_name": "muchogu",
       "bib_number": "2228",
-      "team": "individual",
-      "position": "187",
-      "duration": 12336.9,
-      "time": "3 hrs 25 min"
+      "position": 187,
+      "time": "3:25:37"
     },
     {
       "first_name": "SALIM",
       "last_name": "RAMADHAN",
       "bib_number": "2152",
-      "team": "individual",
-      "position": "188",
-      "duration": 12496.88,
-      "time": "3 hrs 28 min"
+      "position": 188,
+      "time": "3:28:17"
     },
     {
       "first_name": "Patrick",
       "last_name": "Makambo",
       "bib_number": "2058",
-      "team": "individual",
-      "position": "189",
-      "duration": 12574.04,
-      "time": "3 hrs 29 min"
+      "position": 189,
+      "time": "3:29:34"
     },
     {
       "first_name": "Kevin",
       "last_name": "Rorio",
       "bib_number": "2125",
-      "team": "individual",
-      "position": "190",
-      "duration": 12625.25,
-      "time": "3 hrs 30 min"
+      "position": 190,
+      "time": "3:30:25"
     },
     {
       "first_name": "Victor",
       "last_name": "Odhiambo",
       "bib_number": "2317",
-      "team": "individual",
-      "position": "191",
-      "duration": 12628.48,
-      "time": "3 hrs 30 min"
+      "position": 191,
+      "time": "3:30:28"
     },
     {
       "first_name": "Gabriel",
       "last_name": "Smith",
       "bib_number": "2183",
-      "team": "individual",
-      "position": "192",
-      "duration": 12742.65,
-      "time": "3 hrs 32 min"
+      "position": 192,
+      "time": "3:32:23"
     },
     {
       "first_name": "Daniel",
       "last_name": "Gatwechi",
       "bib_number": "2180",
-      "team": "individual",
-      "position": "193",
-      "duration": 12746.26,
-      "time": "3 hrs 32 min"
+      "position": 193,
+      "time": "3:32:26"
     },
     {
       "first_name": "Gidraph",
       "last_name": "Kinyua",
       "bib_number": "2301",
-      "team": "individual",
-      "position": "194",
-      "duration": 12759.27,
-      "time": "3 hrs 32 min"
+      "position": 194,
+      "time": "3:32:39"
     },
     {
       "first_name": "Joel",
       "last_name": "Muchiri",
       "bib_number": "2074",
-      "team": "individual",
-      "position": "195",
-      "duration": 12786.93,
-      "time": "3 hrs 33 min"
+      "position": 195,
+      "time": "3:33:07"
     },
     {
       "first_name": "Maxwell",
       "last_name": "Mboya",
       "bib_number": "2326",
-      "team": "individual",
-      "position": "196",
-      "duration": 12819.95,
-      "time": "3 hrs 33 min"
+      "position": 196,
+      "time": "3:33:40"
     },
     {
       "first_name": "Nigel",
       "last_name": "Otieno",
       "bib_number": "2248",
-      "team": "individual",
-      "position": "197",
-      "duration": 12898.37,
-      "time": "3 hrs 34 min"
+      "position": 197,
+      "time": "3:34:58"
     },
     {
       "first_name": "Don",
       "last_name": "Odongo",
       "bib_number": "2261",
-      "team": "individual",
-      "position": "198",
-      "duration": 12966.21,
-      "time": "3 hrs 36 min"
+      "position": 198,
+      "time": "3:36:06"
     },
     {
       "first_name": "Amon",
       "last_name": "Nyakundi",
       "bib_number": "2001",
-      "team": "individual",
-      "position": "199",
-      "duration": 13118.87,
-      "time": "3 hrs 38 min"
+      "position": 199,
+      "time": "3:38:39"
     },
     {
       "first_name": "Hamisi",
       "last_name": "Kibwana",
       "bib_number": "2054",
-      "team": "individual",
-      "position": "200",
-      "duration": 13163.67,
-      "time": "3 hrs 39 min"
+      "position": 200,
+      "time": "3:39:24"
     },
     {
       "first_name": "Ezekiel",
       "last_name": "Namu",
       "bib_number": "2097",
-      "team": "individual",
-      "position": "201",
-      "duration": 13214.56,
-      "time": "3 hrs 40 min"
+      "position": 201,
+      "time": "3:40:15"
     },
     {
       "first_name": "Brian",
       "last_name": "Ondiegi",
       "bib_number": "2169",
-      "team": "individual",
-      "position": "202",
-      "duration": 13351.16,
-      "time": "3 hrs 42 min"
+      "position": 202,
+      "time": "3:42:31"
     },
     {
       "first_name": "Eugene",
       "last_name": "Emali",
       "bib_number": "2299",
-      "team": "individual",
-      "position": "203",
-      "duration": 13616.86,
-      "time": "3 hrs 46 min"
+      "position": 203,
+      "time": "3:46:57"
     },
     {
       "first_name": "Stephen",
       "last_name": "Muindi",
       "bib_number": "2171",
-      "team": "individual",
-      "position": "204",
-      "duration": 13641.18,
-      "time": "3 hrs 47 min"
+      "position": 204,
+      "time": "3:47:21"
     },
     {
       "first_name": "Dennis",
       "last_name": "Odete",
       "bib_number": "2229",
-      "team": "individual",
-      "position": "205",
-      "duration": 13955.03,
-      "time": "3 hrs 52 min"
+      "position": 205,
+      "time": "3:52:35"
     },
     {
       "first_name": "David",
       "last_name": "kaloki",
       "bib_number": "2321",
-      "team": "individual",
-      "position": "206",
-      "duration": 14133.3,
-      "time": "3 hrs 55 min"
+      "position": 206,
+      "time": "3:55:33"
     },
     {
       "first_name": "Titus",
       "last_name": "Kihiu",
       "bib_number": "2148",
-      "team": "individual",
-      "position": "207",
-      "duration": 14244.44,
-      "time": "3 hrs 57 min"
+      "position": 207,
+      "time": "3:57:24"
     },
     {
       "first_name": "Leon",
       "last_name": "ichwara",
       "bib_number": "2055",
-      "team": "individual",
-      "position": "208",
-      "duration": 14286.85,
-      "time": "3 hrs 58 min"
+      "position": 208,
+      "time": "3:58:07"
     },
     {
       "first_name": "BenWilliam",
       "last_name": "Huine",
       "bib_number": "2002",
-      "team": "individual",
-      "position": "209",
-      "duration": 14340.83,
-      "time": "3 hrs 59 min"
+      "position": 209,
+      "time": "3:59:01"
     },
     {
       "first_name": "Joshua",
       "last_name": "Bakasa",
       "bib_number": "2289",
-      "team": "individual",
-      "position": "210",
-      "duration": 14446.47,
-      "time": "4 hrs 00 min"
+      "position": 210,
+      "time": "4:00:46"
     },
     {
       "first_name": "Conrad",
       "last_name": "Wafula",
       "bib_number": "2108",
-      "team": "individual",
-      "position": "211",
-      "duration": 14458.8,
-      "time": "4 hrs 00 min"
+      "position": 211,
+      "time": "4:00:59"
     },
     {
       "first_name": "Samuel",
       "last_name": "Onyango",
       "bib_number": "2339",
-      "team": "individual",
-      "position": "212",
-      "duration": 14722.76,
-      "time": "4 hrs 05 min"
+      "position": 212,
+      "time": "4:05:23"
     },
     {
       "first_name": "Evan",
       "last_name": "Gichuki",
       "bib_number": "2348",
-      "team": "individual",
-      "position": "213",
-      "duration": 14862.3,
-      "time": "4 hrs 07 min"
+      "position": 213,
+      "time": "4:07:42"
     },
     {
       "first_name": "Peter",
       "last_name": "Shitsukane",
       "bib_number": "2305",
-      "team": "individual",
-      "position": "214",
-      "duration": 15042.35,
-      "time": "4 hrs 10 min"
+      "position": 214,
+      "time": "4:10:42"
     },
     {
       "first_name": "Nelson",
       "last_name": "Mandela",
       "bib_number": "2252",
-      "team": "individual",
-      "position": "215",
-      "duration": 15121.03,
-      "time": "4 hrs 12 min"
+      "position": 215,
+      "time": "4:12:01"
     },
     {
       "first_name": "Keith",
       "last_name": "Angana",
       "bib_number": "2255",
-      "team": "individual",
-      "position": "216",
-      "duration": 15171.7,
-      "time": "4 hrs 12 min"
+      "position": 216,
+      "time": "4:12:52"
     },
     {
       "first_name": "Kelvin",
       "last_name": "Munyoike",
       "bib_number": "2126",
-      "team": "individual",
-      "position": "217",
-      "duration": 15329.27,
-      "time": "4 hrs 15 min"
+      "position": 217,
+      "time": "4:15:29"
     },
     {
       "first_name": "Billy",
       "last_name": "Maina",
       "bib_number": "2123",
-      "team": "individual",
-      "position": "218",
-      "duration": 15410.94,
-      "time": "4 hrs 16 min"
+      "position": 218,
+      "time": "4:16:51"
     },
     {
       "first_name": "Victor",
       "last_name": "Omondi",
       "bib_number": "2203",
-      "team": "individual",
-      "position": "219",
-      "duration": 15413.79,
-      "time": "4 hrs 16 min"
+      "position": 219,
+      "time": "4:16:54"
     },
     {
       "first_name": "Thomas",
       "last_name": "Kinuthia",
       "bib_number": "2049",
-      "team": "individual",
-      "position": "220",
-      "duration": 15419.84,
-      "time": "4 hrs 17 min"
+      "position": 220,
+      "time": "4:17:00"
     },
     {
       "first_name": "Dennis",
       "last_name": "Ngore",
       "bib_number": "2046",
-      "team": "individual",
-      "position": "221",
-      "duration": 15455.18,
-      "time": "4 hrs 17 min"
+      "position": 221,
+      "time": "4:17:35"
     },
     {
       "first_name": "MIKE",
       "last_name": "OSWETO",
       "bib_number": "2368",
-      "team": "individual",
-      "position": "222",
-      "duration": 15564.69,
-      "time": "4 hrs 19 min"
+      "position": 222,
+      "time": "4:19:25"
     },
     {
       "first_name": "Rodgers",
       "last_name": "Kiplimo",
       "bib_number": "2327",
-      "team": "individual",
-      "position": "223",
-      "duration": 15816.75,
-      "time": "4 hrs 23 min"
+      "position": 223,
+      "time": "4:23:37"
     },
     {
       "first_name": "Paul",
       "last_name": "Mugabe",
       "bib_number": "2024",
-      "team": "individual",
-      "position": "224",
-      "duration": 16276.67,
-      "time": "4 hrs 31 min"
+      "position": 224,
+      "time": "4:31:17"
     },
     {
       "first_name": "Vincent",
       "last_name": "Oleli",
       "bib_number": "2064",
-      "team": "individual",
-      "position": "225",
-      "duration": 16312.4,
-      "time": "4 hrs 31 min"
+      "position": 225,
+      "time": "4:31:52"
     },
     {
       "first_name": "DANIEL",
       "last_name": "OBIERO",
       "bib_number": "2142",
-      "team": "individual",
-      "position": "226",
-      "duration": 16418.86,
-      "time": "4 hrs 33 min"
+      "position": 226,
+      "time": "4:33:39"
     },
     {
       "first_name": "Kevin",
       "last_name": "Okoth",
       "bib_number": "2188",
-      "team": "individual",
-      "position": "227",
-      "duration": 17280.52,
-      "time": "4 hrs 48 min"
+      "position": 227,
+      "time": "4:48:01"
     },
     {
       "first_name": "Roy",
       "last_name": "Khapoya",
       "bib_number": "2014",
-      "team": "individual",
-      "position": "228",
-      "duration": 17877.31,
-      "time": "4 hrs 57 min"
+      "position": 228,
+      "time": "4:57:57"
     },
     {
       "first_name": "Raymond",
       "last_name": "Chepkwony",
       "bib_number": "2145",
-      "team": "individual",
-      "position": "229",
-      "duration": 18029.59,
-      "time": "5 hrs 00 min"
+      "position": 229,
+      "time": "5:00:30"
     },
     {
       "first_name": "Carl",
       "last_name": "Karanja",
       "bib_number": "2336",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Allan",
       "last_name": "Omondi",
       "bib_number": "2083",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "BRIAN",
       "last_name": "KINYUA",
       "bib_number": "2085",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Abubakar",
       "last_name": "Mohammed",
       "bib_number": "2080",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Geoffrey",
       "last_name": "Chege",
       "bib_number": "2079",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Silvester",
       "last_name": "Rioba",
       "bib_number": "2078",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "George",
       "last_name": "Inyega",
       "bib_number": "2092",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "CALVIN",
       "last_name": "OGAL MUMBO",
       "bib_number": "2077",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Brian",
       "last_name": "Wangui",
       "bib_number": "2124",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Kennedy",
       "last_name": "Nthiwa",
       "bib_number": "2117",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Matayo",
       "last_name": "Bomedian",
       "bib_number": "2149",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Dr.",
       "last_name": "Collin namayuba",
       "bib_number": "2153",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Brian",
       "last_name": "Sakhasia",
       "bib_number": "2170",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Onesmus",
       "last_name": "Mutiga",
       "bib_number": "2185",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Meshack",
       "last_name": "Kipkorir",
       "bib_number": "2196",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Marvine",
       "last_name": "Wasike",
       "bib_number": "2198",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Wycliff",
       "last_name": "Njeru",
       "bib_number": "2199",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Biren",
       "last_name": "Shah",
       "bib_number": "2206",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Ken",
       "last_name": "Mwangi",
       "bib_number": "2272",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Boblenny",
       "last_name": "Mang'oi",
       "bib_number": "2271",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Edwin",
       "last_name": "Ngatia",
       "bib_number": "2106",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "John",
       "last_name": "Njanja",
       "bib_number": "2258",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Morris",
       "last_name": "Inganga",
       "bib_number": "2245",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Dawood",
       "last_name": "Farrah",
       "bib_number": "2053",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Samuel",
       "last_name": "Mbatai",
       "bib_number": "2232",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Felix",
       "last_name": "Achayo",
       "bib_number": "2230",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Anthony",
       "last_name": "Kabuthu",
       "bib_number": "2207",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Reagan",
       "last_name": "Otieno",
       "bib_number": "2060",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "GEORGE",
       "last_name": "Kabiru",
       "bib_number": "2082",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Ishmael",
       "last_name": "Mwangi",
       "bib_number": "2333",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "PETER",
       "last_name": "NJIIIRI",
       "bib_number": "2056",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "DIVIT",
       "last_name": "VARSANI",
       "bib_number": "2325",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "John",
       "last_name": "Paul Koinet",
       "bib_number": "2316",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Ephantus",
       "last_name": "Mwondu",
       "bib_number": "2300",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Edwin",
       "last_name": "Ekasi",
       "bib_number": "2043",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Mogoa",
       "last_name": "Moruri",
       "bib_number": "2282",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Manu",
       "last_name": "Muriithi",
       "bib_number": "2277",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Samuel",
       "last_name": "Waiganjo",
       "bib_number": "2369",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Stanley",
       "last_name": "Odhiambo",
       "bib_number": "2367",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "timothy",
       "last_name": "Chelagat",
       "bib_number": "2355",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Neville",
       "last_name": "Odindo",
       "bib_number": "2342",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Mickey",
       "last_name": "Malenge",
       "bib_number": "2005",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "brian",
       "last_name": "fundi",
       "bib_number": "2358",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Casper",
       "last_name": "Sakusi",
       "bib_number": "2021",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Moses",
       "last_name": "Makabe",
       "bib_number": "2319",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "ELIJAH",
       "last_name": "MUSYOKA",
       "bib_number": "2270",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Xavior",
       "last_name": "Shitaka",
       "bib_number": "2018",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Adan",
       "last_name": "Khalid",
       "bib_number": "2026",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Bonface",
       "last_name": "Muriungi",
       "bib_number": "2016",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Joseph",
       "last_name": "Kamau",
       "bib_number": "2008",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Luke",
       "last_name": "Austin Waithaka",
       "bib_number": "2006",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Oywer",
       "last_name": "Kevin",
       "bib_number": "2003",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Ellie",
       "last_name": "Nyagwach",
       "bib_number": "2166",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     }
   ],
@@ -4007,361 +3114,281 @@
       "first_name": "Yvonne",
       "last_name": "Kirigo",
       "bib_number": "8135",
-      "team": "individual",
-      "position": "1",
-      "duration": 4360.24,
-      "time": "1 hrs 13 mins"
+      "position": 1,
+      "time": "1:12:40"
     },
     {
       "first_name": "Grace",
       "last_name": "Njiru",
       "bib_number": "8084",
-      "team": "individual",
-      "position": "2",
-      "duration": 4379.51,
-      "time": "1 hrs 13 mins"
+      "position": 2,
+      "time": "1:13:00"
     },
     {
       "first_name": "Isabel",
       "last_name": "Ngugi",
       "bib_number": "8098",
-      "team": "individual",
-      "position": "3",
-      "duration": 4642.46,
-      "time": "1 hrs 17 mins"
+      "position": 3,
+      "time": "1:17:22"
     },
     {
       "first_name": "Anne",
       "last_name": "Miingi",
       "bib_number": "8067",
-      "team": "individual",
-      "position": "4",
-      "duration": 4685.81,
-      "time": "1 hrs 18 mins"
+      "position": 4,
+      "time": "1:18:06"
     },
     {
       "first_name": "Eunice",
       "last_name": "Mburugu",
       "bib_number": "8139",
-      "team": "individual",
-      "position": "5",
-      "duration": 5434.54,
-      "time": "1 hrs 31 mins"
+      "position": 5,
+      "time": "1:30:35"
     },
     {
       "first_name": "Esther",
       "last_name": "Wangari",
       "bib_number": "8050",
-      "team": "individual",
-      "position": "6",
-      "duration": 5504.85,
-      "time": "1 hrs 32 mins"
+      "position": 6,
+      "time": "1:31:45"
     },
     {
       "first_name": "Happiness",
       "last_name": "Mutua",
       "bib_number": "8031",
-      "team": "individual",
-      "position": "7",
-      "duration": 5567.5,
-      "time": "1 hrs 33 mins"
+      "position": 7,
+      "time": "1:32:47"
     },
     {
       "first_name": "Fatma",
       "last_name": "Shark",
       "bib_number": "8007",
-      "team": "individual",
-      "position": "8",
-      "duration": 5630.82,
-      "time": "1 hrs 34 mins"
+      "position": 8,
+      "time": "1:33:51"
     },
     {
       "first_name": "Ivy",
       "last_name": "Langat",
       "bib_number": "8092",
-      "team": "individual",
-      "position": "9",
-      "duration": 5636.85,
-      "time": "1 hrs 34 mins"
+      "position": 9,
+      "time": "1:33:57"
     },
     {
       "first_name": "Anne",
       "last_name": "C Odhiambo",
       "bib_number": "8107",
-      "team": "individual",
-      "position": "10",
-      "duration": 5639.74,
-      "time": "1 hrs 34 mins"
+      "position": 10,
+      "time": "1:34:00"
     },
     {
       "first_name": "Brenda",
       "last_name": "Esiromo",
       "bib_number": "8101",
-      "team": "individual",
-      "position": "11",
-      "duration": 5685.96,
-      "time": "1 hrs 35 mins"
+      "position": 11,
+      "time": "1:34:46"
     },
     {
       "first_name": "Carol",
       "last_name": "Mururi",
       "bib_number": "8103",
-      "team": "individual",
-      "position": "12",
-      "duration": 5687.86,
-      "time": "1 hrs 35 mins"
+      "position": 12,
+      "time": "1:34:48"
     },
     {
       "first_name": "MARY",
       "last_name": "NEKESA",
       "bib_number": "8125",
-      "team": "individual",
-      "position": "13",
-      "duration": 5793.9,
-      "time": "1 hrs 37 mins"
+      "position": 13,
+      "time": "1:36:34"
     },
     {
       "first_name": "Rael",
       "last_name": "Kakai",
       "bib_number": "8136",
-      "team": "individual",
-      "position": "14",
-      "duration": 6001.04,
-      "time": "1 hrs 40 mins"
+      "position": 14,
+      "time": "1:40:01"
     },
     {
       "first_name": "Dorsi",
       "last_name": "Jowi",
       "bib_number": "8039",
-      "team": "individual",
-      "position": "15",
-      "duration": 6226.2,
-      "time": "1 hrs 44 mins"
+      "position": 15,
+      "time": "1:43:46"
     },
     {
       "first_name": "Sophie",
       "last_name": "Okova",
       "bib_number": "8120",
-      "team": "individual",
-      "position": "16",
-      "duration": 6334.17,
-      "time": "1 hrs 46 mins"
+      "position": 16,
+      "time": "1:45:34"
     },
     {
       "first_name": "Njeri",
       "last_name": "Muhiu",
       "bib_number": "8038",
-      "team": "individual",
-      "position": "17",
-      "duration": 6373.11,
-      "time": "1 hrs 46 mins"
+      "position": 17,
+      "time": "1:46:13"
     },
     {
       "first_name": "Christine",
       "last_name": "Magaju",
       "bib_number": "8094",
-      "team": "individual",
-      "position": "18",
-      "duration": 6404.01,
-      "time": "1 hrs 47 mins"
+      "position": 18,
+      "time": "1:46:44"
     },
     {
       "first_name": "Tiffany",
       "last_name": "Karanja",
       "bib_number": "8140",
-      "team": "individual",
-      "position": "19",
-      "duration": 6540.44,
-      "time": "1 hrs 49 mins"
+      "position": 19,
+      "time": "1:49:00"
     },
     {
       "first_name": "BRENDA",
       "last_name": "MBURUGU",
       "bib_number": "8106",
-      "team": "individual",
-      "position": "20",
-      "duration": 6643.87,
-      "time": "1 hrs 51 mins"
+      "position": 20,
+      "time": "1:50:44"
     },
     {
       "first_name": "Njambi",
       "last_name": "Wainaina",
       "bib_number": "8074",
-      "team": "individual",
-      "position": "21",
-      "duration": 6721.46,
-      "time": "1 hrs 52 mins"
+      "position": 21,
+      "time": "1:52:01"
     },
     {
       "first_name": "Evalyne",
       "last_name": "Kimemia",
       "bib_number": "8079",
-      "team": "individual",
-      "position": "22",
-      "duration": 6794.23,
-      "time": "1 hrs 53 mins"
+      "position": 22,
+      "time": "1:53:14"
     },
     {
       "first_name": "Stellah",
       "last_name": "Gakii",
       "bib_number": "8068",
-      "team": "individual",
-      "position": "23",
-      "duration": 6870.3,
-      "time": "1 hrs 55 mins"
+      "position": 23,
+      "time": "1:54:30"
     },
     {
       "first_name": "Sylvia",
       "last_name": "Mwangi",
       "bib_number": "8062",
-      "team": "individual",
-      "position": "24",
-      "duration": 6917.44,
-      "time": "1 hrs 55 mins"
+      "position": 24,
+      "time": "1:55:17"
     },
     {
       "first_name": "Wangui",
       "last_name": "Muraguri",
       "bib_number": "8055",
-      "team": "individual",
-      "position": "25",
-      "duration": 7031.55,
-      "time": "1 hrs 57 mins"
+      "position": 25,
+      "time": "1:57:12"
     },
     {
       "first_name": "Leiyan",
       "last_name": "Saningo",
       "bib_number": "8138",
-      "team": "individual",
-      "position": "26",
-      "duration": 7370.66,
-      "time": "2 hrs 3 mins"
+      "position": 26,
+      "time": "2:02:51"
     },
     {
       "first_name": "Rose",
       "last_name": "Muturi",
       "bib_number": "8021",
-      "team": "individual",
-      "position": "27",
-      "duration": 7655.33,
-      "time": "2 hrs 8 mins"
+      "position": 27,
+      "time": "2:07:35"
     },
     {
       "first_name": "Eva",
       "last_name": "Njoki",
       "bib_number": "8069",
-      "team": "individual",
-      "position": "28",
-      "duration": 7663.42,
-      "time": "2 hrs 8 mins"
+      "position": 28,
+      "time": "2:07:43"
     },
     {
       "first_name": "Nancy",
       "last_name": "Atello",
       "bib_number": "8063",
-      "team": "individual",
-      "position": "29",
-      "duration": 8565.84,
-      "time": "2 hrs 23 mins"
+      "position": 29,
+      "time": "2:22:46"
     },
     {
       "first_name": "Tehlah",
       "last_name": "Majuma",
       "bib_number": "8078",
-      "team": "individual",
-      "position": "30",
-      "duration": 8573.72,
-      "time": "2 hrs 23 mins"
+      "position": 30,
+      "time": "2:22:54"
     },
     {
       "first_name": "VALENTINE",
       "last_name": "WANGARI",
       "bib_number": "8100",
-      "team": "individual",
-      "position": "31",
-      "duration": 8771.53,
-      "time": "2 hrs 26 mins"
+      "position": 31,
+      "time": "2:26:12"
     },
     {
       "first_name": "Nannette",
       "last_name": "Miingi",
       "bib_number": "2159",
-      "team": "individual",
-      "position": "5",
-      "duration": 9166.97,
-      "time": "2 hrs 33 mins"
+      "position": 32,
+      "time": "2:32:47"
     },
     {
       "first_name": "Leah",
       "last_name": "Ombuor",
       "bib_number": "8080",
-      "team": "individual",
-      "position": "32",
-      "duration": 9698.52,
-      "time": "2 hrs 42 mins"
+      "position": 33,
+      "time": "2:41:39"
     },
     {
       "first_name": "Christine",
       "last_name": "Mboya",
       "bib_number": "8093",
-      "team": "individual",
-      "position": "33",
-      "duration": 9994.04,
-      "time": "2 hrs 47 mins"
+      "position": 34,
+      "time": "2:46:34"
     },
     {
       "first_name": "Faith",
       "last_name": "Nyokabi",
       "bib_number": "8072",
-      "team": "individual",
-      "position": "34",
-      "duration": 10610.99,
-      "time": "2 hrs 57 mins"
+      "position": 35,
+      "time": "2:56:51"
     },
     {
       "first_name": "Janerose",
       "last_name": "Jerono",
       "bib_number": "8032",
-      "team": "individual",
-      "position": "35",
-      "duration": 10658.76,
-      "time": "2 hrs 58 mins"
+      "position": 36,
+      "time": "2:57:39"
     },
     {
       "first_name": "Zuhra",
       "last_name": "Nagib",
       "bib_number": "8077",
-      "team": "individual",
-      "position": "36",
-      "duration": 10864.35,
-      "time": "3 hrs 1 mins"
+      "position": 37,
+      "time": "3:01:04"
     },
     {
       "first_name": "Maureen",
       "last_name": "Avugwi",
       "bib_number": "8013",
-      "team": "individual",
-      "position": "37",
-      "duration": 12185.85,
-      "time": "3 hrs 23 mins"
+      "position": 38,
+      "time": "3:23:06"
     },
     {
       "first_name": "Lena",
       "last_name": "Njuguna",
       "bib_number": "8117",
-      "team": "individual",
-      "position": "38",
-      "duration": 12568.3,
-      "time": "3 hrs 29 mins"
+      "position": 39,
+      "time": "3:29:28"
     },
     {
       "first_name": "Tessie",
       "last_name": "Ng'ang'a",
       "bib_number": "8127",
-      "team": "individual",
       "position": null,
-      "duration": null,
-      "time": "0 hrs 0 mins"
+      "time": "0.00"
     }
   ],
   "CORPORATE MALE": [
@@ -4369,792 +3396,616 @@
       "first_name": "Joseph",
       "last_name": "Gitau",
       "bib_number": "8073",
-      "team": "individual",
-      "position": "1",
-      "duration": 2956.23,
-      "time": "0 hrs 49 mins"
+      "position": 1,
+      "time": "0:49:16"
     },
     {
       "first_name": "Simon",
       "last_name": "Wangui Gagnon",
       "bib_number": "8123",
-      "team": "individual",
-      "position": "2",
-      "duration": 3145.96,
-      "time": "0 hrs 52 mins"
+      "position": 2,
+      "time": "0:52:26"
     },
     {
       "first_name": "Clinton",
       "last_name": "Adoyo",
       "bib_number": "8088",
-      "team": "individual",
-      "position": "3",
-      "duration": 3179.58,
-      "time": "0 hrs 53 mins"
+      "position": 3,
+      "time": "0:53:00"
     },
     {
       "first_name": "Washington",
       "last_name": "Ayiga",
       "bib_number": "8048",
-      "team": "individual",
-      "position": "4",
-      "duration": 3596.63,
-      "time": "1 hrs 0 mins"
+      "position": 4,
+      "time": "0:59:57"
     },
     {
       "first_name": "Theodore",
       "last_name": "Murefu",
       "bib_number": "8058",
-      "team": "individual",
-      "position": "5",
-      "duration": 3894.6,
-      "time": "1 hrs 5 mins"
+      "position": 5,
+      "time": "1:04:55"
     },
     {
       "first_name": "Johnmark",
       "last_name": "Ochieng",
       "bib_number": "8017",
-      "team": "individual",
-      "position": "6",
-      "duration": 4005.5,
-      "time": "1 hrs 7 mins"
+      "position": 6,
+      "time": "1:06:46"
     },
     {
       "first_name": "Elly",
       "last_name": "Odhiambo",
       "bib_number": "8006",
-      "team": "individual",
-      "position": "7",
-      "duration": 4027.87,
-      "time": "1 hrs 7 mins"
+      "position": 7,
+      "time": "1:07:08"
     },
     {
       "first_name": "Musa",
       "last_name": "Aziz",
       "bib_number": "8037",
-      "team": "individual",
-      "position": "8",
-      "duration": 4053.44,
-      "time": "1 hrs 8 mins"
+      "position": 8,
+      "time": "1:07:33"
     },
     {
       "first_name": "James",
       "last_name": "Mwambwa",
       "bib_number": "8086",
-      "team": "individual",
-      "position": "9",
-      "duration": 4103.42,
-      "time": "1 hrs 8 mins"
+      "position": 9,
+      "time": "1:08:23"
     },
     {
       "first_name": "Jackson",
       "last_name": "Kanyeki",
       "bib_number": "8129",
-      "team": "individual",
-      "position": "10",
-      "duration": 4123.17,
-      "time": "1 hrs 9 mins"
+      "position": 10,
+      "time": "1:08:43"
     },
     {
       "first_name": "Justin",
       "last_name": "Mutuma",
       "bib_number": "8133",
-      "team": "individual",
-      "position": "11",
-      "duration": 4123.55,
-      "time": "1 hrs 9 mins"
+      "position": 11,
+      "time": "1:08:44"
     },
     {
       "first_name": "Nelson",
       "last_name": "kipkurui",
       "bib_number": "8022",
-      "team": "individual",
-      "position": "12",
-      "duration": 4152.87,
-      "time": "1 hrs 9 mins"
+      "position": 12,
+      "time": "1:09:13"
     },
     {
       "first_name": "Khalid",
       "last_name": "Adan",
       "bib_number": "8054",
-      "team": "individual",
-      "position": "13",
-      "duration": 4191.87,
-      "time": "1 hrs 10 mins"
+      "position": 13,
+      "time": "1:09:52"
     },
     {
       "first_name": "Samuel",
       "last_name": "Gichohi",
       "bib_number": "8070",
-      "team": "individual",
-      "position": "14",
-      "duration": 4199.27,
-      "time": "1 hrs 10 mins"
+      "position": 14,
+      "time": "1:09:59"
     },
     {
       "first_name": "Eugene",
       "last_name": "Otieno",
       "bib_number": "8018",
-      "team": "individual",
-      "position": "15",
-      "duration": 4233.92,
-      "time": "1 hrs 11 mins"
+      "position": 15,
+      "time": "1:10:34"
     },
     {
       "first_name": "Emmanuel",
       "last_name": "Mabango",
       "bib_number": "8030",
-      "team": "individual",
-      "position": "16",
-      "duration": 4242.67,
-      "time": "1 hrs 11 mins"
+      "position": 16,
+      "time": "1:10:43"
     },
     {
       "first_name": "Peter",
       "last_name": "Kibe",
       "bib_number": "8109",
-      "team": "individual",
-      "position": "17",
-      "duration": 4250.08,
-      "time": "1 hrs 11 mins"
+      "position": 17,
+      "time": "1:10:50"
     },
     {
       "first_name": "Daniel",
       "last_name": "Okumu",
       "bib_number": "8126",
-      "team": "individual",
-      "position": "18",
-      "duration": 4255.12,
-      "time": "1 hrs 11 mins"
+      "position": 18,
+      "time": "1:10:55"
     },
     {
       "first_name": "David",
       "last_name": "Kamuu",
       "bib_number": "8002",
-      "team": "individual",
-      "position": "19",
-      "duration": 4271.1,
-      "time": "1 hrs 11 mins"
+      "position": 19,
+      "time": "1:11:11"
     },
     {
       "first_name": "Desmond",
       "last_name": "Momanyi",
       "bib_number": "8105",
-      "team": "individual",
-      "position": "20",
-      "duration": 4276.3,
-      "time": "1 hrs 11 mins"
+      "position": 20,
+      "time": "1:11:16"
     },
     {
       "first_name": "Calvin",
       "last_name": "Jaoko",
       "bib_number": "8108",
-      "team": "individual",
-      "position": "21",
-      "duration": 4300.44,
-      "time": "1 hrs 12 mins"
+      "position": 21,
+      "time": "1:11:40"
     },
     {
       "first_name": "Tony",
       "last_name": "Mwenda",
       "bib_number": "8148",
-      "team": "individual",
-      "position": "22",
-      "duration": 4313.82,
-      "time": "1 hrs 12 mins"
+      "position": 22,
+      "time": "1:11:54"
     },
     {
       "first_name": "Danis",
       "last_name": "Fabisch Kagali",
       "bib_number": "8011",
-      "team": "individual",
-      "position": "23",
-      "duration": 4317.03,
-      "time": "1 hrs 12 mins"
+      "position": 23,
+      "time": "1:11:57"
     },
     {
       "first_name": "Alex",
       "last_name": "Kanyi Maina",
       "bib_number": "8116",
-      "team": "individual",
-      "position": "24",
-      "duration": 4324.16,
-      "time": "1 hrs 12 mins"
+      "position": 24,
+      "time": "1:12:04"
     },
     {
       "first_name": "Kelvin",
       "last_name": "King'ori",
       "bib_number": "8036",
-      "team": "individual",
-      "position": "25",
-      "duration": 4373.36,
-      "time": "1 hrs 13 mins"
+      "position": 25,
+      "time": "1:12:53"
     },
     {
       "first_name": "ISAAC",
       "last_name": "OTIENO",
       "bib_number": "8114",
-      "team": "individual",
-      "position": "26",
-      "duration": 4389.48,
-      "time": "1 hrs 13 mins"
+      "position": 26,
+      "time": "1:13:09"
     },
     {
       "first_name": "Muita",
       "last_name": "Ikua",
       "bib_number": "8099",
-      "team": "individual",
-      "position": "27",
-      "duration": 4436.91,
-      "time": "1 hrs 14 mins"
+      "position": 27,
+      "time": "1:13:57"
     },
     {
       "first_name": "Davis",
       "last_name": "Yangah",
       "bib_number": "8137",
-      "team": "individual",
-      "position": "28",
-      "duration": 4453.41,
-      "time": "1 hrs 14 mins"
+      "position": 28,
+      "time": "1:14:13"
     },
     {
       "first_name": "Dennis",
       "last_name": "Muigai",
       "bib_number": "8076",
-      "team": "individual",
-      "position": "29",
-      "duration": 4454.01,
-      "time": "1 hrs 14 mins"
+      "position": 29,
+      "time": "1:14:14"
     },
     {
       "first_name": "Neville",
       "last_name": "Masheti",
       "bib_number": "8042",
-      "team": "individual",
-      "position": "30",
-      "duration": 4456.43,
-      "time": "1 hrs 14 mins"
+      "position": 30,
+      "time": "1:14:16"
     },
     {
       "first_name": "Eric",
       "last_name": "Njenga",
       "bib_number": "8052",
-      "team": "individual",
-      "position": "31",
-      "duration": 4463.45,
-      "time": "1 hrs 14 mins"
+      "position": 31,
+      "time": "1:14:23"
     },
     {
       "first_name": "David",
       "last_name": "Kariuki",
       "bib_number": "8089",
-      "team": "individual",
-      "position": "32",
-      "duration": 4467.06,
-      "time": "1 hrs 14 mins"
+      "position": 32,
+      "time": "1:14:27"
     },
     {
       "first_name": "Erolls",
       "last_name": "Kipchirchir",
       "bib_number": "8046",
-      "team": "individual",
-      "position": "33",
-      "duration": 4470.49,
-      "time": "1 hrs 15 mins"
+      "position": 33,
+      "time": "1:14:30"
     },
     {
       "first_name": "Marcus",
       "last_name": "Mutuma",
       "bib_number": "8128",
-      "team": "individual",
-      "position": "34",
-      "duration": 4510.6,
-      "time": "1 hrs 15 mins"
+      "position": 34,
+      "time": "1:15:11"
     },
     {
       "first_name": "James",
       "last_name": "Mwangi",
       "bib_number": "8130",
-      "team": "individual",
-      "position": "35",
-      "duration": 4512.24,
-      "time": "1 hrs 15 mins"
+      "position": 35,
+      "time": "1:15:12"
     },
     {
       "first_name": "Benadict",
       "last_name": "Isiaho",
       "bib_number": "8045",
-      "team": "individual",
-      "position": "36",
-      "duration": 4548.28,
-      "time": "1 hrs 16 mins"
+      "position": 36,
+      "time": "1:15:48"
     },
     {
       "first_name": "Samuel",
       "last_name": "Muindi",
       "bib_number": "8023",
-      "team": "individual",
-      "position": "37",
-      "duration": 4557.55,
-      "time": "1 hrs 16 mins"
+      "position": 37,
+      "time": "1:15:58"
     },
     {
       "first_name": "Paul",
       "last_name": "Njue",
       "bib_number": "8134",
-      "team": "individual",
-      "position": "38",
-      "duration": 4584.23,
-      "time": "1 hrs 16 mins"
+      "position": 38,
+      "time": "1:16:24"
     },
     {
       "first_name": "James",
       "last_name": "Kimathi",
       "bib_number": "8083",
-      "team": "individual",
-      "position": "39",
-      "duration": 4606.13,
-      "time": "1 hrs 17 mins"
+      "position": 39,
+      "time": "1:16:46"
     },
     {
       "first_name": "Walter",
       "last_name": "Muguma",
       "bib_number": "8144",
-      "team": "individual",
-      "position": "40",
-      "duration": 4611.6,
-      "time": "1 hrs 17 mins"
+      "position": 40,
+      "time": "1:16:52"
     },
     {
       "first_name": "Maxmillan",
       "last_name": "Karani",
       "bib_number": "8015",
-      "team": "individual",
-      "position": "41",
-      "duration": 4619.62,
-      "time": "1 hrs 17 mins"
+      "position": 41,
+      "time": "1:17:00"
     },
     {
       "first_name": "Munene",
       "last_name": "Mwongela",
       "bib_number": "8010",
-      "team": "individual",
-      "position": "42",
-      "duration": 4686.7,
-      "time": "1 hrs 18 mins"
+      "position": 42,
+      "time": "1:18:07"
     },
     {
       "first_name": "Patrick",
       "last_name": "Kimani",
       "bib_number": "8033",
-      "team": "individual",
-      "position": "43",
-      "duration": 5176.33,
-      "time": "1 hrs 26 mins"
+      "position": 43,
+      "time": "1:26:16"
     },
     {
       "first_name": "Clement",
       "last_name": "Murimi",
       "bib_number": "8141",
-      "team": "individual",
-      "position": "44",
-      "duration": 5352.96,
-      "time": "1 hrs 29 mins"
+      "position": 44,
+      "time": "1:29:13"
     },
     {
       "first_name": "Sean",
       "last_name": "Murimi",
       "bib_number": "8081",
-      "team": "individual",
-      "position": "45",
-      "duration": 5631.01,
-      "time": "1 hrs 34 mins"
+      "position": 45,
+      "time": "1:33:51"
     },
     {
       "first_name": "Isaac",
       "last_name": "Engoke",
       "bib_number": "8016",
-      "team": "individual",
-      "position": "46",
-      "duration": 5637.47,
-      "time": "1 hrs 34 mins"
+      "position": 46,
+      "time": "1:33:57"
     },
     {
       "first_name": "Evans",
       "last_name": "Baragu",
       "bib_number": "8029",
-      "team": "individual",
-      "position": "47",
-      "duration": 5684.92,
-      "time": "1 hrs 35 mins"
+      "position": 47,
+      "time": "1:34:45"
     },
     {
       "first_name": "martin",
       "last_name": "gathogo",
       "bib_number": "8044",
-      "team": "individual",
-      "position": "48",
-      "duration": 5700.55,
-      "time": "1 hrs 35 mins"
+      "position": 48,
+      "time": "1:35:01"
     },
     {
       "first_name": "Dickstein",
       "last_name": "Mukaria",
       "bib_number": "8075",
-      "team": "individual",
-      "position": "49",
-      "duration": 5861.22,
-      "time": "1 hrs 38 mins"
+      "position": 49,
+      "time": "1:37:41"
     },
     {
       "first_name": "Jesse",
       "last_name": "Muthinja",
       "bib_number": "8003",
-      "team": "individual",
-      "position": "50",
-      "duration": 6101.29,
-      "time": "1 hrs 42 mins"
+      "position": 50,
+      "time": "1:41:41"
     },
     {
       "first_name": "Godwin",
       "last_name": "Kipngetich",
       "bib_number": "8020",
-      "team": "individual",
-      "position": "51",
-      "duration": 6265.35,
-      "time": "1 hrs 44 mins"
+      "position": 51,
+      "time": "1:44:25"
     },
     {
       "first_name": "Joseph",
       "last_name": "Mbuthia",
       "bib_number": "8147",
-      "team": "individual",
-      "position": "52",
-      "duration": 6401.78,
-      "time": "1 hrs 47 mins"
+      "position": 52,
+      "time": "1:46:42"
     },
     {
       "first_name": "GEOFFREY",
       "last_name": "NGUGI",
       "bib_number": "8005",
-      "team": "individual",
-      "position": "53",
-      "duration": 6644.06,
-      "time": "1 hrs 51 mins"
+      "position": 53,
+      "time": "1:50:44"
     },
     {
       "first_name": "stephen",
       "last_name": "mwangi",
       "bib_number": "8143",
-      "team": "individual",
-      "position": "54",
-      "duration": 6907.14,
-      "time": "1 hrs 55 mins"
+      "position": 54,
+      "time": "1:55:07"
     },
     {
       "first_name": "Innocent",
       "last_name": "Baluge",
       "bib_number": "8009",
-      "team": "individual",
-      "position": "55",
-      "duration": 7014.86,
-      "time": "1 hrs 57 mins"
+      "position": 55,
+      "time": "1:56:55"
     },
     {
       "first_name": "Gabriel",
       "last_name": "Odhiambo",
       "bib_number": "8124",
-      "team": "individual",
-      "position": "56",
-      "duration": 7033.26,
-      "time": "1 hrs 57 mins"
+      "position": 56,
+      "time": "1:57:13"
     },
     {
       "first_name": "Mworia",
       "last_name": "Kelvin",
       "bib_number": "8142",
-      "team": "individual",
-      "position": "57",
-      "duration": 7331.17,
-      "time": "2 hrs 2 mins"
+      "position": 57,
+      "time": "2:02:11"
     },
     {
       "first_name": "Julius",
       "last_name": "Meso",
       "bib_number": "8008",
-      "team": "individual",
-      "position": "58",
-      "duration": 7576.39,
-      "time": "2 hrs 6 mins"
+      "position": 58,
+      "time": "2:06:16"
     },
     {
       "first_name": "Joy",
       "last_name": "Odhiambo",
       "bib_number": "8090",
-      "team": "individual",
-      "position": "59",
-      "duration": 7723.44,
-      "time": "2 hrs 9 mins"
+      "position": 59,
+      "time": "2:08:43"
     },
     {
       "first_name": "Recee",
       "last_name": "Mubachia",
       "bib_number": "8028",
-      "team": "individual",
-      "position": "60",
-      "duration": 8219.04,
-      "time": "2 hrs 17 mins"
+      "position": 60,
+      "time": "2:16:59"
     },
     {
       "first_name": "Eric",
       "last_name": "Muindu",
       "bib_number": "8110",
-      "team": "individual",
-      "position": "61",
-      "duration": 8301.73,
-      "time": "2 hrs 18 mins"
+      "position": 61,
+      "time": "2:18:22"
     },
     {
       "first_name": "Tosin",
       "last_name": "Palogun",
       "bib_number": "8019",
-      "team": "individual",
-      "position": "62",
-      "duration": 8772.39,
-      "time": "2 hrs 26 mins"
+      "position": 62,
+      "time": "2:26:12"
     },
     {
       "first_name": "Ian",
       "last_name": "Kariuki",
       "bib_number": "8091",
-      "team": "individual",
-      "position": "63",
-      "duration": 9128.75,
-      "time": "2 hrs 32 mins"
+      "position": 63,
+      "time": "2:32:09"
     },
     {
       "first_name": "Kent",
       "last_name": "Warekwa",
       "bib_number": "8065",
-      "team": "individual",
-      "position": "64",
-      "duration": 10877.54,
-      "time": "3 hrs 1 mins"
+      "position": 64,
+      "time": "3:01:18"
     },
     {
       "first_name": "Kennedy",
       "last_name": "Kimende",
       "bib_number": "8112",
-      "team": "individual",
-      "position": "65",
-      "duration": 12748.42,
-      "time": "3 hrs 32 mins"
+      "position": 65,
+      "time": "3:32:28"
     },
     {
       "first_name": "Knight",
       "last_name": "Onyango",
       "bib_number": "8064",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Jamal",
       "last_name": "Ibrahim",
       "bib_number": "8051",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Ronald",
       "last_name": "Magut",
       "bib_number": "8085",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "VICTOR",
       "last_name": "MWAURA",
       "bib_number": "8043",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Antony",
       "last_name": "Mwangi",
       "bib_number": "8115",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Frankline",
       "last_name": "Yego",
       "bib_number": "8041",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Wayne",
       "last_name": "Dwallow",
       "bib_number": "8053",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Steven",
       "last_name": "Orwongo",
       "bib_number": "8040",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Paul",
       "last_name": "Kahohi",
       "bib_number": "8035",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Antony",
       "last_name": "Mwangi",
       "bib_number": "8024",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Brandon",
       "last_name": "Mutunga",
       "bib_number": "8131",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Reagan",
       "last_name": "Aura",
       "bib_number": "8014",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "bonface",
       "last_name": "munyi",
       "bib_number": "8012",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Walter",
       "last_name": "Muguma",
       "bib_number": "8047",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "BENSON",
       "last_name": "KIBE",
       "bib_number": "8082",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Saningo",
       "last_name": "Oloiputari",
       "bib_number": "8025",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Arthur",
       "last_name": "Namu",
       "bib_number": "8102",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Collins",
       "last_name": "Murithi",
       "bib_number": "8111",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Sllas",
       "last_name": "Ngare",
       "bib_number": "8026",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Martin",
       "last_name": "Mukara",
       "bib_number": "8001",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Stanley",
       "last_name": "Muthama",
       "bib_number": "8118",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Collins",
       "last_name": "Baraza",
       "bib_number": "8121",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     },
     {
       "first_name": "Kelvin",
       "last_name": "Kibaara",
       "bib_number": "8122",
-      "team": "individual",
       "position": null,
-      "duration": null,
       "time": "0.00"
     }
   ],
@@ -5162,583 +4013,532 @@
     "overall_standings": [
       {
         "team_name": "Joy Riders",
+        "position": 1,
+        "average": "1:48:33",
         "leg_times": [
-          "5987",
-          "6107",
-          "6689",
-          "7646",
-          "6137"
-        ],
-        "average": "6513.2",
-        "position": "1"
+          "1:39:47",
+          "1:41:47",
+          "1:51:29",
+          "2:07:26",
+          "1:42:17"
+        ]
       },
       {
         "team_name": "Nyahururu Cycling Club",
+        "position": 2,
+        "average": "1:58:43",
         "leg_times": [
-          "5984.585",
-          "6483",
-          "7238",
-          "7836",
-          "8074"
-        ],
-        "average": "7123.117",
-        "position": "2"
+          "1:39:45",
+          "1:48:03",
+          "2:00:38",
+          "2:10:36",
+          "2:14:34"
+        ]
       },
       {
         "team_name": "KAF Tigers",
+        "position": 3,
+        "average": "1:58:46",
         "leg_times": [
-          "6568",
-          "6584",
-          "6635",
-          "7170",
-          "8671"
-        ],
-        "average": "7125.6",
-        "position": "3"
+          "1:49:28",
+          "1:49:44",
+          "1:50:35",
+          "1:59:30",
+          "2:24:31"
+        ]
       },
       {
         "team_name": "Airpocket",
+        "position": 4,
+        "average": "2:14:54",
         "leg_times": [
-          "6071",
-          "6624",
-          "6852",
-          "8023",
-          "12899"
-        ],
-        "average": "8093.8",
-        "position": "4"
+          "1:41:11",
+          "1:50:24",
+          "1:54:12",
+          "2:13:43",
+          "3:34:59"
+        ]
       },
       {
         "team_name": "Tip of the Spear",
+        "position": 5,
+        "average": "2:36:48",
         "leg_times": [
-          "7313",
-          "7856",
-          "9304",
-          "9791",
-          "12776"
-        ],
-        "average": "9408",
-        "position": "5"
+          "2:01:53",
+          "2:10:56",
+          "2:35:04",
+          "2:43:11",
+          "3:32:56"
+        ]
       },
       {
         "team_name": "Loop Cycling Club",
+        "position": 6,
+        "average": "3:05:09",
         "leg_times": [
-          "8431",
-          "9369",
-          "9642",
-          "13561",
-          "14544"
-        ],
-        "average": "11109.4",
-        "position": "6"
+          "2:20:31",
+          "2:36:09",
+          "2:40:42",
+          "3:46:01",
+          "4:02:24"
+        ]
       },
       {
         "team_name": "Landscape Aslliance",
+        "position": 7,
+        "average": "4:03:14",
         "leg_times": [
-          "11709",
-          "12508",
-          "13503",
-          "17054",
-          "18195"
-        ],
-        "average": "14593.8",
-        "position": "7"
+          "3:15:09",
+          "3:28:28",
+          "3:45:03",
+          "4:44:14",
+          "5:03:15"
+        ]
       },
       {
         "team_name": "Rongai Cyclers",
+        "position": 8,
+        "average": "1:52:51",
         "leg_times": [
-          "6052",
-          "6553",
-          "7170",
-          "14079"
-        ],
-        "average": "6770.8",
-        "position": "8"
+          "1:40:52",
+          "1:49:13",
+          "1:59:30",
+          "3:54:39"
+        ]
       },
       {
         "team_name": "Sea Riders",
+        "position": 9,
+        "average": "1:49:50",
         "leg_times": [
-          "8524",
-          "10708",
-          "13716"
-        ],
-        "average": "6589.6",
-        "position": "9"
+          "2:22:04",
+          "2:58:28",
+          "3:48:36"
+        ]
       },
       {
         "team_name": "Sea Riders B",
+        "position": 10,
+        "average": "0:58:55",
         "leg_times": [
-          "8043",
-          "9634"
-        ],
-        "average": "3535.4",
-        "position": "10"
+          "2:14:03",
+          "2:40:34"
+        ]
       },
       {
         "team_name": "Dedsilva International",
-        "leg_times": [],
-        "average": "0",
-        "position": "DQ"
+        "position": "DQ",
+        "average": "-",
+        "leg_times": []
       }
     ],
     "detailed_summary": [
       {
         "first_name": "David",
         "last_name": "Mathai",
-        "rider_code": "0010-3",
+        "rider_code": "0010 -3",
         "team": "Nyahururu Cycling Team",
-        "position": "1",
-        "duration": 5984.59,
-        "time": "1 hr 40 min"
+        "position": 1,
+        "time": "1:39:45"
       },
       {
         "first_name": "Mevin",
         "last_name": "Njuguna",
-        "rider_code": "0012-2",
+        "rider_code": "0012 -2",
         "team": "Joyriders Kenya",
-        "position": "2",
-        "duration": 5987.0,
-        "time": "1 hr 40 min"
+        "position": 2,
+        "time": "1:39:47"
       },
       {
         "first_name": "Sifa",
         "last_name": "Kuruga",
-        "rider_code": "0011-5",
+        "rider_code": "0011 -5",
         "team": "Rongai cyclers racing",
-        "position": "3",
-        "duration": 6052.0,
-        "time": "1 hr 41 min"
+        "position": 3,
+        "time": "1:40:52"
       },
       {
         "first_name": "Samuel",
         "last_name": "Njau",
-        "rider_code": "0007-1",
+        "rider_code": "0007 -1",
         "team": "Airpocket",
-        "position": "4",
-        "duration": 6071.03,
-        "time": "1 hr 41 min"
+        "position": 4,
+        "time": "1:41:11"
       },
       {
         "first_name": "Michael",
         "last_name": "Matindi",
-        "rider_code": "0012-3",
+        "rider_code": "0012 -3",
         "team": "Joyriders Kenya",
-        "position": "5",
-        "duration": 6107.0,
-        "time": "1 hr 42 min"
+        "position": 5,
+        "time": "1:41:47"
       },
       {
         "first_name": "Ken",
         "last_name": "Muchiri",
         "rider_code": "2012-1",
         "team": "Joyriders Kenya",
-        "position": "6",
-        "duration": 6137.0,
-        "time": "1 hr 42 min"
+        "position": 6,
+        "time": "1:42:17"
       },
       {
         "first_name": "Gerald",
         "last_name": "Njinju",
-        "rider_code": "0010-2",
+        "rider_code": "0010 -2",
         "team": "Nyahururu Cycling Team",
-        "position": "7",
-        "duration": 6483.0,
-        "time": "1 hr 48 min"
+        "position": 7,
+        "time": "1:48:03"
       },
       {
         "first_name": "Kelvin",
         "last_name": "Maina",
-        "rider_code": "0011-3",
+        "rider_code": "0011 -3",
         "team": "Rongai cyclers racing",
-        "position": "8",
-        "duration": 6553.0,
-        "time": "1 hr 49 min"
+        "position": 8,
+        "time": "1:49:13"
       },
       {
         "first_name": "Titus",
         "last_name": "Mworia",
-        "rider_code": "0008-1",
+        "rider_code": "0008 -1",
         "team": "KAF TIGERS",
-        "position": "9",
-        "duration": 6568.03,
-        "time": "1 hr 49 min"
+        "position": 9,
+        "time": "1:49:28"
       },
       {
         "first_name": "Eric",
         "last_name": "Wallace",
-        "rider_code": "0008-3",
+        "rider_code": "0008 -3",
         "team": "KAF TIGERS",
-        "position": "10",
-        "duration": 6584.5,
-        "time": "1 hr 50 min"
+        "position": 10,
+        "time": "1:49:44"
       },
       {
         "first_name": "Victor",
         "last_name": "Ngugi",
-        "rider_code": "0007-2",
+        "rider_code": "0007 -2",
         "team": "Airpocket",
-        "position": "11",
-        "duration": 6624.0,
-        "time": "1 hr 50 min"
+        "position": 11,
+        "time": "1:50:24"
       },
       {
         "first_name": "Morris",
         "last_name": "Nyakundi",
-        "rider_code": "0008-4",
+        "rider_code": "0008 -4",
         "team": "KAF TIGERS",
-        "position": "12",
-        "duration": 6635.36,
-        "time": "1 hr 51 min"
+        "position": 12,
+        "time": "1:50:35"
       },
       {
         "first_name": "Kelvin",
         "last_name": "Kamore",
-        "rider_code": "0012-4",
+        "rider_code": "0012 -4",
         "team": "Joyriders Kenya",
-        "position": "13",
-        "duration": 6689.91,
-        "time": "1 hr 51 min"
+        "position": 13,
+        "time": "1:51:30"
       },
       {
         "first_name": "Allan",
         "last_name": "Maina",
-        "rider_code": "0007-4",
+        "rider_code": "0007 -4",
         "team": "Airpocket",
-        "position": "14",
-        "duration": 6852.45,
-        "time": "1 hr 54 min"
+        "position": 14,
+        "time": "1:54:12"
       },
       {
         "first_name": "Amon",
         "last_name": "Nango",
-        "rider_code": "0008-5",
+        "rider_code": "0008 -5",
         "team": "KAF TIGERS",
-        "position": "15",
-        "duration": 7170.27,
-        "time": "2 hr 0 min"
+        "position": 15,
+        "time": "1:59:30"
       },
       {
         "first_name": "Adriano",
         "last_name": "Mwiti",
-        "rider_code": "0011-2",
+        "rider_code": "0011 -2",
         "team": "Rongai cyclers racing",
-        "position": "16",
-        "duration": 7170.82,
-        "time": "2 hr 0 min"
+        "position": 16,
+        "time": "1:59:31"
       },
       {
         "first_name": "David",
         "last_name": "Kabira",
-        "rider_code": "0010-1",
+        "rider_code": "0010 -1",
         "team": "Nyahururu Cycling Team",
-        "position": "17",
-        "duration": 7238.75,
-        "time": "2 hr 1 min"
+        "position": 17,
+        "time": "2:00:39"
       },
       {
         "first_name": "Kevin",
         "last_name": "Waithendia",
-        "rider_code": "0009-5",
+        "rider_code": "0009 -5",
         "team": "TIP OF THE SPEAR",
-        "position": "18",
-        "duration": 7313.08,
-        "time": "2 hr 2 min"
+        "position": 18,
+        "time": "2:01:53"
       },
       {
         "first_name": "Wambui",
         "last_name": "Kamau",
-        "rider_code": "0012-5",
+        "rider_code": "0012 -5",
         "team": "Joyriders Kenya",
-        "position": "19",
-        "duration": 7646.79,
-        "time": "2 hr 7 min"
+        "position": 19,
+        "time": "2:07:27"
       },
       {
         "first_name": "James",
         "last_name": "Mwangi",
-        "rider_code": "0010-5",
+        "rider_code": "0010 -5",
         "team": "Nyahururu Cycling Team",
-        "position": "20",
-        "duration": 7836.58,
-        "time": "2 hr 11 min"
+        "position": 20,
+        "time": "2:10:37"
       },
       {
         "first_name": "Jackson",
         "last_name": "Otieno",
-        "rider_code": "0009-4",
+        "rider_code": "0009 -4",
         "team": "TIP OF THE SPEAR",
-        "position": "21",
-        "duration": 7856.01,
-        "time": "2 hr 11 min"
+        "position": 21,
+        "time": "2:10:56"
       },
       {
         "first_name": "Margaret",
         "last_name": "Mutuku",
-        "rider_code": "0007-5",
+        "rider_code": "0007 -5",
         "team": "Airpocket",
-        "position": "22",
-        "duration": 8023.36,
-        "time": "2 hr 14 min"
+        "position": 22,
+        "time": "2:13:43"
       },
       {
         "first_name": "John",
         "last_name": "Masila",
-        "rider_code": "0002-2",
+        "rider_code": "0002 -2",
         "team": "Sea Riders B",
-        "position": "23",
-        "duration": 8043.25,
-        "time": "2 hr 14 min"
+        "position": 23,
+        "time": "2:14:03"
       },
       {
         "first_name": "Perez",
         "last_name": "Otieno",
-        "rider_code": "0004-1",
+        "rider_code": "0004 -1",
         "team": "Loop Squad Cyclists",
-        "position": "24",
-        "duration": 8431.26,
-        "time": "2 hr 21 min"
+        "position": 24,
+        "time": "2:20:31"
       },
       {
         "first_name": "Span",
         "last_name": "Emmanuel",
-        "rider_code": "0001-4",
+        "rider_code": "0001 -4",
         "team": "Sea Riders",
-        "position": "25",
-        "duration": 8524.82,
-        "time": "2 hr 22 min"
+        "position": 25,
+        "time": "2:22:05"
       },
       {
         "first_name": "Catherine",
         "last_name": "Kariuki",
-        "rider_code": "0008-2",
+        "rider_code": "0008 -2",
         "team": "KAF TIGERS",
-        "position": "26",
-        "duration": 8671.44,
-        "time": "2 hr 25 min"
+        "position": 26,
+        "time": "2:24:31"
       },
       {
         "first_name": "Paul",
         "last_name": "Ichoho",
-        "rider_code": "0009-1",
+        "rider_code": "0009 -1",
         "team": "TIP OF THE SPEAR",
-        "position": "27",
-        "duration": 9304.82,
-        "time": "2 hr 35 min"
+        "position": 27,
+        "time": "2:35:05"
       },
       {
         "first_name": "Bob",
         "last_name": "Mutua",
-        "rider_code": "0004-2",
+        "rider_code": "0004 -2",
         "team": "Loop Squad Cyclists",
-        "position": "28",
-        "duration": 9369.23,
-        "time": "2 hr 36 min"
+        "position": 28,
+        "time": "2:36:09"
       },
       {
         "first_name": "Jordan",
         "last_name": "Makana",
-        "rider_code": "0001-5",
+        "rider_code": "0001 -5",
         "team": "Sea Riders",
-        "position": "29",
-        "duration": 9634.7,
-        "time": "2 hr 41 min"
+        "position": 29,
+        "time": "2:40:35"
       },
       {
         "first_name": "Stephen",
         "last_name": "Ondieki",
-        "rider_code": "0004-4",
+        "rider_code": "0004 -4",
         "team": "Loop Squad Cyclists",
-        "position": "30",
-        "duration": 9642.87,
-        "time": "2 hr 41 min"
+        "position": 30,
+        "time": "2:40:43"
       },
       {
         "first_name": "Ann",
         "last_name": "Ng'ang'a",
-        "rider_code": "0009-2",
+        "rider_code": "0009 -2",
         "team": "TIP OF THE SPEAR",
-        "position": "31",
-        "duration": 9791.11,
-        "time": "2 hr 43 min"
+        "position": 31,
+        "time": "2:43:11"
       },
       {
         "first_name": "Morris",
         "last_name": "Mutwiri",
-        "rider_code": "0002-4",
+        "rider_code": "0002 -4",
         "team": "Sea Riders B",
-        "position": "32",
-        "duration": 10708.38,
-        "time": "2 hr 58 min"
+        "position": 32,
+        "time": "2:58:28"
       },
       {
         "first_name": "Tiberius",
         "last_name": "Odhiambo",
-        "rider_code": "0006-2",
+        "rider_code": "0006 -2",
         "team": "Landscape Alliance Cycling Team",
-        "position": "33",
-        "duration": 11709.09,
-        "time": "3 hr 15 min"
+        "position": 33,
+        "time": "3:15:09"
       },
       {
         "first_name": "Kyalo",
         "last_name": "Mutua",
-        "rider_code": "0006-3",
+        "rider_code": "0006 -3",
         "team": "Landscape Alliance Cycling Team",
-        "position": "34",
-        "duration": 12508.48,
-        "time": "3 hr 28 min"
+        "position": 34,
+        "time": "3:28:28"
       },
       {
         "first_name": "Hillary",
         "last_name": "Siego",
-        "rider_code": "0009-3",
+        "rider_code": "0009 -3",
         "team": "TIP OF THE SPEAR",
-        "position": "35",
-        "duration": 12776.28,
-        "time": "3 hr 33 min"
+        "position": 35,
+        "time": "3:32:56"
       },
       {
         "first_name": "Ryan",
         "last_name": "Kamau",
-        "rider_code": "0007-3",
+        "rider_code": "0007 -3",
         "team": "Airpocket",
-        "position": "36",
-        "duration": 12899.03,
-        "time": "3 hr 35 min"
+        "position": 36,
+        "time": "3:34:59"
       },
       {
         "first_name": "Patrick",
         "last_name": "Sando",
-        "rider_code": "0006-4",
+        "rider_code": "0006 -4",
         "team": "Landscape Alliance Cycling Team",
-        "position": "37",
-        "duration": 13503.21,
-        "time": "3 hr 45 min"
+        "position": 37,
+        "time": "3:45:03"
       },
       {
         "first_name": "Akinyi",
         "last_name": "Onyuka",
-        "rider_code": "0004-3",
+        "rider_code": "0004 -3",
         "team": "Loop Squad Cyclists",
-        "position": "38",
-        "duration": 13561.08,
-        "time": "3 hr 46 min"
+        "position": 38,
+        "time": "3:46:01"
       },
       {
         "first_name": "Salome",
         "last_name": "Musyoka",
-        "rider_code": "0001-1",
+        "rider_code": "0001 -1",
         "team": "Sea Riders",
-        "position": "39",
-        "duration": 13716.71,
-        "time": "3 hr 49 min"
+        "position": 39,
+        "time": "3:48:37"
       },
       {
         "first_name": "Jan",
         "last_name": "Anderson",
-        "rider_code": "0011-1",
+        "rider_code": "0011 -1",
         "team": "Rongai cyclers racing",
-        "position": "40",
-        "duration": 14079.01,
-        "time": "3 hr 55 min"
+        "position": 40,
+        "time": "3:54:39"
       },
       {
         "first_name": "Cosmus",
         "last_name": "Musango",
-        "rider_code": "0004-5",
+        "rider_code": "0004 -5",
         "team": "Loop Squad Cyclists",
-        "position": "41",
-        "duration": 14544.78,
-        "time": "4 hr 2 min"
+        "position": 41,
+        "time": "4:02:25"
       },
       {
         "first_name": "Brian",
         "last_name": "Ndirangu",
-        "rider_code": "0006-1",
+        "rider_code": "0006 -1",
         "team": "Landscape Alliance Cycling Team",
-        "position": "42",
-        "duration": 17054.57,
-        "time": "4 hr 44 min"
+        "position": 42,
+        "time": "4:44:15"
       },
       {
         "first_name": "Paige",
         "last_name": "Wanjau",
-        "rider_code": "0006-5",
+        "rider_code": "0006 -5",
         "team": "Landscape Alliance Cycling Team",
-        "position": "43",
-        "duration": 18195.2,
-        "time": "5 hr 3 min"
+        "position": 43,
+        "time": "5:03:15"
       },
       {
         "first_name": "Eddi",
         "last_name": "Odhiambo",
-        "rider_code": "0005-2",
+        "rider_code": "0005 -2",
         "team": "DEDSILVA INTERNATIONAL LTD RECON RIDERS",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
         "first_name": "kennedy",
         "last_name": "musyoka Mutuku",
-        "rider_code": "0005-3",
+        "rider_code": "0005 -3",
         "team": "DEDSILVA INTERNATIONAL LTD RECON RIDERS",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
         "first_name": "Lucy",
         "last_name": "Njoki",
-        "rider_code": "0002-3",
+        "rider_code": "0002 -3",
         "team": "Sea Riders B",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
         "first_name": "Brian",
         "last_name": "Shan",
-        "rider_code": "0005-2",
+        "rider_code": "0005 -2",
         "team": "DEDSILVA INTERNATIONAL LTD RECON RIDERS",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
         "first_name": "Briton",
         "last_name": "Jimbi",
-        "rider_code": "0002-5",
+        "rider_code": "0002 -5",
         "team": "Sea Riders B",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
         "first_name": "Jecinta",
         "last_name": "Wanjiku",
-        "rider_code": "0011-4",
+        "rider_code": "0011 -4",
         "team": "Rongai cyclers racing",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
         "first_name": "Joshua",
         "last_name": "Muchui",
-        "rider_code": "0001-3",
+        "rider_code": "0001 -3",
         "team": "Sea Riders",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
         "first_name": "Brian",
         "last_name": "Nzomo",
-        "rider_code": "0005-5",
+        "rider_code": "0005 -5",
         "team": "DEDSILVA INTERNATIONAL LTD RECON RIDERS",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
@@ -5747,7 +4547,6 @@
         "rider_code": "2002-1",
         "team": "Sea Riders B",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
@@ -5756,25 +4555,22 @@
         "rider_code": "2001-2",
         "team": "Sea Riders",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
         "first_name": "Kibwi",
         "last_name": "Brenda Wangari",
-        "rider_code": "0005-4",
+        "rider_code": "0005 -4",
         "team": "DEDSILVA INTERNATIONAL LTD RECON RIDERS",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
         "first_name": "Jennifer",
         "last_name": "Njeri",
-        "rider_code": "0010-4",
+        "rider_code": "0010 -4",
         "team": "Nyahururu Cycling Team",
         "position": null,
-        "duration": null,
         "time": "0.00"
       }
     ]
@@ -5783,116 +4579,116 @@
     "overall_standings": [
       {
         "team_name": "Bicycle Garage",
+        "position": 1,
+        "average": "0:00:04",
         "leg_times": [
-          "11446.85",
-          "12064.97",
-          "12066.90",
-          "12544.49",
-          "16097.25"
-        ],
-        "average": "3.57",
-        "position": "1"
+          "3:10:47",
+          "3:21:05",
+          "3:21:07",
+          "3:29:04",
+          "4:28:17"
+        ]
       },
       {
         "team_name": "KAF Falcons",
+        "position": 2,
+        "average": "0:00:04",
         "leg_times": [
-          "12062.36",
-          "12064.39",
-          "12293.74",
-          "13471.58",
-          "15564.00"
-        ],
-        "average": "3.64",
-        "position": "2"
+          "3:21:02",
+          "3:21:04",
+          "3:24:54",
+          "3:44:32",
+          "4:19:24"
+        ]
       },
       {
         "team_name": "Urban Cycling",
+        "position": 3,
+        "average": "0:00:04",
         "leg_times": [
-          "11790.00",
-          "12660.00",
-          "13350.43",
-          "13351.24",
-          "15080.83"
-        ],
-        "average": "3.68",
-        "position": "3"
+          "3:16:30",
+          "3:31:00",
+          "3:42:30",
+          "3:42:31",
+          "4:11:21"
+        ]
       },
       {
         "team_name": "Ariya Finergy SOlar",
+        "position": 4,
+        "average": "0:00:04",
         "leg_times": [
-          "13524.28",
-          "14488.77",
-          "15229.03",
-          "15240.34",
-          "15806.22"
-        ],
-        "average": "4.13",
-        "position": "4"
+          "3:45:24",
+          "4:01:29",
+          "4:13:49",
+          "4:14:00",
+          "4:23:26"
+        ]
       },
       {
         "team_name": "Dedsilva Eagle",
+        "position": 5,
+        "average": "0:00:04",
         "leg_times": [
-          "12832.00",
-          "14466.86",
-          "15051.27",
-          "15914.65",
-          "16701.97"
-        ],
-        "average": "4.16",
-        "position": "5"
+          "3:33:52",
+          "4:01:07",
+          "4:10:51",
+          "4:25:15",
+          "4:38:22"
+        ]
       },
       {
         "team_name": "Thursday Ritualists",
+        "position": 6,
+        "average": "0:00:04",
         "leg_times": [
-          "12829.91",
-          "14632.11",
-          "15922.00",
-          "16234.28",
-          "16260.68"
-        ],
-        "average": "4.22",
-        "position": "6"
+          "3:33:50",
+          "4:03:52",
+          "4:25:22",
+          "4:30:34",
+          "4:29:00"
+        ]
       },
       {
         "team_name": "Commuter FC",
+        "position": 7,
+        "average": "0:00:05",
         "leg_times": [
-          "14096.15",
-          "14764.24",
-          "15303.45",
-          "19262.56",
-          "19738.50"
-        ],
-        "average": "4.62",
-        "position": "7"
+          "3:54:56",
+          "4:06:04",
+          "4:15:03",
+          "5:21:03",
+          "5:28:59"
+        ]
       },
       {
         "team_name": "Anchor Riders",
+        "position": 8,
+        "average": "0:00:03",
         "leg_times": [
-          "14402.07",
-          "17974.26",
-          "21233.64"
-        ],
-        "average": "2.98",
-        "position": "8"
+          "4:00:02",
+          "4:59:34",
+          "5:53:54"
+        ]
       },
       {
         "team_name": "Landscape Alliance",
+        "position": 9,
+        "average": "0:00:04",
         "leg_times": [
-          "19739.21",
-          "22925.05",
-          "24905.83"
-        ],
-        "average": "3.75",
-        "position": "9"
+          "5:28:59",
+          "6:22:05",
+          "6:55:06"
+        ]
       },
       {
         "team_name": "Dedsilva International",
+        "position": "DQ",
+        "average": "0:00:02",
         "leg_times": [
-          "14464.13",
-          "15272.75"
-        ],
-        "average": "1.65",
-        "position": "DQ"
+          "4:01:04",
+          "4:14:33"
+        ]
       }
     ],
     "detailed_summary": [
@@ -5901,387 +4697,344 @@
         "last_name": "Wangai",
         "rider_code": "7010-5",
         "team": "Bicycle Garage",
-        "position": "1",
-        "duration": 11446.85,
-        "time": "3 hrs 11 mins"
+        "position": 1,
+        "time": "3:10:47"
       },
       {
         "first_name": "Cornelius",
         "last_name": "Kemboi Kemboi",
         "rider_code": "7009-1",
         "team": "Urban Cycling Racing",
-        "position": "2",
-        "duration": 11790.0,
-        "time": "3 hrs 21 mins"
+        "position": 2,
+        "time": "3:16:30"
       },
       {
         "first_name": "Geoffrey",
         "last_name": "Waire",
         "rider_code": "7008-5",
         "team": "KAF FALCONS",
-        "position": "3",
-        "duration": 12062.36,
-        "time": "3 hrs 21 mins"
+        "position": 3,
+        "time": "3:21:02"
       },
       {
         "first_name": "Isaac",
         "last_name": "Njoroge",
         "rider_code": "7008-3",
         "team": "KAF FALCONS",
-        "position": "4",
-        "duration": 12064.39,
-        "time": "3 hrs 21 mins"
+        "position": 4,
+        "time": "3:21:04"
       },
       {
         "first_name": "Patrick",
         "last_name": "Mugu",
         "rider_code": "7010-2",
         "team": "Bicycle Garage",
-        "position": "5",
-        "duration": 12064.97,
-        "time": "3 hrs 21 mins"
+        "position": 5,
+        "time": "3:21:05"
       },
       {
         "first_name": "Peter",
         "last_name": "Karanja",
         "rider_code": "7010-4",
         "team": "Bicycle Garage",
-        "position": "6",
-        "duration": 12066.9,
-        "time": "3 hrs 25 mins"
+        "position": 6,
+        "time": "3:21:07"
       },
       {
         "first_name": "Bonface",
         "last_name": "Oteba",
         "rider_code": "7008-4",
         "team": "KAF FALCONS",
-        "position": "7",
-        "duration": 12293.74,
-        "time": "3 hrs 29 mins"
+        "position": 7,
+        "time": "3:24:54"
       },
       {
         "first_name": "Davis",
         "last_name": "Kamau",
         "rider_code": "7010-3",
         "team": "Bicycle Garage",
-        "position": "8",
-        "duration": 12544.49,
-        "time": "3 hrs 34 mins"
+        "position": 8,
+        "time": "3:29:04"
       },
       {
         "first_name": "Josephat",
         "last_name": "Kamuri",
         "rider_code": "7009-5",
         "team": "Urban Cycling Racing",
-        "position": "9",
-        "duration": 12660.0,
-        "time": "3 hrs 43 mins"
+        "position": 9,
+        "time": "3:31:00"
       },
       {
         "first_name": "Bradley",
         "last_name": "Gabriel",
         "rider_code": "7003-5",
         "team": "Thurday Ritualists",
-        "position": "10",
-        "duration": 12829.91,
-        "time": "3 hrs 43 mins"
+        "position": 10,
+        "time": "3:33:50"
       },
       {
         "first_name": "Kevin",
         "last_name": "Odongo",
         "rider_code": "7007-2",
         "team": "DEDSILVA EAGLES",
-        "position": "11",
-        "duration": 12832.0,
-        "time": "3 hrs 45 mins"
+        "position": 11,
+        "time": "3:33:52"
       },
       {
         "first_name": "Peter",
         "last_name": "Githinji",
         "rider_code": "7009-4",
         "team": "Urban Cycling Racing",
-        "position": "12",
-        "duration": 13350.43,
-        "time": "3 hrs 45 mins"
+        "position": 12,
+        "time": "3:42:30"
       },
       {
         "first_name": "Michael",
         "last_name": "Ngugi",
         "rider_code": "7009-3",
         "team": "Urban Cycling Racing",
-        "position": "13",
-        "duration": 13351.24,
-        "time": "3 hrs 55 mins"
+        "position": 13,
+        "time": "3:42:31"
       },
       {
         "first_name": "Joseph",
         "last_name": "Wangai",
         "rider_code": "7008-1",
         "team": "KAF FALCONS",
-        "position": "14",
-        "duration": 13471.58,
-        "time": "4 hrs 0 mins"
+        "position": 14,
+        "time": "3:44:32"
       },
       {
         "first_name": "Boaz",
         "last_name": "Ngisa",
         "rider_code": "7005-2",
         "team": "Ariya Finergy Solar",
-        "position": "15",
-        "duration": 13524.28,
-        "time": "4 hrs 1 mins"
+        "position": 15,
+        "time": "3:45:24"
       },
       {
         "first_name": "Kelvin",
         "last_name": "Gachie Thura",
         "rider_code": "7006-3",
         "team": "Commuters FC",
-        "position": "16",
-        "duration": 14096.15,
-        "time": "4 hrs 1 mins"
+        "position": 16,
+        "time": "3:54:56"
       },
       {
         "first_name": "Keren",
         "last_name": "Mberia",
         "rider_code": "7001-5",
         "team": "ANCHOR RIDERS",
-        "position": "17",
-        "duration": 14402.07,
-        "time": "4 hrs 1 mins"
+        "position": 17,
+        "time": "4:00:02"
       },
       {
         "first_name": "Cornelius",
         "last_name": "Kemboi",
         "rider_code": "7002-3",
         "team": "DEDSILVA INTERNATIONAL LTD RIDERS 2026",
-        "position": "18",
-        "duration": 14464.13,
-        "time": "4 hrs 4 mins"
+        "position": 18,
+        "time": "4:01:04"
       },
       {
         "first_name": "Emmanuel",
         "last_name": "Anyumba",
         "rider_code": "7007-4",
         "team": "DEDSILVA EAGLES",
-        "position": "19",
-        "duration": 14466.86,
-        "time": "4 hrs 6 mins"
+        "position": 19,
+        "time": "4:01:07"
       },
       {
         "first_name": "Julia",
         "last_name": "Alice Miringu",
         "rider_code": "7005-5",
         "team": "Ariya Finergy Solar",
-        "position": "20",
-        "duration": 14488.77,
-        "time": "4 hrs 11 mins"
+        "position": 20,
+        "time": "4:01:29"
       },
       {
         "first_name": "James",
         "last_name": "Ominde",
         "rider_code": "7003-4",
         "team": "Thurday Ritualists",
-        "position": "21",
-        "duration": 14632.11,
-        "time": "4 hrs 11 mins"
+        "position": 21,
+        "time": "4:03:52"
       },
       {
         "first_name": "Jeremiah",
         "last_name": "Gikeno Muiruri",
         "rider_code": "7006-4",
         "team": "Commuters FC",
-        "position": "22",
-        "duration": 14764.24,
-        "time": "4 hrs 14 mins"
+        "position": 22,
+        "time": "4:06:04"
       },
       {
         "first_name": "Isaac",
         "last_name": "Appiah",
         "rider_code": "7007-3",
         "team": "DEDSILVA EAGLES",
-        "position": "23",
-        "duration": 15051.27,
-        "time": "4 hrs 14 mins"
+        "position": 23,
+        "time": "4:10:51"
       },
       {
         "first_name": "Jamila",
         "last_name": "Abdullah",
         "rider_code": "7009-2",
         "team": "Urban Cycling Racing",
-        "position": "24",
-        "duration": 15080.83,
-        "time": "4 hrs 15 mins"
+        "position": 24,
+        "time": "4:11:21"
       },
       {
         "first_name": "Farah",
         "last_name": "Ibrahim",
         "rider_code": "7005-4",
         "team": "Ariya Finergy Solar",
-        "position": "25",
-        "duration": 15229.03,
-        "time": "4 hrs 15 mins"
+        "position": 25,
+        "time": "4:13:49"
       },
       {
         "first_name": "Julius",
         "last_name": "Kaiguara",
         "rider_code": "7005-3",
         "team": "Ariya Finergy Solar",
-        "position": "26",
-        "duration": 15240.34,
-        "time": "4 hrs 23 mins"
+        "position": 26,
+        "time": "4:14:00"
       },
       {
         "first_name": "Martin",
         "last_name": "Ngochi",
         "rider_code": "7002-2",
         "team": "DEDSILVA INTERNATIONAL LTD RIDERS 2026",
-        "position": "27",
-        "duration": 15272.75,
-        "time": "4 hrs 25 mins"
+        "position": 27,
+        "time": "4:14:33"
       },
       {
         "first_name": "Fredrick",
         "last_name": "Mwangi",
         "rider_code": "7006-2",
         "team": "Commuters FC",
-        "position": "28",
-        "duration": 15303.45,
-        "time": "4 hrs 28 mins"
+        "position": 28,
+        "time": "4:15:03"
       },
       {
         "first_name": "Grace",
         "last_name": "Kerubo",
         "rider_code": "7008-2",
         "team": "KAF FALCONS",
-        "position": "29",
-        "duration": 15564.0,
-        "time": "4 hrs 31 mins"
+        "position": 29,
+        "time": "4:19:24"
       },
       {
         "first_name": "Peter",
         "last_name": "Thuo Maqueen",
         "rider_code": "7005-1",
         "team": "Ariya Finergy Solar",
-        "position": "30",
-        "duration": 15806.22,
-        "time": "4 hrs 31 mins"
+        "position": 30,
+        "time": "4:23:26"
       },
       {
         "first_name": "Ebenezer",
         "last_name": "Kaula",
         "rider_code": "7007-1",
         "team": "DEDSILVA EAGLES",
-        "position": "31",
-        "duration": 15914.65,
-        "time": "4 hrs 31 mins"
+        "position": 31,
+        "time": "4:25:15"
       },
       {
         "first_name": "Charles",
         "last_name": "Kirui",
         "rider_code": "7003-1",
         "team": "Thurday Ritualists",
-        "position": "32",
-        "duration": 15922.0,
-        "time": "4 hrs 38 mins"
+        "position": 32,
+        "time": "4:25:22"
       },
       {
         "first_name": "Mary",
         "last_name": "Mbinya",
         "rider_code": "7010-1",
         "team": "Bicycle Garage",
-        "position": "33",
-        "duration": 16097.25,
-        "time": "4 hrs 60 mins"
+        "position": 33,
+        "time": "4:28:17"
       },
       {
         "first_name": "Steve",
         "last_name": "Kigen",
         "rider_code": "7003-3",
         "team": "Thurday Ritualists",
-        "position": "34",
-        "duration": 16234.28,
-        "time": "5 hrs 21 mins"
+        "position": 34,
+        "time": "4:29:05"
       },
       {
         "first_name": "Sein",
         "last_name": "Jane Kieni",
         "rider_code": "7003-2",
         "team": "Thurday Ritualists",
-        "position": "35",
-        "duration": 16260.68,
-        "time": "5 hrs 29 mins"
+        "position": 35,
+        "time": "4:29:10"
       },
       {
         "first_name": "Jecinta",
         "last_name": "Njoki",
         "rider_code": "7007-5",
         "team": "DEDSILVA EAGLES",
-        "position": "36",
-        "duration": 16701.97,
-        "time": "5 hrs 29 mins"
+        "position": 36,
+        "time": "4:38:22"
       },
       {
         "first_name": "Johnson",
         "last_name": "Kibe",
         "rider_code": "7001-4",
         "team": "ANCHOR RIDERS",
-        "position": "37",
-        "duration": 17974.26,
-        "time": "5 hrs 54 mins"
+        "position": 37,
+        "time": "4:59:34"
       },
       {
         "first_name": "ERIC",
         "last_name": "MUKUHA NDUATI",
         "rider_code": "7006-5",
         "team": "Commuters FC",
-        "position": "38",
-        "duration": 19262.56,
-        "time": "6 hrs 22 mins"
+        "position": 38,
+        "time": "5:21:03"
       },
       {
         "first_name": "Marya",
         "last_name": "Nyambura",
         "rider_code": "7006-1",
         "team": "Commuters FC",
-        "position": "39",
-        "duration": 19738.5,
-        "time": "6 hrs 55 mins"
+        "position": 39,
+        "time": "5:28:59"
       },
       {
         "first_name": "Nelly",
         "last_name": "Orwaya",
         "rider_code": "7004-5",
         "team": "Landscape Alliance Cycling Team",
-        "position": "40",
-        "duration": 19739.21,
-        "time": "0 hrs 0 mins"
+        "position": 40,
+        "time": "5:28:59"
       },
       {
         "first_name": "Alvis",
         "last_name": "Wangui",
         "rider_code": "7001-3",
         "team": "ANCHOR RIDERS",
-        "position": "41",
-        "duration": 21233.64,
-        "time": "0 hrs 0 mins"
+        "position": 41,
+        "time": "5:53:54"
       },
       {
         "first_name": "Fredrick",
         "last_name": "Mwingirwa",
         "rider_code": "7004-2",
         "team": "Landscape Alliance Cycling Team",
-        "position": "42",
-        "duration": 22925.05,
-        "time": "0 hrs 0 mins"
+        "position": 42,
+        "time": "6:22:05"
       },
       {
         "first_name": "Kenneth",
         "last_name": "Oduor",
         "rider_code": "7004-3",
         "team": "Landscape Alliance Cycling Team",
-        "position": "43",
-        "duration": 24905.83,
-        "time": "0 hrs 0 mins"
+        "position": 43,
+        "time": "6:55:06"
       },
       {
         "first_name": "Filex",
@@ -6289,8 +5042,7 @@
         "rider_code": "7001-1",
         "team": "ANCHOR RIDERS",
         "position": null,
-        "duration": null,
-        "time": "0 hrs 0 mins"
+        "time": "0.00"
       },
       {
         "first_name": "Nickson",
@@ -6298,8 +5050,7 @@
         "rider_code": "7004-1",
         "team": "Landscape Alliance Cycling Team",
         "position": null,
-        "duration": null,
-        "time": "0 hrs 0 mins"
+        "time": "0.00"
       },
       {
         "first_name": "David",
@@ -6307,8 +5058,7 @@
         "rider_code": "7002-4",
         "team": "DEDSILVA INTERNATIONAL LTD RIDERS 2026",
         "position": null,
-        "duration": null,
-        "time": "0 hrs 0 mins"
+        "time": "0.00"
       },
       {
         "first_name": "Gabriel",
@@ -6316,7 +5066,6 @@
         "rider_code": "7002-1",
         "team": "DEDSILVA INTERNATIONAL LTD RIDERS 2026",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
@@ -6325,7 +5074,6 @@
         "rider_code": "7002-5",
         "team": "DEDSILVA INTERNATIONAL LTD RIDERS 2026",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
@@ -6334,7 +5082,6 @@
         "rider_code": "7001-2",
         "team": "ANCHOR RIDERS",
         "position": null,
-        "duration": null,
         "time": "0.00"
       },
       {
@@ -6343,7 +5090,6 @@
         "rider_code": "7004-4",
         "team": "Landscape Alliance Cycling Team",
         "position": null,
-        "duration": null,
         "time": "0.00"
       }
     ]
