@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/contact-us.css';
 import {
     AiOutlineMail,
@@ -48,7 +49,10 @@ const ContactUs = () => {
     };
 
     const contactCards = [
-        { icon: <AiOutlineMail />, title: 'Email Us', detail: 'ridesupport@airbornefraternity.org', link: 'mailto:ridesupport@airbornefraternity.org', accentColor: 'rgba(59,130,246,0.7)' },
+        { icon: <AiOutlineMail />, title: 'Email Us', details: [
+            { label: 'For support', email: 'ridesupport@airbornefraternity.org', link: 'mailto:ridesupport@airbornefraternity.org' },
+            { label: 'For complaints', email: 'info@airbornefraternity.org', link: 'mailto:info@airbornefraternity.org' }
+        ], accentColor: 'rgba(59,130,246,0.7)' },
         { icon: <AiOutlinePhone />, title: 'Call Us', detail: '0703 752 118', link: 'tel:0703752118', accentColor: 'var(--color-primary-light)' },
         { icon: <AiOutlineWhatsApp />, title: 'WhatsApp', detail: 'Chat with Support', link: 'https://wa.me/254703752118', accentColor: '#25D366' },
         { icon: <AiOutlineEnvironment />, title: 'Event Venue', detail: 'Ulinzi Sports Complex, Nairobi', link: 'https://maps.google.com', accentColor: 'rgba(249,115,22,0.8)' },
@@ -92,22 +96,46 @@ const ContactUs = () => {
 
                         {/* Sidebar */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                            {contactCards.map((card, idx) => (
-                                <a key={idx} href={card.link} target="_blank" rel="noopener noreferrer"
-                                    className="ct-contact-card"
-                                    style={{ '--hover-border': card.accentColor } as any}
-                                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = card.accentColor; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.borderColor = card.accentColor; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.color = card.accentColor; }}
-                                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--ct-border)'; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.borderColor = 'var(--ct-border-2)'; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.color = card.accentColor; }}
-                                >
-                                    <div className="ct-contact-icon" style={{ color: card.accentColor }}>
-                                        {card.icon}
-                                    </div>
-                                    <div>
-                                        <div className="ct-contact-label">{card.title}</div>
-                                        <div className="ct-contact-detail">{card.detail}</div>
-                                    </div>
-                                </a>
-                            ))}
+                            {contactCards.map((card, idx) => {
+                                if ('details' in card) {
+                                    // Email Us card with multiple emails
+                                    return (
+                                        <div key={idx} className="ct-contact-card ct-contact-card-top" style={{ borderColor: 'var(--ct-border)' }}>
+                                            <div className="ct-contact-icon" style={{ color: card.accentColor }}>
+                                                {card.icon}
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <div className="ct-contact-label">{card.title}</div>
+                                                {card.details.map((emailItem, emailIdx) => (
+                                                    <div key={emailIdx} style={{ marginTop: emailIdx > 0 ? '6px' : '0' }}>
+                                                        <div className="ct-contact-detail-label">{emailItem.label}</div>
+                                                        <a href={emailItem.link} className="ct-contact-detail" style={{ color: 'var(--ct-text-1)' }}>
+                                                            {emailItem.email}
+                                                        </a>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                                // Other cards
+                                return (
+                                    <a key={idx} href={card.link} target="_blank" rel="noopener noreferrer"
+                                        className="ct-contact-card"
+                                        style={{ '--hover-border': card.accentColor } as any}
+                                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = card.accentColor; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.borderColor = card.accentColor; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.color = card.accentColor; }}
+                                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--ct-border)'; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.borderColor = 'var(--ct-border-2)'; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.color = card.accentColor; }}
+                                    >
+                                        <div className="ct-contact-icon" style={{ color: card.accentColor }}>
+                                            {card.icon}
+                                        </div>
+                                        <div>
+                                            <div className="ct-contact-label">{card.title}</div>
+                                            <div className="ct-contact-detail">{card.detail}</div>
+                                        </div>
+                                    </a>
+                                );
+                            })}
 
                             {/* Office Hours */}
                             <div className="ct-hours">
@@ -116,6 +144,12 @@ const ContactUs = () => {
                                 <div className="ct-hours-row"><div className="ct-hours-dot" />Mon – Fri: 8:00 AM – 5:00 PM</div>
                                 <div className="ct-hours-row"><div className="ct-hours-dot" />Sat: 9:00 AM – 1:00 PM</div>
                             </div>
+
+                            {/* Feedback Link */}
+                            <Link to="/feedback" className="ct-feedback-link">
+                                <div className="ct-feedback-text">Share Your Feedback</div>
+                                <div className="ct-feedback-sub">Tell us about your experience</div>
+                            </Link>
                         </div>
 
                         {/* Main column */}

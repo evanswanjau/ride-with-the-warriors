@@ -142,11 +142,18 @@ const FeedbackPage = () => {
                 <p style={{
                     color: 'var(--p-text-2, rgba(255,255,255,0.58))',
                     fontSize: '0.95rem', lineHeight: 1.75,
-                    marginBottom: '2.5rem',
+                    marginBottom: '1rem',
                 }}>
                     Thank you for being part of Ride With The Warriors 2026. Whether you rode, cheered,
                     sponsored or organised — your honest feedback shapes a better ride in 2027.
                     It takes less than a minute, and every answer is read.
+                </p>
+                <p style={{
+                    color: 'var(--p-text-3, rgba(255,255,255,0.4))',
+                    fontSize: '0.85rem', lineHeight: 1.6,
+                    marginBottom: '2.5rem',
+                }}>
+                    For any other detailed complaints, email us at <a href="mailto:info@airbornefraternity.org" style={{ color: 'var(--color-primary-light, #4caf50)', textDecoration: 'none' }}>info@airbornefraternity.org</a>
                 </p>
 
                 {status === 'done' ? (

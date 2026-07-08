@@ -179,6 +179,10 @@
     clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
 }
 
+.ct-contact-card-top {
+    align-items: flex-start;
+}
+
 .ct-contact-card:hover {
     transform: translateX(4px);
 }
@@ -210,6 +214,15 @@
     font-weight: 600;
     color: var(--ct-text-1);
     word-break: break-all;
+}
+
+.ct-contact-detail-label {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--ct-text-3);
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
 /* ── Office hours card ───────────────────────────────────── */
@@ -253,6 +266,36 @@
     height: 4px;
     background: rgba(255, 255, 255, 0.4);
     flex-shrink: 0;
+}
+
+/* ── Feedback Link ──────────────────────────────────────────── */
+.ct-feedback-link {
+    display: block;
+    padding: 22px 24px;
+    background: var(--color-primary);
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+}
+
+.ct-feedback-link:hover {
+    background: var(--color-primary-dark);
+}
+
+.ct-feedback-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.ct-feedback-sub {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.72);
 }
 
 /* ── Form panel ──────────────────────────────────────────── */
