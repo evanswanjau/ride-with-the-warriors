@@ -8,6 +8,8 @@ import {
     AiOutlineTrophy
 } from 'react-icons/ai';
 import Confetti from 'react-confetti';
+import { API_BASE_URL } from '../config';
+import { authHeaders } from '../auth/session';
 
 const RaffleSuccessPage = () => {
     const { id } = useParams();
@@ -16,7 +18,20 @@ const RaffleSuccessPage = () => {
     const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
     const ticketIds: string[] = location.state?.ticketIds || (id ? [id] : []);
-    const displayId = ticketIds.join(', ');
+    // Ticket numbers are assigned when the payment lands; look them up.
+    const [numbers, setNumbers] = useState<string[]>([]);
+    const idsKey = ticketIds.join(',');
+    useEffect(() => {
+        let cancelled = false;
+        Promise.all(idsKey.split(',').filter(Boolean).map(tid =>
+            fetch(`${API_BASE_URL}/raffle/${tid}`, { headers: authHeaders() })
+                .then(r => (r.ok ? r.json() : null))
+                .then(d => d?.ticket?.ticketNumber as string | undefined)
+                .catch(() => undefined),
+        )).then(list => { if (!cancelled) setNumbers(list.filter((n): n is string => !!n)); });
+        return () => { cancelled = true; };
+    }, [idsKey]);
+    const displayId = numbers.length ? numbers.join(', ') : 'Assigning…';
 
     useEffect(() => {
         const handleResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });

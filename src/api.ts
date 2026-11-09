@@ -1,4 +1,5 @@
 import { API_BASE_URL } from './config';
+import { authHeaders } from './auth/session';
 
 export interface ApiError {
     code: string;
@@ -48,7 +49,7 @@ export const api = {
     },
 
     async getRegistration(id: string) {
-        const response = await fetch(`${API_BASE_URL}/registrations/${id}`);
+        const response = await fetch(`${API_BASE_URL}/registrations/${id}`, { headers: authHeaders() });
         return handleResponse<{ registration: any }>(response);
     },
 

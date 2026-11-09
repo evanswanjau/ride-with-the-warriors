@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import type { RiderDetails, TeamDetails, FamilyDetails } from '../types';
 import { isValidKenyanPhone, isValidID, calculateAge } from '../utils';
 import { API_BASE_URL } from '../config';
+import { authHeaders } from '../auth/session';
 
 interface RegistrationContextType {
     // State
@@ -298,7 +299,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
 
                 const response = await fetch(`${API_BASE_URL}/registrations`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', ...authHeaders() },
                     body: JSON.stringify({
                         circuitId: selectedCircuit,
                         type: registrationType,
@@ -378,7 +379,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
 
             const response = await fetch(`${API_BASE_URL}/registrations`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
                 body: JSON.stringify({
                     circuitId: selectedCircuit,
                     type: registrationType,

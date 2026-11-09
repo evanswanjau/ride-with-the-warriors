@@ -9,6 +9,7 @@ import {
     AiOutlineWarning,
 } from 'react-icons/ai';
 import { API_BASE_URL, PAYMENT_MODE } from '../../config';
+import { authHeaders } from '../../auth/session';
 
 interface PaymentPageProps {
     registrationId: string;
@@ -38,7 +39,7 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
     useEffect(() => {
         const fetchReg = async () => {
             try {
-                const res = await fetch(`${API_BASE_URL}/registrations/${registrationId}`);
+                const res = await fetch(`${API_BASE_URL}/registrations/${registrationId}`, { headers: authHeaders() });
                 if (!res.ok) return;
                 const { registration: r } = await res.json();
                 const p = r.payload;
@@ -64,7 +65,7 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                 return;
             }
             try {
-                const res = await fetch(`${API_BASE_URL}/registrations/${regId}`);
+                const res = await fetch(`${API_BASE_URL}/registrations/${regId}`, { headers: authHeaders() });
                 if (res.ok) {
                     const data = await res.json();
                     const reg = data.registration;
@@ -94,8 +95,8 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
         try {
             const response = await fetch(`${API_BASE_URL}/registrations/pay/stk-push`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ registrationId, amount: regInfo?.amount || amount, phoneNumber: formatted }),
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ registrationId, phoneNumber: formatted }),
             });
             const data = await response.json();
             if (response.ok && data.success) {
@@ -103,7 +104,7 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
                 setIsProcessing(false);
                 startPolling(registrationId);
             } else {
-                setError(data.message || 'STK Push failed. Please try again.');
+                setError(data.error?.message || data.message || 'STK Push failed. Please try again.');
                 setIsProcessing(false);
             }
         } catch {
@@ -119,15 +120,15 @@ const PaymentPage = ({ registrationId, amount, phoneNumber: registrationPhone, o
             const phone = mpesaPhone || '254700000000';
             const response = await fetch(`${API_BASE_URL}/registrations/pay/stk-push`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ registrationId, amount: regInfo?.amount || amount, phoneNumber: phone }),
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ registrationId, phoneNumber: phone }),
             });
             const data = await response.json();
             if (response.ok && data.success) {
                 setPaymentStatus('pending');
                 startPolling(registrationId);
             } else {
-                setError(data.message || 'Simulation failed.');
+                setError(data.error?.message || data.message || 'Simulation failed.');
             }
         } catch {
             setError('Connection error during simulation.');

@@ -15,12 +15,12 @@ import NotifyPage from './pages/NotifyPage';
 import FeedbackPage from './pages/FeedbackPage';
 import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
-import ProfilePage from './pages/ProfilePage';
+import LoginPage from './pages/LoginPage';
+import AccountPage from './pages/AccountPage';
+import RequireAuth from './components/auth/RequireAuth';
 import AdminPage from './pages/AdminPage';
 import RaffleClosedPage from './pages/RaffleClosedPage';
 import RaffleSuccessPage from './pages/RaffleSuccessPage';
-import RaffleProfilePage from './pages/RaffleProfilePage';
-import RaffleEmailProfilePage from './pages/RaffleEmailProfilePage';
 import RafflePaymentPageRoute from './pages/RafflePaymentPageRoute';
 import DonatePage from './pages/DonatePage';
 import ResultsPage from './pages/ResultsPage';
@@ -60,27 +60,31 @@ const App = () => {
         <Route path="/results" element={<Layout isFullWidth><ResultsPage /></Layout>} />
         <Route path="/raffle-winners" element={<Layout isFullWidth><RaffleWinnersPage /></Layout>} />
 
-        {/* Registration Flow — closed; redirect all register paths to closed page */}
+        {/* Participant accounts */}
+        <Route path="/login" element={<Layout isFullWidth><LoginPage /></Layout>} />
+        <Route path="/account" element={<Layout isFullWidth><RequireAuth><AccountPage /></RequireAuth></Layout>} />
+
+        {/* Registration Flow — closed; redirect all register paths to closed page.
+            When it reopens, wrap the flow in <RequireAuth> (the API requires login). */}
         <Route path="/register/closed" element={<RegistrationClosedPage />} />
         <Route path="/register/notify" element={<NotifyPage />} />
         <Route path="/register/*" element={<RegistrationClosedPage />} />
         <Route path="/military/register/*" element={<RegistrationClosedPage />} />
 
         {/* Payment & Success */}
-        <Route path="/payment/:regId" element={<PaymentPage />} />
-        <Route path="/success/:regId" element={<SuccessPage />} />
+        <Route path="/payment/:regId" element={<RequireAuth><PaymentPage /></RequireAuth>} />
+        <Route path="/success/:regId" element={<RequireAuth><SuccessPage /></RequireAuth>} />
 
-        {/* Profile — search is disabled; profiles remain reachable by direct URL */}
-        <Route path="/search" element={<Navigate to="/" replace />} />
-        <Route path="/profile/:id" element={<Layout><ProfilePage /></Layout>} />
+        {/* Old public profile links now live in the participant's account */}
+        <Route path="/search" element={<Navigate to="/account" replace />} />
+        <Route path="/profile/:id" element={<Navigate to="/account" replace />} />
 
         {/* Raffle Flow — closed; profiles and payments for existing tickets remain reachable */}
         <Route path="/raffle/closed" element={<RaffleClosedPage />} />
         <Route path="/raffle/step/*" element={<RaffleClosedPage />} />
-        <Route path="/raffle/payment/:id" element={<RafflePaymentPageRoute />} />
-        <Route path="/raffle/success/:id" element={<RaffleSuccessPage />} />
-        <Route path="/raffle/profile/:id" element={<RaffleProfilePage />} />
-        <Route path="/raffle/profile/email/:email" element={<RaffleEmailProfilePage />} />
+        <Route path="/raffle/payment/:id" element={<RequireAuth><RafflePaymentPageRoute /></RequireAuth>} />
+        <Route path="/raffle/success/:id" element={<RequireAuth><RaffleSuccessPage /></RequireAuth>} />
+        <Route path="/raffle/profile/*" element={<Navigate to="/account" replace />} />
 
         {/* Legal */}
         <Route path="/terms-and-conditions" element={<TermsPage />} />
