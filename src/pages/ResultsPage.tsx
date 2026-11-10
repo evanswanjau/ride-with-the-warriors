@@ -36,7 +36,7 @@ interface TeamRosterRider {
 }
 
 type GenderFilter = 'All' | 'Male' | 'Female';
-type CircuitFilter = 'All' | 'Blitz' | 'Recon' | 'Corporate';
+type CircuitFilter = 'All' | 'Blitz' | 'Recon' | 'Corporate' | 'Kids';
 type ResultType = 'Individual' | 'Team';
 
 // The raw category keys look like "BLITZ I FEMALE", "RECON MALE", "CORPORATE FEMALE".
@@ -45,6 +45,7 @@ const getCircuitFromCategory = (category: string): CircuitFilter | 'Other' => {
     if (/^BLITZ/i.test(category)) return 'Blitz';
     if (/^RECON/i.test(category)) return 'Recon';
     if (/^CORPORATE/i.test(category)) return 'Corporate';
+    if (/^KIDS/i.test(category)) return 'Kids';
     return 'Other';
 };
 
@@ -122,7 +123,9 @@ const ResultsPage = () => {
                         category,
                         time: rider.time || '0.00',
                         position: rider.position,
-                        status: rider.position === 'DQ' ? 'DQ' : (rider.position ? 'Finished' : 'DNS'),
+                        // Kids entries carry an explicit status (their race is lap-based,
+                        // so a rider can finish without a ranked position).
+                        status: rider.status || (rider.position === 'DQ' ? 'DQ' : (rider.position ? 'Finished' : 'DNS')),
                     });
                 });
             }
@@ -136,9 +139,9 @@ const ResultsPage = () => {
         return set;
     }, [teamStandings]);
 
-    // Corporate has no team results, so force Individual if it's selected there.
+    // Corporate and Kids have no team results, so force Individual if it's selected there.
     useEffect(() => {
-        if (selectedCircuit === 'Corporate' && selectedType === 'Team') {
+        if ((selectedCircuit === 'Corporate' || selectedCircuit === 'Kids') && selectedType === 'Team') {
             setSelectedType('Individual');
         }
     }, [selectedCircuit, selectedType]);
@@ -155,6 +158,8 @@ const ResultsPage = () => {
     const handleCircuitChange = (circuit: CircuitFilter) => {
         setSelectedCircuit(circuit);
         setSelectedCategory('All');
+        // Kids is a single mixed category, so a gender filter would hide everyone.
+        if (circuit === 'Kids') setSelectedGender('All');
         setCurrentPage(1);
     };
 
@@ -286,6 +291,7 @@ const ResultsPage = () => {
                                         <option value="Blitz">Blitz</option>
                                         <option value="Recon">Recon</option>
                                         <option value="Corporate">Corporate</option>
+                                        <option value="Kids">Kids</option>
                                     </select>
                                 </div>
 
@@ -295,7 +301,7 @@ const ResultsPage = () => {
                                         value={selectedType}
                                         onChange={(e) => handleTypeChange(e.target.value as ResultType)}
                                         className="filter-select clip-sm"
-                                        disabled={selectedCircuit === 'Corporate' || (selectedCircuit === 'All' && circuitsWithTeams.size === 0)}
+                                        disabled={selectedCircuit === 'Corporate' || selectedCircuit === 'Kids' || (selectedCircuit === 'All' && circuitsWithTeams.size === 0)}
                                     >
                                         <option value="Individual">Individual</option>
                                         <option value="Team">Team</option>
@@ -304,6 +310,7 @@ const ResultsPage = () => {
 
                                 {!isTeamView && (
                                     <>
+                                        {selectedCircuit !== 'Kids' && (
                                         <div className="filter-group">
                                             <span className="filter-label">Gender</span>
                                             <select
@@ -316,6 +323,7 @@ const ResultsPage = () => {
                                                 <option value="Female">Women</option>
                                             </select>
                                         </div>
+                                        )}
 
                                         <div className="filter-group">
                                             <span className="filter-label">Category</span>

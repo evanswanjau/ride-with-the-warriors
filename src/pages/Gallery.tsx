@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import '../styles/gallery.css';
 import { API_BASE_URL } from '../config';
+// Snapshot of the Cloudinary-hosted albums, so the gallery works even when the
+// API has no gallery endpoint. The API list (when available) replaces it.
+import hostedManifest from '../assets/gallery-hosted.json';
 
 // Dynamically import all images from assets/images/gallery
 const imageModules = import.meta.glob('../assets/images/gallery/**/*.{jpeg,jpg,png,svg,webp}', { eager: true });
@@ -8,11 +11,18 @@ const imageModules = import.meta.glob('../assets/images/gallery/**/*.{jpeg,jpg,p
 /* ─── Lightbox ────────────────────────────────────────────────────────────── */
 interface GalleryImage { url: string; thumb: string; title: string; category: string; }
 
-interface ApiPhoto { id: string; eventYear: number; album: string; publicId: string; caption: string | null; }
+interface HostedPhoto { eventYear: number; album: string; publicId: string; caption: string | null; }
 
 /** Sized, auto-format Cloudinary delivery URL. */
 const cloudinaryUrl = (cloud: string, publicId: string, width: number) =>
     `https://res.cloudinary.com/${cloud}/image/upload/f_auto,q_auto,c_limit,w_${width}/${publicId}`;
+
+const toGalleryImages = (cloud: string, photos: HostedPhoto[]): GalleryImage[] => photos.map(p => ({
+    url: cloudinaryUrl(cloud, p.publicId, 1600),
+    thumb: cloudinaryUrl(cloud, p.publicId, 600),
+    title: p.caption || p.album,
+    category: `RWTW ${p.eventYear} · ${p.album}`,
+}));
 interface LightboxProps {
     images: GalleryImage[];
     index: number | null;
@@ -46,24 +56,21 @@ const Lightbox = ({ images, index, onClose, onPrev, onNext }: LightboxProps) => 
 const Gallery = () => {
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [activeCategory, setActiveCategory] = useState<string>('');
-    const [hostedImages, setHostedImages] = useState<GalleryImage[]>([]);
+    const [hostedImages, setHostedImages] = useState<GalleryImage[]>(
+        () => toGalleryImages(hostedManifest.cloudName, hostedManifest.photos),
+    );
 
-    // Photos hosted on Cloudinary (e.g. RWTW 2026), listed by the API.
+    // Photos hosted on Cloudinary (e.g. RWTW 2026). Prefer the live API list when
+    // the server provides one; otherwise keep the bundled snapshot.
     useEffect(() => {
         let cancelled = false;
         fetch(`${API_BASE_URL}/gallery`)
             .then(r => (r.ok ? r.json() : null))
-            .then((data: { cloudName: string | null; photos: ApiPhoto[] } | null) => {
-                if (cancelled || !data?.cloudName) return;
-                const cloud = data.cloudName;
-                setHostedImages(data.photos.map(p => ({
-                    url: cloudinaryUrl(cloud, p.publicId, 1600),
-                    thumb: cloudinaryUrl(cloud, p.publicId, 600),
-                    title: p.caption || p.album,
-                    category: `RWTW ${p.eventYear} · ${p.album}`,
-                })));
+            .then((data: { cloudName: string | null; photos: HostedPhoto[] } | null) => {
+                if (cancelled || !data?.cloudName || !data.photos?.length) return;
+                setHostedImages(toGalleryImages(data.cloudName, data.photos));
             })
-            .catch(() => { /* gallery API unavailable: show bundled photos only */ });
+            .catch(() => { /* no gallery API: keep the bundled snapshot */ });
         return () => { cancelled = true; };
     }, []);
 
