@@ -51,6 +51,9 @@ const Faqs = () => {
             title: 'Registration & Fees',
             label: 'Sign Up',
             questions: [
+                { question: 'Does my date of birth need to match my ID?', answer: 'Yes. The name and date of birth on your registration must match your national ID, passport or birth certificate. Bring it to kit collection and on race day. If the details do not match, you will not be allowed to start and no refund is given.' },
+                { question: 'Can someone else ride in my place?', answer: 'No. Entries and bib numbers are for the registered rider only. Riding on someone else\'s bib, or letting someone ride on yours, leads to disqualification of both riders and may lead to a ban from future editions.' },
+                { question: 'Will I get a refund if I cannot make it on the day?', answer: 'No. Registration fees are non-refundable, including for riders who do not show up, arrive after their circuit has started, or are not allowed to start because they did not meet the terms.' },
                 { question: 'What are the registration fees?', answer: 'Military personnel cycle for free. Civilians pay KES 2,000 per individual. Team entries (Blitz, Recon, Corporate) are KES 9,000 per team and must include at least one female rider. Family Fun Ride: Cubs/Champs pay KES 1,000 each; Tigers (parents/guardians) pay KES 2,000.' },
                 { question: 'What registration details are required?', answer: 'Participants provide their full name, contact details, country of origin, service/ID/passport number, shirt size, and emergency contact information. Registration is available online at airbornefraternity.org.' },
                 { question: 'Do teams have any special requirements?', answer: 'Yes. Teams in the Blitz, Recon, and Corporate categories must include at least one female rider to qualify. This is a non-negotiable inclusivity requirement for all team entries.' },
@@ -75,6 +78,7 @@ const Faqs = () => {
             title: 'Prizes & Awards',
             label: 'Prizes',
             questions: [
+                { question: 'How long do I have to collect my prize?', answer: 'Prizes must be collected in person, with valid identification, within 30 days of the event. Prizes not collected within 30 days are donated to a charity chosen by the organisers.' },
                 { question: 'Which categories have prize money?', answer: 'Prize money and trophies are awarded in the competitive circuits only — the Blitz Circuit (120 km) and the Recon Circuit (60 km). The Corporate Challenge and Family Fun Ride are non-competitive and recognition-based.' },
                 { question: 'What prizes are available for competitive categories?', answer: 'The top three finishers in each sub-category receive cash prizes and trophies. Awards cover age-group, gender, team, and elite classifications. Detailed prize breakdowns will be published in the official race programme.' },
                 { question: 'What is the Grand Raffle star prize?', answer: 'The star prize in the Grand Raffle is a brand-new saloon car. Additional raffle prizes include high-end bicycles, flat-screen TVs, refrigerators, and a variety of other sponsored items. Raffle tickets are KES 1,000 each and open to all.' },
