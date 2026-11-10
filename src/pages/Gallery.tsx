@@ -1,11 +1,28 @@
 import { useState, useEffect } from 'react';
 import '../styles/gallery.css';
+import { API_BASE_URL } from '../config';
+// Snapshot of the Cloudinary-hosted albums, so the gallery works even when the
+// API has no gallery endpoint. The API list (when available) replaces it.
+import hostedManifest from '../assets/gallery-hosted.json';
 
 // Dynamically import all images from assets/images/gallery
 const imageModules = import.meta.glob('../assets/images/gallery/**/*.{jpeg,jpg,png,svg,webp}', { eager: true });
 
 /* ─── Lightbox ────────────────────────────────────────────────────────────── */
-interface GalleryImage { url: string; title: string; category: string; }
+interface GalleryImage { url: string; thumb: string; title: string; category: string; }
+
+interface HostedPhoto { eventYear: number; album: string; publicId: string; caption: string | null; }
+
+/** Sized, auto-format Cloudinary delivery URL. */
+const cloudinaryUrl = (cloud: string, publicId: string, width: number) =>
+    `https://res.cloudinary.com/${cloud}/image/upload/f_auto,q_auto,c_limit,w_${width}/${publicId}`;
+
+const toGalleryImages = (cloud: string, photos: HostedPhoto[]): GalleryImage[] => photos.map(p => ({
+    url: cloudinaryUrl(cloud, p.publicId, 1600),
+    thumb: cloudinaryUrl(cloud, p.publicId, 600),
+    title: p.caption || p.album,
+    category: `RWTW ${p.eventYear} · ${p.album}`,
+}));
 interface LightboxProps {
     images: GalleryImage[];
     index: number | null;
@@ -39,9 +56,26 @@ const Lightbox = ({ images, index, onClose, onPrev, onNext }: LightboxProps) => 
 const Gallery = () => {
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [activeCategory, setActiveCategory] = useState<string>('');
+    const [hostedImages, setHostedImages] = useState<GalleryImage[]>(
+        () => toGalleryImages(hostedManifest.cloudName, hostedManifest.photos),
+    );
+
+    // Photos hosted on Cloudinary (e.g. RWTW 2026). Prefer the live API list when
+    // the server provides one; otherwise keep the bundled snapshot.
+    useEffect(() => {
+        let cancelled = false;
+        fetch(`${API_BASE_URL}/gallery`)
+            .then(r => (r.ok ? r.json() : null))
+            .then((data: { cloudName: string | null; photos: HostedPhoto[] } | null) => {
+                if (cancelled || !data?.cloudName || !data.photos?.length) return;
+                setHostedImages(toGalleryImages(data.cloudName, data.photos));
+            })
+            .catch(() => { /* no gallery API: keep the bundled snapshot */ });
+        return () => { cancelled = true; };
+    }, []);
 
     // Process all images and group by category
-    const allImages = Object.entries(imageModules).map(([path, module]) => {
+    const bundledImages: GalleryImage[] = Object.entries(imageModules).map(([path, module]) => {
         const parts = path.split('/');
         const filename = parts.pop() || '';
         const categoryDir = parts.pop() || 'Other';
@@ -52,25 +86,29 @@ const Gallery = () => {
             .split(' ')
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
-        return { url: (module as any).default, title, category: displayCategory };
+        const url = (module as { default: string }).default;
+        return { url, thumb: url, title, category: displayCategory };
     });
+    // Hosted albums first (newest year first), then photos bundled with the site.
+    const allImages: GalleryImage[] = [...hostedImages, ...bundledImages];
 
     const categories = Array.from(new Set(allImages.map(img => img.category))).sort((a, b) => {
-        // Prioritize Registration Drive Launch
+        // Newest hosted event albums first
+        const ya = a.match(/^RWTW (\d{4})/)?.[1], yb = b.match(/^RWTW (\d{4})/)?.[1];
+        if (ya || yb) return (Number(yb) || 0) - (Number(ya) || 0) || a.localeCompare(b);
+        // Then prioritize Registration Drive Launch
         if (a.toLowerCase().includes('registration')) return -1;
         if (b.toLowerCase().includes('registration')) return 1;
         return a.localeCompare(b);
     });
 
-    useEffect(() => {
-        if (categories.length > 0 && !activeCategory) {
-            setActiveCategory(categories[0]);
-        }
-    }, [categories, activeCategory]);
+    // Until the visitor picks a tab, show the first (newest) album — including
+    // hosted albums that arrive after the first render.
+    const currentCategory = categories.includes(activeCategory) ? activeCategory : (categories[0] ?? '');
 
-    const filteredImages = allImages
-        .filter(img => img.category === activeCategory)
-        .sort((a, b) => a.title.localeCompare(b.title));
+    // Hosted albums keep their upload order; bundled photos sort by title.
+    const filteredImages = allImages.filter(img => img.category === currentCategory);
+    if (!currentCategory.startsWith('RWTW ')) filteredImages.sort((a, b) => a.title.localeCompare(b.title));
 
     const openLightbox = (idx: number) => setLightboxIndex(idx);
     const closeLightbox = () => setLightboxIndex(null);
@@ -113,7 +151,7 @@ const Gallery = () => {
                             {categories.map(cat => (
                                 <button
                                     key={cat}
-                                    className={`category-tab ${activeCategory === cat ? 'active' : ''}`}
+                                    className={`category-tab ${currentCategory === cat ? 'active' : ''}`}
                                     onClick={() => setActiveCategory(cat)}
                                 >
                                     {cat}
@@ -139,7 +177,7 @@ const Gallery = () => {
                                 onKeyDown={(e) => e.key === 'Enter' && openLightbox(idx)}
                                 aria-label={`Open ${img.title}`}
                             >
-                                <img src={img.url} alt={img.title} loading="lazy" />
+                                <img src={img.thumb} alt={img.title} loading="lazy" />
                                 <div className="gallery-item-overlay">
                                     <span className="gallery-item-title">{img.title}</span>
                                     <div className="gallery-item-expand">⤢</div>
