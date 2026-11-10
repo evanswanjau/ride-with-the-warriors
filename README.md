@@ -71,3 +71,23 @@ export default defineConfig([
   },
 ])
 ```
+
+## Local development
+
+Run the API stack from `../server` first (see `../server/docs/LOCAL_DEV.md`), then:
+
+```bash
+npm run dev:stack   # http://localhost:5173, uses .env.stack (API on :4000)
+```
+
+## End-to-end tests (Playwright)
+
+Needs Docker running and the server repo at `../server` (`npm run stack:up` there).
+
+```bash
+npm run e2e        # resets rwtw_e2e, starts API :4100, mock DTB :4110, client :5174, runs tests
+npm run e2e:ui     # same, in the Playwright UI
+```
+
+Login codes, SMS and emails are read from Mailpit (http://localhost:8025). Tests named
+`KNOWN BUG:` are marked `test.fail()` and flip when the bug is fixed.
