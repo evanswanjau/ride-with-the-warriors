@@ -5,53 +5,85 @@ import '../styles/legal.css';
 const sections = [
     {
         number: '01',
+        id: 'risk',
         title: 'Acknowledgment of Risk',
         tag: 'Mandatory',
         body: 'I acknowledge that cycling is a potentially hazardous activity involving significant risks. I voluntarily assume all risks associated with my participation, including but not limited to personal injury, illness, disability, death, and property damage. This acknowledgment extends to all circuits — the 5KM Family Fun route through the 120KM Blitz Circuit.',
     },
     {
         number: '02',
+        id: 'fitness',
         title: 'Physical Fitness & Medical Health',
         tag: 'Mandatory',
         body: 'I confirm that I am physically and mentally fit to take part in the Event. I am solely responsible for ensuring I am capable of completing the distance I have selected. I agree to seek medical advice if I have any concerns about my health before participating. The organisers reserve the right to withdraw any participant deemed unfit to continue safely.',
     },
     {
         number: '03',
+        id: 'equipment',
         title: 'Equipment & Safety',
         tag: 'Mandatory',
         body: 'I agree to wear a safety-certified bicycle helmet at all times while cycling during the Event. I am responsible for ensuring my bicycle is in roadworthy condition and safe for use. I will comply with all road traffic laws and instructions from Event marshals. Failure to comply may result in immediate disqualification.',
     },
     {
         number: '04',
+        id: 'identity',
+        title: 'Identity & Eligibility',
+        tag: 'Mandatory',
+        body: 'The name and date of birth given at registration must match the rider\'s national ID, passport or birth certificate. Riders must bring this document to kit collection and on race day. If the details do not match, the rider will not be allowed to start, and no refund will be given. Age categories are based on the date of birth on the identification document.',
+    },
+    {
+        number: '05',
+        id: 'non-transferable',
+        title: 'Non-Transferable Entry',
+        tag: 'Mandatory',
+        body: 'Each entry and bib number is for the registered rider only. Riding for another cyclist, riding on someone else\'s bib, or letting another person ride on your bib is not allowed. Anyone found doing so will be disqualified, along with the registered rider, and may be banned from future editions. Results and prizes from a disqualified entry are forfeited.',
+    },
+    {
+        number: '06',
+        id: 'liability',
         title: 'Liability Waiver & Release',
         tag: 'Legal',
         body: 'To the maximum extent permitted by law, I release and discharge the organisers, sponsors, volunteers, and affiliates of Ride With The Warriors from any and all claims, liabilities, or damages arising out of my participation in the Event, including those caused by negligence. This waiver is binding upon my heirs, executors, and personal representatives.',
     },
     {
-        number: '05',
+        number: '07',
+        id: 'media',
         title: 'Media Release',
         tag: 'Consent',
         body: 'I grant permission to Ride With The Warriors and the KDF Airborne Fraternity to use my name, likeness, and any photographs or video footage taken during the Event for promotional and marketing purposes across any media worldwide, without compensation. This includes social media, print, broadcast, and online publications.',
     },
     {
-        number: '06',
+        number: '08',
+        id: 'refunds',
         title: 'Refund Policy',
         tag: 'Financial',
-        body: 'Registration fees are non-refundable once payment has been processed. In the event of cancellation due to circumstances beyond the organisers\' control — including acts of God, government directives, or security concerns — no refunds will be issued, though registration may be transferred to a future edition at the organisers\' discretion.',
+        body: 'Registration fees are non-refundable once payment has been processed. No refunds are given to riders who do not show up, arrive after their circuit has started, or are not allowed to start because they did not meet these terms (for example, details that do not match their identification). In the event of cancellation due to circumstances beyond the organisers\' control — including acts of God, government directives, or security concerns — no refunds will be issued, though registration may be transferred to a future edition at the organisers\' discretion.',
     },
     {
-        number: '07',
+        number: '09',
+        id: 'prizes',
+        title: 'Prize Collection',
+        tag: 'Financial',
+        body: 'Prizes must be collected within 30 days of the event date, in person by the winner, with valid identification. Prizes not collected within 30 days are forfeited and will be donated to a charity chosen by the organisers. No cash alternative is offered.',
+    },
+    {
+        number: '10',
+        id: 'conduct',
         title: 'Conduct & Fair Play',
         tag: 'Conduct',
         body: 'All participants are expected to uphold the spirit of the Event: respect fellow riders, volunteers, and marshals; follow designated routes and do not cut circuits; and honour the mission of supporting our fallen heroes\' families. Any unsportsmanlike conduct may result in disqualification and a ban from future editions.',
     },
     {
-        number: '08',
+        number: '11',
+        id: 'governing-law',
         title: 'Governing Law',
         tag: 'Legal',
         body: 'These Terms and Conditions shall be governed by and construed in accordance with the laws of the Republic of Kenya. Any dispute arising from participation in the Event shall be subject to the exclusive jurisdiction of the Kenyan courts.',
     },
 ];
+
+/** Shown at the top of the page; update whenever the terms change. */
+const LAST_UPDATED = '10 November 2026';
 
 const TermsPage = () => {
     return (
@@ -74,12 +106,15 @@ const TermsPage = () => {
                                 By registering for Ride With The Warriors, you agree to the following terms.
                                 Please read them carefully before completing your entry.
                             </p>
+                            <p className="page-subtitle--center" style={{ fontSize: '0.8rem', marginTop: 12 }}>
+                                Last updated: {LAST_UPDATED}
+                            </p>
                         </div>
                         {/* ── Sections ── */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                             {sections.map((s) => {
                                 return (
-                                    <div key={s.number} className="terms-section-card">
+                                    <div key={s.number} id={s.id} className="terms-section-card">
                                         <div className="terms-number-col">
                                             <span className="terms-number">{s.number}</span>
                                             <div className="terms-number-line" />
