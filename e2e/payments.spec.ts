@@ -18,11 +18,8 @@ test('unpaid 2026 registration: paying gives a bib, an SMS and an email', async 
     await waitForMessage('unpaid@test.local', since);
 });
 
-// KNOWN BUG (Phase 3): after a failed prompt, "Retry" polls the old paymentFailed
-// flag, so the page shows "Payment failed" at once even when the new prompt is paid.
-// Remove test.fail() when the server clears the flag on a new attempt.
-test('KNOWN BUG: retry after a cancelled prompt reaches the success page', async ({ page }) => {
-    test.fail();
+// COD-119: a new prompt clears the previous failure, so "Retry" can succeed.
+test('retry after a cancelled prompt reaches the success page', async ({ page }) => {
     await login(page, 'retry@test.local', 'retry@test.local');
     await page.getByRole('link', { name: /^Pay/ }).first().click();
     await dtbNext('fail');
