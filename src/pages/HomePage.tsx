@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 import RegistrationClosedModal from '../components/common/RegistrationClosedModal';
 import RaffleClosedModal from '../components/common/RaffleClosedModal';
 import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineTeam, AiOutlineTrophy, AiOutlineTags, AiOutlineArrowRight } from 'react-icons/ai';
-import heroImage from '../assets/images/hero.jpeg';
-import highlightImage1 from '../assets/images/gallery/Ride-With-The-Warriors-2025/296A0069-28-min.jpeg';
-import highlightImage2 from '../assets/images/gallery/Ride-With-The-Warriors-2025/296A0184-33-min.jpeg';
-import highlightImage3 from '../assets/images/gallery/Ride-With-The-Warriors-2025/296A0219-40-min.jpeg';
+import { HERO_HIGHLIGHT, HOME_COLLAGE, highlightImgProps } from '../data/highlights';
 import kdfLogo from '../assets/logos/kdf.png';
 import logo from '../assets/logos/logo.png';
 import equity from '../assets/logos/equity.png';
@@ -137,8 +134,9 @@ const HomePage = () => {
                     <div className="absolute inset-0">
                         <img
                             ref={heroRef}
-                            src={heroImage}
-                            alt="Ride With The Warriors"
+                            {...highlightImgProps(HERO_HIGHLIGHT, '100vw')}
+                            fetchPriority="high"
+                            data-testid="home-hero-img"
                             className="w-full h-[130%] -top-[15%] absolute object-cover object-top will-change-transform"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-black/30" />
@@ -217,12 +215,12 @@ const HomePage = () => {
                     <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
                         <div className="grid grid-cols-2 gap-3">
                             <div className="space-y-3 pt-10">
-                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img src={highlightImage1} alt="RWTW Cyclist" className="w-full h-full object-cover" /></div>
-                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img src={highlightImage3} alt="RWTW Action" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img {...highlightImgProps(HOME_COLLAGE[0], '(min-width: 1024px) 25vw, 50vw')} loading="lazy" data-testid="home-collage-img" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img {...highlightImgProps(HOME_COLLAGE[1], '(min-width: 1024px) 25vw, 50vw')} loading="lazy" data-testid="home-collage-img" className="w-full h-full object-cover" /></div>
                             </div>
                             <div className="space-y-3">
-                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img src={highlightImage2} alt="RWTW Peloton" className="w-full h-full object-cover" /></div>
-                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img src={heroImage} alt="RWTW Landscape" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img {...highlightImgProps(HOME_COLLAGE[2], '(min-width: 1024px) 25vw, 50vw')} loading="lazy" data-testid="home-collage-img" className="w-full h-full object-cover" /></div>
+                                <div className="img-hover-frame h-[350px] w-full overflow-hidden" style={{ clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%)' }}><img {...highlightImgProps(HOME_COLLAGE[3], '(min-width: 1024px) 25vw, 50vw')} loading="lazy" data-testid="home-collage-img" className="w-full h-full object-cover" /></div>
                             </div>
                         </div>
 
