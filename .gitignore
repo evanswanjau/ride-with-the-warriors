@@ -60,7 +60,11 @@ dist
 # gatsby files
 .cache/
 # Comment the next line if you want to check your bundle analysis to your repo
-public
+public/*
+# Installable app (PWA) files are part of the source
+!public/sw.js
+!public/manifest.webmanifest
+!public/pwa/
 
 # vue-cli build objects
 dist
