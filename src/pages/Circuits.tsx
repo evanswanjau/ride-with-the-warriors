@@ -1,18 +1,15 @@
 import { Link } from 'react-router-dom';
 import { AiOutlineArrowRight, AiOutlineClockCircle, AiOutlineDollar, AiOutlineEnvironment } from 'react-icons/ai';
 import { MdEmojiEvents } from 'react-icons/md';
-import blitzImage from '../assets/images/blitz.jpeg';
-import reconImage from '../assets/images/recon.jpeg';
-import corporateImage from '../assets/images/corporate.jpeg';
-import familyImage from '../assets/images/family.jpeg';
+import { CIRCUIT_HIGHLIGHTS, highlightImgProps, type CircuitId, type Highlight } from '../data/highlights';
 
 interface CategoryCard {
-    id: string;
+    id: CircuitId;
     title: string;
     distance: string;
     subtitle: string;
     description: string;
-    image: string;
+    image: Highlight;
     isCompetitive?: boolean;
     price: string;
     time: string;
@@ -27,7 +24,7 @@ const categories: CategoryCard[] = [
         distance: '120 KM',
         subtitle: 'Team / Individual — Competitive',
         description: 'The premier competitive long-distance category. Sub-categories include Vanguard/Junior (under 25), Airborne/Elite (25–39), Commanders (40–49), and Veterans (50+). Teams must include at least one lady.',
-        image: blitzImage,
+        image: CIRCUIT_HIGHLIGHTS.blitz,
         isCompetitive: true,
         price: 'KES 2,000 (Individual) / KES 9,000 (Team)',
         time: '07:00 AM',
@@ -40,7 +37,7 @@ const categories: CategoryCard[] = [
         distance: '60 KM',
         subtitle: 'Team / Individual — Competitive',
         description: 'The intermediate competitive mid-distance category featuring experienced classification. Teams (must include a lady) and Individuals (male/female). Prize money available.',
-        image: reconImage,
+        image: CIRCUIT_HIGHLIGHTS.recon,
         isCompetitive: true,
         price: 'KES 2,000 (Individual) / KES 9,000 (Team)',
         time: '07:30 AM',
@@ -53,7 +50,7 @@ const categories: CategoryCard[] = [
         distance: '30 KM',
         subtitle: 'Team / Individual — Non-Competitive',
         description: 'A non-competitive ride for corporate teams and individuals. Showcase your corporate branding while supporting a great cause. Teams of up to 5 members, must include at least one lady.',
-        image: corporateImage,
+        image: CIRCUIT_HIGHLIGHTS.corporate,
         price: 'KES 2,000 (Individual) / KES 9,000 (Team)',
         time: '08:30 AM',
         route: 'USCL → Galleria Mall → Langata Rd → Ebul Bul Station → USCL',
@@ -65,7 +62,7 @@ const categories: CategoryCard[] = [
         distance: '5 KM',
         subtitle: 'Kids & Parents — Leisure',
         description: 'A safe and fun 5KM ride within the USCL stadium grounds. Sub-categories: Cubs (ages 4–8), Champs (ages 9–13), and Tigers (parents/guardians cycling with kids).',
-        image: familyImage,
+        image: CIRCUIT_HIGHLIGHTS.family,
         price: 'KES 1,000 (Cubs/Champs) / KES 2,000 (Tigers)',
         time: '10:00 AM',
         route: 'Within USCL Stadium',
@@ -384,7 +381,7 @@ const Circuits = () => {
 
                                 {/* Image */}
                                 <div className="ci-card-img">
-                                    <img src={cat.image} alt={cat.title} loading="lazy" />
+                                    <img {...highlightImgProps(cat.image, '(min-width: 1024px) 40vw, 100vw')} loading="lazy" data-testid="circuit-card-img" />
                                     <div className="ci-card-img-overlay" />
                                     <div className="ci-card-img-badges">
                                         <span className="ci-distance-badge">
