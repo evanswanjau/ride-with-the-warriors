@@ -13,7 +13,7 @@ interface RaffleDetailsFormProps {
         acceptedTerms: boolean;
         referralCode: string;
     };
-    onChange: (data: any) => void;
+    onChange: (data: RaffleDetailsFormProps['data']) => void;
     onNext: () => void;
     errors: Record<string, string>;
     hasStoredRef?: boolean;

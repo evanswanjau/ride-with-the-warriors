@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getErrorMessage } from '../utils';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import { AiOutlineHeart, AiOutlineWarning, AiOutlineCheckCircle } from 'react-icons/ai';
@@ -173,8 +174,8 @@ const DonatePage = () => {
 
             setPaymentStatus('pending');
             startPolling(id, data.donationToken);
-        } catch (err: any) {
-            setError(err.message || 'An unexpected error occurred.');
+        } catch (err) {
+            setError(getErrorMessage(err, 'An unexpected error occurred.'));
             setIsProcessing(false);
         } finally {
             setIsProcessing(false);

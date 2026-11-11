@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import type { RiderDetails, TeamDetails, FamilyDetails } from '../types';
-import { isValidKenyanPhone, isValidID, calculateAge } from '../utils';
+import type { RiderDetails, TeamDetails, FamilyDetails, PricingCategory } from '../types';
+import { isValidKenyanPhone, isValidID, calculateAge, type Classification } from '../utils';
 import { API_BASE_URL } from '../config';
 import { authHeaders } from '../auth/session';
 
@@ -21,14 +21,14 @@ interface RegistrationContextType {
     formErrors: string[];
     isSubmitting: boolean;
     registrationId: string | null;
-    pricingCategories: any[];
-    serverClassifications: any[];
-    foundRegistration: any;
-    setFoundRegistration: (val: any) => void;
+    pricingCategories: PricingCategory[];
+    serverClassifications: Classification[];
+    foundRegistration: unknown;
+    setFoundRegistration: (val: unknown) => void;
     isMilitary: boolean;
     setIsMilitary: (val: boolean) => void;
-    allRaffleTickets: any[];
-    setAllRaffleTickets: (val: any[]) => void;
+    allRaffleTickets: unknown[];
+    setAllRaffleTickets: (val: unknown[]) => void;
 
     // Helpers/Handlers
     handleNext: (currentStep: number) => Promise<void>;
@@ -52,8 +52,8 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
     const [registrationType, setRegistrationType] = useState('individual');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [registrationId, setRegistrationId] = useState<string | null>(null);
-    const [pricingCategories, setPricingCategories] = useState<any[]>([]);
-    const [serverClassifications, setServerClassifications] = useState<any[]>([]);
+    const [pricingCategories, setPricingCategories] = useState<PricingCategory[]>([]);
+    const [serverClassifications, setServerClassifications] = useState<Classification[]>([]);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [formErrors, setFormErrors] = useState<string[]>([]);
     const [isMilitary, setIsMilitary] = useState(false);
@@ -105,8 +105,8 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
         return () => window.removeEventListener('beforeunload', handleBeforeUnload);
     }, [hasInProgressRegistration]);
 
-    const [foundRegistration, setFoundRegistration] = useState<any>(null);
-    const [allRaffleTickets, setAllRaffleTickets] = useState<any[]>([]);
+    const [foundRegistration, setFoundRegistration] = useState<unknown>(null);
+    const [allRaffleTickets, setAllRaffleTickets] = useState<unknown[]>([]);
 
     // Fetch Pricing Categories
     useEffect(() => {
@@ -292,7 +292,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
 
             setIsSubmitting(true);
             try {
-                let payload: any;
+                let payload: Record<string, unknown>;
                 if (registrationType === 'individual') payload = { riderDetails: { ...riderDetails, isMilitary, hireBike } };
                 else if (registrationType === 'team') payload = { teamDetails: { ...teamDetails, isMilitary, hireBike } };
                 else payload = { familyDetails: { ...familyDetails, guardian: { ...familyDetails.guardian, isMilitary, hireBike } } };
@@ -372,7 +372,7 @@ export const RegistrationProvider = ({ children }: { children: ReactNode }) => {
         setFormErrors([]);
 
         try {
-            let payload: any;
+            let payload: Record<string, unknown>;
             if (registrationType === 'individual') payload = { riderDetails: { ...riderDetails, isMilitary, hireBike } };
             else if (registrationType === 'team') payload = { teamDetails: { ...teamDetails, isMilitary, hireBike } };
             else payload = { familyDetails: { ...familyDetails, guardian: { ...familyDetails.guardian, isMilitary, hireBike } } };

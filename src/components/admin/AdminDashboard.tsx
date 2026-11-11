@@ -20,13 +20,17 @@ import AdminBibVisual from './AdminBibVisual';
 import { AdminCommunications } from './AdminCommunications';
 import AdminBikeHires from './AdminBikeHires';
 import AdminFeedback from './AdminFeedback';
+import type { IconType } from 'react-icons';
+import type { AdminUser, PricingCategory } from '../../types';
+import type { AdminRegistration, AdminPayment, AdminRaffleTicket, AdminDonation, AdminReferral, DashboardData, SummaryStats, ReferralsStats } from '../../adminTypes';
+import { getErrorMessage } from '../../utils';
 import logo from '../../assets/logos/logo.png';
 import { CIRCUITS } from '../../constants';
 import { API_BASE_URL, SITE_URL } from '../../config';
 
 interface AdminDashboardProps {
     token: string;
-    admin: any;
+    admin: AdminUser | null;
     onLogout: () => void;
 }
 
@@ -37,38 +41,38 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const { "*": viewParam } = useParams();
     const navigate = useNavigate();
     const activeView = (['overview', 'analytics', 'registrations', 'pricing', 'payments', 'raffle', 'bibs', 'donations', 'communications', 'referrals', 'bike-hires', 'feedback'].includes(viewParam || '') ? viewParam : 'overview') as ViewType;
-    const [dashboardData, setDashboardData] = useState<any>(null);
-    const [registrations, setRegistrations] = useState<any[]>([]);
-    const [pricingCategories, setPricingCategories] = useState<any[]>([]);
-    const [stats, setStats] = useState<any>(null);
+    const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+    const [registrations, setRegistrations] = useState<AdminRegistration[]>([]);
+    const [pricingCategories, setPricingCategories] = useState<PricingCategory[]>([]);
+    const [stats, setStats] = useState<SummaryStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [filter, setFilter] = useState({ circuitId: '', type: '', status: '', category: '', search: '', isMilitary: '', dateFrom: '' });
     const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0, pages: 1 });
     const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('adminTheme') === 'dark');
-    const [selectedRegistration, setSelectedRegistration] = useState<any>(null);
+    const [selectedRegistration, setSelectedRegistration] = useState<AdminRegistration | null>(null);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-    const [selectedRaffleTicket, setSelectedRaffleTicket] = useState<any>(null);
+    const [selectedRaffleTicket, setSelectedRaffleTicket] = useState<AdminRaffleTicket | null>(null);
     const [isRaffleDetailsOpen, setIsRaffleDetailsOpen] = useState(false);
-    const [payments, setPayments] = useState<any[]>([]);
-    const [paymentsStats, setPaymentsStats] = useState<any>(null);
+    const [payments, setPayments] = useState<AdminPayment[]>([]);
+    const [paymentsStats, setPaymentsStats] = useState<SummaryStats | null>(null);
     const [paymentsFilter, setPaymentsFilter] = useState({ status: '', search: '', dateFrom: '', dateTo: '' });
     const [paymentsPagination, setPaymentsPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
-    const [raffleTickets, setRaffleTickets] = useState<any[]>([]);
+    const [raffleTickets, setRaffleTickets] = useState<AdminRaffleTicket[]>([]);
     const [raffleFilter, setRaffleFilter] = useState({ status: '', search: '', referralCode: '' });
     const [rafflePagination, setRafflePagination] = useState({ page: 1, limit: 12, total: 0, pages: 1 });
     const [isPrintingRaffle, setIsPrintingRaffle] = useState(false);
-    const [allRaffleTicketsForPrint, setAllRaffleTicketsForPrint] = useState<any[]>([]);
+    const [allRaffleTicketsForPrint, setAllRaffleTicketsForPrint] = useState<AdminRaffleTicket[]>([]);
     const [isServerGeneratingBibs, setIsServerGeneratingBibs] = useState(false);
     const [serverBibProgress, setServerBibProgress] = useState<{ pct: number; processed: number; total: number } | null>(null);
-    const [donations, setDonations] = useState<any[]>([]);
-    const [donationsStats, setDonationsStats] = useState<any>(null);
+    const [donations, setDonations] = useState<AdminDonation[]>([]);
+    const [donationsStats, setDonationsStats] = useState<SummaryStats | null>(null);
     const [donationsFilter, setDonationsFilter] = useState({ status: '', search: '' });
     const [donationsPagination, setDonationsPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
     const [debouncedDonationSearch, setDebouncedDonationSearch] = useState(donationsFilter.search);
 
-    const [referrals, setReferrals] = useState<any[]>([]);
-    const [referralsStats, setReferralsStats] = useState<any>(null);
+    const [referrals, setReferrals] = useState<AdminReferral[]>([]);
+    const [referralsStats, setReferralsStats] = useState<ReferralsStats | null>(null);
     const [referralsFilter, setReferralsFilter] = useState({ status: '', search: '' });
     const [referralsPagination, setReferralsPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
     const [debouncedReferralSearch, setDebouncedReferralSearch] = useState(referralsFilter.search);
@@ -79,7 +83,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     const [debouncedRaffleSearch, setDebouncedRaffleSearch] = useState(raffleFilter.search);
 
     const [isReferralModalOpen, setIsReferralModalOpen] = useState(false);
-    const [editingReferral, setEditingReferral] = useState<any>(null);
+    const [editingReferral, setEditingReferral] = useState<AdminReferral | null>(null);
     const [newReferral, setNewReferral] = useState({ code: '', influencerName: '', influencerEmail: '', influencerPhone: '' });
     const [revenueChartRange, setRevenueChartRange] = useState<'7d' | '30d' | '6m'>('30d');
     const [regChartRange, setRegChartRange] = useState<'7d' | '30d' | '6m'>('30d');
@@ -294,7 +298,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             const q = new URLSearchParams({ limit: '10000', ...filter });
             const r = await fetch(`${API_BASE_URL}/admin/registrations?${q}`, { headers: { Authorization: `Bearer ${token}` } });
             const d = await r.json(); if (!d.registrations) return;
-            const ws = XLSX.utils.json_to_sheet(d.registrations.map((r: any) => ({ Bib: r.bibNumber || '', Ref: r.id, Name: `${r.firstName} ${r.lastName}`, Email: r.email, Phone: r.phoneNumber, Team: r.teamName || '', TshirtSize: r.tshirtSize || '', EmergencyContact: r.emergencyContactName || '', EmergencyPhone: r.emergencyPhone || '', Type: r.type, Circuit: r.circuitId, Category: r.category, Amount: r.totalAmount, MpesaCode: r.mpesaCode || '', Status: r.status, Date: new Date(r.createdAt).toLocaleString() })));
+            const ws = XLSX.utils.json_to_sheet(d.registrations.map((r: AdminRegistration) => ({ Bib: r.bibNumber || '', Ref: r.id, Name: `${r.firstName} ${r.lastName}`, Email: r.email, Phone: r.phoneNumber, Team: r.teamName || '', TshirtSize: r.tshirtSize || '', EmergencyContact: r.emergencyContactName || '', EmergencyPhone: r.emergencyPhone || '', Type: r.type, Circuit: r.circuitId, Category: r.category, Amount: r.totalAmount, MpesaCode: r.mpesaCode || '', Status: r.status, Date: new Date(r.createdAt).toLocaleString() })));
             const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Registrations'); XLSX.writeFile(wb, 'Registrations.xlsx');
         } catch { alert('Export failed'); }
     };
@@ -302,7 +306,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
         try {
             const p = new URLSearchParams({ limit: '10000', ...(paymentsFilter.status && { status: paymentsFilter.status }), ...(paymentsFilter.search && { search: paymentsFilter.search }), ...(paymentsFilter.dateFrom && { dateFrom: paymentsFilter.dateFrom }), ...(paymentsFilter.dateTo && { dateTo: paymentsFilter.dateTo }) });
             const r = await fetch(`${API_BASE_URL}/admin/payments?${p}`, { headers: { Authorization: `Bearer ${token}` } }); const d = await r.json(); const list = d.payments || [];
-            const rows = list.map((p: any) => ({ TransactionCode: p.mpesaReceiptNumber || '', Phone: p.phone || '', Amount: p.amount, Status: p.status, Timestamp: p.transactionDate || new Date(p.createdAt).toISOString(), RegistrationId: p.registrationId, CreatedAt: new Date(p.createdAt).toLocaleString() }));
+            const rows = list.map((p: AdminPayment) => ({ TransactionCode: p.mpesaReceiptNumber || '', Phone: p.phone || '', Amount: p.amount, Status: p.status, Timestamp: p.transactionDate || new Date(p.createdAt).toISOString(), RegistrationId: p.registrationId, CreatedAt: new Date(p.createdAt).toLocaleString() }));
             const ws = XLSX.utils.json_to_sheet(rows);
             if (fmt === 'csv') { const csv = XLSX.utils.sheet_to_csv(ws); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Payments.csv'; a.click(); URL.revokeObjectURL(url); } else { const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Payments'); XLSX.writeFile(wb, 'Payments.xlsx'); }
         } catch { alert('Export failed'); }
@@ -318,7 +322,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             const r = await fetch(`${API_BASE_URL}/admin/raffle?${p}`, { headers: { Authorization: `Bearer ${token}` } });
             const d = await r.json(); const list = d.tickets || [];
             if (!list.length) return alert('No tickets found to export');
-            const rows = list.map((t: any) => ({ TicketNumber: t.ticketNumber || '', Ref: t.id, Name: `${t.firstName} ${t.lastName}`, Email: t.email || '', Phone: t.phoneNumber || '', Referral: t.referralCode || 'Direct', Status: t.status, CreatedAt: new Date(t.createdAt).toLocaleString() }));
+            const rows = list.map((t: AdminRaffleTicket) => ({ TicketNumber: t.ticketNumber || '', Ref: t.id, Name: `${t.firstName} ${t.lastName}`, Email: t.email || '', Phone: t.phoneNumber || '', Referral: t.referralCode || 'Direct', Status: t.status, CreatedAt: new Date(t.createdAt).toLocaleString() }));
             const ws = XLSX.utils.json_to_sheet(rows);
             const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'RaffleTickets'); XLSX.writeFile(wb, 'Raffle_Tickets.xlsx');
         } catch { alert('Export failed'); }
@@ -339,7 +343,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             setIsReferralModalOpen(false);
             setNewReferral({ code: '', influencerName: '', influencerEmail: '', influencerPhone: '' });
             fetchReferrals();
-        } catch (e: any) { setError(e.message); } finally { setLoading(false); }
+        } catch (e) { setError(getErrorMessage(e, 'Request failed')); } finally { setLoading(false); }
     };
     const handleUpdateReferral = async () => {
         if (!editingReferral) return;
@@ -422,9 +426,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             }
 
             pdf.save(`RWTW_Raffle_Tickets_All_${new Date().toISOString().split('T')[0]}.pdf`);
-        } catch (e: any) {
+        } catch (e) {
             console.error(e);
-            alert(e.message || 'Failed to generate PDF');
+            alert(getErrorMessage(e, 'Failed to generate PDF'));
         } finally {
             setIsPrintingRaffle(false);
 
@@ -499,15 +503,15 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             a.click();
             URL.revokeObjectURL(url);
 
-        } catch (e: any) {
-            alert(e.message || 'Failed to generate PDF from server');
+        } catch (e) {
+            alert(getErrorMessage(e, 'Failed to generate PDF from server'));
         } finally {
             setIsServerGeneratingBibs(false);
             setServerBibProgress(null);
         }
     };
 
-    const getBibRegistrationData = (regsToUse: any[] = registrations) => {
+    const getBibRegistrationData = (regsToUse: AdminRegistration[] = registrations) => {
         // Bibs exist only once a registration is paid (or complementary).
         const data = regsToUse.filter(reg => reg.bibNumber).map(reg => ({
             id: reg.bibNumber as string,
@@ -527,7 +531,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             return a.id.localeCompare(b.id);
         });
     };
-    const groupedCategories = pricingCategories.reduce((acc, cat) => { if (!acc[cat.circuitId]) acc[cat.circuitId] = []; acc[cat.circuitId].push(cat); return acc; }, {} as Record<string, any[]>);
+    const groupedCategories = pricingCategories.reduce((acc, cat) => { if (!acc[cat.circuitId]) acc[cat.circuitId] = []; acc[cat.circuitId].push(cat); return acc; }, {} as Record<string, PricingCategory[]>);
 
     // ─── Derived stats from API ───────────────────────────────────────────────
     const d = dashboardData;
@@ -543,7 +547,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     // ─── Tooltip style ────────────────────────────────────────────────────────
     const ttStyle = { backgroundColor: dm ? '#0d1a0d' : '#ffffff', border: `1px solid ${dm ? '#2d6a2d' : '#d8d4cc'}`, borderRadius: 0, padding: '10px 14px', fontFamily: "'Barlow Condensed', sans-serif", fontSize: 13, fontWeight: 700 };
 
-    const navItems: { id: ViewType; label: string; icon: any }[] = [
+    const navItems: { id: ViewType; label: string; icon: IconType }[] = [
         { id: 'overview', label: 'Overview', icon: AiOutlineDashboard },
         { id: 'analytics', label: 'Analytics', icon: AiOutlineBarChart },
         { id: 'registrations', label: 'Registrations', icon: AiOutlineTeam },
@@ -1019,11 +1023,11 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             </div>
                                         </div>
                                         <div className="ad-panel-body">
-                                            {(d?.financials?.conversionFunnel || []).map((row: any, i: number) => (
+                                            {(d?.financials?.conversionFunnel || []).map((row, i: number) => (
                                                 <div key={row.label} className="ad-funnel-row">
                                                     <span className="ad-funnel-label">{row.label}</span>
                                                     <div className="ad-funnel-bar-wrap">
-                                                        <div className="ad-funnel-bar" style={{ width: `${i === 0 ? 100 : Math.round((row.count / (d?.financials?.conversionFunnel[0].count || 1)) * 100)}%` }} />
+                                                        <div className="ad-funnel-bar" style={{ width: `${i === 0 ? 100 : Math.round((row.count / (d?.financials?.conversionFunnel?.[0]?.count || 1)) * 100)}%` }} />
                                                     </div>
                                                     <span className="ad-funnel-count">{row.count}</span>
                                                 </div>
@@ -1044,14 +1048,14 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <ResponsiveContainer width="100%" height={160}>
                                                     <PieChart>
                                                         <Pie data={d?.byCircuit || []} dataKey="value" cx="50%" cy="50%" innerRadius={42} outerRadius={65} paddingAngle={4} startAngle={90} endAngle={-270}>
-                                                            {(d?.byCircuit || []).map((c: any, i: number) => <Cell key={i} fill={c.color} stroke="none" />)}
+                                                            {(d?.byCircuit || []).map((c, i: number) => <Cell key={i} fill={c.color} stroke="none" />)}
                                                         </Pie>
                                                         <Tooltip contentStyle={ttStyle} />
                                                     </PieChart>
                                                 </ResponsiveContainer>
                                             </div>
                                             <div className="ad-pie-legend">
-                                                {(d?.byCircuit || []).map((c: any) => (
+                                                {(d?.byCircuit || []).map((c) => (
                                                     <div key={c.name} className="ad-pie-legend-row">
                                                         <div className="ad-pie-legend-dot" style={{ background: c.color }} />
                                                         <span className="ad-pie-legend-label">{c.name}</span>
@@ -1079,7 +1083,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     <div className="ad-panel">
                                         <div className="ad-panel-head"><div className="ad-panel-title">Gender Split</div></div>
                                         <div className="ad-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                                            {(d?.demographics?.genderBreakdown || []).map((g: any) => (
+                                            {(d?.demographics?.genderBreakdown || []).map((g) => (
                                                 <div key={g.label}>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                                                         <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ad-t3)' }}>{g.label}</span>
@@ -1091,7 +1095,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 </div>
                                             ))}
                                             <div className="ad-insight" style={{ marginTop: 8 }}>
-                                                Minimum lady-per-team rules are on track. <strong>Female participation at {d?.demographics?.genderBreakdown?.find((g: any) => g.label?.toLowerCase() === 'female')?.pct ?? 0}%</strong>.
+                                                Minimum lady-per-team rules are on track. <strong>Female participation at {d?.demographics?.genderBreakdown?.find((g) => g.label?.toLowerCase() === 'female')?.pct ?? 0}%</strong>.
                                             </div>
                                         </div>
                                     </div>
@@ -1099,7 +1103,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     <div className="ad-panel" style={{ display: 'none' }}>
                                         <div className="ad-panel-head"><div className="ad-panel-title">Military vs Civilian</div></div>
                                         <div className="ad-panel-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                                            {(d?.demographics?.militaryBreakdown || []).map((m: any) => (
+                                            {(d?.demographics?.militaryBreakdown || []).map((m) => (
                                                 <div key={m.label}>
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                                                         <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ad-t3)' }}>{m.label}</span>
@@ -1111,7 +1115,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 </div>
                                             ))}
                                             <div className="ad-insight" style={{ marginTop: 8 }}>
-                                                <strong>Military participation at {d?.demographics?.militaryBreakdown?.find((m: any) => m.label === 'Military')?.pct || 0}%</strong> of confirmed entries.
+                                                <strong>Military participation at {d?.demographics?.militaryBreakdown?.find((m) => m.label === 'Military')?.pct || 0}%</strong> of confirmed entries.
                                             </div>
                                         </div>
                                     </div>
@@ -1126,7 +1130,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         </div>
                                         <div className="ad-panel-body">
                                             <div className="ad-feed">
-                                                {(d?.activityFeed || []).map((item: any, i: number) => (
+                                                {(d?.activityFeed || []).map((item, i: number) => (
                                                     <div key={i} className="ad-feed-item">
                                                         <div className="ad-feed-dot" style={{ background: item.type === 'PAYMENT' ? 'var(--ad-pl)' : item.type === 'REGISTRATION' ? 'var(--ad-accent)' : '#38bdf8' }} />
                                                         <div style={{ flex: 1 }}>
@@ -1253,7 +1257,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                     <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} />
                                                     <Tooltip contentStyle={ttStyle} />
                                                     <Bar dataKey="registrations" radius={0} barSize={8}>
-                                                        {(d?.hourlyIntensity || []).map((entry: any, i: number) => (
+                                                        {(d?.hourlyIntensity || []).map((entry, i: number) => (
                                                             <Cell key={i} fill={entry.registrations > 12 ? '#4caf50' : entry.registrations > 6 ? 'rgba(76,175,80,0.5)' : 'rgba(76,175,80,0.18)'} />
                                                         ))}
                                                     </Bar>
@@ -1289,9 +1293,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <BarChart data={d?.revenueByCircuit || []} layout="vertical">
                                                     <XAxis type="number" hide />
                                                     <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fill: 'var(--ad-t3)' }} width={90} />
-                                                    <Tooltip contentStyle={ttStyle} formatter={(v: any) => `KES ${Number(v).toLocaleString()}`} />
+                                                    <Tooltip contentStyle={ttStyle} formatter={(v) => `KES ${Number(v).toLocaleString()}`} />
                                                     <Bar dataKey="value" barSize={10} radius={0}>
-                                                        {(d?.revenueByCircuit || []).map((c: any, i: number) => <Cell key={i} fill={c.color} />)}
+                                                        {(d?.revenueByCircuit || []).map((c, i: number) => <Cell key={i} fill={c.color} />)}
                                                     </Bar>
                                                 </BarChart>
                                             </ResponsiveContainer>
@@ -1537,15 +1541,15 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <thead><tr>{['Transaction Code', 'Phone', 'Amount', 'Status', 'Timestamp', 'For'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                 <tbody>
                                                     {(() => {
-                                                        const filteredPayments = paymentsTypeFilter === '' ? payments : payments.filter((p: any) => {
+                                                        const filteredPayments = paymentsTypeFilter === '' ? payments : payments.filter((p) => {
                                                             if (paymentsTypeFilter === 'cycling') return !!p.registrationId;
-                                                            if (paymentsTypeFilter === 'raffle') return p.raffleTicketIds?.length > 0;
+                                                            if (paymentsTypeFilter === 'raffle') return (p.raffleTicketIds?.length ?? 0) > 0;
                                                             if (paymentsTypeFilter === 'donation') return !!p.donationId;
                                                             return true;
                                                         });
                                                         return loading && payments.length === 0 ? <tr><td className="ad-td" colSpan={6} style={{ textAlign: 'center', padding: 40 }}>Loading…</td></tr>
                                                         : filteredPayments.length === 0 ? <tr><td className="ad-td" colSpan={6} style={{ textAlign: 'center', padding: 40 }}>No payments found.</td></tr>
-                                                            : filteredPayments.map((p: any) => (
+                                                            : filteredPayments.map((p) => (
                                                                 <tr key={p.id} className="ad-tr">
                                                                     <td className="ad-td ad-mono">{p.mpesaReceiptNumber || '—'}</td>
                                                                     <td className="ad-td">{p.phone || '—'}</td>
@@ -1643,7 +1647,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <table className="ad-table">
                                                     <thead><tr>{['#', 'Ticket No.', 'Name', 'Email', 'Phone', 'Referral', 'Status', 'Created', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                     <tbody>
-                                                        {raffleTickets.map((t: any, index: number) => (
+                                                        {raffleTickets.map((t, index: number) => (
                                                             <tr key={t.id} className="ad-tr">
                                                                 <td className="ad-td ad-mono" style={{ fontSize: '0.65rem', color: 'var(--ad-t3)' }}>{(rafflePagination.page - 1) * rafflePagination.limit + index + 1}</td>
                                                                 <td className="ad-td ad-mono" style={{ fontWeight: 700, color: 'var(--ad-accent)' }}>{t.ticketNumber || <span style={{ color: 'var(--ad-t3)', fontWeight: 400 }}>Unpaid</span>}</td>
@@ -1859,7 +1863,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <table className="ad-table">
                                                     <thead><tr>{['#', 'Donor', 'Contact Info', 'Amount', 'Status', 'M-Pesa Code', 'Date', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                     <tbody>
-                                                        {donations.map((d: any, index: number) => (
+                                                        {donations.map((d, index: number) => (
                                                             <tr key={d.id} className="ad-tr">
                                                                 <td className="ad-td ad-mono" style={{ opacity: 0.5 }}>{(donationsPagination.page - 1) * donationsPagination.limit + index + 1}</td>
                                                                 <td className="ad-td">
@@ -1956,7 +1960,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                 <thead><tr>{['#', 'Code', 'Influencer', 'Email', 'Phone', 'Clicks', 'Direct', 'Paid', 'Status', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                 <tbody>
                                                     {referrals.length === 0 ? <tr><td className="ad-td" colSpan={10} style={{ textAlign: 'center', padding: 60, color: 'var(--ad-t3)' }}>No referral codes found.</td></tr>
-                                                        : referrals.map((r: any, idx: number) => (
+                                                        : referrals.map((r, idx: number) => (
                                                             <tr key={r.id} className="ad-tr">
                                                                 <td className="ad-td ad-mono" style={{ opacity: 0.5 }}>{(referralsPagination.page - 1) * referralsPagination.limit + idx + 1}</td>
                                                                 <td className="ad-td"><span className="ad-badge ad-badge-paid" style={{ fontSize: '0.85rem', padding: '4px 8px' }}>{r.code}</span></td>
@@ -2014,7 +2018,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 </div>
                                 {loading ? <div style={{ padding: 40, textAlign: 'center', color: 'var(--ad-t3)' }}>Loading…</div>
                                     : Object.keys(groupedCategories).length === 0 ? <div style={{ padding: 40, textAlign: 'center', color: 'var(--ad-t3)' }}>No categories found.</div>
-                                        : Object.entries(groupedCategories).map(([circuitId, cats]: [string, any]) => (
+                                        : Object.entries(groupedCategories).map(([circuitId, cats]) => (
                                             <div key={circuitId} className="ad-panel">
                                                 <div className="ad-panel-head">
                                                     <div className="ad-panel-title">{CIRCUITS.find(c => c.id === circuitId)?.title || circuitId.toUpperCase()}</div>
@@ -2024,7 +2028,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                     <table className="ad-table" style={{ minWidth: 700 }}>
                                                         <thead><tr>{['Category', 'Type', 'Age Range', 'Colour', 'BIB Range', 'Remarks'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                         <tbody>
-                                                            {cats.map((cat: any) => (
+                                                            {cats.map((cat) => (
                                                                 <tr key={cat.id} className="ad-tr">
                                                                     <td className="ad-td" style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{cat.categoryName}</td>
                                                                     <td className="ad-td" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ad-t3)' }}>{cat.type}</td>
@@ -2115,7 +2119,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
 
                 {/* Hidden print containers - kept off-screen for PDF capture */}
                 <div style={{ position: 'fixed', left: '-10000mm', top: 0, pointerEvents: 'none', zIndex: -1000 }}>
-                    {isPrintingRaffle && <AdminRaffleTicketsPrint tickets={(allRaffleTicketsForPrint.length > 0 ? allRaffleTicketsForPrint : raffleTickets).filter(t => t.ticketNumber).map(t => ({ ...t, id: t.ticketNumber }))} />}
+                    {isPrintingRaffle && <AdminRaffleTicketsPrint tickets={(allRaffleTicketsForPrint.length > 0 ? allRaffleTicketsForPrint : raffleTickets).filter(t => t.ticketNumber).map(t => ({ ...t, id: t.ticketNumber ?? '' }))} />}
                 </div>
 
                 {/* ─── Referral Form Modal ─────────────────────────────────────── */}

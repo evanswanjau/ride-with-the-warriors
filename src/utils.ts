@@ -1,4 +1,10 @@
 
+import type { PricingCategory } from './types';
+
+/** Message from an unknown thrown value, with a fallback. */
+export const getErrorMessage = (err: unknown, fallback: string): string =>
+    (err instanceof Error && err.message) || fallback;
+
 export const calculateAge = (dob: string): number | null => {
     if (!dob) return null;
     const birthDate = new Date(dob);
@@ -30,7 +36,7 @@ export interface Classification {
 }
 
 export const getClassification = (
-    categories: any[],
+    categories: PricingCategory[],
     circuitId: string,
     type: string,
     age: number | null = null,

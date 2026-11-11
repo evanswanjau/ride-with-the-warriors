@@ -1,5 +1,8 @@
 import { API_BASE_URL } from './config';
 import { authHeaders } from './auth/session';
+import type { AdminUser, Circuit } from './types';
+import type { AdminRegistration, SummaryStats, Pagination } from './adminTypes';
+import type { Classification } from './utils';
 
 export interface ApiError {
     code: string;
@@ -25,7 +28,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 export const api = {
     async getCircuits() {
         const response = await fetch(`${API_BASE_URL}/circuits`);
-        return handleResponse<{ circuits: any[] }>(response);
+        return handleResponse<{ circuits: Circuit[] }>(response);
     },
 
     async createRegistration(payload: {
@@ -43,23 +46,23 @@ export const api = {
         return handleResponse<{
             registrationId: string;
             status: string;
-            pricing: any;
-            classifications: any;
+            pricing: { totalAmount: number; [key: string]: unknown };
+            classifications: Classification[];
         }>(response);
     },
 
     async getRegistration(id: string) {
         const response = await fetch(`${API_BASE_URL}/registrations/${id}`, { headers: authHeaders() });
-        return handleResponse<{ registration: any }>(response);
+        return handleResponse<{ registration: Record<string, unknown> }>(response);
     },
 
-    async adminLogin(payload: any) {
+    async adminLogin(payload: { email: string; password: string }) {
         const response = await fetch(`${API_BASE_URL}/admin/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        return handleResponse<{ token: string; admin: any }>(response);
+        return handleResponse<{ token: string; admin: AdminUser }>(response);
     },
 
     async adminLogout(token: string) {
@@ -78,20 +81,20 @@ export const api = {
                 'Authorization': `Bearer ${token}`
             }
         });
-        return handleResponse<{ admin: any }>(response);
+        return handleResponse<{ admin: AdminUser }>(response);
     },
 
-    async adminGetRegistrations(token: string, params: any = {}) {
+    async adminGetRegistrations(token: string, params: Record<string, string> = {}) {
         const queryString = new URLSearchParams(params).toString();
         const response = await fetch(`${API_BASE_URL}/admin/registrations?${queryString}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
-        return handleResponse<any>(response);
+        return handleResponse<{ registrations: AdminRegistration[]; pagination?: Pagination }>(response);
     },
 
-    async adminUpdateRegistration(token: string, id: string, payload: any) {
+    async adminUpdateRegistration(token: string, id: string, payload: Partial<AdminRegistration>) {
         const response = await fetch(`${API_BASE_URL}/admin/registrations/${id}`, {
             method: 'PATCH',
             headers: {
@@ -100,7 +103,7 @@ export const api = {
             },
             body: JSON.stringify(payload)
         });
-        return handleResponse<any>(response);
+        return handleResponse<{ registration: AdminRegistration }>(response);
     },
 
     async adminDeleteRegistration(token: string, id: string) {
@@ -119,17 +122,17 @@ export const api = {
                 'Authorization': `Bearer ${token}`
             }
         });
-        return handleResponse<any>(response);
+        return handleResponse<SummaryStats>(response);
     },
 
     async getAllRegistrations() {
         const response = await fetch(`${API_BASE_URL}/admin/registrations`);
-        return handleResponse<{ registrations: any[] }>(response);
+        return handleResponse<{ registrations: AdminRegistration[] }>(response);
     },
 
     async getResults(params: { name?: string; bibNumber?: string } = {}) {
         const queryString = new URLSearchParams(params).toString();
         const response = await fetch(`${API_BASE_URL}/results?${queryString}`);
-        return handleResponse<{ results: any[] }>(response);
+        return handleResponse<{ results: Record<string, unknown>[] }>(response);
     },
 };

@@ -19,5 +19,9 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // Phase 3b: src/ has no `any`; keep it that way.
+      '@typescript-eslint/no-explicit-any': 'error',
+    },
   },
 ])

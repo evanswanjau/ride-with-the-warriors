@@ -9,7 +9,7 @@
  */
 import { defineConfig, devices } from '@playwright/test';
 
-const SERVER_DIR = '../server';
+const SERVER_DIR = process.env.SERVER_DIR ?? '../server';
 
 export default defineConfig({
     testDir: './e2e', // e2e-perf/ has its own config (no API needed)

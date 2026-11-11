@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getErrorMessage } from '../utils';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 
@@ -27,8 +28,8 @@ const NotifyPage = () => {
                 throw new Error(data?.error || 'Something went wrong');
             }
             setStatus('done');
-        } catch (err: any) {
-            setErrorMsg(err.message || 'Something went wrong. Please try again.');
+        } catch (err) {
+            setErrorMsg(getErrorMessage(err, 'Something went wrong. Please try again.'));
             setStatus('error');
         }
     };
