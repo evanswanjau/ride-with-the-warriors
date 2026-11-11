@@ -14,6 +14,7 @@ import fdsaLogo from '../../assets/logos/fdsa-logo.png';
 import Confetti from 'react-confetti';
 import { calculateAge } from '../../utils';
 import { API_BASE_URL } from '../../config';
+import { authHeaders } from '../../auth/session';
 
 interface SuccessPageProps {
     registrationId: string;
@@ -31,11 +32,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
         const handleResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
         window.addEventListener('resize', handleResize);
 
-        fetch(`${API_BASE_URL}/profile/search`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ searchType: 'id', searchValue: registrationId }),
-        })
+        fetch(`${API_BASE_URL}/registrations/${registrationId}`, { headers: authHeaders() })
             .then(res => res.json())
             .then(data => { if (data.registration) setRegistration(data.registration); })
             .catch(console.error);
@@ -44,7 +41,11 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
     }, [registrationId]);
 
     const isTeam = registration?.type === 'team';
-    const members = registration?.payload?.teamDetails?.members || [];
+    const riders: { firstName: string; lastName: string; bibNumber: string | null; isCaptain: boolean; gender: string | null; dob: string | null }[] = registration?.riders || [];
+    const members = isTeam ? riders : [];
+    // Bibs are assigned when payment lands; teams show their shared base number.
+    const primaryBib: string | null = registration?.bibNumber ?? riders[0]?.bibNumber ?? null;
+    const shownBib = primaryBib ? (isTeam ? primaryBib.split('-')[0] : primaryBib) : null;
 
     return (
         <div style={{ overflowX: 'hidden' }}>
@@ -90,7 +91,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
                         <div className="sx-id-top">
                             <div>
                                 <div className="sx-id-top-label">
-                                    {isTeam ? 'Team Registration ID' : 'Your Registration ID'}
+                                    {isTeam ? 'Team Bib Number' : 'Your Bib Number'}
                                 </div>
                             </div>
                             <AiOutlineTrophy className="sx-id-trophy" />
@@ -99,7 +100,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
                         {/* ID number */}
                         <div className="sx-id-body">
                             <AiOutlineBarcode className="sx-id-barcode" />
-                            <span className="sx-id-number">{registrationId}</span>
+                            <span className="sx-id-number">{shownBib ?? 'Assigning…'}</span>
                         </div>
 
                         {/* Perforated separator */}
@@ -127,7 +128,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
                                                         {m.isCaptain && <span className="sx-member-captain">Captain</span>}
                                                     </div>
                                                     <div className="sx-member-reg">
-                                                        {m.regId || `${registrationId}-${idx + 1}`}
+                                                        {m.bibNumber || 'Bib pending'}
                                                     </div>
                                                 </div>
                                                 <div className="sx-member-meta">
@@ -146,7 +147,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
                     <div className="sx-ctas">
                         <button onClick={onViewProfile} className="sx-btn-primary">
                             <AiOutlineIdcard />
-                            View My Full Profile
+                            View My Account
                         </button>
                         <button onClick={onDone} className="sx-btn-ghost">
                             <AiOutlineHome />

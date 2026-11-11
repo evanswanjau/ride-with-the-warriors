@@ -5,6 +5,7 @@ import RaffleDetailsForm from '../components/raffle/RaffleDetailsForm';
 import RaffleReview from '../components/raffle/RaffleReview';
 import ProgressBar from '../components/layout/ProgressBar';
 import { API_BASE_URL } from '../config';
+import { authHeaders } from '../auth/session';
 import { getStoredReferralCode } from '../components/ReferralCapture';
 
 
@@ -71,7 +72,7 @@ const RafflePage = () => {
         try {
             const res = await fetch(`${API_BASE_URL}/raffle`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
                 body: JSON.stringify({
                     firstName: formData.firstName.trim(),
                     lastName: formData.lastName.trim(),

@@ -5,6 +5,7 @@ import RaffleClosedModal from '../common/RaffleClosedModal';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import logoRegular from '../../assets/logos/logo.png';
 import logoWhite from '../../assets/logos/logo_white.png';
+import { useAuth } from '../../context/AuthContext';
 
 /* ─── Theme toggle icon ──────────────────────────────────────────────────── */
 const SunIcon = () => (
@@ -24,6 +25,7 @@ const MoonIcon = () => (
 /* ─── Navbar ─────────────────────────────────────────────────────────────── */
 const Navbar = () => {
     const location = useLocation();
+    const { account } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [showRegModal, setShowRegModal] = useState(false);
@@ -569,6 +571,10 @@ const Navbar = () => {
 
                         <div className="nav-divider" />
 
+                        <Link to={account ? '/account' : '/login'} className="nav-cta black-white">
+                            {account ? 'My Account' : 'Log in'}
+                        </Link>
+
                         {/* CTAs */}
                         <Link to="/feedback" className="nav-cta black-white">Feedback</Link>
                         <Link to="/raffle-winners" className="nav-cta amber" style={{ border: 'none' }}>
@@ -634,6 +640,13 @@ const Navbar = () => {
 
                 {/* CTAs */}
                 <div className="nav-mobile-ctas">
+                    <Link
+                        to={account ? '/account' : '/login'}
+                        className="nav-mobile-cta black-white"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        {account ? 'My Account' : 'Log in'}
+                    </Link>
                     <Link
                         to="/feedback"
                         className="nav-mobile-cta black-white"

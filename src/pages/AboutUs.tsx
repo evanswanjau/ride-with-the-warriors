@@ -1,12 +1,7 @@
 import { Link } from 'react-router-dom';
 import '../styles/about-us.css';
 import { AiOutlineAim, AiOutlineHeart, AiOutlineGlobal, AiOutlineStar } from 'react-icons/ai';
-import storyImage from '../assets/images/gallery/Ride-With-The-Warriors-2025/296A0186-34-min.jpeg';
-import teamImage from '../assets/images/gallery/Ride-With-The-Warriors-2025/296A0075-30-min.jpeg';
-import collageImage1 from '../assets/images/gallery/Ride-With-The-Warriors-2025/collage1.jpeg';
-import collageImage2 from '../assets/images/gallery/Ride-With-The-Warriors-2025/collage2.jpeg';
-import collageImage3 from '../assets/images/gallery/Ride-With-The-Warriors-2025/collage3.jpeg';
-import reconImage from '../assets/images/gallery/Ride-With-The-Warriors-2025/recon-team.jpeg';
+import { ABOUT_HIGHLIGHTS, highlightImgProps } from '../data/highlights';
 import goingGreenImage from '../assets/images/going-green.jpg';
 
 const AboutUs = () => {
@@ -78,12 +73,12 @@ const AboutUs = () => {
                         {/* Mosaic */}
                         <div className="ab-story-mosaic">
                             <div className="ab-img-frame ab-mosaic-main">
-                                <img src={storyImage} alt="RWTW riders in action" />
+                                <img {...highlightImgProps(ABOUT_HIGHLIGHTS.story)} data-testid="about-highlight-img" />
                             </div>
                             <div className="ab-mosaic-row">
-                                {[collageImage1, collageImage2, collageImage3].map((src, i) => (
+                                {ABOUT_HIGHLIGHTS.mosaic.map((h, i) => (
                                     <div key={i} className="ab-img-frame ab-mosaic-thumb">
-                                        <img src={src} alt="RWTW collage" />
+                                        <img {...highlightImgProps(h, '(min-width: 1024px) 15vw, 33vw')} loading="lazy" data-testid="about-highlight-img" />
                                     </div>
                                 ))}
                             </div>
@@ -93,7 +88,7 @@ const AboutUs = () => {
                     {/* ── History ── */}
                     <div className="page-section ab-two-col">
                         <div className="ab-img-frame ab-img-hero">
-                            <img src={reconImage} alt="RWTW history" />
+                            <img {...highlightImgProps(ABOUT_HIGHLIGHTS.history)} loading="lazy" data-testid="about-highlight-img" />
                         </div>
                         <div>
                             <div className="page-label-row">
@@ -193,7 +188,7 @@ const AboutUs = () => {
                             </div>
                         </div>
                         <div className="ab-img-frame ab-img-hero" style={{ order: 1 }}>
-                            <img src={teamImage} alt="KDF Airborne Fraternity" />
+                            <img {...highlightImgProps(ABOUT_HIGHLIGHTS.fraternity)} loading="lazy" data-testid="about-highlight-img" />
                         </div>
                     </div>
 

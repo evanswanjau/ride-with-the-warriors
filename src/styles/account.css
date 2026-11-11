@@ -1,0 +1,119 @@
+/* Participant login + account pages. Uses the site's existing --p-* / --color-* tokens. */
+
+.acct-page {
+    font-family: 'Barlow', sans-serif;
+    background: var(--p-bg, #0a0a0a);
+    color: var(--p-text-1, #fff);
+    min-height: 100vh;
+    padding: 48px 16px 80px;
+    box-sizing: border-box;
+}
+
+.acct-page--center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.acct-wrap { max-width: 480px; width: 100%; margin: 0 auto; }
+.acct-wrap--wide { max-width: 920px; }
+
+.acct-eyebrow {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 0.28em; text-transform: uppercase; color: var(--color-primary-light, #4caf50);
+}
+.acct-eyebrow::before, .acct-eyebrow::after {
+    content: ''; height: 1px; width: 32px; background: var(--color-primary-light, #4caf50); flex-shrink: 0;
+}
+
+.acct-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; line-height: 1.15; margin: 0 0 0.75rem;
+}
+
+.acct-lead { color: var(--p-text-2, rgba(255,255,255,0.58)); font-size: 0.95rem; line-height: 1.7; margin: 0 0 2rem; }
+.acct-muted { color: var(--p-text-2, rgba(255,255,255,0.58)); font-size: 0.85rem; line-height: 1.6; }
+
+.acct-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.acct-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px) { .acct-row { grid-template-columns: 1fr; } }
+
+.acct-label {
+    display: block; margin-bottom: 6px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--p-label, rgba(255,255,255,0.55));
+}
+
+.acct-input {
+    width: 100%; box-sizing: border-box; padding: 13px 16px; font-size: 0.95rem;
+    font-family: 'Barlow', sans-serif; outline: none;
+    background: var(--p-input-bg, #0e0e0e); color: var(--p-text-1, #fff);
+    border: 1px solid var(--p-input-bd, rgba(255,255,255,0.09));
+}
+.acct-input:focus { border-color: var(--color-primary-light, #4caf50); }
+.acct-input--code { font-family: 'Courier New', monospace; font-size: 1.6rem; letter-spacing: 0.5em; text-align: center; }
+
+.acct-error { color: #f87171; font-size: 0.85rem; margin: 0; }
+.acct-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 0.5rem; }
+
+.acct-link {
+    background: none; border: none; padding: 0; cursor: pointer; font: inherit; font-size: 0.85rem;
+    color: var(--color-primary-light, #4caf50); text-decoration: underline;
+}
+.acct-link:disabled { color: var(--p-text-2, rgba(255,255,255,0.4)); cursor: default; text-decoration: none; }
+
+/* Account page */
+.acct-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 2rem; }
+.acct-years { display: flex; gap: 8px; flex-wrap: wrap; }
+.acct-year {
+    padding: 8px 14px; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    letter-spacing: 0.12em; background: transparent; color: var(--p-text-2, rgba(255,255,255,0.6));
+    border: 1px solid var(--p-input-bd, rgba(255,255,255,0.12));
+}
+.acct-year[aria-pressed='true'] { color: #fff; border-color: var(--color-primary-light, #4caf50); background: rgba(45,106,45,0.18); }
+
+.acct-section { margin-bottom: 2.5rem; }
+.acct-section-title {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--p-label, rgba(255,255,255,0.55));
+    border-bottom: 1px solid var(--p-input-bd, rgba(255,255,255,0.09)); padding-bottom: 8px; margin: 0 0 1rem;
+}
+
+.acct-card {
+    border: 1px solid var(--p-input-bd, rgba(255,255,255,0.09)); background: var(--p-card-bg, rgba(255,255,255,0.02));
+    padding: 18px; margin-bottom: 14px;
+}
+.acct-card-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; margin-bottom: 12px; }
+.acct-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin: 0; }
+
+.acct-badge {
+    display: inline-block; padding: 3px 8px; font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem;
+    font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid currentColor;
+}
+.acct-badge--paid { color: var(--color-primary-light, #4caf50); }
+.acct-badge--unpaid { color: var(--color-accent, #f59e0b); }
+.acct-badge--other { color: var(--p-text-2, rgba(255,255,255,0.6)); }
+
+.acct-riders { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.acct-riders th {
+    text-align: left; font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--p-label, rgba(255,255,255,0.5)); font-weight: 700; padding: 6px 8px 6px 0;
+}
+.acct-riders td { padding: 8px 8px 8px 0; border-top: 1px solid var(--p-input-bd, rgba(255,255,255,0.06)); vertical-align: top; }
+.acct-bib { font-family: 'Courier New', monospace; font-weight: 700; font-size: 1.05rem; color: var(--color-primary-light, #4caf50); }
+.acct-bib--pending { font-family: 'Barlow', sans-serif; font-weight: 400; font-size: 0.8rem; color: var(--p-text-2, rgba(255,255,255,0.5)); }
+@media (max-width: 560px) {
+    .acct-riders thead { display: none; }
+    .acct-riders tr { display: grid; grid-template-columns: 1fr auto; padding: 8px 0; border-top: 1px solid var(--p-input-bd, rgba(255,255,255,0.06)); }
+    .acct-riders td { border: none; padding: 2px 0; }
+    .acct-riders td[data-hide-mobile] { display: none; }
+}
+
+.acct-tickets { display: flex; flex-wrap: wrap; gap: 10px; }
+.acct-ticket {
+    border: 1px dashed var(--p-input-bd, rgba(255,255,255,0.18)); padding: 10px 14px; min-width: 120px;
+}
+
+.acct-empty { border: 1px dashed var(--p-input-bd, rgba(255,255,255,0.12)); padding: 24px; text-align: center; }

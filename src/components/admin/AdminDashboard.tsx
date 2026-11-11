@@ -294,7 +294,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             const q = new URLSearchParams({ limit: '10000', ...filter });
             const r = await fetch(`${API_BASE_URL}/admin/registrations?${q}`, { headers: { Authorization: `Bearer ${token}` } });
             const d = await r.json(); if (!d.registrations) return;
-            const ws = XLSX.utils.json_to_sheet(d.registrations.map((r: any) => ({ ID: r.id, Name: `${r.firstName} ${r.lastName}`, Email: r.email, Phone: r.phoneNumber, Team: r.teamName || '', TshirtSize: r.tshirtSize || '', EmergencyContact: r.emergencyContactName || '', EmergencyPhone: r.emergencyPhone || '', Type: r.type, Circuit: r.circuitId, Category: r.category, Amount: r.totalAmount, MpesaCode: r.mpesaCode || '', Status: r.status, Date: new Date(r.createdAt).toLocaleString() })));
+            const ws = XLSX.utils.json_to_sheet(d.registrations.map((r: any) => ({ Bib: r.bibNumber || '', Ref: r.id, Name: `${r.firstName} ${r.lastName}`, Email: r.email, Phone: r.phoneNumber, Team: r.teamName || '', TshirtSize: r.tshirtSize || '', EmergencyContact: r.emergencyContactName || '', EmergencyPhone: r.emergencyPhone || '', Type: r.type, Circuit: r.circuitId, Category: r.category, Amount: r.totalAmount, MpesaCode: r.mpesaCode || '', Status: r.status, Date: new Date(r.createdAt).toLocaleString() })));
             const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Registrations'); XLSX.writeFile(wb, 'Registrations.xlsx');
         } catch { alert('Export failed'); }
     };
@@ -318,7 +318,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
             const r = await fetch(`${API_BASE_URL}/admin/raffle?${p}`, { headers: { Authorization: `Bearer ${token}` } });
             const d = await r.json(); const list = d.tickets || [];
             if (!list.length) return alert('No tickets found to export');
-            const rows = list.map((t: any) => ({ TicketID: t.id, Name: `${t.firstName} ${t.lastName}`, Email: t.email || '', Phone: t.phoneNumber || '', Referral: t.referralCode || 'Direct', Status: t.status, CreatedAt: new Date(t.createdAt).toLocaleString() }));
+            const rows = list.map((t: any) => ({ TicketNumber: t.ticketNumber || '', Ref: t.id, Name: `${t.firstName} ${t.lastName}`, Email: t.email || '', Phone: t.phoneNumber || '', Referral: t.referralCode || 'Direct', Status: t.status, CreatedAt: new Date(t.createdAt).toLocaleString() }));
             const ws = XLSX.utils.json_to_sheet(rows);
             const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'RaffleTickets'); XLSX.writeFile(wb, 'Raffle_Tickets.xlsx');
         } catch { alert('Export failed'); }
@@ -508,8 +508,9 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
     };
 
     const getBibRegistrationData = (regsToUse: any[] = registrations) => {
-        const data = regsToUse.map(reg => ({
-            id: reg.id,
+        // Bibs exist only once a registration is paid (or complementary).
+        const data = regsToUse.filter(reg => reg.bibNumber).map(reg => ({
+            id: reg.bibNumber as string,
             firstName: reg.firstName,
             lastName: reg.lastName,
             category: reg.category,
@@ -1408,7 +1409,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                             <table className="ad-table">
                                                 <thead>
                                                     <tr>
-                                                        {['Pass ID', 'Participant', 'Circuit / Category', 'Amount', 'Status', 'Registered', 'Actions'].map(h => (
+                                                        {['Bib', 'Participant', 'Circuit / Category', 'Amount', 'Status', 'Registered', 'Actions'].map(h => (
                                                             <th key={h} className="ad-th">{h}</th>
                                                         ))}
                                                     </tr>
@@ -1420,7 +1421,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                         <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>No registrations found.</td></tr>
                                                     ) : registrations.map(reg => (
                                                         <tr key={reg.id} className="ad-tr">
-                                                            <td className="ad-td ad-mono">{reg.id}</td>
+                                                            <td className="ad-td ad-mono">{reg.bibNumber || <span style={{ color: 'var(--ad-t3)' }}>Unpaid</span>}</td>
                                                             <td className="ad-td">
                                                                 <div style={{ fontWeight: 700, color: 'var(--ad-t1)' }}>{cap(reg.firstName)} {cap(reg.lastName)}</div>
                                                                 {reg.teamName && <div style={{ fontSize: '0.72rem', color: 'var(--ad-t3)', fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 2 }}>Team: {reg.teamName}</div>}
@@ -1533,7 +1534,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         )}
                                         <div className="ad-table-wrap">
                                             <table className="ad-table">
-                                                <thead><tr>{['Transaction Code', 'Phone', 'Amount', 'Status', 'Timestamp', 'Context / ID', 'Link'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                <thead><tr>{['Transaction Code', 'Phone', 'Amount', 'Status', 'Timestamp', 'For'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                 <tbody>
                                                     {(() => {
                                                         const filteredPayments = paymentsTypeFilter === '' ? payments : payments.filter((p: any) => {
@@ -1542,8 +1543,8 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                             if (paymentsTypeFilter === 'donation') return !!p.donationId;
                                                             return true;
                                                         });
-                                                        return loading && payments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>Loading…</td></tr>
-                                                        : filteredPayments.length === 0 ? <tr><td className="ad-td" colSpan={7} style={{ textAlign: 'center', padding: 40 }}>No payments found.</td></tr>
+                                                        return loading && payments.length === 0 ? <tr><td className="ad-td" colSpan={6} style={{ textAlign: 'center', padding: 40 }}>Loading…</td></tr>
+                                                        : filteredPayments.length === 0 ? <tr><td className="ad-td" colSpan={6} style={{ textAlign: 'center', padding: 40 }}>No payments found.</td></tr>
                                                             : filteredPayments.map((p: any) => (
                                                                 <tr key={p.id} className="ad-tr">
                                                                     <td className="ad-td ad-mono">{p.mpesaReceiptNumber || '—'}</td>
@@ -1552,14 +1553,10 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                                                     <td className="ad-td"><span className={`ad-badge ad-badge-${p.status.toLowerCase()}`}>{p.status}</span></td>
                                                                     <td className="ad-td ad-mono" style={{ fontSize: '0.72rem' }}>{p.transactionDate ? String(p.transactionDate).slice(0, 8) : formatDate(p.createdAt)}</td>
                                                                     <td className="ad-td ad-mono" style={{ fontSize: '0.65rem' }}>
-                                                                        {p.registrationId ? `Cycling: ${p.registrationId}` :
-                                                                            (p.raffleTicketIds && p.raffleTicketIds.length > 0) ? `Raffle: ${p.raffleTicketIds[0]}${p.raffleTicketIds.length > 1 ? '...' : ''}` :
-                                                                                p.donationId ? `Donation: ${p.donationId.slice(0, 8)}...` : '—'}
-                                                                    </td>
-                                                                    <td className="ad-td">
-                                                                        {p.registrationId && <a href={`${SITE_URL}/profile/${p.registrationId}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-pl)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>View &rarr;</a>}
-                                                                        {(p.raffleTicketIds && p.raffleTicketIds.length > 0) && <a href={`${SITE_URL}/raffle/profile/${p.raffleTicketIds[0]}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ad-accent)', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', textDecoration: 'none' }}>Tix &rarr;</a>}
-                                                                        {p.donationId && <span style={{ color: 'var(--ad-t3)', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase' }}>Donation</span>}
+                                                                        {p.bikeHireId ? `Bike hire${p.bibNumber ? ` · Bib ${p.bibNumber}` : ''}` :
+                                                                            p.registrationId ? `Cycling · ${p.bibNumber ? `Bib ${p.bibNumber}` : 'no bib yet'}` :
+                                                                            (p.raffleTicketIds && p.raffleTicketIds.length > 0) ? `Raffle · ${p.ticketNumbers?.length ? p.ticketNumbers.join(', ') : `${p.raffleTicketIds.length} unnumbered`}` :
+                                                                                p.donationId ? 'Donation' : '—'}
                                                                     </td>
                                                                 </tr>
                                                             ));
@@ -1644,12 +1641,12 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                         ) : (
                                             <div className="ad-table-wrap">
                                                 <table className="ad-table">
-                                                    <thead><tr>{['#', 'Ticket ID', 'Name', 'Email', 'Phone', 'Referral', 'Status', 'Created', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
+                                                    <thead><tr>{['#', 'Ticket No.', 'Name', 'Email', 'Phone', 'Referral', 'Status', 'Created', 'Actions'].map(h => <th key={h} className="ad-th">{h}</th>)}</tr></thead>
                                                     <tbody>
                                                         {raffleTickets.map((t: any, index: number) => (
                                                             <tr key={t.id} className="ad-tr">
                                                                 <td className="ad-td ad-mono" style={{ fontSize: '0.65rem', color: 'var(--ad-t3)' }}>{(rafflePagination.page - 1) * rafflePagination.limit + index + 1}</td>
-                                                                <td className="ad-td ad-mono" style={{ fontWeight: 700, color: 'var(--ad-accent)' }}>{t.id}</td>
+                                                                <td className="ad-td ad-mono" style={{ fontWeight: 700, color: 'var(--ad-accent)' }}>{t.ticketNumber || <span style={{ color: 'var(--ad-t3)', fontWeight: 400 }}>Unpaid</span>}</td>
                                                                 <td className="ad-td" style={{ fontWeight: 600 }}>{cap(t.firstName)} {cap(t.lastName)}</td>
                                                                 <td className="ad-td" style={{ fontSize: '0.75rem' }}>{t.email || '—'}</td>
                                                                 <td className="ad-td ad-mono" style={{ fontSize: '0.75rem' }}>{t.phoneNumber || '—'}</td>
@@ -2069,7 +2066,7 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                             </div>
                             <div className="ad-drawer-body">
                                 {isRaffleDetailsOpen && selectedRaffleTicket && [
-                                    { label: 'Ticket ID', val: selectedRaffleTicket.id, mono: true },
+                                    { label: 'Ticket No.', val: selectedRaffleTicket.ticketNumber || 'Assigned after payment', mono: true },
                                     { label: 'Name', val: `${cap(selectedRaffleTicket.firstName)} ${cap(selectedRaffleTicket.lastName)}` },
                                     { label: 'Email', val: selectedRaffleTicket.email || '—' },
                                     { label: 'Phone', val: selectedRaffleTicket.phoneNumber || '—' },
@@ -2085,7 +2082,8 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                 ))}
 
                                 {isDetailsOpen && selectedRegistration && [
-                                    { label: 'Pass ID', val: selectedRegistration.id, mono: true },
+                                    { label: 'Bib', val: selectedRegistration.bibNumber || 'Assigned after payment', mono: true },
+                                    { label: 'Reference', val: selectedRegistration.id, mono: true },
                                     { label: 'Name', val: `${cap(selectedRegistration.firstName)} ${cap(selectedRegistration.lastName)}` },
                                     { label: 'Military Status', val: selectedRegistration.isMilitary ? 'Yes' : 'No' },
                                     ...(selectedRegistration.isMilitary ? [
@@ -2111,24 +2109,13 @@ const AdminDashboard = ({ token, admin, onLogout }: AdminDashboardProps) => {
                                     </div>
                                 ))}
                             </div>
-                            <div className="ad-drawer-actions">
-                                {isRaffleDetailsOpen && selectedRaffleTicket && (
-                                    <a href={`${SITE_URL}/raffle/profile/${selectedRaffleTicket.id}`} target="_blank" rel="noreferrer" className="ad-drawer-link-primary">Open Full Profile &rarr;</a>
-                                )}
-                                {isDetailsOpen && selectedRegistration && (
-                                    <>
-                                        <a href={`${SITE_URL}/profile/${selectedRegistration.id}`} target="_blank" rel="noreferrer" className="ad-drawer-link-primary">Open Full Profile &rarr;</a>
-                                        <a href={`${SITE_URL}/payment/${selectedRegistration.id}`} className="ad-drawer-link-ghost">Go to Payment</a>
-                                    </>
-                                )}
-                            </div>
                         </aside>
                     </>
                 )}
 
                 {/* Hidden print containers - kept off-screen for PDF capture */}
                 <div style={{ position: 'fixed', left: '-10000mm', top: 0, pointerEvents: 'none', zIndex: -1000 }}>
-                    {isPrintingRaffle && <AdminRaffleTicketsPrint tickets={allRaffleTicketsForPrint.length > 0 ? allRaffleTicketsForPrint : raffleTickets} />}
+                    {isPrintingRaffle && <AdminRaffleTicketsPrint tickets={(allRaffleTicketsForPrint.length > 0 ? allRaffleTicketsForPrint : raffleTickets).filter(t => t.ticketNumber).map(t => ({ ...t, id: t.ticketNumber }))} />}
                 </div>
 
                 {/* ─── Referral Form Modal ─────────────────────────────────────── */}

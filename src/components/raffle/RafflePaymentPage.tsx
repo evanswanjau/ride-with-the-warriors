@@ -8,6 +8,7 @@ import {
     AiOutlineWarning,
 } from 'react-icons/ai';
 import { API_BASE_URL } from '../../config';
+import { authHeaders } from '../../auth/session';
 
 interface RafflePaymentPageProps {
     ticketId: string;
@@ -47,7 +48,7 @@ const RafflePaymentPage = ({ ticketId, ticketIds, firstName, lastName, amount, p
                 return;
             }
             try {
-                const res = await fetch(`${API_BASE_URL}/raffle/${id}`);
+                const res = await fetch(`${API_BASE_URL}/raffle/${id}`, { headers: authHeaders() });
                 if (res.ok) {
                     const data = await res.json();
                     const t = data.ticket;
@@ -77,7 +78,7 @@ const RafflePaymentPage = ({ ticketId, ticketIds, firstName, lastName, amount, p
         try {
             const response = await fetch(`${API_BASE_URL}/raffle/pay/stk-push`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
                 body: JSON.stringify({ ticketIds, phoneNumber: formatted }),
             });
             const data = await response.json();
@@ -86,7 +87,7 @@ const RafflePaymentPage = ({ ticketId, ticketIds, firstName, lastName, amount, p
                 setIsProcessing(false);
                 startPolling(ticketId);
             } else {
-                setError(data.message || 'STK Push failed. Please try again.');
+                setError(data.error?.message || data.message || 'STK Push failed. Please try again.');
                 setIsProcessing(false);
             }
         } catch {

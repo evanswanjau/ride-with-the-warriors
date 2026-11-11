@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import { AiOutlineHeart, AiOutlineWarning, AiOutlineCheckCircle } from 'react-icons/ai';
 import { API_BASE_URL } from '../config';
+import { authHeaders } from '../auth/session';
 import '../styles/home.css';
 
 function formatKenyanPhone(raw: string): string {
@@ -151,7 +152,7 @@ const DonatePage = () => {
             // 1. Create Donation Record
             const res = await fetch(`${API_BASE_URL}/donations`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
                 body: JSON.stringify({ amount: finalAmount, name, email, phone: formattedPhone }),
             });
             const data = await res.json();

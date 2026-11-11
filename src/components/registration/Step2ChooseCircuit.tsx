@@ -2,18 +2,15 @@ import '../../styles/registration/Step2ChooseCircuit.css';
 import { useRef } from 'react';
 import CircuitCard from "./CircuitCard";
 import { CIRCUITS } from "../../constants";
-import blitzImage from "../../assets/images/blitz.jpeg";
-import intermediateImage from "../../assets/images/recon.jpeg";
-import corporateImage from "../../assets/images/corporate.jpeg";
-import familyImage from "../../assets/images/family.jpeg";
+import { CIRCUIT_HIGHLIGHTS } from "../../data/highlights";
 import RegistrationStepLayout from "./ui/RegistrationStepLayout";
 import { useRegistration } from '../../context/RegistrationContext';
 
 const CIRCUIT_IMAGES: Record<string, string> = {
-    blitz: blitzImage,
-    recon: intermediateImage,
-    corporate: corporateImage,
-    family: familyImage,
+    blitz: CIRCUIT_HIGHLIGHTS.blitz.src,
+    recon: CIRCUIT_HIGHLIGHTS.recon.src,
+    corporate: CIRCUIT_HIGHLIGHTS.corporate.src,
+    family: CIRCUIT_HIGHLIGHTS.family.src,
 };
 
 interface Step2ChooseCircuitProps {
