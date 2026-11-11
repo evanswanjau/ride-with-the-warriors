@@ -24,7 +24,15 @@ const FeedbackPage = lazy(() => import('./pages/FeedbackPage'));
 const PaymentPage = lazy(() => import('./pages/PaymentPage'));
 const SuccessPage = lazy(() => import('./pages/SuccessPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
-const AccountPage = lazy(() => import('./pages/AccountPage'));
+// Rider portal (/account/*)
+const PortalLayout = lazy(() => import('./portal/PortalLayout'));
+const HomeScreen = lazy(() => import('./portal/screens/HomeScreen'));
+const EntriesScreen = lazy(() => import('./portal/screens/EntriesScreen'));
+const EntryScreen = lazy(() => import('./portal/screens/EntryScreen'));
+const RidersScreen = lazy(() => import('./portal/screens/RidersScreen'));
+const RiderScreen = lazy(() => import('./portal/screens/RiderScreen'));
+const TicketsScreen = lazy(() => import('./portal/screens/TicketsScreen'));
+const ProfileScreen = lazy(() => import('./portal/screens/ProfileScreen'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 const RaffleClosedPage = lazy(() => import('./pages/RaffleClosedPage'));
 const RaffleSuccessPage = lazy(() => import('./pages/RaffleSuccessPage'));
@@ -68,7 +76,16 @@ const App = () => {
 
         {/* Participant accounts */}
         <Route path="/login" element={<Layout isFullWidth><LoginPage /></Layout>} />
-        <Route path="/account" element={<Layout isFullWidth><RequireAuth><AccountPage /></RequireAuth></Layout>} />
+        <Route path="/account" element={<RequireAuth><PortalLayout /></RequireAuth>}>
+          <Route index element={<HomeScreen />} />
+          <Route path="entries" element={<EntriesScreen />} />
+          <Route path="entries/:groupId" element={<EntryScreen />} />
+          <Route path="riders" element={<RidersScreen />} />
+          <Route path="riders/:riderId" element={<RiderScreen />} />
+          <Route path="tickets" element={<TicketsScreen />} />
+          <Route path="profile" element={<ProfileScreen />} />
+          <Route path="*" element={<Navigate to="/account" replace />} />
+        </Route>
 
         {/* Registration Flow — closed; redirect all register paths to closed page.
             When it reopens, wrap the flow in <RequireAuth> (the API requires login). */}
