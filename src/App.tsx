@@ -1,41 +1,47 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { RegistrationProvider, useRegistration } from './context/RegistrationContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
-import AboutUs from './pages/AboutUs';
-import Circuits from './pages/Circuits';
-import ContactUs from './pages/ContactUs';
-import Gallery from './pages/Gallery';
-import Faqs from './pages/Faqs';
-import TermsPage from './pages/TermsPage';
-import PrivacyPage from './pages/PrivacyPage';
-import RegistrationClosedPage from './pages/RegistrationClosedPage';
-import NotifyPage from './pages/NotifyPage';
-import FeedbackPage from './pages/FeedbackPage';
-import PaymentPage from './pages/PaymentPage';
-import SuccessPage from './pages/SuccessPage';
-import LoginPage from './pages/LoginPage';
-import PortalLayout from './portal/PortalLayout';
-import HomeScreen from './portal/screens/HomeScreen';
-import EntriesScreen from './portal/screens/EntriesScreen';
-import EntryScreen from './portal/screens/EntryScreen';
-import RidersScreen from './portal/screens/RidersScreen';
-import RiderScreen from './portal/screens/RiderScreen';
-import TicketsScreen from './portal/screens/TicketsScreen';
-import ProfileScreen from './portal/screens/ProfileScreen';
 import RequireAuth from './components/auth/RequireAuth';
-import AdminPage from './pages/AdminPage';
-import RaffleClosedPage from './pages/RaffleClosedPage';
-import RaffleSuccessPage from './pages/RaffleSuccessPage';
-import RafflePaymentPageRoute from './pages/RafflePaymentPageRoute';
-import DonatePage from './pages/DonatePage';
-import ResultsPage from './pages/ResultsPage';
-import RaffleWinnersPage from './pages/RaffleWinnersPage';
 
 import ScrollToTop from './utils/ScrollToTop';
 import PageTitle from './utils/PageTitle';
 import ReferralCapture from './components/ReferralCapture';
+
+// Everything except the homepage loads on demand, so visitors only download
+// the code (and heavy libraries such as recharts/xlsx/jspdf) for pages they open.
+const AboutUs = lazy(() => import('./pages/AboutUs'));
+const Circuits = lazy(() => import('./pages/Circuits'));
+const ContactUs = lazy(() => import('./pages/ContactUs'));
+const Gallery = lazy(() => import('./pages/Gallery'));
+const Faqs = lazy(() => import('./pages/Faqs'));
+const TermsPage = lazy(() => import('./pages/TermsPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const RegistrationClosedPage = lazy(() => import('./pages/RegistrationClosedPage'));
+const NotifyPage = lazy(() => import('./pages/NotifyPage'));
+const FeedbackPage = lazy(() => import('./pages/FeedbackPage'));
+const PaymentPage = lazy(() => import('./pages/PaymentPage'));
+const SuccessPage = lazy(() => import('./pages/SuccessPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+// Rider portal (/account/*)
+const PortalLayout = lazy(() => import('./portal/PortalLayout'));
+const HomeScreen = lazy(() => import('./portal/screens/HomeScreen'));
+const EntriesScreen = lazy(() => import('./portal/screens/EntriesScreen'));
+const EntryScreen = lazy(() => import('./portal/screens/EntryScreen'));
+const RidersScreen = lazy(() => import('./portal/screens/RidersScreen'));
+const RiderScreen = lazy(() => import('./portal/screens/RiderScreen'));
+const TicketsScreen = lazy(() => import('./portal/screens/TicketsScreen'));
+const ProfileScreen = lazy(() => import('./portal/screens/ProfileScreen'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
+const RaffleClosedPage = lazy(() => import('./pages/RaffleClosedPage'));
+const RaffleSuccessPage = lazy(() => import('./pages/RaffleSuccessPage'));
+const RafflePaymentPageRoute = lazy(() => import('./pages/RafflePaymentPageRoute'));
+const DonatePage = lazy(() => import('./pages/DonatePage'));
+const ResultsPage = lazy(() => import('./pages/ResultsPage'));
+const RaffleWinnersPage = lazy(() => import('./pages/RaffleWinnersPage'));
+
+const RouteFallback = () => <div className="min-h-screen" role="status" aria-label="Loading" />;
 
 const MilitaryRedirect = () => {
   const { setIsMilitary } = useRegistration();
@@ -53,6 +59,7 @@ const App = () => {
       <ScrollToTop />
       <PageTitle />
       <ReferralCapture />
+      <Suspense fallback={<RouteFallback />}>
       <Routes>
         {/* Public Pages */}
         <Route path="/" element={<Layout isFullWidth><HomePage /></Layout>} />
@@ -109,6 +116,7 @@ const App = () => {
         {/* Admin */}
         <Route path="/admin/*" element={<AdminPage />} />
       </Routes>
+      </Suspense>
     </RegistrationProvider>
   );
 };

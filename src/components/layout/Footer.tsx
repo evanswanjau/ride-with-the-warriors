@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logo from '../../assets/logos/logo.png';
+import logo from '../../assets/logos/web/logo-sm.webp';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -308,7 +308,7 @@ const Footer = () => {
                     {/* ── Brand ── */}
                     <div className="footer-brand">
                         <Link to="/" className="footer-logo">
-                            <img src={logo} alt="RWTW" />
+                            <img src={logo} alt="RWTW" width={48} height={50} loading="lazy" decoding="async" />
                             <span className="footer-logo-text">
                                 Ride With The Warriors
                                 <span className="footer-logo-sub">KDF • Airborne Fraternity</span>

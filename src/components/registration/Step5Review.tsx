@@ -3,15 +3,19 @@ import { useState } from 'react';
 import { CIRCUITS } from '../../constants';
 import type { RiderDetails, TeamDetails, FamilyDetails } from '../../types';
 import { getClassification, calculateAge, getContrastText } from '../../utils';
-import blitzIndividual from '../../assets/images/gallery/Ride-With-The-Warriors-2025/blitz-individual.jpeg';
-import blitzTeam from '../../assets/images/gallery/Ride-With-The-Warriors-2025/blitz-team.jpeg';
-import reconIndividual from '../../assets/images/gallery/Ride-With-The-Warriors-2025/recon-individual.jpeg';
-import reconTeam from '../../assets/images/gallery/Ride-With-The-Warriors-2025/recon-team.jpeg';
-import corporateIndividual from '../../assets/images/gallery/Ride-With-The-Warriors-2025/corporate-individual.jpeg';
-import corporateTeam from '../../assets/images/gallery/Ride-With-The-Warriors-2025/corporate-team.jpeg';
-import familyImage from '../../assets/images/family.jpeg';
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
 import { useRegistration } from '../../context/RegistrationContext';
+
+import { cldUrl, galleryImage, siteImage } from '../../utils/cloudinary';
+
+/** Registration card photos (Cloudinary, sized for a 600px card). */
+const blitzIndividual = cldUrl(galleryImage('rwtw/2025/ride-with-the-warriors-2025/blitz-individual').publicId, 800);
+const blitzTeam = cldUrl(galleryImage('rwtw/2025/ride-with-the-warriors-2025/blitz-team').publicId, 800);
+const reconIndividual = cldUrl(galleryImage('rwtw/2025/ride-with-the-warriors-2025/recon-individual').publicId, 800);
+const reconTeam = cldUrl(galleryImage('rwtw/2025/ride-with-the-warriors-2025/recon-team').publicId, 800);
+const corporateIndividual = cldUrl(galleryImage('rwtw/2025/ride-with-the-warriors-2025/corporate-individual').publicId, 800);
+const corporateTeam = cldUrl(galleryImage('rwtw/2025/ride-with-the-warriors-2025/corporate-team').publicId, 800);
+const familyImage = cldUrl(siteImage('family').publicId, 800);
 
 /* ── Icons ────────────────────────────────────────────────────────────── */
 const ArrowLeft = () => (

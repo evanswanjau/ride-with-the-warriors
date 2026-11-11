@@ -1,8 +1,9 @@
+import { Suspense } from 'react';
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import { LuHouse, LuFlag, LuUsers, LuTicket, LuUser, LuWifiOff, LuArrowLeft, LuSmartphone } from 'react-icons/lu';
 import { PortalDataProvider, usePortalData } from './PortalData';
 import { useInstallAction } from './InstallCard';
-import logo from '../assets/logos/logo_white.png';
+import logo from '../assets/logos/web/logo_white.webp';
 import '../styles/portal.css';
 
 const TABS = [
@@ -58,7 +59,7 @@ const PortalLayout = () => (
             <Rail />
             <div className="rp-main">
                 <OfflineBanner />
-                <Outlet />
+                <Suspense fallback={<p className="rp-muted" role="status" style={{ padding: 16 }}>Loading…</p>}><Outlet /></Suspense>
             </div>
             <nav className="rp-tabbar" aria-label="Account">
                 {TABS.map(t => (

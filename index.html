@@ -20,18 +20,29 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="canonical" href="https://airbornefraternity.org/" />
 
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HY5HLFK1QL"></script>
+  <!-- Google Analytics: page view queued now; gtag.js is fetched on the first interaction or
+       5 s after load, whichever comes first, so it stays off the critical path. -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-HY5HLFK1QL');
+    (function () {
+      var started = false;
+      var events = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
+      function start() {
+        if (started) return;
+        started = true;
+        events.forEach(function (e) { window.removeEventListener(e, start); });
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-HY5HLFK1QL';
+        document.head.appendChild(s);
+      }
+      events.forEach(function (e) { window.addEventListener(e, start, { once: true, passive: true }); });
+      window.addEventListener('load', function () { setTimeout(start, 5000); });
+    })();
   </script>
-  <link href="https://fonts.googleapis.com" rel="preconnect" />
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&amp;display=swap"
-    rel="stylesheet" />
 </head>
 
 <body>

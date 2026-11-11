@@ -24,6 +24,8 @@ test.describe('Terms and conditions', () => {
 
     test('numbers every clause in order', async ({ page }) => {
         await page.goto('/terms-and-conditions');
+        // The page is lazy-loaded: wait for it to render before reading the list.
+        await expect(page.locator('.terms-number').first()).toBeVisible();
         const numbers = await page.locator('.terms-number').allTextContents();
         expect(numbers).toEqual(Array.from({ length: numbers.length }, (_, i) => String(i + 1).padStart(2, '0')));
         expect(numbers.length).toBe(11);
