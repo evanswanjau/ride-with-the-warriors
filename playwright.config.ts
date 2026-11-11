@@ -27,7 +27,7 @@ export default defineConfig({
     },
     projects: [
         { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
-        { name: 'mobile', use: { ...devices['Pixel 7'] }, testMatch: /smoke\.spec\.ts/ },
+        { name: 'mobile', use: { ...devices['Pixel 7'] }, testMatch: /(smoke|portal)\.spec\.ts/ },
     ],
     webServer: [
         {

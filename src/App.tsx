@@ -16,7 +16,14 @@ import FeedbackPage from './pages/FeedbackPage';
 import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
 import LoginPage from './pages/LoginPage';
-import AccountPage from './pages/AccountPage';
+import PortalLayout from './portal/PortalLayout';
+import HomeScreen from './portal/screens/HomeScreen';
+import EntriesScreen from './portal/screens/EntriesScreen';
+import EntryScreen from './portal/screens/EntryScreen';
+import RidersScreen from './portal/screens/RidersScreen';
+import RiderScreen from './portal/screens/RiderScreen';
+import TicketsScreen from './portal/screens/TicketsScreen';
+import ProfileScreen from './portal/screens/ProfileScreen';
 import RequireAuth from './components/auth/RequireAuth';
 import AdminPage from './pages/AdminPage';
 import RaffleClosedPage from './pages/RaffleClosedPage';
@@ -62,7 +69,16 @@ const App = () => {
 
         {/* Participant accounts */}
         <Route path="/login" element={<Layout isFullWidth><LoginPage /></Layout>} />
-        <Route path="/account" element={<Layout isFullWidth><RequireAuth><AccountPage /></RequireAuth></Layout>} />
+        <Route path="/account" element={<RequireAuth><PortalLayout /></RequireAuth>}>
+          <Route index element={<HomeScreen />} />
+          <Route path="entries" element={<EntriesScreen />} />
+          <Route path="entries/:groupId" element={<EntryScreen />} />
+          <Route path="riders" element={<RidersScreen />} />
+          <Route path="riders/:riderId" element={<RiderScreen />} />
+          <Route path="tickets" element={<TicketsScreen />} />
+          <Route path="profile" element={<ProfileScreen />} />
+          <Route path="*" element={<Navigate to="/account" replace />} />
+        </Route>
 
         {/* Registration Flow — closed; redirect all register paths to closed page.
             When it reopens, wrap the flow in <RequireAuth> (the API requires login). */}
