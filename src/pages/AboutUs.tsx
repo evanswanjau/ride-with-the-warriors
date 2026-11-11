@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import '../styles/about-us.css';
 import { AiOutlineAim, AiOutlineHeart, AiOutlineGlobal, AiOutlineStar } from 'react-icons/ai';
 import { ABOUT_HIGHLIGHTS, highlightImgProps } from '../data/highlights';
-import goingGreenImage from '../assets/images/going-green.jpg';
+import { cldImgProps, siteImage } from '../utils/cloudinary';
 
 const AboutUs = () => {
     const pillars = [
@@ -207,7 +207,7 @@ const AboutUs = () => {
                             </p>
                         </div>
                         <div className="ab-img-frame ab-img-hero">
-                            <img src={goingGreenImage} alt="Going Green Initiative" />
+                            <img {...cldImgProps(siteImage('going-green'), 800)} sizes="(min-width: 1024px) 40vw, 100vw" loading="lazy" alt="Going Green Initiative" />
                         </div>
                     </div>
 

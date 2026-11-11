@@ -12,7 +12,7 @@ import { defineConfig, devices } from '@playwright/test';
 const SERVER_DIR = '../server';
 
 export default defineConfig({
-    testDir: './e2e',
+    testDir: './e2e', // e2e-perf/ has its own config (no API needed)
     globalSetup: './e2e/global-setup.ts',
     fullyParallel: false,
     workers: 1,

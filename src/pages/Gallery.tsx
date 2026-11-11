@@ -5,9 +5,6 @@ import { API_BASE_URL } from '../config';
 // API has no gallery endpoint. The API list (when available) replaces it.
 import hostedManifest from '../assets/gallery-hosted.json';
 
-// Dynamically import all images from assets/images/gallery
-const imageModules = import.meta.glob('../assets/images/gallery/**/*.{jpeg,jpg,png,svg,webp}', { eager: true });
-
 /* ─── Lightbox ────────────────────────────────────────────────────────────── */
 interface GalleryImage { url: string; thumb: string; title: string; category: string; }
 
@@ -74,31 +71,12 @@ const Gallery = () => {
         return () => { cancelled = true; };
     }, []);
 
-    // Process all images and group by category
-    const bundledImages: GalleryImage[] = Object.entries(imageModules).map(([path, module]) => {
-        const parts = path.split('/');
-        const filename = parts.pop() || '';
-        const categoryDir = parts.pop() || 'Other';
-        const displayCategory = categoryDir.replace(/-/g, ' ');
-        const title = filename
-            .replace(/\.[^/.]+$/, '')
-            .replace(/[-_]/g, ' ')
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-        const url = (module as { default: string }).default;
-        return { url, thumb: url, title, category: displayCategory };
-    });
-    // Hosted albums first (newest year first), then photos bundled with the site.
-    const allImages: GalleryImage[] = [...hostedImages, ...bundledImages];
+    const allImages: GalleryImage[] = hostedImages;
 
     const categories = Array.from(new Set(allImages.map(img => img.category))).sort((a, b) => {
         // Newest hosted event albums first
         const ya = a.match(/^RWTW (\d{4})/)?.[1], yb = b.match(/^RWTW (\d{4})/)?.[1];
         if (ya || yb) return (Number(yb) || 0) - (Number(ya) || 0) || a.localeCompare(b);
-        // Then prioritize Registration Drive Launch
-        if (a.toLowerCase().includes('registration')) return -1;
-        if (b.toLowerCase().includes('registration')) return 1;
         return a.localeCompare(b);
     });
 
@@ -106,9 +84,8 @@ const Gallery = () => {
     // hosted albums that arrive after the first render.
     const currentCategory = categories.includes(activeCategory) ? activeCategory : (categories[0] ?? '');
 
-    // Hosted albums keep their upload order; bundled photos sort by title.
+    // Albums keep their upload order.
     const filteredImages = allImages.filter(img => img.category === currentCategory);
-    if (!currentCategory.startsWith('RWTW ')) filteredImages.sort((a, b) => a.title.localeCompare(b.title));
 
     const openLightbox = (idx: number) => setLightboxIndex(idx);
     const closeLightbox = () => setLightboxIndex(null);
