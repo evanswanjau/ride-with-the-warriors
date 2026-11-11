@@ -41,3 +41,41 @@ test('gallery lists 2025 albums from Cloudinary', async ({ page }) => {
     expect(urls.filter((u) => /\.jpe?g(\?|$)/i.test(u) && u.startsWith('http://localhost'))).toEqual([]);
     await expect(page.getByText(/RWTW 2025/).first()).toBeVisible();
 });
+
+test('homepage logos are small, resized images', async ({ page }) => {
+    const sizes: { url: string; bytes: number }[] = [];
+    page.on('response', async (r) => {
+        const url = r.url();
+        if (url.startsWith('http://localhost') && r.request().resourceType() === 'image') {
+            const body = await r.body().catch(() => Buffer.alloc(0));
+            sizes.push({ url, bytes: body.length });
+        }
+    });
+    await collect(page, '/');
+    await page.locator('.sp-track').evaluate((el) => el.scrollIntoView());
+    await expect.poll(() => sizes.some((s) => /kdf/i.test(s.url))).toBe(true);
+    await page.waitForLoadState('networkidle');
+    for (const s of sizes) expect(s.bytes, s.url).toBeLessThan(40 * 1024);
+    expect(sizes.filter((s) => /kdf/i.test(s.url)).every((s) => /\.webp$/.test(s.url))).toBe(true);
+});
+
+test('fonts are self-hosted and preloaded; analytics waits for the first interaction', async ({ page }) => {
+    const gtag: string[] = [];
+    await page.route('https://www.googletagmanager.com/**', (r) => { gtag.push(r.request().url()); return r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }); });
+    const urls = await collect(page, '/');
+    expect(urls.filter((u) => /fonts\.(googleapis|gstatic)\.com/.test(u))).toEqual([]);
+    expect(urls.some((u) => /\/assets\/bebasneue-normal-400-[\w-]+\.woff2$/.test(u))).toBe(true);
+    expect(await page.locator('link[rel="preload"][as="font"]').count()).toBeGreaterThan(0);
+    expect(gtag).toEqual([]);
+    await page.mouse.wheel(0, 400);
+    await expect.poll(() => gtag.length).toBeGreaterThan(0);
+});
+
+test('gallery thumbnails are responsive Cloudinary images', async ({ page }) => {
+    await collect(page, '/gallery');
+    const thumb = page.getByTestId('gallery-thumb').first();
+    await expect(thumb).toBeVisible();
+    const srcset = (await thumb.getAttribute('srcset')) ?? '';
+    for (const w of [320, 480, 640]) expect(srcset).toContain(`w_${w}/`);
+    expect(await thumb.getAttribute('sizes')).toContain('100vw');
+});

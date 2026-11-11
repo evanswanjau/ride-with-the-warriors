@@ -3,8 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import RegistrationClosedModal from '../common/RegistrationClosedModal';
 import RaffleClosedModal from '../common/RaffleClosedModal';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
-import logoRegular from '../../assets/logos/logo.png';
-import logoWhite from '../../assets/logos/logo_white.png';
+import logoRegular from '../../assets/logos/web/logo-sm.webp';
+import logoWhite from '../../assets/logos/web/logo_white.webp';
 import { useAuth } from '../../context/AuthContext';
 
 /* ─── Theme toggle icon ──────────────────────────────────────────────────── */
@@ -537,7 +537,7 @@ const Navbar = () => {
                 <div className="nav-inner">
                     {/* Logo */}
                     <Link to="/" className="nav-logo">
-                        <img src={currentLogo} alt="RWTW" />
+                        <img src={currentLogo} alt="RWTW" width={39} height={40} />
                         <span className="nav-logo-label hidden sm:block">
                             Ride With The Warriors
                             <span className="nav-logo-sub">KDF • Airborne Fraternity</span>

@@ -4,14 +4,14 @@ import RegistrationClosedModal from '../components/common/RegistrationClosedModa
 import RaffleClosedModal from '../components/common/RaffleClosedModal';
 import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineTeam, AiOutlineTrophy, AiOutlineTags, AiOutlineArrowRight } from 'react-icons/ai';
 import { HERO_HIGHLIGHT, HOME_COLLAGE, highlightImgProps } from '../data/highlights';
-import kdfLogo from '../assets/logos/kdf.png';
-import logo from '../assets/logos/logo.png';
-import equity from '../assets/logos/equity.png';
-import dedsilva from '../assets/logos/dedsilva.png';
-import isuzu from '../assets/logos/Isuzu.png';
-import gigamsys from '../assets/logos/gigamsys.png';
-import stanfajoy from '../assets/logos/stanfajoy.png';
-import wld from '../assets/logos/wld.png';
+import kdfLogo from '../assets/logos/web/kdf.webp';
+import logo from '../assets/logos/web/logo.webp';
+import equity from '../assets/logos/web/equity.webp';
+import dedsilva from '../assets/logos/web/dedsilva.webp';
+import isuzu from '../assets/logos/web/isuzu.webp';
+import gigamsys from '../assets/logos/web/gigamsys.webp';
+import stanfajoy from '../assets/logos/web/stanfajoy.webp';
+import wld from '../assets/logos/web/wld.webp';
 import fdsaLogo from '../assets/logos/fdsa-logo.png';
 
 import '../styles/home.css';
@@ -435,7 +435,7 @@ const HomePage = () => {
                 <section className="py-14 px-6 lg:px-12 border-t" style={{ borderColor: 'var(--border-1)', background: 'var(--page-bg)', transition: 'background 0.3s' }}>
                     <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
                         <div className="flex-none flex items-center justify-center w-32 h-32 border" style={{ borderColor: 'var(--border-2)', background: 'rgba(255,255,255,0.04)', clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))' }}>
-                            <img src={fdsaLogo} alt="Flying Doctors Society of Africa" className="h-20 w-auto object-contain" />
+                            <img src={fdsaLogo} alt="Flying Doctors Society of Africa" width={80} height={77} loading="lazy" decoding="async" className="h-20 w-auto object-contain" />
                         </div>
                         <div className="flex-1 text-center md:text-left">
                             <div className="flex items-center gap-3 mb-3 justify-center md:justify-start">
@@ -481,7 +481,7 @@ const HomePage = () => {
                                     { src: fdsaLogo, alt: 'Flying Doctors Society of Africa', h: 'h-24', cls: 'sp-logo-fdsa' },
                                 ].map((s, i) => (
                                     <div key={`${pass}-${i}`} className={`sp-logo-wrap flex-shrink-0 flex items-center justify-center ${'cls' in s ? s.cls : ''}`} aria-hidden={pass === 1}>
-                                        <img src={s.src} alt={s.alt} className={`${s.h} w-auto object-contain`} />
+                                        <img src={s.src} alt={s.alt} loading="lazy" decoding="async" className={`${s.h} w-auto object-contain`} />
                                     </div>
                                 ))
                             )}

@@ -6,7 +6,7 @@ import { API_BASE_URL } from '../config';
 import hostedManifest from '../assets/gallery-hosted.json';
 
 /* ─── Lightbox ────────────────────────────────────────────────────────────── */
-interface GalleryImage { url: string; thumb: string; title: string; category: string; }
+interface GalleryImage { url: string; thumb: string; thumbSrcSet: string; title: string; category: string; }
 
 interface HostedPhoto { eventYear: number; album: string; publicId: string; caption: string | null; }
 
@@ -14,9 +14,14 @@ interface HostedPhoto { eventYear: number; album: string; publicId: string; capt
 const cloudinaryUrl = (cloud: string, publicId: string, width: number) =>
     `https://res.cloudinary.com/${cloud}/image/upload/f_auto,q_auto,c_limit,w_${width}/${publicId}`;
 
+/** Thumbnail widths; the browser picks one from THUMB_SIZES (1, 2 or 3 columns). */
+const THUMB_WIDTHS = [320, 480, 640];
+const THUMB_SIZES = '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw';
+
 const toGalleryImages = (cloud: string, photos: HostedPhoto[]): GalleryImage[] => photos.map(p => ({
     url: cloudinaryUrl(cloud, p.publicId, 1600),
-    thumb: cloudinaryUrl(cloud, p.publicId, 600),
+    thumb: cloudinaryUrl(cloud, p.publicId, 480),
+    thumbSrcSet: THUMB_WIDTHS.map(w => `${cloudinaryUrl(cloud, p.publicId, w)} ${w}w`).join(', '),
     title: p.caption || p.album,
     category: `RWTW ${p.eventYear} · ${p.album}`,
 }));
@@ -154,7 +159,7 @@ const Gallery = () => {
                                 onKeyDown={(e) => e.key === 'Enter' && openLightbox(idx)}
                                 aria-label={`Open ${img.title}`}
                             >
-                                <img src={img.thumb} alt={img.title} loading="lazy" />
+                                <img src={img.thumb} srcSet={img.thumbSrcSet} sizes={THUMB_SIZES} alt={img.title} loading="lazy" decoding="async" data-testid="gallery-thumb" />
                                 <div className="gallery-item-overlay">
                                     <span className="gallery-item-title">{img.title}</span>
                                     <div className="gallery-item-expand">⤢</div>
