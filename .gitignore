@@ -55,7 +55,6 @@ out
 
 # nuxt.js build output
 .nuxt
-dist
 
 # gatsby files
 .cache/
@@ -65,9 +64,6 @@ public/*
 !public/sw.js
 !public/manifest.webmanifest
 !public/pwa/
-
-# vue-cli build objects
-dist
 
 # Serverless directories
 .serverless/
@@ -92,12 +88,11 @@ dist
 
 # TypeScript
 *.tsbuildinfo
+tsconfig.tsbuildinfo
 
 # Prisma
 /prisma/dev.db
 /prisma/dev.db-journal
-.vercel
-
 .vercel
 
 # Playwright
