@@ -7,8 +7,12 @@ interface Registration {
     circuitId: string;
     type: string;
     status: string;
-    payload: any;
-    pricing: any;
+    payload: {
+        riderDetails: { firstName: string; lastName: string };
+        teamDetails: { teamName: string };
+        familyDetails: { guardian: { fullName: string } };
+    };
+    pricing: { totalAmount: number };
 }
 
 const AdminView = () => {

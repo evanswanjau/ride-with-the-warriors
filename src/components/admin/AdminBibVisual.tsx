@@ -9,7 +9,7 @@ interface BibRegistration {
     category: string;
     hexColor: string;
     circuitId: string;
-    teamName?: string;
+    teamName?: string | null;
     type: string;
 }
 

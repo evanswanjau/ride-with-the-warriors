@@ -22,9 +22,18 @@ interface SuccessPageProps {
     onDone: () => void;
 }
 
+interface SuccessRider { firstName: string; lastName: string; bibNumber: string | null; isCaptain: boolean; gender: string | null; dob: string | null }
+
+interface SuccessRegistration {
+    type?: string;
+    bibNumber?: string | null;
+    riders?: SuccessRider[];
+    [key: string]: unknown;
+}
+
 const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps) => {
     const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
-    const [registration, setRegistration] = useState<any>(null);
+    const [registration, setRegistration] = useState<SuccessRegistration | null>(null);
     const [showMembers, setShowMembers] = useState(false);
     const [fdsaDismissed, setFdsaDismissed] = useState(false);
 
@@ -41,7 +50,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
     }, [registrationId]);
 
     const isTeam = registration?.type === 'team';
-    const riders: { firstName: string; lastName: string; bibNumber: string | null; isCaptain: boolean; gender: string | null; dob: string | null }[] = registration?.riders || [];
+    const riders: SuccessRider[] = registration?.riders || [];
     const members = isTeam ? riders : [];
     // Bibs are assigned when payment lands; teams show their shared base number.
     const primaryBib: string | null = registration?.bibNumber ?? riders[0]?.bibNumber ?? null;
@@ -120,7 +129,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
 
                                 {showMembers && (
                                     <div className="sx-members-list">
-                                        {members.map((m: any, idx: number) => (
+                                        {members.map((m, idx: number) => (
                                             <div key={idx} className="sx-member-card">
                                                 <div>
                                                     <div className="sx-member-name">
@@ -133,7 +142,7 @@ const SuccessPage = ({ registrationId, onViewProfile, onDone }: SuccessPageProps
                                                 </div>
                                                 <div className="sx-member-meta">
                                                     <div>{m.gender}</div>
-                                                    <div>{calculateAge(m.dob)} yrs</div>
+                                                    <div>{calculateAge(m.dob ?? '')} yrs</div>
                                                 </div>
                                             </div>
                                         ))}

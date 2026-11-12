@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { getErrorMessage } from '../../utils';
 import { AiOutlineExclamationCircle, AiOutlineReload, AiOutlineUpload, AiOutlineDownload } from 'react-icons/ai';
 import { API_BASE_URL } from '../../config';
 
@@ -77,6 +78,21 @@ function parseCsvRecipients(text: string): { recipients: CsvRecipient[]; errors:
     return { recipients, errors };
 }
 
+interface CommsStats { success?: number; failed?: number; [key: string]: unknown }
+
+interface CommsPreview {
+    recipientsCount?: number;
+    sampleRecipients?: { name?: string; contact?: string; compiledMessage?: string }[];
+    smsStats?: CommsStats;
+    emailStats?: CommsStats;
+    [key: string]: unknown;
+}
+
+interface SmsBalance {
+    credit?: string | number;
+    [key: string]: unknown;
+}
+
 export const AdminCommunications: React.FC = () => {
     const [mode, setMode] = useState<'sms' | 'email' | 'both'>('email');
     const [targetEntity, setTargetEntity] = useState<'cyclist' | 'raffle' | 'donor' | 'custom' | 'csv'>('cyclist');
@@ -94,8 +110,8 @@ export const AdminCommunications: React.FC = () => {
     const [testMode, setTestMode] = useState(true);
     const [loading, setLoading] = useState(false);
     
-    const [preview, setPreview] = useState<any>(null);
-    const [balance, setBalance] = useState<any>(null);
+    const [preview, setPreview] = useState<CommsPreview | null>(null);
+    const [balance, setBalance] = useState<SmsBalance | null>(null);
     const [showRenewInfo, setShowRenewInfo] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -227,9 +243,9 @@ export const AdminCommunications: React.FC = () => {
                 setPreview(data); // Will show the final sent stats on the right side
                 fetchBalance(); // Refresh balance after live send
             }
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error sending message:', error);
-            setErrorMsg(error.message || 'Send failed. Check console logs.');
+            setErrorMsg(getErrorMessage(error, 'Send failed. Check console logs.'));
         } finally {
             setLoading(false);
         }
@@ -334,7 +350,7 @@ export const AdminCommunications: React.FC = () => {
                         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                             <div className="ad-filter-group" style={{ flex: 1 }}>
                                 <label className="ad-filter-label">Mode</label>
-                                <select className="ad-select" value={mode} onChange={(e) => setMode(e.target.value as any)}>
+                                <select className="ad-select" value={mode} onChange={(e) => setMode(e.target.value as typeof mode)}>
                                     <option value="sms">SMS Only</option>
                                     <option value="email">Email Only</option>
                                     <option value="both">Both SMS & Email</option>
@@ -359,7 +375,7 @@ export const AdminCommunications: React.FC = () => {
                             {targetEntity !== 'custom' && targetEntity !== 'csv' && (
                                 <div className="ad-filter-group" style={{ flex: 1 }}>
                                     <label className="ad-filter-label">Payment Status</label>
-                                    <select className="ad-select" value={targetStatus} onChange={(e) => setTargetStatus(e.target.value as any)}>
+                                    <select className="ad-select" value={targetStatus} onChange={(e) => setTargetStatus(e.target.value as typeof targetStatus)}>
                                         <option value="all">All</option>
                                         <option value="paid">Paid Only</option>
                                         <option value="unpaid">Unpaid Only</option>
@@ -544,7 +560,7 @@ export const AdminCommunications: React.FC = () => {
                                             Sample Generated Messages
                                         </div>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '400px', overflowY: 'auto', paddingRight: '5px' }} className="ad-feed">
-                                            {preview.sampleRecipients.map((r: any, idx: number) => (
+                                            {preview.sampleRecipients.map((r, idx: number) => (
                                                 <div key={idx} style={{ padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--ad-border)', borderRadius: '4px' }}>
                                                     <div style={{ fontWeight: 600, color: 'var(--ad-pl)', fontSize: '0.85rem', marginBottom: '2px' }}>{r.name || 'Unknown User'}</div>
                                                     <div style={{ color: 'var(--ad-t3)', fontSize: '0.75rem', fontFamily: "'JetBrains Mono', monospace", marginBottom: '8px' }}>{r.contact || 'No Info'}</div>

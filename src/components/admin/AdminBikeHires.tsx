@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getErrorMessage } from '../../utils';
 import { API_BASE_URL } from '../../config';
 import {
     AiOutlineSearch,
@@ -51,9 +52,9 @@ const AdminBikeHires = () => {
                 setError(errMsg);
                 setHires([]);
             }
-        } catch (error: any) {
+        } catch (error) {
             console.error('Fetch error:', error);
-            setError(error.message || 'An unexpected error occurred');
+            setError(getErrorMessage(error, 'An unexpected error occurred'));
             setHires([]);
         } finally {
             setLoading(false);
@@ -76,7 +77,7 @@ const AdminBikeHires = () => {
                 body: JSON.stringify({ status })
             });
             if (res.ok) {
-                setHires(hires.map(h => h.id === id ? { ...h, status: status as any } : h));
+                setHires(hires.map(h => h.id === id ? { ...h, status: status as BikeHire['status'] } : h));
             }
         } catch (error) {
             console.error('Update error:', error);

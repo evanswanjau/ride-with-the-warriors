@@ -1,8 +1,8 @@
 import '../../styles/registration/Step5Review.css';
 import { useState } from 'react';
 import { CIRCUITS } from '../../constants';
-import type { RiderDetails, TeamDetails, FamilyDetails } from '../../types';
-import { getClassification, calculateAge, getContrastText } from '../../utils';
+import type { RiderDetails, TeamDetails, FamilyDetails, PricingCategory } from '../../types';
+import { getClassification, calculateAge, getContrastText, type Classification } from '../../utils';
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
 import { useRegistration } from '../../context/RegistrationContext';
 
@@ -101,8 +101,8 @@ interface Step5ReviewProps {
     familyData: FamilyDetails;
     isSubmitting?: boolean;
     registrationId: string | null;
-    pricingCategories: any[];
-    serverClassifications?: any[];
+    pricingCategories: PricingCategory[];
+    serverClassifications?: Classification[];
 }
 
 const Step5Review = ({

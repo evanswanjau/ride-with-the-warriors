@@ -1,6 +1,15 @@
 import { useNavigate, useParams, useLocation, Navigate } from 'react-router-dom';
 import RafflePaymentPage from '../components/raffle/RafflePaymentPage';
 
+interface RafflePaymentState {
+    ticketIds?: string[];
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phoneNumber?: string;
+    amount?: number;
+}
+
 const RafflePaymentPageRoute = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -11,7 +20,7 @@ const RafflePaymentPageRoute = () => {
     const queryParams = new URLSearchParams(location.search);
     const queryIds = queryParams.get('ids');
     
-    const state = (location.state as any) || {};
+    const state = (location.state as RafflePaymentState | null) || {};
     
     // Determine ticket IDs: Priority 1: Query Params (for bulk), Priority 2: State, Priority 3: URL ID
     let ticketIdsToUse: string[] = [];

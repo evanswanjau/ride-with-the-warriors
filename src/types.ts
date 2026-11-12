@@ -83,3 +83,26 @@ export interface Circuit {
     location: string;
     isCompetitive?: boolean;
 }
+
+export interface PricingCategory {
+    id?: string;
+    circuitId: string;
+    type: string;
+    familyCategory?: string | null;
+    minAge: number | null;
+    maxAge: number | null;
+    categoryName: string;
+    regRange: string;
+    price: number;
+    colorCode: string;
+    hexColor: string;
+    remarks?: string | null;
+}
+
+export interface AdminUser {
+    id?: string;
+    email?: string;
+    name?: string;
+    role?: string;
+    [key: string]: unknown;
+}
