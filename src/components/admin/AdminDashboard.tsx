@@ -23,7 +23,7 @@ import AdminFeedback from './AdminFeedback';
 import type { IconType } from 'react-icons';
 import type { AdminUser, PricingCategory } from '../../types';
 import type { AdminRegistration, AdminPayment, AdminRaffleTicket, AdminDonation, AdminReferral, DashboardData, SummaryStats, ReferralsStats } from '../../adminTypes';
-import { getErrorMessage } from '../../utils';
+import { getErrorMessage } from '../../utils/registration';
 import logo from '../../assets/logos/logo.png';
 import { CIRCUITS } from '../../constants';
 import { API_BASE_URL, SITE_URL } from '../../config';

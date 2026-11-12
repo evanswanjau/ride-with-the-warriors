@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getErrorMessage } from '../utils';
+import { getErrorMessage } from '../utils/registration';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import { AiOutlineHeart, AiOutlineWarning, AiOutlineCheckCircle } from 'react-icons/ai';

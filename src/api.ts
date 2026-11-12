@@ -2,7 +2,7 @@ import { API_BASE_URL } from './config';
 import { authHeaders } from './auth/session';
 import type { AdminUser, Circuit } from './types';
 import type { AdminRegistration, SummaryStats, Pagination } from './adminTypes';
-import type { Classification } from './utils';
+import type { Classification } from './utils/registration';
 
 export interface ApiError {
     code: string;

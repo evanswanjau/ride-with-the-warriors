@@ -1,5 +1,5 @@
 
-import type { PricingCategory } from './types';
+import type { PricingCategory } from '../types';
 
 /** Message from an unknown thrown value, with a fallback. */
 export const getErrorMessage = (err: unknown, fallback: string): string =>

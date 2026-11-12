@@ -12,7 +12,7 @@ import {
 } from 'react-icons/ai';
 import fdsaLogo from '../../assets/logos/fdsa-logo.png';
 import Confetti from 'react-confetti';
-import { calculateAge } from '../../utils';
+import { calculateAge } from '../../utils/registration';
 import { API_BASE_URL } from '../../config';
 import { authHeaders } from '../../auth/session';
 
