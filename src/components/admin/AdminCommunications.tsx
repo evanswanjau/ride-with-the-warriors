@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { getErrorMessage } from '../../utils';
+import { getErrorMessage } from '../../utils/registration';
 import { AiOutlineExclamationCircle, AiOutlineReload, AiOutlineUpload, AiOutlineDownload } from 'react-icons/ai';
 import { API_BASE_URL } from '../../config';
 

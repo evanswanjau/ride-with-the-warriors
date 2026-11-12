@@ -21,8 +21,8 @@ const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const RegistrationClosedPage = lazy(() => import('./pages/RegistrationClosedPage'));
 const NotifyPage = lazy(() => import('./pages/NotifyPage'));
 const FeedbackPage = lazy(() => import('./pages/FeedbackPage'));
-const PaymentPage = lazy(() => import('./pages/PaymentPage'));
-const SuccessPage = lazy(() => import('./pages/SuccessPage'));
+const PaymentPage = lazy(() => import('./pages/PaymentPageRoute'));
+const SuccessPage = lazy(() => import('./pages/SuccessPageRoute'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 // Rider portal (/account/*)
 const PortalLayout = lazy(() => import('./portal/PortalLayout'));

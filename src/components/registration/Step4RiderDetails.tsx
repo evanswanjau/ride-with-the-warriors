@@ -2,7 +2,7 @@ import '../../styles/registration/Step4RiderDetails.css';
 import type { RiderDetails } from '../../types';
 import { useRegistration } from '../../context/RegistrationContext';
 import ErrorBanner from '../common/ErrorBanner';
-import { calculateAge } from '../../utils';
+import { calculateAge } from '../../utils/registration';
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
 
 /* ── Inline icons ─────────────────────────────────────────────────────── */

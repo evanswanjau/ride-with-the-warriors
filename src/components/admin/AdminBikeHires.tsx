@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getErrorMessage } from '../../utils';
+import { getErrorMessage } from '../../utils/registration';
 import { API_BASE_URL } from '../../config';
 import {
     AiOutlineSearch,

@@ -1,7 +1,7 @@
 import '../../styles/registration/Step4TeamDetails.css';
 import type { TeamDetails, TeamMember } from '../../types';
 import ErrorBanner from '../common/ErrorBanner';
-import { calculateAge } from '../../utils';
+import { calculateAge } from '../../utils/registration';
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
 import { useRegistration } from '../../context/RegistrationContext';
 

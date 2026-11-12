@@ -2,7 +2,7 @@ import '../../styles/registration/Step5Review.css';
 import { useState } from 'react';
 import { CIRCUITS } from '../../constants';
 import type { RiderDetails, TeamDetails, FamilyDetails, PricingCategory } from '../../types';
-import { getClassification, calculateAge, getContrastText, type Classification } from '../../utils';
+import { getClassification, calculateAge, getContrastText, type Classification } from '../../utils/registration';
 import RegistrationStepLayout from './ui/RegistrationStepLayout';
 import { useRegistration } from '../../context/RegistrationContext';
 

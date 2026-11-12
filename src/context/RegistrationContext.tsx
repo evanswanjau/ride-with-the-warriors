@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { RiderDetails, TeamDetails, FamilyDetails, PricingCategory } from '../types';
-import { isValidKenyanPhone, isValidID, calculateAge, type Classification } from '../utils';
+import { isValidKenyanPhone, isValidID, calculateAge, type Classification } from '../utils/registration';
 import { API_BASE_URL } from '../config';
 import { authHeaders } from '../auth/session';
 

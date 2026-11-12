@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getErrorMessage } from '../utils';
+import { getErrorMessage } from '../utils/registration';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 
