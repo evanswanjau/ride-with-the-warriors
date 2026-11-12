@@ -17,7 +17,7 @@ export default defineConfig({
     fullyParallel: false,
     workers: 1,
     retries: process.env.CI ? 1 : 0,
-    timeout: 60_000,
+    timeout: 120_000, // mail waits can take up to a minute (outbox worker runs every minute)
     expect: { timeout: 15_000 },
     reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : [['list']],
     use: {
