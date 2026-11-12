@@ -5,8 +5,13 @@ const MOCK_DTB = 'http://localhost:4110';
 
 type MailSummary = { ID: string; To: { Address: string }[]; Subject: string; Created: string };
 
-/** Waits for the newest message to `address` that arrived after `since`, and returns its text. */
-export async function waitForMessage(address: string, since: Date, timeoutMs = 20_000): Promise<{ subject: string; text: string }> {
+/**
+ * Waits for the newest message to `address` that arrived after `since`, and returns its text.
+ * Queued notifications are sent by the outbox worker once a minute, so allow a little over that.
+ */
+export const MAIL_WAIT_MS = 75_000;
+
+export async function waitForMessage(address: string, since: Date, timeoutMs = MAIL_WAIT_MS): Promise<{ subject: string; text: string }> {
     const deadline = Date.now() + timeoutMs;
     while (Date.now() < deadline) {
         const res = await fetch(`${MAILPIT}/search?query=${encodeURIComponent(`to:"${address}"`)}&limit=10`);
