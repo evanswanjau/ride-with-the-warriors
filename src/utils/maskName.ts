@@ -16,9 +16,27 @@ export function maskSurname(surname: string): string {
     return words(surname ?? '').map(maskWord).join(' ');
 }
 
-/** Mask a full name: "Hannah Kibet" -> "Hannah ***bet". Single words are kept as-is. */
+/** Mask a full name: "Hannah Kibet" -> "Hannah ***et". Single words are kept as-is. */
 export function maskName(fullName: string): string {
     const [first, ...rest] = words(fullName ?? '');
     if (!first) return '';
     return [first, ...rest.map(maskWord)].join(' ');
+}
+
+/**
+ * Title-case a (masked) name for display: "nancy ***ambu" -> "Nancy ***ambu".
+ * Words starting with `***` keep the mask and stay lowercase; other words get a capital after
+ * the start of the word, a hyphen or an apostrophe.
+ */
+export function displayName(name: string): string {
+    return (name ?? '')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((word) =>
+            word.startsWith(MASK)
+                ? word.toLowerCase()
+                : word.toLowerCase().replace(/(^|[-'\u2019])([a-z])/g, (_m, sep: string, c: string) => sep + c.toUpperCase()),
+        )
+        .join(' ');
 }

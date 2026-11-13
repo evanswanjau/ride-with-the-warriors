@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { maskName, maskSurname } from './maskName';
+import { displayName, maskName, maskSurname } from './maskName';
 
 describe('maskSurname', () => {
     it('masks the first 3 letters', () => {
@@ -61,5 +61,21 @@ describe('maskName', () => {
 
     it('never leaks the first 3 letters of a masked word', () => {
         expect(maskName('Hannah Kibet')).not.toContain('Kib');
+    });
+});
+
+describe('displayName', () => {
+    it('title-cases the first name and keeps the mask lowercase', () => {
+        expect(displayName('nancy ***ambu')).toBe('Nancy ***ambu');
+        expect(displayName('BENJAMIN ***KOSGEI')).toBe('Benjamin ***kosgei');
+    });
+
+    it('capitalises after hyphens and apostrophes', () => {
+        expect(displayName("mary-jane o'neil")).toBe("Mary-Jane O'Neil");
+    });
+
+    it('keeps a bare mask as is and handles empty input', () => {
+        expect(displayName('***')).toBe('***');
+        expect(displayName('  ')).toBe('');
     });
 });
