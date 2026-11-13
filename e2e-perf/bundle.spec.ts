@@ -39,7 +39,7 @@ test('admin code is fetched only when /admin is opened', async ({ page }) => {
 test('gallery lists 2025 albums from Cloudinary', async ({ page }) => {
     const urls = await collect(page, '/gallery');
     expect(urls.filter((u) => /\.jpe?g(\?|$)/i.test(u) && u.startsWith('http://localhost'))).toEqual([]);
-    await expect(page.getByText(/RWTW 2025/).first()).toBeVisible();
+    await expect(page.getByTestId('year-2025')).toBeVisible();
 });
 
 test('homepage logos are small, resized images', async ({ page }) => {
@@ -76,6 +76,6 @@ test('gallery thumbnails are responsive Cloudinary images', async ({ page }) => 
     const thumb = page.getByTestId('gallery-thumb').first();
     await expect(thumb).toBeVisible();
     const srcset = (await thumb.getAttribute('srcset')) ?? '';
-    for (const w of [320, 480, 640]) expect(srcset).toContain(`w_${w}/`);
+    for (const w of [400, 600, 900]) expect(srcset).toContain(`w_${w}/`);
     expect(await thumb.getAttribute('sizes')).toContain('100vw');
 });
