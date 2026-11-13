@@ -76,6 +76,6 @@ test('gallery thumbnails are responsive Cloudinary images', async ({ page }) => 
     const thumb = page.getByTestId('gallery-thumb').first();
     await expect(thumb).toBeVisible();
     const srcset = (await thumb.getAttribute('srcset')) ?? '';
-    for (const w of [400, 600, 900]) expect(srcset).toContain(`w_${w}/`);
-    expect(await thumb.getAttribute('sizes')).toContain('100vw');
+    for (const w of [240, 400, 600]) expect(srcset).toContain(`w_${w}/`);
+    expect(await thumb.getAttribute('sizes')).toContain('33vw');
 });

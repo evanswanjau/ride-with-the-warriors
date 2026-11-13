@@ -17,10 +17,16 @@ interface GalleryImage {
 /** Sized, auto-format Cloudinary delivery URL. */
 const cloudinaryUrl = (cloud: string, publicId: string, width: number) =>
     `https://res.cloudinary.com/${cloud}/image/upload/f_auto,q_auto,c_limit,w_${width}/${publicId}`;
+/** Square thumbnail: edge-to-edge tiles, sized for 3 (phone), 4 (tablet) or 6 (desktop) per row. */
+const squareUrl = (cloud: string, publicId: string, width: number) =>
+    `https://res.cloudinary.com/${cloud}/image/upload/f_auto,q_auto,c_fill,g_auto,ar_1:1,w_${width}/${publicId}`;
 
 /** Thumbnail widths; the browser picks one from THUMB_SIZES (1, 2 or 3 columns). */
-const THUMB_WIDTHS = [400, 600, 900];
-const THUMB_SIZES = '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw';
+const THUMB_WIDTHS = [240, 400, 600];
+const THUMB_SIZES = '(min-width: 1280px) 16vw, (min-width: 640px) 25vw, 33vw';
+/** Photos per album in the "All" view, and per "load more" step inside one album. */
+const PREVIEW_COUNT = 12;
+const PAGE_SIZE = 120;
 
 const albumSlug = (album: string) => album.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -30,8 +36,8 @@ const albumRank = (slug: string) => { const i = ALBUM_ORDER.indexOf(slug); retur
 
 const toGalleryImages = (cloud: string, photos: HostedPhoto[]): GalleryImage[] => photos.map(p => ({
     url: cloudinaryUrl(cloud, p.publicId, 1600),
-    thumb: cloudinaryUrl(cloud, p.publicId, 600),
-    thumbSrcSet: THUMB_WIDTHS.map(w => `${cloudinaryUrl(cloud, p.publicId, w)} ${w}w`).join(', '),
+    thumb: squareUrl(cloud, p.publicId, 400),
+    thumbSrcSet: THUMB_WIDTHS.map(w => `${squareUrl(cloud, p.publicId, w)} ${w}w`).join(', '),
     title: p.caption || p.album,
     year: p.eventYear,
     album: p.album,
@@ -144,10 +150,19 @@ const Gallery = () => {
 
     const requestedAlbum = params.get('album') ?? '';
     const album = albums.some(a => a.slug === requestedAlbum) ? requestedAlbum : '';
-    const filteredImages = useMemo(
-        () => (album ? yearImages.filter(i => i.albumSlug === album) : yearImages),
-        [yearImages, album],
-    );
+    // "All" shows each album as its own section (a short preview + "See all"); one album shows a long, paged grid.
+    const [shown, setShown] = useState({ key: '', count: PAGE_SIZE });
+    const viewKey = `${year}|${album}`;
+    const pageCount = shown.key === viewKey ? shown.count : PAGE_SIZE;
+    const sections = useMemo(() => {
+        if (album) {
+            const a = albums.find(x => x.slug === album)!;
+            return [{ ...a, images: yearImages.filter(i => i.albumSlug === album).slice(0, pageCount), total: a.count }];
+        }
+        return albums.map(a => ({ ...a, images: yearImages.filter(i => i.albumSlug === a.slug).slice(0, PREVIEW_COUNT), total: a.count }));
+    }, [albums, album, yearImages, pageCount]);
+    const filteredImages = useMemo(() => sections.flatMap(s => s.images), [sections]);
+    const albumTotal = album ? (albums.find(a => a.slug === album)?.count ?? 0) : 0;
 
     const select = (nextYear: number, nextAlbum: string) => {
         const p = new URLSearchParams();
@@ -216,7 +231,7 @@ const Gallery = () => {
                                     data-testid={`album-${a.slug}`}
                                     onClick={() => select(year, a.slug)}
                                 >
-                                    <img className="album-chip-cover" src={a.cover.thumb.replace('w_600', 'w_96')} alt="" loading="lazy" decoding="async" />
+                                    <img className="album-chip-cover" src={a.cover.thumb.replace('w_400', 'w_96')} alt="" loading="lazy" decoding="async" />
                                     {a.name}
                                     <span className="category-tab-count">({a.count})</span>
                                 </button>
@@ -227,24 +242,47 @@ const Gallery = () => {
 
                 {/* ── Grid ───────────────────────────────────────────────── */}
                 {filteredImages.length > 0 ? (
-                    <div className="gallery-grid" data-testid="gallery-grid">
-                        {filteredImages.map((img, idx) => (
-                            <div
-                                key={img.url}
-                                className="gallery-item"
-                                onClick={() => setLightboxIndex(idx)}
-                                role="button"
-                                tabIndex={0}
-                                onKeyDown={(e) => e.key === 'Enter' && setLightboxIndex(idx)}
-                                aria-label={`Open ${img.title}`}
-                            >
-                                <img src={img.thumb} srcSet={img.thumbSrcSet} sizes={THUMB_SIZES} alt={img.title} loading="lazy" decoding="async" data-testid="gallery-thumb" />
-                                <div className="gallery-item-overlay">
-                                    <span className="gallery-item-title">{img.title}</span>
-                                    <div className="gallery-item-expand">⤢</div>
-                                </div>
+                    <div data-testid="gallery-grid">
+                        {sections.map(sec => {
+                            const offset = sections.slice(0, sections.indexOf(sec)).reduce((n, x) => n + x.images.length, 0);
+                            return (
+                                <section key={sec.slug} className="gallery-section" data-testid={`section-${sec.slug}`}>
+                                    {!album && (
+                                        <div className="gallery-section-head">
+                                            <h2 className="gallery-section-title">{sec.name}</h2>
+                                            <span className="gallery-section-count">({sec.total})</span>
+                                            {sec.total > sec.images.length && (
+                                                <button className="gallery-see-all" data-testid={`see-all-${sec.slug}`} onClick={() => select(year, sec.slug)}>
+                                                    See all
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                    <div className="gallery-grid">
+                                        {sec.images.map((img, idx) => (
+                                            <div
+                                                key={img.url}
+                                                className="gallery-item"
+                                                onClick={() => setLightboxIndex(offset + idx)}
+                                                role="button"
+                                                tabIndex={0}
+                                                onKeyDown={(e) => e.key === 'Enter' && setLightboxIndex(offset + idx)}
+                                                aria-label={`Open ${img.title}`}
+                                            >
+                                                <img src={img.thumb} srcSet={img.thumbSrcSet} sizes={THUMB_SIZES} alt={img.title} loading="lazy" decoding="async" data-testid="gallery-thumb" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+                            );
+                        })}
+                        {album && albumTotal > pageCount && (
+                            <div className="gallery-more-row">
+                                <button className="gallery-more" data-testid="load-more" onClick={() => setShown({ key: viewKey, count: pageCount + PAGE_SIZE })}>
+                                    Load more ({albumTotal - pageCount} left)
+                                </button>
                             </div>
-                        ))}
+                        )}
                     </div>
                 ) : (
                     <div className="gallery-empty">
