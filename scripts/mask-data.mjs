@@ -4,9 +4,8 @@
  *
  *   node scripts/mask-data.mjs
  *
- * Raffle: ticket AA130 (the car) is placed first with a fully masked name until the real
- * winner is confirmed. TODO: set its `name` to "<First> <Surname>" and run this script
- * again; it will show as "<First> ***rest".
+ * Raffle: ticket AA130 (the car, Nissan Sylphy) is placed first. Its name is stored already
+ * masked, so the full surname is never written to the repo.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { maskName, maskSurname } from '../src/utils/maskName.ts';
@@ -31,7 +30,7 @@ write('results.json', results);
 // raffle.json
 const CAR = 'AA130';
 const raffle = read('raffle.json').filter((w) => w.raffle_number !== CAR);
-const rows = [{ serial_number: 0, item: 'Car', raffle_number: CAR, name: '***' }, ...raffle].map((w, i) => ({
+const rows = [{ serial_number: 0, item: 'Nissan Sylphy', raffle_number: CAR, name: 'Nancy ***ambu' }, ...raffle].map((w, i) => ({
     ...w,
     serial_number: i + 1,
     name: maskName(w.name),
