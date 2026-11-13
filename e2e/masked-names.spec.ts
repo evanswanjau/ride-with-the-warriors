@@ -17,7 +17,7 @@ test('raffle winners: car (AA130) is first and surnames are masked', async ({ pa
 
     const first = rows.first().locator('td');
     await expect(first.nth(0)).toHaveText('1');
-    await expect(first.nth(1)).toHaveText('Nissan Sylphy');
+    await expect(first.nth(1)).toContainText('Nissan Sylphy');
     await expect(first.nth(2)).toHaveText('AA130');
     await expect(first.nth(3)).toHaveText(/^nancy \*\*\*ambu$/i);
 
@@ -52,4 +52,20 @@ test('results: rider surnames are masked', async ({ page }) => {
 
     await page.getByPlaceholder(/search/i).first().fill('kibet');
     await expect(page.getByText('Hannah')).toHaveCount(0);
+});
+
+test('raffle winners: grand prize card shows the car, ticket and masked winner', async ({ page }) => {
+    await page.goto('/raffle-winners');
+    const card = page.getByTestId('grand-prize');
+    await expect(card).toContainText('Grand Prize');
+    await expect(card).toContainText('Nissan Sylphy');
+    await expect(card).toContainText('AA130');
+    await expect(card).toContainText('Nancy ***ambu');
+    await expect(card).not.toContainText('Karambu');
+
+    // Table row 1 is highlighted, badged, and names are title case (not lowercase).
+    const row = page.locator('table.winners-table tbody tr').first();
+    await expect(row).toHaveClass(/row-grand/);
+    await expect(row.locator('.grand-badge')).toContainText('Car');
+    await expect(row.locator('td.name-cell')).toHaveText('Nancy ***ambu');
 });
