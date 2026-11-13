@@ -64,11 +64,11 @@ const RegistrationClosedPage = () => {
 
                 {/* CTAs */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center', marginBottom: '3rem' }}>
-                    <Link to="/register/notify" className="shimmer-btn shimmer-btn--primary">
-                        Pre-register
+                    <Link to="/feedback" className="shimmer-btn shimmer-btn--primary">
+                        Share Feedback
                     </Link>
-                    <Link to="/2026" className="shimmer-btn shimmer-btn--ghost">
-                        See 2026 highlights
+                    <Link to="/register/notify" className="shimmer-btn shimmer-btn--ghost">
+                        Notify Me for {EDITION.year}
                     </Link>
                 </div>
 

@@ -56,3 +56,20 @@ test('header has no Race Results or Raffle Winners button', async ({ page, isMob
     await expect(header.locator('a.nav-cta', { hasText: /Race Results|Raffle Winners/ })).toHaveCount(0);
     await expect(header.getByRole('link', { name: /Race Results|Raffle Winners/ })).toHaveCount(0);
 });
+
+test('pre-register form submits to the API', async ({ page }) => {
+    await page.goto('/register/notify');
+    await expect(page.getByRole('heading', { name: /Pre-register for RWTW 27/i })).toBeVisible();
+    await page.getByPlaceholder('e.g. James', { exact: true }).fill('Teaser');
+    await page.getByPlaceholder('e.g. james@example.com').fill(`teaser-${Date.now()}@example.com`);
+    await page.getByRole('button', { name: /Notify Me for 2027/ }).click();
+    await expect(page.getByText("You're on the list!")).toBeVisible();
+});
+
+test('feedback form submits to the API', async ({ page }) => {
+    await page.goto('/feedback');
+    await page.getByRole('button', { name: /Cyclist/ }).click();
+    await page.getByRole('button', { name: /5 stars/ }).click();
+    await page.getByRole('button', { name: 'Submit Feedback' }).click();
+    await expect(page.getByText(/Your feedback has been received/)).toBeVisible();
+});

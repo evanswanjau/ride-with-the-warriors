@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { API_BASE_URL } from '../config';
 import { EDITION } from '../config/edition';
-import { isOn } from '../config/features';
-import OpensSoonCard from '../components/common/OpensSoonCard';
 
 type Role = 'CYCLIST' | 'ATTENDEE' | 'SPONSOR' | 'ORGANISER';
 
@@ -18,7 +16,6 @@ const ROLES: { value: Role; label: string; description: string }[] = [
 const RATING_LABELS = ['', 'Poor', 'Fair', 'Good', 'Great', 'Outstanding'];
 
 const FeedbackPage = () => {
-    const formsOn = isOn('forms');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [notifyFor2027, setNotifyFor2027] = useState(false);
@@ -34,7 +31,6 @@ const FeedbackPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formsOn) return;
         if (!role) {
             setErrorMsg('Please tell us how you took part in the event.');
             setStatus('error');
@@ -198,20 +194,8 @@ const FeedbackPage = () => {
                         </div>
                     </div>
                 ) : (
-                    <>
-                    {!formsOn && (
-                        <OpensSoonCard
-                            title="Feedback opens soon"
-                            text={`We're getting our systems ready for ${EDITION.year}. Until then, send your thoughts to info@airbornefraternity.org or on WhatsApp.`}
-                            emailSubject="RWTW%202026%20feedback"
-                        />
-                    )}
                     <form onSubmit={handleSubmit}>
-                      <fieldset
-                        disabled={!formsOn}
-                        aria-disabled={!formsOn}
-                        style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '2rem', opacity: formsOn ? 1 : 0.5 }}
-                      >
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
                         {/* Optional name */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
@@ -452,9 +436,8 @@ const FeedbackPage = () => {
                                 {status === 'submitting' ? 'Sending...' : 'Submit Feedback'}
                             </button>
                         </div>
-                      </fieldset>
+                      </div>
                     </form>
-                    </>
                 )}
 
             </div>

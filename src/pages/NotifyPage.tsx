@@ -3,11 +3,8 @@ import { getErrorMessage } from '../utils/registration';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 import { EDITION } from '../config/edition';
-import { isOn } from '../config/features';
-import OpensSoonCard from '../components/common/OpensSoonCard';
 
 const NotifyPage = () => {
-    const formsOn = isOn('forms');
     const [firstName, setFirstName] = useState('');
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState<'idle' | 'submitting' | 'done' | 'error'>('idle');
@@ -15,7 +12,6 @@ const NotifyPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formsOn) return;
         if (!email.trim()) return;
         setStatus('submitting');
         setErrorMsg('');
@@ -134,20 +130,8 @@ const NotifyPage = () => {
                         </div>
                     </div>
                 ) : (
-                    <>
-                    {!formsOn && (
-                        <OpensSoonCard
-                            title="Pre-registration opens soon"
-                            text={`Registration for ${EDITION.shortName} opens on ${EDITION.registrationOpensLabel}. Pre-registration will be open here shortly. Follow us or check back soon.`}
-                            emailSubject="RWTW%2027%20pre-registration"
-                        />
-                    )}
                     <form onSubmit={handleSubmit}>
-                      <fieldset
-                        disabled={!formsOn}
-                        aria-disabled={!formsOn}
-                        style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '1.25rem', opacity: formsOn ? 1 : 0.5 }}
-                      >
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                         <div>
                             <label style={labelStyle}>First Name</label>
                             <input
@@ -179,7 +163,7 @@ const NotifyPage = () => {
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '0.5rem' }}>
                             <button
                                 type="submit"
-                                disabled={status === 'submitting' || !formsOn}
+                                disabled={status === 'submitting'}
                                 className="shimmer-btn shimmer-btn--primary"
                                 style={{
                                     border: 'none',
@@ -190,9 +174,8 @@ const NotifyPage = () => {
                                 {status === 'submitting' ? 'Saving...' : `Notify Me for ${EDITION.year}`}
                             </button>
                             </div>
-                      </fieldset>
+                      </div>
                     </form>
-                    </>
                 )}
 
             </div>
