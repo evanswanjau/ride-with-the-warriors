@@ -1,11 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import RegistrationClosedModal from '../common/RegistrationClosedModal';
-import RaffleClosedModal from '../common/RaffleClosedModal';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import logoRegular from '../../assets/logos/web/logo-sm.webp';
 import logoWhite from '../../assets/logos/web/logo_white.webp';
 import { useAuth } from '../../context/AuthContext';
+import { isOn } from '../../config/features';
+import { primaryCta } from '../../config/cta';
+
+const RECAP_ITEMS = [
+    { name: 'Highlights', path: '/2026', desc: 'The day in numbers and moments' },
+    { name: 'Photos', path: '/gallery?year=2026', desc: 'Every album from race day' },
+    { name: 'Race Results', path: '/results', desc: 'Times and positions by circuit' },
+    { name: 'Raffle Winners', path: '/raffle-winners', desc: 'Including the Nissan Sylphy, ticket AA130' },
+];
 
 /* ─── Theme toggle icon ──────────────────────────────────────────────────── */
 const SunIcon = () => (
@@ -28,8 +35,13 @@ const Navbar = () => {
     const { account } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [showRegModal, setShowRegModal] = useState(false);
-    const [showRaffleModal, setShowRaffleModal] = useState(false);
+    const [recapOpen, setRecapOpen] = useState(false);
+    const [mobileRecapOpen, setMobileRecapOpen] = useState(false);
+    const recapRef = useRef<HTMLDivElement>(null);
+    const recapBtnRef = useRef<HTMLButtonElement>(null);
+    const openedByHover = useRef(false);
+    const accountOn = isOn('account');
+    const cta = primaryCta();
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined') {
             return localStorage.getItem('rwtw-theme') || 'dark';
@@ -73,17 +85,47 @@ const Navbar = () => {
     }, []);
 
     /* Close menu on route change */
-    useEffect(() => { setIsMenuOpen(false); }, [location.pathname]);
+    useEffect(() => { setIsMenuOpen(false); setRecapOpen(false); }, [location.pathname, location.search]);
 
-    const navLinks = [
+    /* Close the Recap dropdown on outside click */
+    useEffect(() => {
+        if (!recapOpen) return;
+        const onDown = (e: MouseEvent) => {
+            if (recapRef.current && !recapRef.current.contains(e.target as Node)) setRecapOpen(false);
+        };
+        document.addEventListener('mousedown', onDown);
+        return () => document.removeEventListener('mousedown', onDown);
+    }, [recapOpen]);
+
+    const onRecapKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Escape') {
+            setRecapOpen(false);
+            recapBtnRef.current?.focus();
+            return;
+        }
+        if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+        e.preventDefault();
+        const items = Array.from(recapRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []);
+        if (!recapOpen) { setRecapOpen(true); return; }
+        const i = items.indexOf(document.activeElement as HTMLElement);
+        const next = e.key === 'ArrowDown' ? (i + 1) % items.length : (i <= 0 ? items.length - 1 : i - 1);
+        items[next]?.focus();
+    };
+
+    const navLinksBefore = [
         { name: 'Home', path: '/' },
         { name: 'About', path: '/about' },
-        { name: 'Gallery', path: '/gallery' },
+        { name: 'Circuits', path: '/circuits' },
+    ];
+    const navLinksAfter = [
         { name: 'FAQs', path: '/faqs' },
         { name: 'Contact', path: '/contact' },
     ];
 
     const isActive = (path: string) => location.pathname === path;
+    const recapActive =
+        ['/2026', '/results', '/raffle-winners'].includes(location.pathname) ||
+        (location.pathname === '/gallery' && new URLSearchParams(location.search).get('year') === '2026');
 
     return (
         <>
@@ -197,7 +239,7 @@ const Navbar = () => {
                     flex: 1;
                     justify-content: center;
                 }
-                @media (max-width: 900px) { .nav-links { display: none; } }
+                @media (max-width: 1023px) { .nav-links { display: none; } }
 
                 .nav-link {
                     position: relative;
@@ -238,7 +280,7 @@ const Navbar = () => {
                     gap: 10px;
                     flex-shrink: 0;
                 }
-                @media (max-width: 900px) { .nav-actions { display: none; } }
+                @media (max-width: 1023px) { .nav-actions { display: none; } }
 
                 /* ── Icon button ── */
                 .nav-icon-btn {
@@ -367,7 +409,7 @@ const Navbar = () => {
                     align-items: center;
                     gap: 8px;
                 }
-                @media (max-width: 900px) { .nav-mobile-controls { display: flex; } }
+                @media (max-width: 1023px) { .nav-mobile-controls { display: flex; } }
 
                 /* ── Mobile overlay ── */
                 .nav-mobile-overlay {
@@ -530,6 +572,87 @@ const Navbar = () => {
                     border-color: rgba(255,255,255,0.5);
                     color: #fff;
                 }
+
+                /* ── Tighter spacing on mid-size desktops so everything fits ── */
+                @media (min-width: 1024px) and (max-width: 1439px) {
+                    .nav-inner { padding: 0 20px; gap: 14px; }
+                    .nav-logo-sub { display: none; }
+                    .nav-logo-label { font-size: 1.05rem; }
+                    .nav-link { padding: 7px 8px; font-size: 0.95rem; letter-spacing: 0.1em; }
+                    .nav-link::after { left: 8px; right: 8px; }
+                    .nav-actions { gap: 8px; }
+                    .nav-cta { padding: 9px 16px; font-size: 0.85rem; letter-spacing: 0.1em; }
+                    .nav-text-link { font-size: 0.9rem; letter-spacing: 0.1em; }
+                    .theme-toggle span { display: none; }
+                }
+
+                /* ── Plain text links in the right-hand actions ── */
+                .nav-text-link {
+                    font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 1rem; font-weight: 700;
+                    letter-spacing: 0.15em; text-transform: uppercase;
+                    text-decoration: none; white-space: nowrap;
+                    padding: 6px 4px;
+                    transition: color 0.2s;
+                }
+                .is-transparent .nav-text-link { color: rgba(255,255,255,0.8); }
+                .is-solid .nav-text-link { color: var(--nav-text); }
+                .is-transparent .nav-text-link:hover { color: #fff; }
+                .is-solid .nav-text-link:hover { color: var(--nav-text-active); }
+
+                /* ── 2026 Recap dropdown ── */
+                .nav-dropdown { position: relative; }
+                .nav-dropdown-btn {
+                    background: none; border: 0; cursor: pointer;
+                    display: inline-flex; align-items: center; gap: 6px;
+                }
+                .nav-dropdown-caret { font-size: 0.7rem; transition: transform 0.2s; }
+                .nav-dropdown.open .nav-dropdown-caret { transform: rotate(180deg); }
+                .nav-dropdown-menu {
+                    position: absolute; top: 100%; left: 0; min-width: 290px;
+                    padding: 8px 0; margin-top: 6px;
+                    background: var(--nav-mobile-bg);
+                    border: 1px solid var(--nav-border);
+                    box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+                    z-index: 130;
+                }
+                .nav-dropdown-menu::before { /* hover bridge over the gap */
+                    content: ''; position: absolute; top: -8px; left: 0; right: 0; height: 8px;
+                }
+                .nav-dropdown-item {
+                    display: block; padding: 10px 18px; text-decoration: none;
+                    color: var(--nav-text-active);
+                    transition: background 0.15s;
+                }
+                .nav-dropdown-item:hover, .nav-dropdown-item:focus-visible {
+                    background: var(--nav-toggle-bg); outline: none;
+                }
+                .nav-dropdown-item-name {
+                    display: block; font-family: 'Barlow Condensed', sans-serif;
+                    font-size: 1.05rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+                }
+                .nav-dropdown-item-desc { display: block; font-size: 0.78rem; opacity: 0.6; margin-top: 2px; }
+
+                /* ── Mobile accordion + text links ── */
+                .nav-mobile-accordion-btn {
+                    width: 100%; background: none; border-left: 0; border-right: 0; border-top: 0; cursor: pointer; text-align: left;
+                }
+                .nav-mobile-sub { display: flex; flex-direction: column; padding: 4px 0 10px 16px; border-bottom: 1px solid var(--nav-mobile-border); }
+                .nav-mobile-sub a {
+                    padding: 12px 0; text-decoration: none; color: var(--nav-mobile-link);
+                    font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700;
+                    letter-spacing: 0.08em; text-transform: uppercase;
+                }
+                .nav-mobile-sub a small {
+                    display: block; font-family: 'Barlow', sans-serif; font-size: 0.75rem;
+                    text-transform: none; letter-spacing: 0; opacity: 0.65; font-weight: 400;
+                }
+                .nav-mobile-sub a:hover { color: var(--nav-mobile-link-active); }
+                .nav-mobile-text-link {
+                    text-align: center; padding: 8px; text-decoration: none; color: var(--nav-mobile-link-active);
+                    font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700;
+                    letter-spacing: 0.12em; text-transform: uppercase;
+                }
             `}</style>
 
             {/* ── Main nav ── */}
@@ -546,7 +669,56 @@ const Navbar = () => {
 
                     {/* Center links */}
                     <nav className="nav-links">
-                        {navLinks.map((link) => (
+                        {navLinksBefore.map((link) => (
+                            <Link
+                                key={link.path}
+                                to={link.path}
+                                className={`nav-link ${isActive(link.path) ? 'active' : ''}`}
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
+
+                        <div
+                            className={`nav-dropdown ${recapOpen ? 'open' : ''}`}
+                            ref={recapRef}
+                            onMouseEnter={() => { if (!recapOpen) openedByHover.current = true; setRecapOpen(true); }}
+                            onMouseLeave={() => { openedByHover.current = false; setRecapOpen(false); }}
+                            onKeyDown={onRecapKeyDown}
+                        >
+                            <button
+                                ref={recapBtnRef}
+                                type="button"
+                                className={`nav-link nav-dropdown-btn ${recapActive ? 'active' : ''}`}
+                                aria-haspopup="menu"
+                                aria-expanded={recapOpen}
+                                onClick={() => {
+                                    // A click right after hover-opening keeps the menu open instead of toggling it shut.
+                                    if (openedByHover.current) { openedByHover.current = false; setRecapOpen(true); }
+                                    else setRecapOpen((v) => !v);
+                                }}
+                            >
+                                2026 Recap <span className="nav-dropdown-caret" aria-hidden="true">▾</span>
+                            </button>
+                            {recapOpen && (
+                                <div className="nav-dropdown-menu" role="menu" aria-label="2026 Recap">
+                                    {RECAP_ITEMS.map((item) => (
+                                        <Link
+                                            key={item.path}
+                                            to={item.path}
+                                            role="menuitem"
+                                            className="nav-dropdown-item"
+                                            onClick={() => setRecapOpen(false)}
+                                        >
+                                            <span className="nav-dropdown-item-name">{item.name}</span>
+                                            <span className="nav-dropdown-item-desc">{item.desc}</span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {navLinksAfter.map((link) => (
                             <Link
                                 key={link.path}
                                 to={link.path}
@@ -571,16 +743,13 @@ const Navbar = () => {
 
                         <div className="nav-divider" />
 
-                        <Link to={account ? '/account' : '/login'} className="nav-cta black-white">
-                            {account ? 'My Account' : 'Log in'}
-                        </Link>
-
-                        {/* CTAs */}
-                        <Link to="/feedback" className="nav-cta black-white">Feedback</Link>
-                        <Link to="/raffle-winners" className="nav-cta amber" style={{ border: 'none' }}>
-                            Raffle Winners
-                        </Link>
-                        <Link to="/results" className="nav-cta green nav-cta-red-shadow">Race Results</Link>
+                        {accountOn && (
+                            <Link to={account ? '/account' : '/login'} className="nav-text-link">
+                                {account ? 'My Account' : 'Log in'}
+                            </Link>
+                        )}
+                        <Link to="/feedback" className="nav-text-link">Feedback</Link>
+                        <Link to={cta.to} className="nav-cta green">{cta.label}</Link>
                     </div>
 
                     {/* Mobile controls */}
@@ -624,7 +793,7 @@ const Navbar = () => {
 
                 {/* Links */}
                 <nav className="nav-mobile-links">
-                    {navLinks.map((link, i) => (
+                    {[...navLinksBefore, null, ...navLinksAfter].map((link, i) => link ? (
                         <Link
                             key={link.path}
                             to={link.path}
@@ -635,45 +804,51 @@ const Navbar = () => {
                             {link.name}
                             <span className="link-arrow">→</span>
                         </Link>
+                    ) : (
+                        <div key="recap">
+                            <button
+                                type="button"
+                                className={`nav-mobile-link nav-mobile-accordion-btn ${recapActive ? 'active' : ''}`}
+                                aria-expanded={mobileRecapOpen}
+                                aria-controls="mobile-recap-sub"
+                                onClick={() => setMobileRecapOpen((v) => !v)}
+                            >
+                                2026 Recap
+                                <span aria-hidden="true" style={{ fontSize: '1rem' }}>{mobileRecapOpen ? '−' : '+'}</span>
+                            </button>
+                            {mobileRecapOpen && (
+                                <div className="nav-mobile-sub" id="mobile-recap-sub">
+                                    {RECAP_ITEMS.map((item) => (
+                                        <Link key={item.path} to={item.path} onClick={() => setIsMenuOpen(false)}>
+                                            {item.name}
+                                            <small>{item.desc}</small>
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     ))}
                 </nav>
 
                 {/* CTAs */}
                 <div className="nav-mobile-ctas">
-                    <Link
-                        to={account ? '/account' : '/login'}
-                        className="nav-mobile-cta black-white"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        {account ? 'My Account' : 'Log in'}
-                    </Link>
-                    <Link
-                        to="/feedback"
-                        className="nav-mobile-cta black-white"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
+                    {accountOn && (
+                        <Link
+                            to={account ? '/account' : '/login'}
+                            className="nav-mobile-text-link"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            {account ? 'My Account' : 'Log in'}
+                        </Link>
+                    )}
+                    <Link to="/feedback" className="nav-mobile-text-link" onClick={() => setIsMenuOpen(false)}>
                         Feedback
                     </Link>
-                    <Link
-                        to="/raffle-winners"
-                        className="nav-mobile-cta amber"
-                        style={{ border: 'none' }}
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Raffle Winners
-                    </Link>
-                    <Link
-                        to="/results"
-                        className="nav-mobile-cta green"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Race Results
+                    <Link to={cta.to} className="nav-mobile-cta green" onClick={() => setIsMenuOpen(false)}>
+                        {cta.label}
                     </Link>
                 </div>
             </div>
-
-            {showRegModal && <RegistrationClosedModal onClose={() => setShowRegModal(false)} />}
-            {showRaffleModal && <RaffleClosedModal onClose={() => setShowRaffleModal(false)} />}
         </>
     );
 };

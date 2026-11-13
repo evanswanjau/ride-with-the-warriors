@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { getErrorMessage } from '../utils/registration';
 import { Link } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
+import { EDITION } from '../config/edition';
 
 const NotifyPage = () => {
     const [firstName, setFirstName] = useState('');
@@ -74,7 +75,7 @@ const NotifyPage = () => {
                         letterSpacing: '0.28em', textTransform: 'uppercase',
                         color: 'var(--color-primary-light, #4caf50)',
                     }}>
-                        Ride With The Warriors 2027
+                        Ride With The Warriors {EDITION.year}
                     </span>
                     <div style={{ height: '1px', width: '32px', background: 'var(--color-primary-light, #4caf50)', flexShrink: 0 }} />
                 </div>
@@ -87,7 +88,7 @@ const NotifyPage = () => {
                     letterSpacing: '0.04em', lineHeight: 1.15,
                     marginBottom: '1rem',
                 }}>
-                    Be the First to Know
+                    Pre-register for {EDITION.shortName}
                 </h1>
 
                 <p style={{
@@ -95,7 +96,7 @@ const NotifyPage = () => {
                     fontSize: '0.95rem', lineHeight: 1.75,
                     marginBottom: '2.5rem',
                 }}>
-                    Registration for 2026 is closed, but the next edition is coming. Leave your details and we'll let you know when registration opens for 2027.
+                    Leave your details and we'll let you know when registration opens for {EDITION.year}.
                 </p>
 
                 {status === 'done' ? (
@@ -116,7 +117,7 @@ const NotifyPage = () => {
                                 You're on the list!
                             </p>
                             <p style={{ color: 'var(--p-text-2, rgba(255,255,255,0.58))', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                                We'll be in touch when registration opens for Ride With The Warriors 2027.
+                                We'll notify you when registration opens on {EDITION.registrationOpensLabel}.
                             </p>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
@@ -129,7 +130,8 @@ const NotifyPage = () => {
                         </div>
                     </div>
                 ) : (
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    <form onSubmit={handleSubmit}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                         <div>
                             <label style={labelStyle}>First Name</label>
                             <input
@@ -169,9 +171,10 @@ const NotifyPage = () => {
                                     opacity: status === 'submitting' ? 0.6 : 1,
                                 }}
                             >
-                                {status === 'submitting' ? 'Saving...' : 'Notify Me for 2027'}
+                                {status === 'submitting' ? 'Saving...' : `Notify Me for ${EDITION.year}`}
                             </button>
                             </div>
+                      </div>
                     </form>
                 )}
 

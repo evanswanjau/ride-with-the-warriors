@@ -4,6 +4,7 @@ import { RegistrationProvider, useRegistration } from './context/RegistrationCon
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import RequireAuth from './components/auth/RequireAuth';
+import { FeatureRoute } from './components/common/FeatureRoute';
 
 import ScrollToTop from './utils/ScrollToTop';
 import PageTitle from './utils/PageTitle';
@@ -40,6 +41,7 @@ const RafflePaymentPageRoute = lazy(() => import('./pages/RafflePaymentPageRoute
 const DonatePage = lazy(() => import('./pages/DonatePage'));
 const ResultsPage = lazy(() => import('./pages/ResultsPage'));
 const RaffleWinnersPage = lazy(() => import('./pages/RaffleWinnersPage'));
+const Recap2026Page = lazy(() => import('./pages/Recap2026Page'));
 
 const RouteFallback = () => <div className="min-h-screen" role="status" aria-label="Loading" />;
 
@@ -69,14 +71,15 @@ const App = () => {
         <Route path="/contact" element={<Layout isFullWidth><ContactUs /></Layout>} />
         <Route path="/gallery" element={<Layout isFullWidth><Gallery /></Layout>} />
         <Route path="/faqs" element={<Layout isFullWidth><Faqs /></Layout>} />
-        <Route path="/donate" element={<DonatePage />} />
+        <Route path="/donate" element={<FeatureRoute feature="donate"><DonatePage /></FeatureRoute>} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/results" element={<Layout isFullWidth><ResultsPage /></Layout>} />
+        <Route path="/2026" element={<Layout isFullWidth><Recap2026Page /></Layout>} />
         <Route path="/raffle-winners" element={<Layout isFullWidth><RaffleWinnersPage /></Layout>} />
 
         {/* Participant accounts */}
-        <Route path="/login" element={<Layout isFullWidth><LoginPage /></Layout>} />
-        <Route path="/account" element={<RequireAuth><PortalLayout /></RequireAuth>}>
+        <Route path="/login" element={<FeatureRoute feature="account"><Layout isFullWidth><LoginPage /></Layout></FeatureRoute>} />
+        <Route path="/account" element={<FeatureRoute feature="account"><RequireAuth><PortalLayout /></RequireAuth></FeatureRoute>}>
           <Route index element={<HomeScreen />} />
           <Route path="entries" element={<EntriesScreen />} />
           <Route path="entries/:groupId" element={<EntryScreen />} />
@@ -95,8 +98,8 @@ const App = () => {
         <Route path="/military/register/*" element={<RegistrationClosedPage />} />
 
         {/* Payment & Success */}
-        <Route path="/payment/:regId" element={<RequireAuth><PaymentPage /></RequireAuth>} />
-        <Route path="/success/:regId" element={<RequireAuth><SuccessPage /></RequireAuth>} />
+        <Route path="/payment/:regId" element={<FeatureRoute feature="account"><RequireAuth><PaymentPage /></RequireAuth></FeatureRoute>} />
+        <Route path="/success/:regId" element={<FeatureRoute feature="account"><RequireAuth><SuccessPage /></RequireAuth></FeatureRoute>} />
 
         {/* Old public profile links now live in the participant's account */}
         <Route path="/search" element={<Navigate to="/account" replace />} />
@@ -105,8 +108,8 @@ const App = () => {
         {/* Raffle Flow — closed; profiles and payments for existing tickets remain reachable */}
         <Route path="/raffle/closed" element={<RaffleClosedPage />} />
         <Route path="/raffle/step/*" element={<RaffleClosedPage />} />
-        <Route path="/raffle/payment/:id" element={<RequireAuth><RafflePaymentPageRoute /></RequireAuth>} />
-        <Route path="/raffle/success/:id" element={<RequireAuth><RaffleSuccessPage /></RequireAuth>} />
+        <Route path="/raffle/payment/:id" element={<FeatureRoute feature="account"><RequireAuth><RafflePaymentPageRoute /></RequireAuth></FeatureRoute>} />
+        <Route path="/raffle/success/:id" element={<FeatureRoute feature="account"><RequireAuth><RaffleSuccessPage /></RequireAuth></FeatureRoute>} />
         <Route path="/raffle/profile/*" element={<Navigate to="/account" replace />} />
 
         {/* Legal */}

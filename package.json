@@ -23,7 +23,8 @@
     "e2e:perf": "playwright test -c playwright.perf.config.ts",
     "budget": "node scripts/check-budget.mjs",
     "e2e:ui": "playwright test --ui",
-    "e2e:report": "playwright show-report"
+    "e2e:report": "playwright show-report",
+    "test": "vitest run --dir src"
   },
   "dependencies": {
     "@sentry/react": "^9.47.2",

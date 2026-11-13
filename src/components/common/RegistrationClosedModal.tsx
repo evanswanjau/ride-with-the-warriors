@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { EDITION } from '../../config/edition';
 
 interface Props {
     onClose: () => void;
@@ -117,7 +118,7 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
                     color: 'var(--p-text-2, rgba(255,255,255,0.58))',
                     lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '2rem',
                 }}>
-                    Thank you for your interest. Share your experience and sign up to be notified when registration opens for 2027.
+                    Thank you for your interest. Share your experience and sign up to be notified when registration opens for {EDITION.year}.
                 </p>
 
                 {/* CTAs */}
@@ -134,7 +135,7 @@ const RegistrationClosedModal = ({ onClose }: Props) => {
                         className="shimmer-btn shimmer-btn--ghost"
                         style={{ width: '100%', justifyContent: 'center', border: '1px solid var(--p-border-2)', cursor: 'pointer' }}
                     >
-                        Notify Me for 2027
+                        Notify Me for {EDITION.year}
                     </button>
                 </div>
             </div>

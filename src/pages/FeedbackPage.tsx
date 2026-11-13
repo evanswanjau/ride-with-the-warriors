@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { API_BASE_URL } from '../config';
+import { EDITION } from '../config/edition';
 
 type Role = 'CYCLIST' | 'ATTENDEE' | 'SPONSOR' | 'ORGANISER';
 
@@ -41,7 +42,7 @@ const FeedbackPage = () => {
             return;
         }
         if (notifyFor2027 && !email.trim()) {
-            setErrorMsg('Please enter your email to be notified for 2027.');
+            setErrorMsg(`Please enter your email to be notified for ${EDITION.year}.`);
             setStatus('error');
             return;
         }
@@ -145,7 +146,7 @@ const FeedbackPage = () => {
                     marginBottom: '1rem',
                 }}>
                     Thank you for being part of Ride With The Warriors 2026. Whether you rode, cheered,
-                    sponsored or organised — your honest feedback shapes a better ride in 2027.
+                    sponsored or organised — your honest feedback shapes a better ride in {EDITION.year}.
                     It takes less than a minute, and every answer is read.
                 </p>
                 <p style={{
@@ -175,16 +176,16 @@ const FeedbackPage = () => {
                             </p>
                             <p style={{ color: 'var(--p-text-2, rgba(255,255,255,0.58))', fontSize: '0.9rem', lineHeight: 1.6 }}>
                                 Your feedback has been received. It goes straight to the team planning
-                                Ride With The Warriors 2027 — riding with honour, and getting better every year.
+                                Ride With The Warriors {EDITION.year} — riding with honour, and getting better every year.
                                 {notifyRegistered && (
-                                    <> We'll also email you when registration opens for 2027.</>
+                                    <> We'll also email you when registration opens for {EDITION.year}.</>
                                 )}
                             </p>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
                             {!notifyRegistered && (
                                 <Link to="/register/notify" className="shimmer-btn shimmer-btn--primary">
-                                    Notify Me for 2027
+                                    Notify Me for {EDITION.year}
                                 </Link>
                             )}
                             <Link to="/" className="shimmer-btn shimmer-btn--ghost">
@@ -193,7 +194,8 @@ const FeedbackPage = () => {
                         </div>
                     </div>
                 ) : (
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                    <form onSubmit={handleSubmit}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
                         {/* Optional name */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
@@ -325,7 +327,7 @@ const FeedbackPage = () => {
 
                         {/* Improvements */}
                         <div>
-                            <label style={labelStyle}>What should we improve for 2027?</label>
+                            <label style={labelStyle}>What should we improve for {EDITION.year}?</label>
                             <textarea
                                 value={improvements}
                                 onChange={e => setImprovements(e.target.value)}
@@ -356,7 +358,7 @@ const FeedbackPage = () => {
                                     letterSpacing: '0.1em', textTransform: 'uppercase',
                                     color: 'var(--p-text-1, #fff)',
                                 }}>
-                                    Notify Me for 2027
+                                    Notify Me for {EDITION.year}
                                 </span>
                                 <button
                                     type="button"
@@ -408,7 +410,7 @@ const FeedbackPage = () => {
                                         lineHeight: 1.5,
                                         color: 'var(--p-text-2, rgba(255,255,255,0.58))',
                                     }}>
-                                        We'll let you know when registration opens for the 2027 edition.
+                                        We'll let you know when registration opens for the {EDITION.year} edition.
                                     </p>
                                 </div>
                             )}
@@ -434,6 +436,7 @@ const FeedbackPage = () => {
                                 {status === 'submitting' ? 'Sending...' : 'Submit Feedback'}
                             </button>
                         </div>
+                      </div>
                     </form>
                 )}
 
