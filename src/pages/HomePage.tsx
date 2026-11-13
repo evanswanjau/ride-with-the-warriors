@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import RegistrationClosedModal from '../components/common/RegistrationClosedModal';
-import RaffleClosedModal from '../components/common/RaffleClosedModal';
-import { AiOutlineCalendar, AiOutlineEnvironment, AiOutlineTeam, AiOutlineTrophy, AiOutlineTags, AiOutlineArrowRight } from 'react-icons/ai';
+import { AiOutlineTeam, AiOutlineTrophy } from 'react-icons/ai';
+import Countdown from '../components/common/Countdown';
+import RecapPhotos from '../components/common/RecapPhotos';
+import { EDITION, PAST_EDITION, phaseAt } from '../config/edition';
+import { primaryCta } from '../config/cta';
 import { HERO_HIGHLIGHT, HOME_COLLAGE, highlightImgProps } from '../data/highlights';
 import kdfLogo from '../assets/logos/web/kdf.webp';
 import logo from '../assets/logos/web/logo.webp';
@@ -62,7 +64,7 @@ const TestimonialsSection = () => {
             <div className="t-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
                     <div style={{ height: 1, width: 48, background: 'var(--color-primary)', flexShrink: 0 }} />
-                    <span className="section-label">Voices From The 2025 Edition</span>
+                    <span className="section-label">Voices From Past Editions</span>
                 </div>
                 <h2 className="display-heading t-heading">
                     Riders Don't <span style={{ color: 'var(--color-primary-light)' }}>Forget.</span>
@@ -87,8 +89,8 @@ const TestimonialsSection = () => {
 /* ─── Main Component ─────────────────────────────────────────────────────── */
 const HomePage = () => {
     const heroRef = useRef<HTMLImageElement>(null);
-    const [showRegModal, setShowRegModal] = useState(false);
-    const [showRaffleModal, setShowRaffleModal] = useState(false);
+    const cta = primaryCta();
+    const phase = phaseAt();
 
     useEffect(() => {
         let ticking = false;
@@ -111,12 +113,13 @@ const HomePage = () => {
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
-    const stats = [
-        { icon: <AiOutlineTeam />, value: '500+', label: 'Riders Expected' },
-        { icon: <AiOutlineTrophy />, value: '4', label: 'Race Circuits' },
-        { icon: <AiOutlineCalendar />, value: 'July 5', label: '2026 Edition' },
-        { icon: <AiOutlineEnvironment />, value: '120 KM', label: 'Longest Route' },
+    const keyDates = [
+        { title: 'Pre-register now', detail: 'Be first to know' },
+        { title: `Registration opens ${EDITION.registrationOpensLabel}`, detail: '00:00 EAT' },
+        { title: `Closes ${EDITION.registrationClosesLabel} or at ${EDITION.riderCap.toLocaleString('en-US')} riders`, detail: 'Whichever comes first' },
+        { title: `Race day ${EDITION.raceDayLabel.replace('Sunday ', '')}`, detail: EDITION.venue },
     ];
+    const activeStep = { 'pre-registration': 0, 'registration-open': 2, 'registration-closed': 3, 'post-race': 3 }[phase];
 
     const circuits = [
         { number: '120', name: 'Blitz Circuit', type: 'Competitive', distance: '120 KM', description: 'The ultimate endurance test for elite cyclists pushing their absolute limits.' },
@@ -149,31 +152,31 @@ const HomePage = () => {
                         <div className="max-w-7xl mx-auto px-6 lg:px-12">
                             <div className="flex items-center gap-3 mb-8">
                                 <div className="h-px w-12 bg-[var(--color-primary)]" />
-                                <span className="section-label" style={{ color: '#4caf50' }}>2nd Edition — KDF Airborne Fraternity</span>
+                                <span className="section-label" style={{ color: '#4caf50' }}>{`${EDITION.ordinal} Edition — KDF Airborne Fraternity`}</span>
                             </div>
-                            <h1 className="display-heading text-[clamp(4rem,12vw,9rem)] text-white mb-2">
-                                Ride With<br />
-                                The <span style={{ color: 'var(--color-primary-light)' }}>Warriors</span> 2026
+                            <h1 className="display-heading text-[clamp(3.2rem,10vw,8rem)] text-white mb-2">
+                                Ride for the<br />
+                                <span style={{ color: 'var(--color-primary-light)' }}>Warrior Within.</span>
                             </h1>
                             <div className="flex flex-col md:flex-row md:items-end gap-10 mt-8">
-                                <p className="text-white/60 text-lg max-w-md leading-relaxed font-light">
-                                    A premier multi-national cycling event. Ride with honour —
-                                    <span className="text-white/90 font-semibold"> supporting the widows</span> of our fallen heroes.
-                                </p>
+                                <div className="flex flex-col gap-8">
+                                    <p className="text-white/60 text-lg max-w-xl leading-relaxed font-light">
+                                        {EDITION.theme}
+                                    </p>
+                                    <Countdown className="text-white" />
+                                </div>
                                 <div className="flex flex-wrap gap-4 md:ml-auto md:pb-1">
-                                    <Link to="/raffle-winners" className="shimmer-btn shimmer-btn--amber" style={{ border: 'none' }}>
-                                        Raffle Winners
-                                    </Link>
-                                    <Link to="/results" className="shimmer-btn shimmer-btn--primary">Race Results</Link>
+                                    <Link to={cta.to} className="shimmer-btn shimmer-btn--primary">{cta.label}</Link>
+                                    <Link to="/2026" className="shimmer-btn shimmer-btn--ghost" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.5)' }}>See 2026 highlights</Link>
                                 </div>
                             </div>
                             <div className="mt-12 flex items-center gap-4">
                                 <div className="flex items-center gap-2 text-white/40 text-sm font-semibold tracking-widest uppercase">
                                     <span className="inline-block w-2 h-2 bg-[var(--color-primary-light)]" />
-                                    05 July 2026
+                                    {EDITION.raceDayLabel}
                                 </div>
                                 <div className="h-px flex-1 max-w-[200px] bg-white/10" />
-                                <div className="text-white/40 text-sm font-semibold tracking-widest uppercase">Ulinzi Sports Complex</div>
+                                <div className="text-white/40 text-sm font-semibold tracking-widest uppercase">{EDITION.venue}</div>
                             </div>
                         </div>
                     </div>
@@ -183,9 +186,9 @@ const HomePage = () => {
                 <div className="ticker-wrap py-3">
                     <div className="ticker-track">
                         {Array(2).fill([
-                            'RIDE WITH THE WARRIORS', '05 JULY 2026', 'KDF AIRBORNE FRATERNITY',
-                            '120KM BLITZ CIRCUIT', 'HONOUR THE FALLEN', 'ULINZI SPORTS COMPLEX',
-                            'SUPPORTING THE WIDOWS', '500+ RIDERS', '4 CIRCUITS',
+                            'RIDE WITH THE WARRIORS', EDITION.raceDayLabel.toUpperCase(), 'KDF AIRBORNE FRATERNITY',
+                            `REGISTRATION OPENS ${EDITION.registrationOpensLabel.toUpperCase()}`, 'HONOUR THE FALLEN', EDITION.venue.toUpperCase(),
+                            'SUPPORTING THE WIDOWS', EDITION.shortName, '4 CIRCUITS',
                         ]).flat().map((item, i) => (
                             <span key={i} className="px-8 text-xs font-bold tracking-[0.25em] text-white/80 whitespace-nowrap">
                                 {item} <span className="text-white/30 mx-2">◆</span>
@@ -194,17 +197,31 @@ const HomePage = () => {
                     </div>
                 </div>
 
-                {/* ── Stats Strip ──────────────────────────────────────── */}
+                {/* ── Key dates ────────────────────────────────────────── */}
                 <section style={{ background: 'var(--stat-bg)', borderTop: '1px solid var(--border-1)', borderBottom: '1px solid var(--border-1)', transition: 'background 0.3s' }}>
-                    <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-2 md:grid-cols-4" style={{ borderRight: 'none' }}>
-                        {stats.map((stat, idx) => (
-                            <div key={idx} className="stat-card py-10 flex flex-col gap-2" style={{ borderRight: idx < 3 ? '1px solid var(--border-1)' : 'none' }}>
-                                <div style={{ color: 'var(--color-primary-light)', fontSize: '1.25rem' }}>{stat.icon}</div>
-                                <div className="display-heading text-5xl" style={{ color: 'var(--text-1)' }}>{stat.value}</div>
-                                <div className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--text-3)' }}>{stat.label}</div>
-                            </div>
-                        ))}
-                    </div>
+                    <ol className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-4 list-none m-0" data-testid="key-dates">
+                        {keyDates.map((step, idx) => {
+                            const active = idx === activeStep;
+                            return (
+                                <li
+                                    key={step.title}
+                                    aria-current={active ? 'step' : undefined}
+                                    className="py-8 md:px-6 first:md:pl-0 flex flex-col gap-2"
+                                    style={{
+                                        borderRight: idx < 3 ? '1px solid var(--border-1)' : 'none',
+                                        borderBottom: idx < 3 ? '1px solid var(--border-1)' : 'none',
+                                        borderTop: active ? '3px solid var(--color-primary-light)' : '3px solid transparent',
+                                    }}
+                                >
+                                    <div className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: active ? 'var(--color-primary-light)' : 'var(--text-3)' }}>
+                                        Step {idx + 1}{active ? ' · Now' : ''}
+                                    </div>
+                                    <div className="display-heading text-3xl" style={{ color: 'var(--text-1)' }}>{step.title}</div>
+                                    <div className="text-sm" style={{ color: 'var(--text-3)' }}>{step.detail}</div>
+                                </li>
+                            );
+                        })}
+                    </ol>
                 </section>
 
                 {/* ── About / Mission ──────────────────────────────────── */}
@@ -234,8 +251,9 @@ const HomePage = () => {
                             </h2>
                             <p className="text-lg leading-relaxed mb-10" style={{ color: 'var(--text-2)' }}>
                                 Ride With The Warriors is a fusion of elite cycling challenge and military tradition.
-                                The 2026 edition raises the bar with new circuits, uniting civilians and soldiers
-                                in a shared test of endurance — while making a real difference for the families left behind.
+                                The {EDITION.year} edition rides for the Warrior Within, raising awareness of soldiers' mental health
+                                while uniting civilians and soldiers in a shared test of endurance — and making
+                                a real difference for the families left behind.
                             </p>
                             <div className="space-y-0 mb-12" style={{ borderTop: '1px solid var(--border-1)' }}>
                                 {[
@@ -304,84 +322,45 @@ const HomePage = () => {
 
 
 
-                <section className="py-24 px-6 lg:px-12" style={{ fontFamily: "'Barlow', sans-serif", background: 'var(--page-bg)', transition: 'background 0.3s' }}>
+                {/* ── 2026 Recap ───────────────────────────────────────── */}
+                <section className="py-24 px-6 lg:px-12" style={{ background: 'var(--page-bg)', transition: 'background 0.3s' }} data-testid="home-recap">
                     <div className="max-w-7xl mx-auto">
-                        <div className="flex flex-col md:flex-row md:items-end gap-6 mb-14">
-                            <div>
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="h-px w-12 bg-amber-500" />
-                                    <span className="font-['Barlow_Condensed'] text-[0.7rem] font-bold tracking-[0.25em] uppercase text-amber-600">The Grand Raffle 2026</span>
-                                </div>
-                                <h2 className="font-['Bebas_Neue'] tracking-[0.03em] leading-[0.95] text-[clamp(3rem,6vw,5rem)]" style={{ color: 'var(--text-1)' }}>
-                                    Win Big.<br />
-                                    <span className="text-amber-500">Give Back.</span>
-                                </h2>
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="h-px w-12 bg-[var(--color-primary)]" />
+                            <span className="section-label">{PAST_EDITION.year} Recap</span>
+                        </div>
+                        <h2 className="display-heading text-[clamp(3rem,6vw,5rem)] mb-12" style={{ color: 'var(--text-1)' }}>
+                            See What You <span style={{ color: 'var(--color-primary-light)' }}>Missed.</span>
+                        </h2>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-4">
+                            <div className="lg:col-span-3 grid grid-cols-3 gap-4">
+                                {[
+                                    { value: PAST_EDITION.riders, label: 'riders' },
+                                    { value: PAST_EDITION.participants, label: 'participants' },
+                                    { value: PAST_EDITION.ordinal, label: 'edition' },
+                                ].map((t) => (
+                                    <div key={t.label} className="border p-6 flex flex-col gap-2 justify-center" style={{ borderColor: 'var(--border-1)', background: 'var(--raised-bg)' }}>
+                                        <div className="display-heading text-4xl md:text-5xl" style={{ color: 'var(--text-1)' }}>{t.value}</div>
+                                        <div className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--text-3)' }}>{t.label}</div>
+                                    </div>
+                                ))}
                             </div>
-                            <p className="max-w-xs leading-relaxed md:ml-auto md:text-right text-sm" style={{ color: 'var(--text-3)' }}>
-                                Every ticket supports the widows and families of fallen heroes — while putting you in the draw for incredible prizes.
-                            </p>
+                            <div className="lg:col-span-2 border p-6 flex flex-col gap-2" style={{ borderColor: 'var(--border-1)', background: 'var(--raised-bg)' }}>
+                                <div className="text-xs font-bold uppercase tracking-[0.2em] text-amber-600">The ticket that won the car</div>
+                                <div className="display-heading text-6xl text-amber-500" data-testid="car-ticket">{PAST_EDITION.carTicket}</div>
+                                <Link to="/raffle-winners" className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-light)' }}>
+                                    All raffle winners →
+                                </Link>
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-0 border"
-                            style={{ clipPath: 'polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 28px 100%, 0 calc(100% - 28px))', borderColor: 'var(--border-1)', background: 'var(--raised-bg)', transition: 'background 0.3s' }}>
-                            <div className="lg:col-span-3 p-10 md:p-14 flex flex-col justify-between">
-                                <div>
-                                    <p className="text-lg leading-relaxed mb-10 max-w-lg" style={{ color: 'var(--text-2)' }}>
-                                        Support the widows and families of our fallen heroes. Every ticket purchased
-                                        directly contributes to their welfare while giving you a chance to
-                                        <span className="font-semibold" style={{ color: 'var(--text-1)' }}> win incredible prizes</span>.
-                                    </p>
-                                    <div className="mb-12">
-                                        <div className="raffle-feature-light" style={{ borderColor: 'var(--border-1)' }}>
-                                            <div className="raffle-feature-icon-light"><AiOutlineTrophy /></div>
-                                            <div>
-                                                <h4 className="font-bold text-sm tracking-wide mb-1" style={{ color: 'var(--text-1)' }}>Elite Prizes</h4>
-                                                <p className="text-sm" style={{ color: 'var(--text-3)' }}>High-end mountain bikes, exclusive military experiences, and more.</p>
-                                            </div>
-                                        </div>
-                                        <div className="raffle-feature-light" style={{ borderColor: 'var(--border-1)' }}>
-                                            <div className="raffle-feature-icon-light"><AiOutlineTags /></div>
-                                            <div>
-                                                <h4 className="font-bold text-sm tracking-wide mb-1" style={{ color: 'var(--text-1)' }}>KSH 1,000 / Ticket</h4>
-                                                <p className="text-sm" style={{ color: 'var(--text-3)' }}>Buy as many as you want — more tickets means better odds.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowRaffleModal(true)}
-                                        className="raffle-cta-btn w-full sm:w-auto flex justify-center"
-                                        style={{ cursor: 'pointer', border: 'none' }}
-                                    >
-                                        <span className="sm:hidden">Buy Tickets Now</span>
-                                        <span className="hidden sm:inline">Get Your Tickets Now</span>
-                                        <AiOutlineArrowRight className="text-lg" />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="lg:col-span-2 raffle-ticket-visual-light min-h-[360px] flex flex-col items-center justify-center gap-8 p-12">
-                                <div className="font-['Barlow_Condensed'] text-[0.7rem] font-bold uppercase tracking-[0.3em] text-amber-600/80">Grand Raffle 2026</div>
-                                <div className="text-center">
-                                    <div className="font-['Bebas_Neue'] text-[5.5rem] text-amber-500 leading-none relative" style={{ textShadow: '0 0 40px rgba(245,158,11,0.6), 0 0 80px rgba(245,158,11,0.4), 0 0 10px rgba(245,158,11,0.8)' }}>
-                                        1,000
-                                    </div>
-                                    <div className="font-['Barlow_Condensed'] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-amber-600/70 mt-1">KSH per ticket</div>
-                                </div>
-                                <div className="w-full border-t border-dashed border-amber-500/30" />
-                                <div className="grid grid-cols-2 gap-0 w-full">
-                                    <div className="prize-stat-light text-center">
-                                        <div className="font-['Bebas_Neue'] text-3xl" style={{ color: 'var(--text-1)' }}>Multiple</div>
-                                        <div className="text-xs font-bold uppercase tracking-widest mt-1" style={{ color: 'var(--text-3)' }}>Prize Tiers</div>
-                                    </div>
-                                    <div className="prize-stat-light text-center">
-                                        <div className="font-['Bebas_Neue'] text-3xl" style={{ color: 'var(--text-1)' }}>∞</div>
-                                        <div className="text-xs font-bold uppercase tracking-widest mt-1" style={{ color: 'var(--text-3)' }}>Tickets / Person</div>
-                                    </div>
-                                </div>
-                                <div className="font-['Barlow_Condensed'] text-[0.7rem] font-bold uppercase tracking-[0.2em] text-neutral-500">Draw: 05 July 2026</div>
-                            </div>
+                        <RecapPhotos count={4} />
+
+                        <div className="mt-10 flex flex-wrap gap-4">
+                            <Link to="/2026" className="shimmer-btn shimmer-btn--primary">Highlights</Link>
+                            <Link to="/gallery?year=2026" className="shimmer-btn shimmer-btn--ghost">Photos</Link>
+                            <Link to="/results" className="shimmer-btn shimmer-btn--ghost">Results</Link>
                         </div>
                     </div>
                 </section>
@@ -393,7 +372,7 @@ const HomePage = () => {
                 <section className="py-28 px-6 lg:px-12 cta-band relative overflow-hidden" style={{ background: 'var(--page-bg)', transition: 'background 0.3s' }}>
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
                         <span className="display-heading text-[20vw] whitespace-nowrap select-none" style={{ color: 'var(--text-1)', opacity: 0.02 }}>
-                            RIDE 2026
+                            RIDE {EDITION.year}
                         </span>
                     </div>
                     <div className="max-w-7xl mx-auto relative z-10">
@@ -407,25 +386,15 @@ const HomePage = () => {
                                     Ready To<br /><span style={{ color: 'var(--color-primary-light)' }}>Ride?</span>
                                 </h2>
                                 <p className="mt-6 text-lg max-w-md leading-relaxed" style={{ color: 'var(--text-3)' }}>
-                                    Join hundreds of riders on July 5th, 2026. Whether you're a pro cyclist
-                                    or bringing the family — there's a circuit for you.
+                                    Registration opens {EDITION.registrationOpensLabel}. Pre-register and
+                                    we'll tell you first.
                                 </p>
                             </div>
-                            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 lg:flex-col xl:flex-row">
-                                <div className="border p-8 flex-1" style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)', borderColor: 'var(--border-1)', background: 'var(--cta-card-bg)', transition: 'background 0.3s' }}>
-                                    <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>For Supporters</div>
-                                    <div className="display-heading text-3xl mb-4" style={{ color: 'var(--text-1)' }}>Raffle Winners</div>
-                                    <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>See who won in the grand raffle draw.</p>
-                                    <Link to="/raffle-winners" className="shimmer-btn shimmer-btn--amber w-full text-center" style={{ border: 'none' }}>
-                                        Raffle Winners
-                                    </Link>
-                                </div>
-                                <div className="border p-8 flex-1" style={{ clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)', borderColor: 'var(--border-1)', background: 'var(--cta-card-bg)', transition: 'background 0.3s' }}>
-                                    <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>For Cyclists</div>
-                                    <div className="display-heading text-3xl mb-4" style={{ color: 'var(--text-1)' }}>Race Results</div>
-                                    <p className="text-sm mb-8" style={{ color: 'var(--text-3)' }}>Check out the race results from the 2026 edition.</p>
-                                    <Link to="/results" className="shimmer-btn shimmer-btn--primary w-full text-center">Race Results</Link>
-                                </div>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+                                <Link to={cta.to} className="shimmer-btn shimmer-btn--primary text-center">{cta.label}</Link>
+                                <Link to="/feedback" className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-light)' }}>
+                                    Give feedback on {PAST_EDITION.year}
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -444,7 +413,7 @@ const HomePage = () => {
                             </div>
                             <h3 className="display-heading text-3xl mb-3" style={{ color: 'var(--text-1)' }}>Flying Doctors Society of Africa</h3>
                             <p className="text-sm leading-relaxed max-w-lg" style={{ color: 'var(--text-2)' }}>
-                                As a RWTW 2026 participant, we strongly recommend enrolling in Flying Doctors' Emergency Medical Evacuation membership — ensuring access to air rescue and emergency medical services throughout the event and beyond.
+                                As an {EDITION.shortName} participant, we strongly recommend enrolling in Flying Doctors' Emergency Medical Evacuation membership — ensuring access to air rescue and emergency medical services throughout the event and beyond.
                             </p>
                         </div>
                         <div className="flex-none">
@@ -491,8 +460,6 @@ const HomePage = () => {
 
             </div>
 
-            {showRegModal && <RegistrationClosedModal onClose={() => setShowRegModal(false)} />}
-            {showRaffleModal && <RaffleClosedModal onClose={() => setShowRaffleModal(false)} />}
         </>
     );
 };

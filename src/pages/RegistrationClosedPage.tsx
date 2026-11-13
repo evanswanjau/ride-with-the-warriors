@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { EDITION } from '../config/edition';
 
 const RegistrationClosedPage = () => {
     return (
@@ -51,23 +52,23 @@ const RegistrationClosedPage = () => {
                     fontSize: '1rem', lineHeight: 1.75,
                     marginBottom: '0.75rem', maxWidth: '440px',
                 }}>
-                    Cyclist registration for Ride With The Warriors 2026 has officially closed.
+                    Registration opens {EDITION.registrationOpensLabel}.
                 </p>
                 <p style={{
                     color: 'var(--p-text-2, rgba(255,255,255,0.58))',
                     fontSize: '1rem', lineHeight: 1.75,
                     marginBottom: '2.5rem', maxWidth: '440px',
                 }}>
-                    Thank you for your interest. Share your experience and sign up to be notified when registration opens for 2027.
+                    Pre-register now and we'll tell you first when {EDITION.shortName} registration opens.
                 </p>
 
                 {/* CTAs */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center', marginBottom: '3rem' }}>
-                    <Link to="/feedback" className="shimmer-btn shimmer-btn--primary">
-                        Share Feedback
+                    <Link to="/register/notify" className="shimmer-btn shimmer-btn--primary">
+                        Pre-register
                     </Link>
-                    <Link to="/register/notify" className="shimmer-btn shimmer-btn--ghost">
-                        Notify Me for 2027
+                    <Link to="/2026" className="shimmer-btn shimmer-btn--ghost">
+                        See 2026 highlights
                     </Link>
                 </div>
 

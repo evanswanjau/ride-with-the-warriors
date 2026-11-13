@@ -1,15 +1,39 @@
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logos/web/logo-sm.webp';
+import { EDITION } from '../../config/edition';
+import { isOn } from '../../config/features';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
 
-    const navLinks = [
-        { name: 'Home', path: '/' },
-        { name: 'About Us', path: '/about' },
-        { name: 'Gallery', path: '/gallery' },
-        { name: 'FAQs', path: '/faqs' },
-        { name: 'Contact', path: '/contact' },
+    const columns = [
+        {
+            label: 'The Ride',
+            links: [
+                { name: 'Home', path: '/' },
+                { name: 'About', path: '/about' },
+                { name: 'Circuits', path: '/circuits' },
+                { name: 'FAQs', path: '/faqs' },
+                { name: 'Contact', path: '/contact' },
+            ],
+        },
+        {
+            label: '2026 Recap',
+            links: [
+                { name: 'Highlights', path: '/2026' },
+                { name: 'Photos', path: '/gallery?year=2026' },
+                { name: 'Race Results', path: '/results' },
+                { name: 'Raffle Winners', path: '/raffle-winners' },
+            ],
+        },
+        {
+            label: 'Get involved',
+            links: [
+                { name: `Pre-register ${EDITION.year}`, path: '/register/notify' },
+                { name: 'Give feedback', path: '/feedback' },
+                ...(isOn('donate') ? [{ name: 'Donate', path: '/donate' }] : []),
+            ],
+        },
     ];
 
     const legalLinks = [
@@ -59,7 +83,7 @@ const Footer = () => {
                     margin: 0 auto;
                     padding: 64px 48px 48px;
                     display: grid;
-                    grid-template-columns: 1.6fr 1fr 1fr;
+                    grid-template-columns: 1.6fr 1fr 1fr 1fr;
                     gap: 56px;
                 }
                 @media (max-width: 900px) {
@@ -320,42 +344,27 @@ const Footer = () => {
                         </p>
                         <div className="footer-event-badge">
                             <div className="footer-badge-dot" />
-                            <span className="footer-badge-text">2nd Edition — 05 July 2026 · Nairobi</span>
+                            <span className="footer-badge-text">{`${EDITION.ordinal} Edition — ${EDITION.raceDayLabel}`}</span>
                         </div>
                         <Link to="/about#going-green" className="footer-eco-badge" style={{ textDecoration: 'none' }}>
                             <span className="footer-eco-text">Going Green: Promoting sustainable transport & eco-conservation</span>
                         </Link>
                     </div>
 
-                    {/* ── Nav ── */}
-                    <div>
-                        <div className="footer-col-label">Navigation</div>
-                        <nav className="footer-nav-list">
-                            {navLinks.map((link) => (
-                                <Link key={link.path} to={link.path} className="footer-nav-link">
-                                    {link.name}
-                                    <span className="footer-nav-arrow">→</span>
-                                </Link>
-                            ))}
-                        </nav>
-                    </div>
-
-                    {/* ── CTAs ── */}
-                    <div className="footer-cta-col">
-                        <div className="footer-col-label">Get Involved</div>
-                        <Link to="/register/closed" className="footer-cta-btn green">
-                            Register to Cycle
-                        </Link>
-                        <Link to="/raffle/closed" className="footer-cta-btn amber">
-                            Buy Raffle Tickets
-                        </Link>
-                        <Link to="/donate" className="footer-cta-btn amber">
-                            Donate
-                        </Link>
-                        <Link to="/feedback" className="footer-cta-btn green">
-                            Share Your Feedback
-                        </Link>
-                    </div>
+                    {/* ── Link columns ── */}
+                    {columns.map((col) => (
+                        <div key={col.label}>
+                            <div className="footer-col-label">{col.label}</div>
+                            <nav className="footer-nav-list" aria-label={col.label}>
+                                {col.links.map((link) => (
+                                    <Link key={link.path} to={link.path} className="footer-nav-link">
+                                        {link.name}
+                                        <span className="footer-nav-arrow">→</span>
+                                    </Link>
+                                ))}
+                            </nav>
+                        </div>
+                    ))}
 
                 </div>
 
