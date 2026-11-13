@@ -17,9 +17,9 @@ test('raffle winners: car (AA130) is first and surnames are masked', async ({ pa
 
     const first = rows.first().locator('td');
     await expect(first.nth(0)).toHaveText('1');
-    await expect(first.nth(1)).toHaveText('Car');
+    await expect(first.nth(1)).toHaveText('Nissan Sylphy');
     await expect(first.nth(2)).toHaveText('AA130');
-    await expect(first.nth(3)).toHaveText('***');
+    await expect(first.nth(3)).toHaveText(/^nancy \*\*\*ambu$/i);
 
     for (const name of await nameCells(page).allTextContents()) {
         expect(isMasked(name), `unmasked name on raffle page: "${name}"`).toBe(true);
