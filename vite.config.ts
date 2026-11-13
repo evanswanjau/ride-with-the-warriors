@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -38,6 +39,9 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       preloadFonts(),
     ],
+    test: {
+      include: ['src/**/*.test.ts'],
+    },
     server: {
       proxy: {
         '/api': {
