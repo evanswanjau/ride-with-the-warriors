@@ -447,3 +447,76 @@
         align-items: flex-start;
     }
 }
+
+/* ── Hero: car photo + black gradient ─────────────────────── */
+.page.raffle-page {
+    padding: 0 0 80px;
+}
+
+.raffle-page-inner {
+    padding: 56px 48px 0;
+}
+
+.raffle-hero {
+    /* The hero is always dark (photo + black gradient), in light theme too. */
+    --p-text-1: #ffffff;
+    --p-text-2: rgba(255, 255, 255, 0.78);
+    --p-text-3: rgba(255, 255, 255, 0.55);
+    --p-card: #121212;
+    --color-primary-light: #4caf50;
+    --color-accent: #f59e0b;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: #000;
+    color: var(--p-text-1);
+    padding: 130px 0 56px;
+}
+
+.raffle-hero-img {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.raffle-hero-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    /* strong at the bottom and on the left, so text stays readable on any photo */
+    background:
+        linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.82) 30%, rgba(0, 0, 0, 0.35) 70%, rgba(0, 0, 0, 0.55) 100%),
+        linear-gradient(to right, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.6) 45%, rgba(0, 0, 0, 0) 85%);
+}
+
+.raffle-hero-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 48px;
+}
+
+.raffle-hero .grand-prize {
+    max-width: 960px;
+    margin-top: 40px;
+}
+
+@media (max-width: 640px) {
+    .raffle-hero {
+        padding: 110px 0 36px;
+    }
+
+    .raffle-hero-inner {
+        padding: 0 20px;
+    }
+
+    .raffle-page-inner {
+        padding: 40px 20px 0;
+    }
+
+    .raffle-hero .grand-prize {
+        margin-top: 28px;
+    }
+}

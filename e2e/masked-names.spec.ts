@@ -69,3 +69,14 @@ test('raffle winners: grand prize card shows the car, ticket and masked winner',
     await expect(row.locator('.grand-badge')).toContainText('Car');
     await expect(row.locator('td.name-cell')).toHaveText('Nancy ***ambu');
 });
+
+test('raffle winners: hero has a Cloudinary car photo and holds the grand prize card', async ({ page }) => {
+    await page.goto('/raffle-winners');
+    const img = page.getByTestId('raffle-hero-img');
+    await expect(img).toHaveAttribute('src', /res\.cloudinary\.com\/dqyqot79w\/image\/upload\/f_auto,q_auto,.*w_1280\//);
+    await expect(img).toHaveAttribute('srcset', /w_800\/.* 800w, .*w_1920\/.* 1920w/);
+    await expect(page.locator('.raffle-hero').getByTestId('grand-prize')).toBeVisible();
+    await expect(page.locator('.raffle-hero h1')).toContainText('Raffle');
+    // no horizontal overflow at any width
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});

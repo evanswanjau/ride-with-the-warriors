@@ -5,9 +5,19 @@ import '../styles/raffle.css';
 import '../styles/pages.css';
 import raffleData from '../assets/raffle.json';
 import { displayName } from '../utils/maskName';
+import { cldSrcSet, cldUrl } from '../utils/cloudinary';
 
 /** The car: shown in the Grand Prize card and highlighted in the table. */
 const GRAND_PRIZE_TICKET = 'AA130';
+
+/**
+ * Hero photo of the car (Cloudinary public id).
+ * TODO: placeholder (a 2026 race-day photo) until the real car shot is chosen: swap the id only.
+ */
+const CAR_HERO_PUBLIC_ID = 'rwtw/2026/race-day/rwtw-2026-001';
+/** CSS object-position for the hero photo: tweak to frame the car (x y). */
+const CAR_HERO_OBJECT_POSITION = '50% 40%';
+const CAR_HERO_WIDTHS = [800, 1280, 1920];
 
 interface RaffleWinner {
     serial_number: number;
@@ -54,10 +64,22 @@ const RaffleWinnersPage = () => {
     const totalPages = Math.max(1, Math.ceil(filteredWinners.length / itemsPerPage));
 
     return (
-        <div className="page">
-            <div className="page-inner">
-                {/* Header */}
-                <div className="page-section">
+        <div className="page raffle-page">
+            {/* Hero: car photo + black gradient, with the grand prize card on it */}
+            <header className="raffle-hero">
+                <img
+                    className="raffle-hero-img"
+                    src={cldUrl(CAR_HERO_PUBLIC_ID, 1280)}
+                    srcSet={cldSrcSet(CAR_HERO_PUBLIC_ID, CAR_HERO_WIDTHS)}
+                    sizes="100vw"
+                    alt=""
+                    aria-hidden="true"
+                    fetchPriority="high"
+                    data-testid="raffle-hero-img"
+                    style={{ objectPosition: CAR_HERO_OBJECT_POSITION }}
+                />
+                <div className="raffle-hero-shade" aria-hidden="true" />
+                <div className="raffle-hero-inner">
                     <div className="page-label-row">
                         <div className="page-label-line" />
                         <span className="page-eyebrow">Raffle Winners</span>
@@ -66,11 +88,8 @@ const RaffleWinnersPage = () => {
                     <p className="page-subtitle">
                         View the lucky winners from our raffle draw
                     </p>
-                </div>
 
-                {/* Grand prize (the car) */}
-                {grandPrize && (
-                    <div className="page-section">
+                    {grandPrize && (
                         <section className="grand-prize" data-testid="grand-prize" aria-label="Grand prize">
                             <div className="grand-prize-label">
                                 <FaCarSide aria-hidden="true" className="grand-prize-icon" />
@@ -90,9 +109,11 @@ const RaffleWinnersPage = () => {
                                 </p>
                             </div>
                         </section>
-                    </div>
-                )}
+                    )}
+                </div>
+            </header>
 
+            <div className="page-inner raffle-page-inner">
                 {/* Search Section */}
                 <div className="page-section">
                     <div className="search-section">
