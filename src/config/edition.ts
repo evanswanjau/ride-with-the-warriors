@@ -21,6 +21,8 @@ export const PAST_EDITION = {
     riders: '800+',
     participants: '2,800',
     carTicket: 'AA130',
+    carWinner: 'Nancy ***ambu',
+    carPrize: 'Nissan Sylphy',
 } as const;
 
 export type Phase = 'pre-registration' | 'registration-open' | 'registration-closed' | 'post-race';

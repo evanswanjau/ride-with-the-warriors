@@ -347,8 +347,9 @@ const HomePage = () => {
                                 ))}
                             </div>
                             <div className="lg:col-span-2 border p-6 flex flex-col gap-2" style={{ borderColor: 'var(--border-1)', background: 'var(--raised-bg)' }}>
-                                <div className="text-xs font-bold uppercase tracking-[0.2em] text-amber-600">The ticket that won the car</div>
+                                <div className="text-xs font-bold uppercase tracking-[0.2em] text-amber-600">The ticket that won the {PAST_EDITION.carPrize}</div>
                                 <div className="display-heading text-6xl text-amber-500" data-testid="car-ticket">{PAST_EDITION.carTicket}</div>
+                                <div className="text-lg font-semibold" style={{ color: 'var(--text-1)' }} data-testid="car-winner">{PAST_EDITION.carWinner}</div>
                                 <Link to="/raffle-winners" className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-light)' }}>
                                     All raffle winners →
                                 </Link>

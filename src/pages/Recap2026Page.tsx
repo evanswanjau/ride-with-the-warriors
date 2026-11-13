@@ -59,8 +59,9 @@ const Recap2026Page = () => {
             {/* 3. Car winner */}
             <section className="px-6 lg:px-12 pb-16">
                 <div className="max-w-7xl mx-auto border p-8 md:p-12 flex flex-col gap-3" style={{ borderColor: 'var(--border-1)', background: 'var(--raised-bg)' }}>
-                    <div className="text-xs font-bold uppercase tracking-[0.2em] text-amber-600">The ticket that won the car</div>
+                    <div className="text-xs font-bold uppercase tracking-[0.2em] text-amber-600">The ticket that won the {PAST_EDITION.carPrize}</div>
                     <div className="display-heading text-[clamp(4rem,10vw,7rem)] text-amber-500" data-testid="car-ticket">{PAST_EDITION.carTicket}</div>
+                    <div className="text-xl font-semibold" data-testid="car-winner">{PAST_EDITION.carWinner}</div>
                     <p className="max-w-xl" style={{ color: 'var(--text-2)' }}>
                         Your ticket could be next: the {EDITION.year} raffle opens with registration.
                     </p>

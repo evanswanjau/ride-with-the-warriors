@@ -11,7 +11,7 @@ const RECAP_ITEMS = [
     { name: 'Highlights', path: '/2026', desc: 'The day in numbers and moments' },
     { name: 'Photos', path: '/gallery?year=2026', desc: 'Every album from race day' },
     { name: 'Race Results', path: '/results', desc: 'Times and positions by circuit' },
-    { name: 'Raffle Winners', path: '/raffle-winners', desc: 'Including the car, ticket AA130' },
+    { name: 'Raffle Winners', path: '/raffle-winners', desc: 'Including the Nissan Sylphy, ticket AA130' },
 ];
 
 /* ─── Theme toggle icon ──────────────────────────────────────────────────── */

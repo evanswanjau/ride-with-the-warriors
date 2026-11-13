@@ -42,6 +42,8 @@ test('mobile: 2026 Recap accordion shows 4 items', async ({ page, isMobile }) =>
 test('/2026 shows the car ticket and links to the recap pages', async ({ page }) => {
     await page.goto('/2026');
     await expect(page.getByText('AA130').first()).toBeVisible();
+    await expect(page.getByTestId('car-winner')).toHaveText('Nancy ***ambu');
+    await expect(page.getByText('Nissan Sylphy').first()).toBeVisible();
     for (const href of ['/gallery?year=2026', '/results', '/raffle-winners']) {
         await expect(page.locator(`a[href="${href}"]`).first()).toBeVisible();
     }
