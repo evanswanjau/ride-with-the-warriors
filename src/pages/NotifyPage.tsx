@@ -117,7 +117,7 @@ const NotifyPage = () => {
                                 You're on the list!
                             </p>
                             <p style={{ color: 'var(--p-text-2, rgba(255,255,255,0.58))', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                                We'll be in touch when registration opens for Ride With The Warriors {EDITION.year}.
+                                We'll notify you when registration opens on {EDITION.registrationOpensLabel}.
                             </p>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
