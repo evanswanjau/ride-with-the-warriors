@@ -398,3 +398,51 @@
     color: var(--gallery-text-3);
     margin-top: 8px;
 }
+/* ── Page padding + year/album filters ───────────────────── */
+.gallery-page {
+    padding: 130px 48px 80px;
+}
+
+.gallery-years {
+    margin-top: 40px;
+}
+
+.gallery-years + .gallery-albums,
+.gallery-albums {
+    margin-top: 16px;
+}
+
+.album-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 10px;
+}
+
+.album-chip-cover {
+    width: 28px;
+    height: 28px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+    .gallery-page {
+        padding: 100px 16px 64px;
+    }
+
+    /* One swipeable row of chips instead of a tall wrapped block. */
+    .gallery-albums {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        margin-left: -16px;
+        margin-right: -16px;
+        padding: 0 16px 8px;
+        scrollbar-width: none;
+    }
+
+    .gallery-albums .category-tab {
+        flex: 0 0 auto;
+        padding: 8px 14px 8px 8px;
+    }
+}
