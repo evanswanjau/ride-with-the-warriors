@@ -9,15 +9,15 @@
  */
 import { defineConfig, devices } from '@playwright/test';
 
-const SERVER_DIR = '../server';
+const SERVER_DIR = process.env.SERVER_DIR ?? '../server';
 
 export default defineConfig({
-    testDir: './e2e',
+    testDir: './e2e', // e2e-perf/ has its own config (no API needed)
     globalSetup: './e2e/global-setup.ts',
     fullyParallel: false,
     workers: 1,
     retries: process.env.CI ? 1 : 0,
-    timeout: 60_000,
+    timeout: 120_000, // mail waits can take up to a minute (outbox worker runs every minute)
     expect: { timeout: 15_000 },
     reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : [['list']],
     use: {
@@ -27,7 +27,7 @@ export default defineConfig({
     },
     projects: [
         { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
-        { name: 'mobile', use: { ...devices['Pixel 7'] }, testMatch: /smoke\.spec\.ts/ },
+        { name: 'mobile', use: { ...devices['Pixel 7'] }, testMatch: /(smoke|portal|teaser)\.spec\.ts/ },
     ],
     webServer: [
         {

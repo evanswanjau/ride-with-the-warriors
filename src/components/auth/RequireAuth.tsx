@@ -8,7 +8,8 @@ const RequireAuth = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
 
     if (loading) {
-        return <div className="acct-page"><p className="acct-muted" style={{ textAlign: 'center' }}>Loading…</p></div>;
+        // Full height, so the footer doesn't jump when the page (or the login redirect) renders.
+        return <div className="acct-page" style={{ minHeight: '100vh' }}><p className="acct-muted" style={{ textAlign: 'center' }}>Loading…</p></div>;
     }
     if (!account) {
         const next = encodeURIComponent(location.pathname + location.search);

@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "vite --host",
     "dev:dev": "vite --mode development",
@@ -11,12 +14,17 @@
     "build:dev": "tsc -b && vite build --mode development",
     "build:prod": "tsc -b && vite build --mode production",
     "lint": "eslint .",
+    "test": "vitest run",
+    "mask-data": "node scripts/mask-data.mjs",
     "preview": "vite preview",
     "dev:stack": "vite --mode stack",
     "typecheck": "tsc -b",
     "e2e": "playwright test",
+    "e2e:perf": "playwright test -c playwright.perf.config.ts",
+    "budget": "node scripts/check-budget.mjs",
     "e2e:ui": "playwright test --ui",
-    "e2e:report": "playwright show-report"
+    "e2e:report": "playwright show-report",
+    "test": "vitest run --dir src"
   },
   "dependencies": {
     "@sentry/react": "^9.47.2",
@@ -52,6 +60,7 @@
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vitest": "^5.1.0"
   }
 }

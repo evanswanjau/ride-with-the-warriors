@@ -1,10 +1,12 @@
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { EDITION } from '../config/edition';
 
-const BRAND_NAME = 'Ride With The Warriors 2026';
+const BRAND_NAME = `Ride With The Warriors ${EDITION.year}`;
 
 const metaMap: Record<string, { title: string, description: string }> = {
-    '/': { title: 'Home', description: 'Join Ride With The Warriors 2026, a premier multi-national cycling event. Experience the Blitz, Recon, Corporate Challenge, and Family Fun circuits.' },
+    '/': { title: 'Home', description: `Join Ride With The Warriors ${EDITION.year}, a premier multi-national cycling event. Experience the Blitz, Recon, Corporate Challenge, and Family Fun circuits.` },
+    '/2026': { title: '2026 Highlights', description: 'Photos, results and raffle winners from the 2nd Ride With The Warriors, 5 July 2026.' },
     '/about': { title: 'About Us', description: 'Learn about the history, pillars, and mission of Ride With The Warriors. Ride with honour, supporting the widows of our fallen heroes.' },
     '/circuits': { title: 'Participants', description: 'Explore the different race categories and participant lists for Ride With The Warriors 2026.' },
     '/sponsors': { title: 'Sponsors', description: 'Discover the partners and sponsors making Ride With The Warriors possible.' },

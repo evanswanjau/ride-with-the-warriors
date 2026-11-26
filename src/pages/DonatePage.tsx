@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getErrorMessage } from '../utils/registration';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import { AiOutlineHeart, AiOutlineWarning, AiOutlineCheckCircle } from 'react-icons/ai';
@@ -90,7 +91,8 @@ const DonatePage = () => {
         }
     };
 
-    const startPolling = async (id: string) => {
+    /** donationToken (from POST /donations) proves this browser created the donation. */
+    const startPolling = async (id: string, token: string) => {
         let attempts = 0;
         const maxAttempts = 20;
         const poll = async () => {
@@ -100,7 +102,7 @@ const DonatePage = () => {
                 return;
             }
             try {
-                const res = await fetch(`${API_BASE_URL}/donations/${id}`);
+                const res = await fetch(`${API_BASE_URL}/donations/${id}`, { headers: { 'X-Donation-Token': token, ...authHeaders() } });
                 if (res.ok) {
                     const data = await res.json();
                     if (data.donation?.status === 'PAID') {
@@ -164,16 +166,16 @@ const DonatePage = () => {
             // 2. Trigger STK Push
             const pushRes = await fetch(`${API_BASE_URL}/donations/pay/stk-push`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ donationId: id, phoneNumber: formattedPhone }),
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ donationId: id, donationToken: data.donationToken, phoneNumber: formattedPhone }),
             });
             const pushData = await pushRes.json();
             if (!pushRes.ok) throw new Error(pushData.error?.message || 'Failed to trigger M-Pesa prompt');
 
             setPaymentStatus('pending');
-            startPolling(id);
-        } catch (err: any) {
-            setError(err.message || 'An unexpected error occurred.');
+            startPolling(id, data.donationToken);
+        } catch (err) {
+            setError(getErrorMessage(err, 'An unexpected error occurred.'));
             setIsProcessing(false);
         } finally {
             setIsProcessing(false);

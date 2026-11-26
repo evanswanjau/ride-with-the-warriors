@@ -122,7 +122,7 @@ const ContactUs = () => {
                                 return (
                                     <a key={idx} href={card.link} target="_blank" rel="noopener noreferrer"
                                         className="ct-contact-card"
-                                        style={{ '--hover-border': card.accentColor } as any}
+                                        style={{ '--hover-border': card.accentColor } as React.CSSProperties}
                                         onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = card.accentColor; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.borderColor = card.accentColor; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.color = card.accentColor; }}
                                         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--ct-border)'; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.borderColor = 'var(--ct-border-2)'; (e.currentTarget.querySelector('.ct-contact-icon') as HTMLElement).style.color = card.accentColor; }}
                                     >

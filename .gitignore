@@ -55,15 +55,15 @@ out
 
 # nuxt.js build output
 .nuxt
-dist
 
 # gatsby files
 .cache/
 # Comment the next line if you want to check your bundle analysis to your repo
-public
-
-# vue-cli build objects
-dist
+public/*
+# Installable app (PWA) files are part of the source
+!public/sw.js
+!public/manifest.webmanifest
+!public/pwa/
 
 # Serverless directories
 .serverless/
@@ -88,12 +88,11 @@ dist
 
 # TypeScript
 *.tsbuildinfo
+tsconfig.tsbuildinfo
 
 # Prisma
 /prisma/dev.db
 /prisma/dev.db-journal
-.vercel
-
 .vercel
 
 # Playwright

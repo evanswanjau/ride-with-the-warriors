@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { AiOutlineSun, AiOutlineMoon, AiOutlineArrowLeft, AiOutlineExclamationCircle, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { API_BASE_URL } from '../../config';
+import type { AdminUser } from '../../types';
 import logo from '../../assets/logos/logo.png';
 
 interface AdminLoginProps {
-    onLogin: (token: string, admin: any) => void;
+    onLogin: (token: string, admin: AdminUser) => void;
     onBack: () => void;
 }
 

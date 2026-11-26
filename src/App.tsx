@@ -1,34 +1,49 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { RegistrationProvider, useRegistration } from './context/RegistrationContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
-import AboutUs from './pages/AboutUs';
-import Circuits from './pages/Circuits';
-import ContactUs from './pages/ContactUs';
-import Gallery from './pages/Gallery';
-import Faqs from './pages/Faqs';
-import TermsPage from './pages/TermsPage';
-import PrivacyPage from './pages/PrivacyPage';
-import RegistrationClosedPage from './pages/RegistrationClosedPage';
-import NotifyPage from './pages/NotifyPage';
-import FeedbackPage from './pages/FeedbackPage';
-import PaymentPage from './pages/PaymentPage';
-import SuccessPage from './pages/SuccessPage';
-import LoginPage from './pages/LoginPage';
-import AccountPage from './pages/AccountPage';
 import RequireAuth from './components/auth/RequireAuth';
-import AdminPage from './pages/AdminPage';
-import RaffleClosedPage from './pages/RaffleClosedPage';
-import RaffleSuccessPage from './pages/RaffleSuccessPage';
-import RafflePaymentPageRoute from './pages/RafflePaymentPageRoute';
-import DonatePage from './pages/DonatePage';
-import ResultsPage from './pages/ResultsPage';
-import RaffleWinnersPage from './pages/RaffleWinnersPage';
+import { FeatureRoute } from './components/common/FeatureRoute';
 
 import ScrollToTop from './utils/ScrollToTop';
 import PageTitle from './utils/PageTitle';
 import ReferralCapture from './components/ReferralCapture';
+
+// Everything except the homepage loads on demand, so visitors only download
+// the code (and heavy libraries such as recharts/xlsx/jspdf) for pages they open.
+const AboutUs = lazy(() => import('./pages/AboutUs'));
+const Circuits = lazy(() => import('./pages/Circuits'));
+const ContactUs = lazy(() => import('./pages/ContactUs'));
+const Gallery = lazy(() => import('./pages/Gallery'));
+const Faqs = lazy(() => import('./pages/Faqs'));
+const TermsPage = lazy(() => import('./pages/TermsPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const RegistrationClosedPage = lazy(() => import('./pages/RegistrationClosedPage'));
+const NotifyPage = lazy(() => import('./pages/NotifyPage'));
+const FeedbackPage = lazy(() => import('./pages/FeedbackPage'));
+const PaymentPage = lazy(() => import('./pages/PaymentPageRoute'));
+const SuccessPage = lazy(() => import('./pages/SuccessPageRoute'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+// Rider portal (/account/*)
+const PortalLayout = lazy(() => import('./portal/PortalLayout'));
+const HomeScreen = lazy(() => import('./portal/screens/HomeScreen'));
+const EntriesScreen = lazy(() => import('./portal/screens/EntriesScreen'));
+const EntryScreen = lazy(() => import('./portal/screens/EntryScreen'));
+const RidersScreen = lazy(() => import('./portal/screens/RidersScreen'));
+const RiderScreen = lazy(() => import('./portal/screens/RiderScreen'));
+const TicketsScreen = lazy(() => import('./portal/screens/TicketsScreen'));
+const ProfileScreen = lazy(() => import('./portal/screens/ProfileScreen'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
+const RaffleClosedPage = lazy(() => import('./pages/RaffleClosedPage'));
+const RaffleSuccessPage = lazy(() => import('./pages/RaffleSuccessPage'));
+const RafflePaymentPageRoute = lazy(() => import('./pages/RafflePaymentPageRoute'));
+const DonatePage = lazy(() => import('./pages/DonatePage'));
+const ResultsPage = lazy(() => import('./pages/ResultsPage'));
+const RaffleWinnersPage = lazy(() => import('./pages/RaffleWinnersPage'));
+const Recap2026Page = lazy(() => import('./pages/Recap2026Page'));
+
+const RouteFallback = () => <div className="min-h-screen" role="status" aria-label="Loading" />;
 
 const MilitaryRedirect = () => {
   const { setIsMilitary } = useRegistration();
@@ -46,6 +61,7 @@ const App = () => {
       <ScrollToTop />
       <PageTitle />
       <ReferralCapture />
+      <Suspense fallback={<RouteFallback />}>
       <Routes>
         {/* Public Pages */}
         <Route path="/" element={<Layout isFullWidth><HomePage /></Layout>} />
@@ -55,14 +71,24 @@ const App = () => {
         <Route path="/contact" element={<Layout isFullWidth><ContactUs /></Layout>} />
         <Route path="/gallery" element={<Layout isFullWidth><Gallery /></Layout>} />
         <Route path="/faqs" element={<Layout isFullWidth><Faqs /></Layout>} />
-        <Route path="/donate" element={<DonatePage />} />
+        <Route path="/donate" element={<FeatureRoute feature="donate"><DonatePage /></FeatureRoute>} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/results" element={<Layout isFullWidth><ResultsPage /></Layout>} />
+        <Route path="/2026" element={<Layout isFullWidth><Recap2026Page /></Layout>} />
         <Route path="/raffle-winners" element={<Layout isFullWidth><RaffleWinnersPage /></Layout>} />
 
         {/* Participant accounts */}
-        <Route path="/login" element={<Layout isFullWidth><LoginPage /></Layout>} />
-        <Route path="/account" element={<Layout isFullWidth><RequireAuth><AccountPage /></RequireAuth></Layout>} />
+        <Route path="/login" element={<FeatureRoute feature="account"><Layout isFullWidth><LoginPage /></Layout></FeatureRoute>} />
+        <Route path="/account" element={<FeatureRoute feature="account"><RequireAuth><PortalLayout /></RequireAuth></FeatureRoute>}>
+          <Route index element={<HomeScreen />} />
+          <Route path="entries" element={<EntriesScreen />} />
+          <Route path="entries/:groupId" element={<EntryScreen />} />
+          <Route path="riders" element={<RidersScreen />} />
+          <Route path="riders/:riderId" element={<RiderScreen />} />
+          <Route path="tickets" element={<TicketsScreen />} />
+          <Route path="profile" element={<ProfileScreen />} />
+          <Route path="*" element={<Navigate to="/account" replace />} />
+        </Route>
 
         {/* Registration Flow — closed; redirect all register paths to closed page.
             When it reopens, wrap the flow in <RequireAuth> (the API requires login). */}
@@ -72,8 +98,8 @@ const App = () => {
         <Route path="/military/register/*" element={<RegistrationClosedPage />} />
 
         {/* Payment & Success */}
-        <Route path="/payment/:regId" element={<RequireAuth><PaymentPage /></RequireAuth>} />
-        <Route path="/success/:regId" element={<RequireAuth><SuccessPage /></RequireAuth>} />
+        <Route path="/payment/:regId" element={<FeatureRoute feature="account"><RequireAuth><PaymentPage /></RequireAuth></FeatureRoute>} />
+        <Route path="/success/:regId" element={<FeatureRoute feature="account"><RequireAuth><SuccessPage /></RequireAuth></FeatureRoute>} />
 
         {/* Old public profile links now live in the participant's account */}
         <Route path="/search" element={<Navigate to="/account" replace />} />
@@ -82,8 +108,8 @@ const App = () => {
         {/* Raffle Flow — closed; profiles and payments for existing tickets remain reachable */}
         <Route path="/raffle/closed" element={<RaffleClosedPage />} />
         <Route path="/raffle/step/*" element={<RaffleClosedPage />} />
-        <Route path="/raffle/payment/:id" element={<RequireAuth><RafflePaymentPageRoute /></RequireAuth>} />
-        <Route path="/raffle/success/:id" element={<RequireAuth><RaffleSuccessPage /></RequireAuth>} />
+        <Route path="/raffle/payment/:id" element={<FeatureRoute feature="account"><RequireAuth><RafflePaymentPageRoute /></RequireAuth></FeatureRoute>} />
+        <Route path="/raffle/success/:id" element={<FeatureRoute feature="account"><RequireAuth><RaffleSuccessPage /></RequireAuth></FeatureRoute>} />
         <Route path="/raffle/profile/*" element={<Navigate to="/account" replace />} />
 
         {/* Legal */}
@@ -93,6 +119,7 @@ const App = () => {
         {/* Admin */}
         <Route path="/admin/*" element={<AdminPage />} />
       </Routes>
+      </Suspense>
     </RegistrationProvider>
   );
 };

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { EDITION } from '../../config/edition';
 
 export const FEEDBACK_PROMPT_STORAGE_KEY = 'rwtw-feedback-prompt-dismissed';
 
@@ -106,7 +107,7 @@ const FeedbackPromptModal = ({ onClose }: Props) => {
                     lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '2rem',
                 }}>
                     Thank you for being part of Ride With The Warriors 2026. Whether you rode,
-                    cheered, sponsored or organised — your honest feedback shapes a better ride in 2027.
+                    cheered, sponsored or organised — your honest feedback shapes a better ride in {EDITION.year}.
                     It takes less than a minute.
                 </p>
 

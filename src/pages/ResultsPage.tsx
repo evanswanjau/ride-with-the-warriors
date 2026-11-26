@@ -61,6 +61,21 @@ const TEAM_KEYS: Record<string, 'Blitz' | 'Recon'> = {
     'RECON TEAM': 'Recon',
 };
 
+interface RawTeamCategory {
+    overall_standings?: { team_name: string; position: string; average: string; leg_times?: string[] }[];
+    detailed_summary?: { team: string; rider_code?: string; first_name: string; last_name: string; position: number | string | null; time?: string }[];
+}
+
+interface RawRider {
+    bib_number?: string;
+    first_name: string;
+    last_name: string;
+    time?: string;
+    status?: string;
+    position: number | string | null;
+    [key: string]: unknown;
+}
+
 const ResultsPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCircuit, setSelectedCircuit] = useState<CircuitFilter>('All');
@@ -74,7 +89,7 @@ const ResultsPage = () => {
     // Parse the raw JSON once into three clean shapes: individual rider rows,
     // team standings rows, and team roster rows (each rider's leg within a team).
     const { individualResults, individualCategories, teamStandings, teamRoster } = useMemo(() => {
-        const data = resultsData as Record<string, any>;
+        const data = resultsData as unknown as Record<string, RawTeamCategory | RawRider[]>;
         const individualResults: RiderResult[] = [];
         const individualCategories: string[] = [];
         const teamStandings: TeamStanding[] = [];
@@ -83,9 +98,9 @@ const ResultsPage = () => {
         Object.keys(data).forEach(category => {
             if (category in TEAM_KEYS) {
                 const circuit = TEAM_KEYS[category];
-                const categoryData = data[category];
+                const categoryData = data[category] as RawTeamCategory;
 
-                (categoryData.overall_standings || []).forEach((team: any, index: number) => {
+                (categoryData.overall_standings || []).forEach((team, index: number) => {
                     teamStandings.push({
                         id: `${category}-standing-${index}`,
                         circuit,
@@ -96,7 +111,7 @@ const ResultsPage = () => {
                     });
                 });
 
-                (categoryData.detailed_summary || []).forEach((rider: any, index: number) => {
+                (categoryData.detailed_summary || []).forEach((rider, index: number) => {
                     teamRoster.push({
                         id: `${category}-rider-${index}`,
                         circuit,
@@ -114,7 +129,7 @@ const ResultsPage = () => {
             const categoryData = data[category];
             if (Array.isArray(categoryData)) {
                 individualCategories.push(category);
-                categoryData.forEach((rider: any, index: number) => {
+                categoryData.forEach((rider, index: number) => {
                     individualResults.push({
                         id: `${category}-${index}`,
                         bibNumber: rider.bib_number || '',
@@ -240,7 +255,7 @@ const ResultsPage = () => {
     const showTeamStandings = isTeamView && teamView === 'Overall';
     const showTeamRoster = isTeamView && teamView === 'Detailed';
 
-    const activeList: any[] = showTeamRoster
+    const activeList: (RiderResult | TeamStanding | TeamRosterRider)[] = showTeamRoster
         ? filteredTeamRoster
         : showTeamStandings
             ? filteredTeamStandings

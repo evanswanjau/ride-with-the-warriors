@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { FaCarSide } from 'react-icons/fa';
 import '../styles/raffle.css';
 import '../styles/pages.css';
 import raffleData from '../assets/raffle.json';
+import { displayName } from '../utils/maskName';
+
+/** The car: shown in the Grand Prize card and highlighted in the table. */
+const GRAND_PRIZE_TICKET = 'AA130';
 
 interface RaffleWinner {
     serial_number: number;
@@ -44,6 +49,8 @@ const RaffleWinnersPage = () => {
         setCurrentPage(1);
     };
 
+    const grandPrize = (raffleData as RaffleWinner[]).find(w => w.raffle_number === GRAND_PRIZE_TICKET);
+
     const totalPages = Math.max(1, Math.ceil(filteredWinners.length / itemsPerPage));
 
     return (
@@ -60,6 +67,31 @@ const RaffleWinnersPage = () => {
                         View the lucky winners from our raffle draw
                     </p>
                 </div>
+
+                {/* Grand prize (the car) */}
+                {grandPrize && (
+                    <div className="page-section">
+                        <section className="grand-prize" data-testid="grand-prize" aria-label="Grand prize">
+                            <div className="grand-prize-label">
+                                <FaCarSide aria-hidden="true" className="grand-prize-icon" />
+                                <span>Grand Prize · Car</span>
+                            </div>
+                            <div className="grand-prize-body">
+                                <div className="grand-prize-main">
+                                    <h2 className="grand-prize-title">{grandPrize.item}</h2>
+                                    <p className="grand-prize-sub">A brand-new car</p>
+                                </div>
+                                <div className="grand-prize-ticket">
+                                    <span className="grand-prize-ticket-label">Ticket</span>
+                                    <span className="grand-prize-ticket-no">{grandPrize.raffle_number}</span>
+                                </div>
+                                <p className="grand-prize-winner">
+                                    Won by <strong>{displayName(grandPrize.name)}</strong>
+                                </p>
+                            </div>
+                        </section>
+                    </div>
+                )}
 
                 {/* Search Section */}
                 <div className="page-section">
@@ -115,11 +147,19 @@ const RaffleWinnersPage = () => {
                                             {filteredWinners
                                                 .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                                                 .map((winner, index) => (
-                                                    <tr key={winner.serial_number} className={index % 2 === 0 ? 'row-even' : 'row-odd'}>
+                                                    <tr
+                                                        key={winner.serial_number}
+                                                        className={winner.raffle_number === GRAND_PRIZE_TICKET ? 'row-grand' : index % 2 === 0 ? 'row-even' : 'row-odd'}
+                                                    >
                                                         <td className="serial-cell">{winner.serial_number}</td>
-                                                        <td className="item-cell">{winner.item}</td>
+                                                        <td className="item-cell">
+                                                            {winner.item}
+                                                            {winner.raffle_number === GRAND_PRIZE_TICKET && (
+                                                                <span className="grand-badge">🚗 Car · Grand prize</span>
+                                                            )}
+                                                        </td>
                                                         <td className="raffle-cell">{winner.raffle_number}</td>
-                                                        <td className="name-cell" title={winner.name}>{winner.name.toLocaleLowerCase()}</td>
+                                                        <td className="name-cell" title={displayName(winner.name)}>{displayName(winner.name)}</td>
                                                     </tr>
                                                 ))}
                                         </tbody>

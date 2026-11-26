@@ -1,0 +1,35 @@
+{
+  "cloudName": "dqyqot79w",
+  "images": {
+    "blitz": {
+      "publicId": "rwtw/site/blitz",
+      "width": 1600,
+      "height": 1066
+    },
+    "corporate": {
+      "publicId": "rwtw/site/corporate",
+      "width": 1600,
+      "height": 1066
+    },
+    "family": {
+      "publicId": "rwtw/site/family",
+      "width": 1600,
+      "height": 770
+    },
+    "going-green": {
+      "publicId": "rwtw/site/going-green",
+      "width": 1280,
+      "height": 853
+    },
+    "hero": {
+      "publicId": "rwtw/site/hero",
+      "width": 1600,
+      "height": 1066
+    },
+    "recon": {
+      "publicId": "rwtw/site/recon",
+      "width": 1333,
+      "height": 1200
+    }
+  }
+}

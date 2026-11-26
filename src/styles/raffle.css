@@ -162,7 +162,6 @@
 .name-cell {
     font-weight: 500;
     max-width: 0;
-    text-transform: capitalize;
 }
 
 .row-even {
@@ -295,5 +294,156 @@
     .pagination-button {
         padding: 8px 14px;
         font-size: 0.8rem;
+    }
+}
+
+/* ── Grand prize (the car) ────────────────────────────────── */
+.grand-prize {
+    --gp-amber: var(--color-accent, #f59e0b);
+    --gp-tint: color-mix(in srgb, var(--gp-amber) 14%, var(--p-card));
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 24px 28px 28px;
+    background:
+        linear-gradient(135deg, var(--gp-tint), var(--p-card) 70%) padding-box,
+        linear-gradient(135deg, #fcd34d, var(--gp-amber) 45%, #b45309) border-box;
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--gp-amber) 25%, transparent),
+        0 8px 40px color-mix(in srgb, var(--gp-amber) 28%, transparent);
+}
+
+.grand-prize::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.18) 50%, transparent 65%);
+    transform: translateX(-120%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .grand-prize::after {
+        animation: grand-prize-shine 5s ease-in-out 1s infinite;
+    }
+}
+
+@keyframes grand-prize-shine {
+    0%, 60% { transform: translateX(-120%); }
+    100% { transform: translateX(120%); }
+}
+
+.grand-prize-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gp-amber);
+}
+
+.grand-prize-icon {
+    font-size: 1.4rem;
+}
+
+.grand-prize-body {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 12px 40px;
+    margin-top: 12px;
+}
+
+.grand-prize-title {
+    margin: 0;
+    font-family: 'Bebas Neue', 'Barlow Condensed', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    line-height: 1;
+    color: var(--p-text-1);
+}
+
+.grand-prize-sub {
+    margin: 6px 0 0;
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    color: var(--p-text-2);
+}
+
+.grand-prize-ticket {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.grand-prize-ticket-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--p-text-3);
+}
+
+.grand-prize-ticket-no {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(2rem, 6vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--gp-amber);
+}
+
+.grand-prize-winner {
+    grid-column: 1 / -1;
+    margin: 8px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid color-mix(in srgb, var(--gp-amber) 30%, transparent);
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.125rem;
+    color: var(--p-text-2);
+}
+
+.grand-prize-winner strong {
+    color: var(--p-text-1);
+    font-weight: 700;
+}
+
+/* Table: highlighted car row */
+.winners-table .row-grand {
+    background: color-mix(in srgb, var(--color-accent, #f59e0b) 16%, var(--p-card));
+}
+
+.winners-table .row-grand td:first-child {
+    box-shadow: inset 4px 0 0 var(--color-accent, #f59e0b);
+}
+
+.grand-badge {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-accent, #f59e0b);
+    background: color-mix(in srgb, var(--color-accent, #f59e0b) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-accent, #f59e0b) 45%, transparent);
+}
+
+@media (max-width: 640px) {
+    .grand-prize {
+        padding: 20px 18px 22px;
+    }
+
+    .grand-prize-body {
+        grid-template-columns: 1fr;
+    }
+
+    .grand-prize-ticket {
+        align-items: flex-start;
     }
 }

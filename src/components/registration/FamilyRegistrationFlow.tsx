@@ -2,7 +2,7 @@ import '../../styles/registration/FamilyRegistrationFlow.css';
 import { useState } from 'react';
 import type { FamilyDetails, JuniorRider } from '../../types';
 import ErrorBanner from '../common/ErrorBanner';
-import { calculateAge } from '../../utils';
+import { calculateAge } from '../../utils/registration';
 import { useRegistration } from '../../context/RegistrationContext';
 
 import RegistrationStepLayout from './ui/RegistrationStepLayout';

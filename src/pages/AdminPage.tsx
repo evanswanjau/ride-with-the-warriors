@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import type { AdminUser } from '../types';
 import { useNavigate } from 'react-router-dom';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminDashboard from '../components/admin/AdminDashboard';
@@ -21,9 +22,9 @@ const AdminPage = () => {
     };
 
     const [adminToken, setAdminToken] = useState<string | null>(getInitialToken());
-    const [adminUser, setAdminUser] = useState<any>(JSON.parse(localStorage.getItem('adminUser') || 'null'));
+    const [adminUser, setAdminUser] = useState<AdminUser | null>(JSON.parse(localStorage.getItem('adminUser') || 'null'));
 
-    const handleAdminLogin = (token: string, admin: any) => {
+    const handleAdminLogin = (token: string, admin: AdminUser) => {
         const expiry = Date.now() + SEVEN_DAYS_MS;
         setAdminToken(token);
         setAdminUser(admin);
