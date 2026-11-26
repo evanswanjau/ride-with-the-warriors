@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getErrorMessage } from '../../utils/registration';
-import { API_BASE_URL } from '../../config';
+import { adminApi } from './api/adminApi';
+import { errorMessage } from './api/http';
+import type { AdminBikeHire as BikeHire } from '../../adminTypes';
 import {
     AiOutlineSearch,
     AiOutlineReload,
@@ -8,22 +9,6 @@ import {
     AiOutlineLeft,
     AiOutlineRight,
 } from 'react-icons/ai';
-
-interface BikeHire {
-    id: string;
-    registrationId: string;
-    bikeType: string;
-    status: 'PENDING' | 'PAID' | 'COLLECTED' | 'RETURNED';
-    amount: number;
-    createdAt: string;
-    registration: {
-        firstName: string;
-        lastName: string;
-        email: string;
-        phoneNumber: string;
-        type: string;
-    };
-}
 
 const AdminBikeHires = () => {
     const [hires, setHires] = useState<BikeHire[]>([]);
@@ -38,23 +23,9 @@ const AdminBikeHires = () => {
         setLoading(true);
         setError(null);
         try {
-            const token = localStorage.getItem('adminToken');
-            const res = await fetch(`${API_BASE_URL}/admin/bike-hires`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const data = await res.json();
-            
-            if (res.ok && Array.isArray(data)) {
-                setHires(data);
-            } else {
-                const errMsg = data.error?.message || 'Failed to fetch bike hires';
-                console.error('Fetch error:', errMsg);
-                setError(errMsg);
-                setHires([]);
-            }
+            setHires(await adminApi.bikeHires.list(undefined));
         } catch (error) {
-            console.error('Fetch error:', error);
-            setError(getErrorMessage(error, 'An unexpected error occurred'));
+            setError(errorMessage(error, 'Failed to fetch bike hires'));
             setHires([]);
         } finally {
             setLoading(false);
@@ -65,22 +36,12 @@ const AdminBikeHires = () => {
         fetchHires();
     }, []);
 
-    const updateStatus = async (id: string, status: string) => {
+    const updateStatus = async (id: string, status: BikeHire['status']) => {
         try {
-            const token = localStorage.getItem('adminToken');
-            const res = await fetch(`${API_BASE_URL}/admin/bike-hires/${id}/status`, {
-                method: 'POST',
-                headers: { 
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ status })
-            });
-            if (res.ok) {
-                setHires(hires.map(h => h.id === id ? { ...h, status: status as BikeHire['status'] } : h));
-            }
+            await adminApi.bikeHires.setStatus(id, status);
+            setHires(hires.map(h => h.id === id ? { ...h, status } : h));
         } catch (error) {
-            console.error('Update error:', error);
+            setError(errorMessage(error, 'Failed to update bike hire'));
         }
     };
 
@@ -201,7 +162,7 @@ const AdminBikeHires = () => {
                                                 KES {(hire.amount || 0).toLocaleString()}
                                             </td>
                                             <td className="ad-td">
-                                                <select className="ad-status-select" value={hire.status} onChange={(e) => updateStatus(hire.id, e.target.value)} style={{ color: hire.status === 'PAID' ? 'var(--ad-pl)' : hire.status === 'COLLECTED' ? 'var(--ad-accent)' : hire.status === 'RETURNED' ? 'var(--ad-t3)' : 'var(--ad-t2)' }}>
+                                                <select className="ad-status-select" value={hire.status} onChange={(e) => updateStatus(hire.id, e.target.value as BikeHire['status'])} style={{ color: hire.status === 'PAID' ? 'var(--ad-pl)' : hire.status === 'COLLECTED' ? 'var(--ad-accent)' : hire.status === 'RETURNED' ? 'var(--ad-t3)' : 'var(--ad-t2)' }}>
                                                     <option value="PENDING">PENDING</option>
                                                     <option value="PAID">PAID</option>
                                                     <option value="COLLECTED">COLLECTED</option>

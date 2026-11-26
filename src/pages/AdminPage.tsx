@@ -1,72 +1,41 @@
-import { useState, useEffect } from 'react';
-import type { AdminUser } from '../types';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminDashboard from '../components/admin/AdminDashboard';
+import { adminApi } from '../components/admin/api/adminApi';
+import { SIGNED_OUT_EVENT, clearSession, readSession, saveSession, type AdminSession } from '../components/admin/api/session';
+import type { AdminUser } from '../types';
 
 const AdminPage = () => {
     const navigate = useNavigate();
-    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+    const [session, setSession] = useState<AdminSession | null>(() => readSession());
 
-    const getInitialToken = () => {
-        const token = localStorage.getItem('adminToken');
-        const expiry = localStorage.getItem('adminSessionExpiry');
-        if (token && expiry && Date.now() < parseInt(expiry)) {
-            return token;
-        }
-        // If expired or missing, clean up
-        localStorage.removeItem('adminToken');
-        localStorage.removeItem('adminUser');
-        localStorage.removeItem('adminSessionExpiry');
-        return null;
+    const handleLogin = (token: string, admin: AdminUser) => {
+        saveSession(token, admin);
+        setSession(readSession());
     };
 
-    const [adminToken, setAdminToken] = useState<string | null>(getInitialToken());
-    const [adminUser, setAdminUser] = useState<AdminUser | null>(JSON.parse(localStorage.getItem('adminUser') || 'null'));
+    const handleLogout = useCallback(() => {
+        // Best effort: the session ends here even if the server cannot be reached.
+        adminApi.auth.logout().catch(() => undefined).finally(clearSession);
+        setSession(null);
+    }, []);
 
-    const handleAdminLogin = (token: string, admin: AdminUser) => {
-        const expiry = Date.now() + SEVEN_DAYS_MS;
-        setAdminToken(token);
-        setAdminUser(admin);
-        localStorage.setItem('adminToken', token);
-        localStorage.setItem('adminUser', JSON.stringify(admin));
-        localStorage.setItem('adminSessionExpiry', expiry.toString());
-    };
-
-    const handleAdminLogout = () => {
-        setAdminToken(null);
-        setAdminUser(null);
-        localStorage.removeItem('adminToken');
-        localStorage.removeItem('adminUser');
-        localStorage.removeItem('adminSessionExpiry');
-    };
-
-    // Periodic session check
+    // Expired (checked every minute) or refused by the server: back to the login form.
     useEffect(() => {
-        if (!adminToken) return;
+        if (!session) return;
+        const onSignedOut = () => setSession(null);
+        const timer = setInterval(() => { if (!readSession()) setSession(null); }, 60_000);
+        window.addEventListener(SIGNED_OUT_EVENT, onSignedOut);
+        return () => {
+            clearInterval(timer);
+            window.removeEventListener(SIGNED_OUT_EVENT, onSignedOut);
+        };
+    }, [session]);
 
-        const interval = setInterval(() => {
-            const expiry = localStorage.getItem('adminSessionExpiry');
-            if (expiry && Date.now() > parseInt(expiry)) {
-                console.log('[Admin] Session expired, logging out...');
-                handleAdminLogout();
-            }
-        }, 60000); // Check every minute
+    if (!session) return <AdminLogin onLogin={handleLogin} onBack={() => navigate('/')} />;
 
-        return () => clearInterval(interval);
-    }, [adminToken]);
-
-    if (!adminToken) {
-        return <AdminLogin onLogin={handleAdminLogin} onBack={() => navigate('/')} />;
-    }
-
-    return (
-        <AdminDashboard
-            admin={adminUser}
-            token={adminToken}
-            onLogout={handleAdminLogout}
-        />
-    );
+    return <AdminDashboard admin={session.admin} token={session.token} onLogout={handleLogout} />;
 };
 
 export default AdminPage;

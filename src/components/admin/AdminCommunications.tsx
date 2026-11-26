@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { getErrorMessage } from '../../utils/registration';
 import { AiOutlineExclamationCircle, AiOutlineReload, AiOutlineUpload, AiOutlineDownload } from 'react-icons/ai';
-import { API_BASE_URL } from '../../config';
-
-type CsvRecipient = { firstName: string; lastName?: string; email: string; phone?: string };
+import { adminApi } from './api/adminApi';
+import { errorMessage } from './api/http';
+import type { BulkSendPayload, CommsPreview, CsvRecipient, SmsBalance } from '../../adminTypes';
 
 const CSV_TEMPLATE = `firstName,email
 James,james@example.com
@@ -78,21 +77,6 @@ function parseCsvRecipients(text: string): { recipients: CsvRecipient[]; errors:
     return { recipients, errors };
 }
 
-interface CommsStats { success?: number; failed?: number; [key: string]: unknown }
-
-interface CommsPreview {
-    recipientsCount?: number;
-    sampleRecipients?: { name?: string; contact?: string; compiledMessage?: string }[];
-    smsStats?: CommsStats;
-    emailStats?: CommsStats;
-    [key: string]: unknown;
-}
-
-interface SmsBalance {
-    credit?: string | number;
-    [key: string]: unknown;
-}
-
 export const AdminCommunications: React.FC = () => {
     const [mode, setMode] = useState<'sms' | 'email' | 'both'>('email');
     const [targetEntity, setTargetEntity] = useState<'cyclist' | 'raffle' | 'donor' | 'custom' | 'csv'>('cyclist');
@@ -120,14 +104,7 @@ export const AdminCommunications: React.FC = () => {
     const fetchBalance = async () => {
         setRefreshing(true);
         try {
-            const token = localStorage.getItem('adminToken');
-            const res = await fetch(`${API_BASE_URL}/admin/email/sms-balance`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            if (res.ok) {
-                const data = await res.json();
-                setBalance(data);
-            }
+            setBalance(await adminApi.messages.smsBalance());
         } catch (e) {
             console.error('Failed to fetch SMS balance', e);
         } finally {
@@ -203,7 +180,7 @@ export const AdminCommunications: React.FC = () => {
         setLoading(true);
         setPreview(null);
         try {
-            const payload = {
+            const payload: BulkSendPayload = {
                 mode,
                 targetEntity,
                 targetStatus,
@@ -214,24 +191,7 @@ export const AdminCommunications: React.FC = () => {
                 subject,
                 testMode
             };
-
-            const token = localStorage.getItem('adminToken');
-            
-            const res = await fetch(`${API_BASE_URL}/admin/email/bulk-send`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json().catch(() => ({}));
-                throw new Error(errorData?.error || errorData?.message || 'Send failed');
-            }
-
-            const data = await res.json();
+            const data = await adminApi.messages.bulkSend(payload);
 
             if (testMode) {
                 setSuccessMsg('Test preview generated');
@@ -245,7 +205,7 @@ export const AdminCommunications: React.FC = () => {
             }
         } catch (error) {
             console.error('Error sending message:', error);
-            setErrorMsg(getErrorMessage(error, 'Send failed. Check console logs.'));
+            setErrorMsg(errorMessage(error, 'Send failed. Check console logs.'));
         } finally {
             setLoading(false);
         }

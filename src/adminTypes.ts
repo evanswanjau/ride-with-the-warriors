@@ -155,3 +155,73 @@ export interface ReferralsStats {
 }
 
 export type { PricingCategory };
+
+export interface AdminBikeHire {
+    id: string;
+    registrationId: string;
+    bikeType: string;
+    status: 'PENDING' | 'PAID' | 'COLLECTED' | 'RETURNED';
+    amount: number;
+    createdAt: string;
+    registration: {
+        firstName: string;
+        lastName: string;
+        email: string;
+        phoneNumber: string;
+        type: string;
+    };
+}
+
+export interface AdminFeedbackEntry {
+    id: string;
+    role: string;
+    rating: number;
+    firstName: string | null;
+    lastName: string | null;
+    highlights: string | null;
+    improvements: string | null;
+    createdAt: string;
+}
+
+export interface CsvRecipient {
+    firstName: string;
+    lastName?: string;
+    email: string;
+    phone?: string;
+}
+
+export interface BulkSendPayload {
+    mode: 'sms' | 'email' | 'both';
+    targetEntity: 'cyclist' | 'raffle' | 'donor' | 'custom' | 'csv';
+    targetStatus: 'all' | 'paid' | 'unpaid';
+    customPhones: string;
+    customEmails: string;
+    csvRecipients?: CsvRecipient[];
+    message: string;
+    subject: string;
+    testMode: boolean;
+}
+
+export interface CommsStats { success?: number; failed?: number; [key: string]: unknown }
+
+export interface CommsPreview {
+    recipientsCount?: number;
+    sampleRecipients?: { name?: string; contact?: string; compiledMessage?: string }[];
+    smsStats?: CommsStats;
+    emailStats?: CommsStats;
+    [key: string]: unknown;
+}
+
+export interface SmsBalance {
+    credit?: string | number;
+    [key: string]: unknown;
+}
+
+/** GET /events/current and each row of GET /admin/events. */
+export interface AdminEvent {
+    year: number;
+    name: string;
+    current?: boolean;
+}
+
+export interface BibJobProgress { pct: number; processed: number; total: number }
