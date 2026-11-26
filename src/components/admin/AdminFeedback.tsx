@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { API_BASE_URL } from '../../config';
+import { adminApi } from './api/adminApi';
+import { errorMessage } from './api/http';
+import type { AdminFeedbackEntry as FeedbackEntry } from '../../adminTypes';
 import {
     AiOutlineSearch,
     AiOutlineReload,
@@ -9,17 +11,6 @@ import {
     AiOutlineClose,
     AiFillStar,
 } from 'react-icons/ai';
-
-interface FeedbackEntry {
-    id: string;
-    role: string;
-    rating: number;
-    firstName: string | null;
-    lastName: string | null;
-    highlights: string | null;
-    improvements: string | null;
-    createdAt: string;
-}
 
 const ROLE_LABELS: Record<string, string> = {
     CYCLIST: 'Cyclist',
@@ -53,16 +44,11 @@ const AdminFeedback = () => {
         setLoading(true);
         setError(null);
         try {
-            const token = localStorage.getItem('adminToken');
-            const res = await fetch(`${API_BASE_URL}/admin/feedback`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data?.error || 'Failed to load feedback');
+            const data = await adminApi.feedback();
             setEntries(data.entries || []);
             setAverageRating(data.averageRating ?? 0);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to load feedback');
+            setError(errorMessage(err, 'Failed to load feedback'));
             setEntries([]);
         } finally {
             setLoading(false);

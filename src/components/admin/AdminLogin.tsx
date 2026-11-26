@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AiOutlineSun, AiOutlineMoon, AiOutlineArrowLeft, AiOutlineExclamationCircle, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { API_BASE_URL } from '../../config';
+import { adminApi } from './api/adminApi';
+import { errorMessage } from './api/http';
 import type { AdminUser } from '../../types';
 import logo from '../../assets/logos/logo.png';
 
@@ -29,16 +30,10 @@ const AdminLogin = ({ onLogin, onBack }: AdminLoginProps) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`${API_BASE_URL}/admin/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error?.message || 'Login failed');
-            onLogin(data.token, data.admin);
+            const { token, admin } = await adminApi.auth.login(email, password);
+            onLogin(token, admin);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred during login');
+            setError(errorMessage(err, 'An error occurred during login'));
         } finally {
             setLoading(false);
         }
