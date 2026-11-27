@@ -6,6 +6,8 @@ export interface AdminShell {
     admin: AdminUser | null;
     /** Dark theme on (charts pick their tooltip colours from it). */
     dark: boolean;
+    /** Event year chosen in the header (?year=); undefined means every year. */
+    year: number | undefined;
 }
 
 export const useAdminShell = () => useOutletContext<AdminShell>();

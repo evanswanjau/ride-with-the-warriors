@@ -13,7 +13,7 @@ import KpiGrid from '../ui/KpiGrid';
 import PageHeader from '../ui/PageHeader';
 import Pagination from '../ui/Pagination';
 import { StatusPill } from '../ui/StatusPill';
-import { formatDate, kes } from '../ui/format';
+import { ALL_YEARS_NOTE, formatDate, kes } from '../ui/format';
 
 const LIMIT = 20;
 const EXPORT_LIMIT = 10_000;
@@ -75,7 +75,7 @@ export default function PaymentsPage() {
                 actions={<button className="ad-btn ad-btn-primary" onClick={handleExport}><AiOutlineTable /> Export CSV</button>}
             />
             {s && (
-                <KpiGrid items={[
+                <KpiGrid note={`${ALL_YEARS_NOTE}; so does this list`} items={[
                     { label: 'Total', val: s.total },
                     { label: 'Paid', val: s.paid, cls: 'green' },
                     { label: 'Failed', val: s.failed, cls: 'red' },

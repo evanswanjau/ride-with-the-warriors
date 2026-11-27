@@ -12,14 +12,14 @@ const RENDER_WAIT_MS = 2000;
  * "Generate Tickets": renders every paid ticket off screen, captures each A4
  * page as an image and saves one PDF. `printArea` must be rendered by the page.
  */
-export function useRaffleTicketPdf() {
+export function useRaffleTicketPdf(year: number | undefined) {
     const [tickets, setTickets] = useState<AdminRaffleTicket[]>([]);
     const [printing, setPrinting] = useState(false);
 
     const generate = async () => {
         setPrinting(true);
         try {
-            const { tickets: paid } = await adminApi.raffle.list({ limit: PRINT_LIMIT, status: 'PAID' });
+            const { tickets: paid } = await adminApi.raffle.list({ year, limit: PRINT_LIMIT, status: 'PAID' });
             if (!paid.length) {
                 alert('No tickets found to print.');
                 return;
@@ -35,7 +35,7 @@ export function useRaffleTicketPdf() {
                 if (i > 0) pdf.addPage();
                 pdf.addImage(await toPng(pages[i], { pixelRatio: 1.5, backgroundColor: '#ffffff' }), 'PNG', 0, 0, 210, 297);
             }
-            pdf.save(`RWTW_Raffle_Tickets_All_${new Date().toISOString().split('T')[0]}.pdf`);
+            pdf.save(`RWTW_Raffle_Tickets_${year ?? 'All'}_${new Date().toISOString().split('T')[0]}.pdf`);
         } catch (e) {
             alert(errorMessage(e, e instanceof Error ? e.message : 'Failed to generate PDF'));
         } finally {

@@ -15,7 +15,8 @@ import KpiGrid from '../ui/KpiGrid';
 import PageHeader from '../ui/PageHeader';
 import Pagination from '../ui/Pagination';
 import { StatusSelect } from '../ui/StatusPill';
-import { cap, formatDate, kes, statusColor } from '../ui/format';
+import { ALL_YEARS_NOTE, cap, formatDate, kes, statusColor } from '../ui/format';
+import { useAdminShell } from '../useAdminShell';
 import { registrationFields } from './registrationFields';
 
 const LIMIT = 10;
@@ -25,6 +26,7 @@ const subLine = { fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '
 
 export default function RegistrationsPage() {
     const [params] = useSearchParams();
+    const { year } = useAdminShell();
     // The Overview's "Review now" opens this page with ?status=UNPAID.
     const [filter, setFilter] = useState({ search: '', circuitId: '', status: params.get('status') ?? '', isMilitary: '' });
     const [page, setPage] = useState(1);
@@ -32,7 +34,7 @@ export default function RegistrationsPage() {
     const [actionError, setActionError] = useState<string | null>(null);
     const search = useDebounced(filter.search);
 
-    const query = { page, limit: LIMIT, circuitId: filter.circuitId, status: filter.status, isMilitary: filter.isMilitary, search };
+    const query = { year, page, limit: LIMIT, circuitId: filter.circuitId, status: filter.status, isMilitary: filter.isMilitary, search };
     const list = useLoad(() => adminApi.registrations.list(query), JSON.stringify(query), 'Failed to load registrations');
     const stats = useLoad(() => adminApi.registrations.stats(), 'stats', 'Failed to load registrations');
     const rows = list.data?.registrations ?? [];
@@ -56,7 +58,7 @@ export default function RegistrationsPage() {
 
     const handleExport = async () => {
         try {
-            saveFile(await adminApi.exports.registrations(undefined), 'registrations-all.csv');
+            saveFile(await adminApi.exports.registrations(year), `registrations-${year ?? 'all'}.csv`);
         } catch (e) {
             setActionError(errorMessage(e, 'Export failed'));
         }
@@ -75,7 +77,7 @@ export default function RegistrationsPage() {
             />
 
             {s && (
-                <KpiGrid items={[
+                <KpiGrid note={ALL_YEARS_NOTE} items={[
                     { label: 'Total', val: s.total },
                     { label: 'Paid', val: s.paid, cls: 'green' },
                     { label: 'Unpaid', val: s.unpaid, cls: 'amber' },

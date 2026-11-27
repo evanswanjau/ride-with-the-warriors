@@ -40,6 +40,8 @@
 .ad-header-brand img { height: 32px; width: auto; object-fit: contain; }
 .ad-header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
 .ad-header-actions { display: flex; align-items: center; gap: 8px; }
+.ad-year-select { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.15); padding: 7px 10px; font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; cursor: pointer; outline: none; }
+.ad-year-select option { color: #111; }
 
 .ad-hbtn {
     position: relative; overflow: hidden;
@@ -98,6 +100,7 @@
 .ad-kpi-trend { font-size: 0.72rem; color: var(--ad-t3); font-weight: 600; display: flex; align-items: center; gap: 4px; }
 .ad-kpi-trend.up { color: var(--ad-pl); }
 .ad-kpi-trend.down { color: var(--ad-red); }
+.ad-kpi-note { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ad-t3); margin-top: 6px; }
 
 /* Panels */
 .ad-panel {

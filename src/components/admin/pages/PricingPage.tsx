@@ -3,13 +3,15 @@ import { CIRCUITS } from '../../../constants';
 import { usePricingCategories } from '../hooks/usePricingCategories';
 import { ErrorBanner, TableHead } from '../ui/Feedback';
 import PageHeader from '../ui/PageHeader';
+import { useAdminShell } from '../useAdminShell';
 
 const COLUMNS = ['Category', 'Type', 'Age Range', 'Colour', 'BIB Range', 'Remarks'];
 const smallCaps = { fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ad-t3)' } as const;
 const message = { padding: 40, textAlign: 'center', color: 'var(--ad-t3)' } as const;
 
 export default function PricingPage() {
-    const { categories, loading, error, reload } = usePricingCategories();
+    const { year } = useAdminShell();
+    const { categories, loading, error, reload } = usePricingCategories(year);
     const byCircuit = categories.reduce<Record<string, PricingCategory[]>>((acc, cat) => {
         (acc[cat.circuitId] ??= []).push(cat);
         return acc;
