@@ -7,8 +7,6 @@ describe('isOn', () => {
     });
     it("is on only for 'true'", () => {
         expect(isOn('account', { VITE_ACCOUNT_ENABLED: 'true' })).toBe(true);
-        expect(isOn('registration', { VITE_REGISTRATION_ENABLED: 'true' })).toBe(true);
-        expect(isOn('raffle', { VITE_RAFFLE_ENABLED: 'true' })).toBe(true);
         expect(isOn('donate', { VITE_DONATE_ENABLED: 'true' })).toBe(true);
     });
     it.each(['TRUE', '1', 'yes', 'false', ''])('is off for %j', (v) => {

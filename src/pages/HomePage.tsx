@@ -5,6 +5,7 @@ import Countdown from '../components/common/Countdown';
 import RecapPhotos from '../components/common/RecapPhotos';
 import { EDITION, PAST_EDITION, phaseAt } from '../config/edition';
 import { primaryCta } from '../config/cta';
+import { useCurrentEvent } from '../hooks/useCurrentEvent';
 import { HERO_HIGHLIGHT, HOME_COLLAGE, highlightImgProps } from '../data/highlights';
 import kdfLogo from '../assets/logos/web/kdf.webp';
 import logo from '../assets/logos/web/logo.webp';
@@ -89,7 +90,7 @@ const TestimonialsSection = () => {
 /* ─── Main Component ─────────────────────────────────────────────────────── */
 const HomePage = () => {
     const heroRef = useRef<HTMLImageElement>(null);
-    const cta = primaryCta();
+    const cta = primaryCta(useCurrentEvent());
     const phase = phaseAt();
 
     useEffect(() => {

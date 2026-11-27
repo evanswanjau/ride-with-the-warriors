@@ -1,9 +1,18 @@
 import { Link } from 'react-router-dom';
-import { EDITION } from '../config/edition';
+import type { LifecycleState, PublicEvent } from '../publicApi';
+import { stateCopy, type GatedFlow } from './eventStateCopy';
 
-const RegistrationClosedPage = () => {
+const text2: React.CSSProperties = {
+    color: 'var(--p-text-2, rgba(255,255,255,0.58))',
+    fontSize: '1rem', lineHeight: 1.75,
+    marginBottom: '0.75rem', maxWidth: '440px',
+};
+
+/** The register or raffle page while it is not open: upcoming, closed or finished. */
+const EventStatePage = ({ what, state, event }: { what: GatedFlow; state: Exclude<LifecycleState, 'open'>; event: PublicEvent | null }) => {
+    const copy = stateCopy(what, state, event);
     return (
-        <div style={{
+        <div data-testid={`${what}-${state}`} style={{
             fontFamily: "'Barlow', sans-serif",
             background: 'var(--p-bg, #0a0a0a)',
             color: 'var(--p-text-1, #fff)',
@@ -16,8 +25,6 @@ const RegistrationClosedPage = () => {
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
                 textAlign: 'center',
             }}>
-
-                {/* Eyebrow */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '2rem' }}>
                     <div style={{ height: '1px', width: '32px', background: 'var(--color-accent, #f59e0b)', flexShrink: 0 }} />
                     <span style={{
@@ -26,12 +33,11 @@ const RegistrationClosedPage = () => {
                         letterSpacing: '0.28em', textTransform: 'uppercase',
                         color: 'var(--color-accent, #f59e0b)',
                     }}>
-                        Registration Closed
+                        {copy.eyebrow}
                     </span>
                     <div style={{ height: '1px', width: '32px', background: 'var(--color-accent, #f59e0b)', flexShrink: 0 }} />
                 </div>
 
-                {/* Heading */}
                 <h1 style={{
                     fontFamily: "'Barlow Condensed', sans-serif",
                     fontSize: 'clamp(2rem, 5vw, 2.8rem)',
@@ -40,39 +46,23 @@ const RegistrationClosedPage = () => {
                     marginBottom: '1.25rem',
                     color: 'var(--p-text-1, #fff)',
                 }}>
-                    Cyclist Registration<br />Is Now Closed
+                    {copy.heading[0]}<br />{copy.heading[1]}
                 </h1>
 
-                {/* Divider */}
                 <div style={{ width: '40px', height: '2px', background: 'var(--color-primary-light, #4caf50)', marginBottom: '1.5rem' }} />
 
-                {/* Body */}
-                <p style={{
-                    color: 'var(--p-text-2, rgba(255,255,255,0.58))',
-                    fontSize: '1rem', lineHeight: 1.75,
-                    marginBottom: '0.75rem', maxWidth: '440px',
-                }}>
-                    Registration opens {EDITION.registrationOpensLabel}.
-                </p>
-                <p style={{
-                    color: 'var(--p-text-2, rgba(255,255,255,0.58))',
-                    fontSize: '1rem', lineHeight: 1.75,
-                    marginBottom: '2.5rem', maxWidth: '440px',
-                }}>
-                    Pre-register now and we'll tell you first when {EDITION.shortName} registration opens.
-                </p>
+                {copy.lines.map((line, i) => (
+                    <p key={line} style={i === copy.lines.length - 1 ? { ...text2, marginBottom: '2.5rem' } : text2}>{line}</p>
+                ))}
 
-                {/* CTAs */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center', marginBottom: '3rem' }}>
-                    <Link to="/feedback" className="shimmer-btn shimmer-btn--primary">
-                        Share Feedback
-                    </Link>
-                    <Link to="/register/notify" className="shimmer-btn shimmer-btn--ghost">
-                        Notify Me for {EDITION.year}
-                    </Link>
+                    {copy.actions.map((a, i) => (
+                        <Link key={a.to} to={a.to} className={`shimmer-btn ${i === 0 ? 'shimmer-btn--primary' : 'shimmer-btn--ghost'}`}>
+                            {a.label}
+                        </Link>
+                    ))}
                 </div>
 
-                {/* Footer note */}
                 <p style={{
                     color: 'var(--p-text-3, rgba(255,255,255,0.33))',
                     fontSize: '0.8rem', letterSpacing: '0.04em',
@@ -90,4 +80,4 @@ const RegistrationClosedPage = () => {
     );
 };
 
-export default RegistrationClosedPage;
+export default EventStatePage;

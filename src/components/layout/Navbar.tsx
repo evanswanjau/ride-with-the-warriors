@@ -5,7 +5,9 @@ import logoRegular from '../../assets/logos/web/logo-sm.webp';
 import logoWhite from '../../assets/logos/web/logo_white.webp';
 import { useAuth } from '../../context/AuthContext';
 import { isOn } from '../../config/features';
-import { primaryCta } from '../../config/cta';
+import { primaryCta, raffleCta } from '../../config/cta';
+import { useCurrentEvent } from '../../hooks/useCurrentEvent';
+import '../../styles/navbar.css';
 
 const RECAP_ITEMS = [
     { name: 'Highlights', path: '/2026', desc: 'The day in numbers and moments' },
@@ -41,7 +43,9 @@ const Navbar = () => {
     const recapBtnRef = useRef<HTMLButtonElement>(null);
     const openedByHover = useRef(false);
     const accountOn = isOn('account');
-    const cta = primaryCta();
+    const current = useCurrentEvent();
+    const cta = primaryCta(current);
+    const raffle = raffleCta(current);
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined') {
             return localStorage.getItem('rwtw-theme') || 'dark';
@@ -84,8 +88,6 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    /* Close menu on route change */
-    useEffect(() => { setIsMenuOpen(false); setRecapOpen(false); }, [location.pathname, location.search]);
 
     /* Close the Recap dropdown on outside click */
     useEffect(() => {
@@ -122,6 +124,15 @@ const Navbar = () => {
         { name: 'Contact', path: '/contact' },
     ];
 
+    /* Close the menus when the route changes (adjusted during render, not in an effect) */
+    const route = location.pathname + location.search;
+    const [lastRoute, setLastRoute] = useState(route);
+    if (route !== lastRoute) {
+        setLastRoute(route);
+        setIsMenuOpen(false);
+        setRecapOpen(false);
+    }
+
     const isActive = (path: string) => location.pathname === path;
     const recapActive =
         ['/2026', '/results', '/raffle-winners'].includes(location.pathname) ||
@@ -129,532 +140,6 @@ const Navbar = () => {
 
     return (
         <>
-            <style>{`
-                
-
-                /* ── Theme Variables ── */
-                :root, [data-theme="dark"] {
-                    --nav-bg-solid: rgba(10, 10, 10, 0.97);
-                    --nav-border: rgba(255,255,255,0.07);
-                    --nav-text: rgba(255,255,255,0.75);
-                    --nav-text-active: #ffffff;
-                    --nav-text-hover: #ffffff;
-                    --nav-logo-text: #ffffff;
-                    --nav-icon: rgba(255,255,255,0.6);
-                    --nav-icon-hover: #ffffff;
-                    --nav-toggle-bg: rgba(255,255,255,0.06);
-                    --nav-toggle-border: rgba(255,255,255,0.1);
-                    --nav-toggle-color: rgba(255,255,255,0.7);
-                    --nav-mobile-bg: #0a0a0a;
-                    --nav-mobile-border: rgba(255,255,255,0.07);
-                    --nav-mobile-link: rgba(255,255,255,0.6);
-                    --nav-mobile-link-active: #ffffff;
-                    --nav-active-bar: var(--color-primary-light, #4caf50);
-                }
-                [data-theme="light"] {
-                    --nav-bg-solid: rgba(250, 248, 244, 0.97);
-                    --nav-border: rgba(0,0,0,0.09);
-                    --nav-text: rgba(30,30,30,0.65);
-                    --nav-text-active: #111111;
-                    --nav-text-hover: #111111;
-                    --nav-logo-text: #111111;
-                    --nav-icon: rgba(30,30,30,0.5);
-                    --nav-icon-hover: #111111;
-                    --nav-toggle-bg: rgba(0,0,0,0.05);
-                    --nav-toggle-border: rgba(0,0,0,0.12);
-                    --nav-toggle-color: rgba(30,30,30,0.65);
-                    --nav-mobile-bg: #faf8f4;
-                    --nav-mobile-border: rgba(0,0,0,0.08);
-                    --nav-mobile-link: rgba(30,30,30,0.55);
-                    --nav-mobile-link-active: #111111;
-                    --nav-active-bar: var(--color-primary, #2d6a2d);
-                }
-
-                /* ── Navbar base ── */
-                .rwtw-nav {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    z-index: 100;
-                    transition: background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
-                    font-family: 'Barlow', sans-serif;
-                }
-                .rwtw-nav.is-solid {
-                    background: var(--nav-bg-solid);
-                    border-bottom: 1px solid var(--nav-border);
-                    backdrop-filter: blur(16px);
-                }
-                .rwtw-nav.is-transparent {
-                    background: transparent;
-                    border-bottom: 1px solid transparent;
-                }
-
-                .nav-inner {
-                    max-width: 1400px;
-                    margin: 0 auto;
-                    padding: 0 44px;
-                    height: 70px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 32px;
-                }
-
-                /* ── Logo ── */
-                .nav-logo {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    text-decoration: none;
-                    flex-shrink: 0;
-                }
-                .nav-logo img {
-                    height: 40px;
-                    width: auto;
-                    object-fit: contain;
-                }
-                .nav-logo-label {
-                    font-family: 'Barlow Condensed', sans-serif;
-                    font-weight: 800;
-                    font-size: 1.2rem;
-                    letter-spacing: 0.1em;
-                    text-transform: uppercase;
-                    line-height: 1.2;
-                    transition: color 0.3s;
-                }
-                .nav-logo-sub {
-                    font-size: 0.75rem;
-                    letter-spacing: 0.2em;
-                    opacity: 0.55;
-                    display: block;
-                }
-                .is-transparent .nav-logo-label { color: rgba(255,255,255,0.95); }
-                .is-solid .nav-logo-label { color: var(--nav-logo-text); }
-
-                /* ── Nav links ── */
-                .nav-links {
-                    display: flex;
-                    align-items: center;
-                    gap: 2px;
-                    flex: 1;
-                    justify-content: center;
-                }
-                @media (max-width: 1023px) { .nav-links { display: none; } }
-
-                .nav-link {
-                    position: relative;
-                    padding: 7px 15px;
-                    font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 1.05rem;
-                    font-weight: 700;
-                    letter-spacing: 0.18em;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    transition: color 0.2s;
-                    white-space: nowrap;
-                }
-                .nav-link::after {
-                    content: '';
-                    position: absolute;
-                    bottom: 0; left: 14px; right: 14px;
-                    height: 2px;
-                    background: var(--nav-active-bar);
-                    transform: scaleX(0);
-                    transform-origin: left;
-                    transition: transform 0.25s ease;
-                }
-                .nav-link.active::after,
-                .nav-link:hover::after { transform: scaleX(1); }
-
-                .is-transparent .nav-link { color: rgba(255,255,255,0.72); }
-                .is-transparent .nav-link:hover,
-                .is-transparent .nav-link.active { color: rgba(255,255,255,1); }
-                .is-solid .nav-link { color: var(--nav-text); }
-                .is-solid .nav-link:hover,
-                .is-solid .nav-link.active { color: var(--nav-text-active); }
-
-                /* ── Right actions ── */
-                .nav-actions {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    flex-shrink: 0;
-                }
-                @media (max-width: 1023px) { .nav-actions { display: none; } }
-
-                /* ── Icon button ── */
-                .nav-icon-btn {
-                    width: 34px; height: 34px;
-                    display: flex; align-items: center; justify-content: center;
-                    border: 1px solid var(--nav-toggle-border);
-                    background: var(--nav-toggle-bg);
-                    color: var(--nav-toggle-color);
-                    cursor: pointer;
-                    transition: color 0.2s, border-color 0.2s, background 0.2s;
-                    text-decoration: none;
-                    flex-shrink: 0;
-                }
-                .nav-icon-btn:hover {
-                    color: var(--nav-icon-hover);
-                    border-color: var(--color-primary, #2d6a2d);
-                }
-                .is-transparent .nav-icon-btn {
-                    border-color: rgba(255,255,255,0.2);
-                    background: rgba(255,255,255,0.06);
-                    color: rgba(255,255,255,0.7);
-                }
-                .is-transparent .nav-icon-btn:hover {
-                    border-color: rgba(255,255,255,0.5);
-                    color: #fff;
-                }
-
-                /* ── CTA buttons (shimmer) ── */
-                .nav-cta {
-                    position: relative;
-                    display: inline-flex;
-                    align-items: center;
-                    padding: 9px 24px;
-                    font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 0.95rem;
-                    font-weight: 800;
-                    letter-spacing: 0.15em;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    overflow: visible;
-                    transition: transform 0.2s, box-shadow 0.2s;
-                    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-                    white-space: nowrap;
-                }
-                .nav-cta::before {
-                    content: '';
-                    position: absolute;
-                    top: 0; left: -80%;
-                    width: 60%; height: 100%;
-                    background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.4) 50%, transparent 80%);
-                    transform: skewX(-20deg);
-                    pointer-events: none;
-                }
-                .nav-cta:hover::before {
-                    left: 140%;
-                    transition: left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                }
-                .nav-cta:hover { transform: translateY(-1px); }
-                .nav-cta.green {
-                    background: var(--color-primary, #2d6a2d);
-                    color: #fff;
-                    box-shadow: 0 0 0 transparent;
-                }
-                .nav-cta.green:hover { box-shadow: 0 8px 20px rgba(45,106,45,0.35); }
-                .nav-cta.nav-cta-red-shadow {
-                    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5), 0 0 30px rgba(239, 68, 68, 0.3);
-                }
-                .nav-cta.amber {
-                    background: #f59e0b;
-                    color: #111;
-                }
-                .nav-cta.amber:hover { box-shadow: 0 8px 20px rgba(245,158,11,0.35); }
-
-                /* ── CTA Glow Effect ── */
-                .nav-cta-glow {
-                    position: relative;
-                    animation: glow-pulse 2s ease-in-out infinite;
-                }
-                .nav-cta-glow::before {
-                    content: '';
-                    position: absolute;
-                    inset: -2px;
-                    background: linear-gradient(45deg, #2d6a2d, #4caf50, #2d6a2d, #1e4d1e, #2d6a2d);
-                    background-size: 400% 400%;
-                    border-radius: inherit;
-                    z-index: -1;
-                    animation: glow-border 3s ease infinite;
-                    opacity: 0.7;
-                }
-                @keyframes glow-pulse {
-                    0%, 100% { box-shadow: 0 0 25px rgba(45, 106, 45, 0.5), 0 0 50px rgba(45, 106, 45, 0.3); }
-                    50% { box-shadow: 0 0 35px rgba(45, 106, 45, 0.7), 0 0 70px rgba(45, 106, 45, 0.5); }
-                }
-                @keyframes glow-border {
-                    0% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                    100% { background-position: 0% 50%; }
-                }
-
-                .nav-cta.black-white {
-                    background: #111;
-                    color: #fff;
-                }
-                [data-theme="dark"] .nav-cta.black-white {
-                    background: #fff;
-                    color: #111;
-                }
-                .nav-cta.black-white:hover { 
-                    box-shadow: 0 8px 20px rgba(0,0,0,0.25); 
-                }
-                [data-theme="dark"] .nav-cta.black-white:hover {
-                    box-shadow: 0 8px 20px rgba(255,255,255,0.15);
-                }
-
-                /* ── Divider ── */
-                .nav-divider {
-                    width: 1px; height: 22px;
-                    background: var(--nav-toggle-border);
-                    flex-shrink: 0;
-                }
-                .is-transparent .nav-divider { background: rgba(255,255,255,0.15); }
-
-                /* ── Mobile controls ── */
-                .nav-mobile-controls {
-                    display: none;
-                    align-items: center;
-                    gap: 8px;
-                }
-                @media (max-width: 1023px) { .nav-mobile-controls { display: flex; } }
-
-                /* ── Mobile overlay ── */
-                .nav-mobile-overlay {
-                    position: fixed;
-                    inset: 0;
-                    z-index: 120;
-                    background: var(--nav-mobile-bg);
-                    transform: translateX(100%);
-                    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-                    display: flex;
-                    flex-direction: column;
-                    font-family: 'Barlow', sans-serif;
-                }
-                .nav-mobile-overlay.open { transform: translateX(0); }
-
-                .nav-mobile-header {
-                    height: 64px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 0 24px;
-                    border-bottom: 1px solid var(--nav-mobile-border);
-                    flex-shrink: 0;
-                }
-
-                .nav-mobile-links {
-                    flex: 1;
-                    padding: 32px 24px;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0;
-                    overflow-y: auto;
-                }
-
-                .nav-mobile-link {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 18px 0;
-                    border-bottom: 1px solid var(--nav-mobile-border);
-                    font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 1.6rem;
-                    font-weight: 800;
-                    letter-spacing: 0.08em;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    color: var(--nav-mobile-link);
-                    transition: color 0.2s, padding-left 0.2s;
-                }
-                .nav-mobile-link.active { color: var(--nav-mobile-link-active); }
-                .nav-mobile-link:hover {
-                    color: var(--nav-mobile-link-active);
-                    padding-left: 8px;
-                }
-                .nav-mobile-link .link-arrow {
-                    font-size: 1rem;
-                    opacity: 0;
-                    transform: translateX(-8px);
-                    transition: opacity 0.2s, transform 0.2s;
-                    color: var(--color-primary-light, #4caf50);
-                }
-                .nav-mobile-link:hover .link-arrow,
-                .nav-mobile-link.active .link-arrow {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-
-                .nav-mobile-ctas {
-                    padding: 24px;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                    border-top: 1px solid var(--nav-mobile-border);
-                }
-
-                .nav-mobile-cta {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 16px;
-                    font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 1rem;
-                    font-weight: 800;
-                    letter-spacing: 0.15em;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    position: relative;
-                    overflow: hidden;
-                    transition: transform 0.2s, box-shadow 0.2s;
-                    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-                }
-                .nav-mobile-cta.green { background: var(--color-primary, #2d6a2d); color: #fff; }
-                .nav-mobile-cta.amber { background: #f59e0b; color: #111; }
-
-                /* ── Mobile CTA Glow Effect ── */
-                .nav-mobile-cta-glow {
-                    position: relative;
-                    animation: glow-pulse 2s ease-in-out infinite;
-                }
-                .nav-mobile-cta-glow::before {
-                    content: '';
-                    position: absolute;
-                    inset: -2px;
-                    background: linear-gradient(45deg, #2d6a2d, #4caf50, #2d6a2d, #1e4d1e, #2d6a2d);
-                    background-size: 400% 400%;
-                    border-radius: inherit;
-                    z-index: -1;
-                    animation: glow-border 3s ease infinite;
-                    opacity: 0.7;
-                }
-
-                .nav-mobile-cta.black-white {
-                    background: #111;
-                    color: #fff;
-                }
-                [data-theme="dark"] .nav-mobile-cta.black-white {
-                    background: #fff;
-                    color: #111;
-                }
-                .nav-mobile-cta:active { transform: scale(0.98); }
-
-                /* ── Mobile logo text ── */
-                .nav-mobile-logo-text {
-                    font-family: 'Barlow Condensed', sans-serif;
-                    font-weight: 800;
-                    font-size: 0.9rem;
-                    letter-spacing: 0.1em;
-                    text-transform: uppercase;
-                    color: var(--nav-logo-text);
-                }
-
-                /* ── Theme toggle ── */
-                .theme-toggle {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                    padding: 5px 10px;
-                    border: 1px solid var(--nav-toggle-border);
-                    background: var(--nav-toggle-bg);
-                    color: var(--nav-toggle-color);
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 0.65rem;
-                    font-weight: 700;
-                    letter-spacing: 0.12em;
-                    text-transform: uppercase;
-                    white-space: nowrap;
-                }
-                .theme-toggle:hover {
-                    border-color: var(--color-primary, #2d6a2d);
-                    color: var(--nav-text-active);
-                }
-                .is-transparent .theme-toggle {
-                    border-color: rgba(255,255,255,0.2);
-                    background: rgba(255,255,255,0.06);
-                    color: rgba(255,255,255,0.7);
-                }
-                .is-transparent .theme-toggle:hover {
-                    border-color: rgba(255,255,255,0.5);
-                    color: #fff;
-                }
-
-                /* ── Tighter spacing on mid-size desktops so everything fits ── */
-                @media (min-width: 1024px) and (max-width: 1439px) {
-                    .nav-inner { padding: 0 20px; gap: 14px; }
-                    .nav-logo-sub { display: none; }
-                    .nav-logo-label { font-size: 1.05rem; }
-                    .nav-link { padding: 7px 8px; font-size: 0.95rem; letter-spacing: 0.1em; }
-                    .nav-link::after { left: 8px; right: 8px; }
-                    .nav-actions { gap: 8px; }
-                    .nav-cta { padding: 9px 16px; font-size: 0.85rem; letter-spacing: 0.1em; }
-                    .nav-text-link { font-size: 0.9rem; letter-spacing: 0.1em; }
-                    .theme-toggle span { display: none; }
-                }
-
-                /* ── Plain text links in the right-hand actions ── */
-                .nav-text-link {
-                    font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 1rem; font-weight: 700;
-                    letter-spacing: 0.15em; text-transform: uppercase;
-                    text-decoration: none; white-space: nowrap;
-                    padding: 6px 4px;
-                    transition: color 0.2s;
-                }
-                .is-transparent .nav-text-link { color: rgba(255,255,255,0.8); }
-                .is-solid .nav-text-link { color: var(--nav-text); }
-                .is-transparent .nav-text-link:hover { color: #fff; }
-                .is-solid .nav-text-link:hover { color: var(--nav-text-active); }
-
-                /* ── 2026 Recap dropdown ── */
-                .nav-dropdown { position: relative; }
-                .nav-dropdown-btn {
-                    background: none; border: 0; cursor: pointer;
-                    display: inline-flex; align-items: center; gap: 6px;
-                }
-                .nav-dropdown-caret { font-size: 0.7rem; transition: transform 0.2s; }
-                .nav-dropdown.open .nav-dropdown-caret { transform: rotate(180deg); }
-                .nav-dropdown-menu {
-                    position: absolute; top: 100%; left: 0; min-width: 290px;
-                    padding: 8px 0; margin-top: 6px;
-                    background: var(--nav-mobile-bg);
-                    border: 1px solid var(--nav-border);
-                    box-shadow: 0 16px 40px rgba(0,0,0,0.35);
-                    z-index: 130;
-                }
-                .nav-dropdown-menu::before { /* hover bridge over the gap */
-                    content: ''; position: absolute; top: -8px; left: 0; right: 0; height: 8px;
-                }
-                .nav-dropdown-item {
-                    display: block; padding: 10px 18px; text-decoration: none;
-                    color: var(--nav-text-active);
-                    transition: background 0.15s;
-                }
-                .nav-dropdown-item:hover, .nav-dropdown-item:focus-visible {
-                    background: var(--nav-toggle-bg); outline: none;
-                }
-                .nav-dropdown-item-name {
-                    display: block; font-family: 'Barlow Condensed', sans-serif;
-                    font-size: 1.05rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-                }
-                .nav-dropdown-item-desc { display: block; font-size: 0.78rem; opacity: 0.6; margin-top: 2px; }
-
-                /* ── Mobile accordion + text links ── */
-                .nav-mobile-accordion-btn {
-                    width: 100%; background: none; border-left: 0; border-right: 0; border-top: 0; cursor: pointer; text-align: left;
-                }
-                .nav-mobile-sub { display: flex; flex-direction: column; padding: 4px 0 10px 16px; border-bottom: 1px solid var(--nav-mobile-border); }
-                .nav-mobile-sub a {
-                    padding: 12px 0; text-decoration: none; color: var(--nav-mobile-link);
-                    font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700;
-                    letter-spacing: 0.08em; text-transform: uppercase;
-                }
-                .nav-mobile-sub a small {
-                    display: block; font-family: 'Barlow', sans-serif; font-size: 0.75rem;
-                    text-transform: none; letter-spacing: 0; opacity: 0.65; font-weight: 400;
-                }
-                .nav-mobile-sub a:hover { color: var(--nav-mobile-link-active); }
-                .nav-mobile-text-link {
-                    text-align: center; padding: 8px; text-decoration: none; color: var(--nav-mobile-link-active);
-                    font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700;
-                    letter-spacing: 0.12em; text-transform: uppercase;
-                }
-            `}</style>
-
             {/* ── Main nav ── */}
             <header className={`rwtw-nav ${isTransparent ? 'is-transparent' : 'is-solid'}`}>
                 <div className="nav-inner">
@@ -749,6 +234,7 @@ const Navbar = () => {
                             </Link>
                         )}
                         <Link to="/feedback" className="nav-text-link">Feedback</Link>
+                        {raffle && <Link to={raffle.to} className="nav-cta amber">{raffle.label}</Link>}
                         <Link to={cta.to} className="nav-cta green">{cta.label}</Link>
                     </div>
 
@@ -844,6 +330,11 @@ const Navbar = () => {
                     <Link to="/feedback" className="nav-mobile-text-link" onClick={() => setIsMenuOpen(false)}>
                         Feedback
                     </Link>
+                    {raffle && (
+                        <Link to={raffle.to} className="nav-mobile-cta amber" onClick={() => setIsMenuOpen(false)}>
+                            {raffle.label}
+                        </Link>
+                    )}
                     <Link to={cta.to} className="nav-mobile-cta green" onClick={() => setIsMenuOpen(false)}>
                         {cta.label}
                     </Link>
