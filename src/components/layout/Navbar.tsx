@@ -8,10 +8,11 @@ import { isOn } from '../../config/features';
 import { primaryCta, raffleCta } from '../../config/cta';
 import { useCurrentEvent } from '../../hooks/useCurrentEvent';
 import '../../styles/navbar.css';
+import { ARCHIVE, PAST_EDITION } from '../../config/edition';
 
 const RECAP_ITEMS = [
-    { name: 'Highlights', path: '/2026', desc: 'The day in numbers and moments' },
-    { name: 'Photos', path: '/gallery?year=2026', desc: 'Every album from race day' },
+    { name: 'Highlights', path: ARCHIVE.recap, desc: 'The day in numbers and moments' },
+    { name: 'Photos', path: ARCHIVE.photos, desc: 'Every album from race day' },
     { name: 'Race Results', path: '/results', desc: 'Times and positions by circuit' },
     { name: 'Raffle Winners', path: '/raffle-winners', desc: 'Including the Nissan Sylphy, ticket AA130' },
 ];
@@ -135,8 +136,8 @@ const Navbar = () => {
 
     const isActive = (path: string) => location.pathname === path;
     const recapActive =
-        ['/2026', '/results', '/raffle-winners'].includes(location.pathname) ||
-        (location.pathname === '/gallery' && new URLSearchParams(location.search).get('year') === '2026');
+        [ARCHIVE.recap, '/results', '/raffle-winners'].includes(location.pathname) ||
+        (location.pathname === '/gallery' && new URLSearchParams(location.search).get('year') === String(PAST_EDITION.year));
 
     return (
         <>
@@ -183,10 +184,10 @@ const Navbar = () => {
                                     else setRecapOpen((v) => !v);
                                 }}
                             >
-                                2026 Recap <span className="nav-dropdown-caret" aria-hidden="true">▾</span>
+                                {ARCHIVE.label} <span className="nav-dropdown-caret" aria-hidden="true">▾</span>
                             </button>
                             {recapOpen && (
-                                <div className="nav-dropdown-menu" role="menu" aria-label="2026 Recap">
+                                <div className="nav-dropdown-menu" role="menu" aria-label={ARCHIVE.label}>
                                     {RECAP_ITEMS.map((item) => (
                                         <Link
                                             key={item.path}
@@ -299,7 +300,7 @@ const Navbar = () => {
                                 aria-controls="mobile-recap-sub"
                                 onClick={() => setMobileRecapOpen((v) => !v)}
                             >
-                                2026 Recap
+                                {ARCHIVE.label}
                                 <span aria-hidden="true" style={{ fontSize: '1rem' }}>{mobileRecapOpen ? '−' : '+'}</span>
                             </button>
                             {mobileRecapOpen && (

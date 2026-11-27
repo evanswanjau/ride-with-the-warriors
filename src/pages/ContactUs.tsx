@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/contact-us.css';
 import { publicApi } from '../publicApi';
+import { useEdition } from '../hooks/useEdition';
 import {
     AiOutlineMail,
     AiOutlinePhone,
@@ -13,6 +14,7 @@ import {
 } from 'react-icons/ai';
 
 const ContactUs = () => {
+    const edition = useEdition();
     const [formData, setFormData] = useState({
         name: '', email: '', phone: '', subject: '', message: ''
     });
@@ -45,7 +47,7 @@ const ContactUs = () => {
         ], accentColor: 'rgba(59,130,246,0.7)' },
         { icon: <AiOutlinePhone />, title: 'Call Us', detail: '0703 752 118', link: 'tel:0703752118', accentColor: 'var(--color-primary-light)' },
         { icon: <AiOutlineWhatsApp />, title: 'WhatsApp', detail: 'Chat with Support', link: 'https://wa.me/254703752118', accentColor: '#25D366' },
-        { icon: <AiOutlineEnvironment />, title: 'Event Venue', detail: 'Ulinzi Sports Complex, Nairobi', link: 'https://maps.google.com', accentColor: 'rgba(249,115,22,0.8)' },
+        { icon: <AiOutlineEnvironment />, title: 'Event Venue', detail: edition.venue ?? 'Nairobi, Kenya', link: 'https://maps.google.com', accentColor: 'rgba(249,115,22,0.8)' },
     ];
 
     return (
@@ -63,7 +65,7 @@ const ContactUs = () => {
                         </div>
                         <h1 className="page-display page-title">Get in <span className="page-accent">Touch.</span></h1>
                         <p className="page-subtitle">
-                            Questions about RWTW 2026? Whether it's registration, logistics, or
+                            Questions about {edition.shortName ?? 'RWTW'}? Whether it's registration, logistics, or
                             sponsorship — we're ready to help.
                         </p>
                     </div>

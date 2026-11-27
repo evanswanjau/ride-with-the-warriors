@@ -57,7 +57,8 @@ test('a 2026 rider sees their history, registers for 2027, and then sees both ye
     // ── Register for 2027 ───────────────────────────────────────────────────
     await nav(page).getByRole('link', { name: 'Home' }).click();
     await page.getByRole('article', { name: 'Recon circuit' }).getByRole('link', { name: 'Register for 2027' }).click();
-    await expect(page).toHaveURL(/\/register\?from=/);
+    // Open: the first step of the form, with the entry to copy riders from. Closed: the state page.
+    await expect(page).toHaveURL(/\/register(\/step\/1)?\?from=/);
 
     const token = await sessionToken(page);
     await register2027(request, token, 'recon', AMINA);

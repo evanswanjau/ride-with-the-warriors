@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 vi.hoisted(() => { Object.assign(globalThis, { window: { location: { origin: 'http://test' } } }); });
 
 import { PublicApiError, publicApi, type PublicEvent } from '.';
-import { rideDayOver, stateOf } from './eventState';
+import { stateOf } from './eventState';
 
 const json = (status: number, body: unknown) =>
     new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
@@ -61,39 +61,15 @@ describe('publicApi', () => {
     });
 });
 
-const NOW = new Date('2027-03-01T12:00:00Z');
-const event = (over: Partial<PublicEvent> = {}): PublicEvent => ({
-    year: 2027, name: 'RWTW', date: '2027-05-09', location: 'Ulinzi',
-    registrationOpen: false, registrationOpensAt: null, registrationClosesAt: null,
-    raffleOpen: false, raffleOpensAt: null, raffleClosesAt: null,
-    rafflePrice: 1000, bikeHirePrice: 1500, bikeStock: null, bikesLeft: null,
-    ...over,
-});
-
 describe('stateOf', () => {
-    it("uses the server's state when it sends one", () => {
-        expect(stateOf(event({ registrationState: 'closed', registrationOpen: true }), 'registration', NOW)).toBe('closed');
-        expect(stateOf(event({ raffleState: 'open' }), 'raffle', NOW)).toBe('open');
+    const event = (over: Partial<PublicEvent>) => ({ registrationState: 'upcoming', raffleState: 'upcoming', ...over }) as PublicEvent;
+
+    it("uses the server's state, never the dates", () => {
+        expect(stateOf(event({ registrationState: 'open' }), 'registration')).toBe('open');
+        expect(stateOf(event({ raffleState: 'finished', raffleOpen: true }), 'raffle')).toBe('finished');
     });
 
-    it('works the state out from dates and the open flag otherwise', () => {
-        expect(stateOf(event(), 'registration', NOW)).toBe('upcoming');
-        expect(stateOf(event({ registrationOpensAt: '2027-04-01T00:00:00Z' }), 'registration', NOW)).toBe('upcoming');
-        expect(stateOf(event({ registrationOpen: true }), 'registration', NOW)).toBe('open');
-        expect(stateOf(event({ registrationClosesAt: '2027-03-01T12:00:00Z' }), 'registration', NOW)).toBe('closed');
-        expect(stateOf(event({ raffleOpen: true }), 'raffle', NOW)).toBe('open');
-        expect(stateOf(event({ raffleOpen: false, raffleClosesAt: '2027-02-01T00:00:00Z' }), 'raffle', NOW)).toBe('closed');
-    });
-
-    it('is finished once the ride day is over, even if still open', () => {
-        const after = new Date('2027-05-10T00:00:00Z');
-        expect(stateOf(event({ registrationOpen: true }), 'registration', after)).toBe('finished');
-        expect(stateOf(event(), 'raffle', after)).toBe('finished');
-        expect(stateOf(event(), 'raffle', new Date('2027-05-09T23:59:59Z'))).toBe('upcoming');
-    });
-
-    it('never finishes without a ride day', () => {
-        expect(rideDayOver(null, NOW)).toBe(false);
-        expect(rideDayOver('not a date', NOW)).toBe(false);
+    it('is closed when a server leaves the state out', () => {
+        expect(stateOf({ registrationOpen: true } as PublicEvent, 'registration')).toBe('closed');
     });
 });

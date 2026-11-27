@@ -11,6 +11,7 @@ const EVENT = {
     registrationOpen: true, registrationOpensAt: null, registrationClosesAt: null,
     raffleOpen: false, raffleOpensAt: null, raffleClosesAt: null,
     rafflePrice: 1000, bikeHirePrice: 1500, bikeStock: null, bikesLeft: null,
+    registrationState: 'open', raffleState: 'closed', riderCap: null, feedbackOpen: false, circuits: [],
 };
 
 let fetchMock: ReturnType<typeof vi.fn>;

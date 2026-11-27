@@ -1,11 +1,12 @@
 import React, { lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { RegistrationProvider, useRegistration } from './context/RegistrationContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import RequireAuth from './components/auth/RequireAuth';
 import { FeatureRoute } from './components/common/FeatureRoute';
 import EventGate from './components/common/EventGate';
+import { ARCHIVE } from './config/edition';
 
 import ScrollToTop from './utils/ScrollToTop';
 import PageTitle from './utils/PageTitle';
@@ -46,13 +47,19 @@ const Recap2026Page = lazy(() => import('./pages/Recap2026Page'));
 
 const RouteFallback = () => <div className="min-h-screen" role="status" aria-label="Loading" />;
 
+// Sends /register to its first step, keeping the query (?from=<entry> prefills riders).
+const KeepQuery = ({ to }: { to: string }) => {
+  const { search } = useLocation();
+  return <Navigate to={{ pathname: to, search }} replace />;
+};
+
 // The API needs a logged-in rider for both flows.
 const RegistrationFlow = () => (
   <EventGate what="registration">
     <RequireAuth>
       <Routes>
         <Route path="step/:stepId" element={<RegisterPage />} />
-        <Route path="*" element={<Navigate to="step/1" replace />} />
+        <Route path="*" element={<KeepQuery to="step/1" />} />
       </Routes>
     </RequireAuth>
   </EventGate>
@@ -63,7 +70,7 @@ const RaffleFlow = () => (
     <RequireAuth>
       <Routes>
         <Route path=":stepId" element={<RafflePage />} />
-        <Route path="*" element={<Navigate to="1" replace />} />
+        <Route path="*" element={<KeepQuery to="1" />} />
       </Routes>
     </RequireAuth>
   </EventGate>
@@ -98,7 +105,7 @@ const App = () => {
         <Route path="/donate" element={<FeatureRoute feature="donate"><DonatePage /></FeatureRoute>} />
         <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/results" element={<Layout isFullWidth><ResultsPage /></Layout>} />
-        <Route path="/2026" element={<Layout isFullWidth><Recap2026Page /></Layout>} />
+        <Route path={ARCHIVE.recap} element={<Layout isFullWidth><Recap2026Page /></Layout>} />
         <Route path="/raffle-winners" element={<Layout isFullWidth><RaffleWinnersPage /></Layout>} />
 
         {/* Participant accounts */}

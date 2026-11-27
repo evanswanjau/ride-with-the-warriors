@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { countdownTarget } from '../../config/edition';
+import { useEdition } from '../../hooks/useEdition';
+import { countdownTarget } from '../../utils/eventDates';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -12,7 +13,8 @@ const Countdown = ({ className = '' }: { className?: string }) => {
         return () => clearInterval(id);
     }, []);
 
-    const target = countdownTarget(now);
+    const edition = useEdition();
+    const target = countdownTarget(now, edition);
     if (!target) return null;
 
     const total = Math.max(0, Math.floor((target.at.getTime() - now.getTime()) / 1000));

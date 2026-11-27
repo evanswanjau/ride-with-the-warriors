@@ -3,8 +3,17 @@ import '../styles/about-us.css';
 import { AiOutlineAim, AiOutlineHeart, AiOutlineGlobal, AiOutlineStar } from 'react-icons/ai';
 import { ABOUT_HIGHLIGHTS, highlightImgProps } from '../data/highlights';
 import { cldImgProps, siteImage } from '../utils/cloudinary';
+import { primaryCta } from '../config/cta';
+import { PAST_EDITION } from '../config/edition';
+import { useCurrentEvent } from '../hooks/useCurrentEvent';
+import { useEdition } from '../hooks/useEdition';
 
 const AboutUs = () => {
+    const edition = useEdition();
+    const cta = primaryCta(useCurrentEvent());
+    // "9 May <year>" -> day "09", rest "May <year>"
+    const [rideDayNum, ...rideMonthYear] = (edition.rideDayShort ?? '').split(' ');
+    const name = edition.shortName ?? 'RWTW';
     const pillars = [
         { icon: <AiOutlineGlobal />, title: 'Military Diplomacy', number: '01', description: "Enhancing 'Esprit de Corps' and partnerships between the military and civilian world through healthy competition." },
         { icon: <AiOutlineHeart />, title: 'Health & Wellness', number: '02', description: 'Advocating for cycling as a sustainable lifestyle choice for military personnel and their families, aligning with the military\'s focus on combat readiness.' },
@@ -15,7 +24,7 @@ const AboutUs = () => {
     const stats = [
         { value: '500+', label: 'Riders Expected' },
         { value: '4', label: 'Race Circuits' },
-        { value: 'July 5', label: '2026 Edition' },
+        { value: edition.rideDayShort ? edition.rideDayShort.replace(/ \d{4}$/, '') : 'TBA', label: edition.year ? `${edition.year} Edition` : 'Next Edition' },
         { value: '120 KM', label: 'Longest Route' },
     ];
 
@@ -44,7 +53,7 @@ const AboutUs = () => {
                             <span className="ab-accent">Supporting the Widows</span>
                         </div>
                         <p className="ab-quote-sub">
-                            The powerful theme for RWTW 2026 — raising awareness and support for military widows,
+                            The powerful theme for RWTW {PAST_EDITION.year} — raising awareness and support for military widows,
                             ensuring the families of fallen warriors are never forgotten.
                         </p>
                     </div>
@@ -104,15 +113,15 @@ const AboutUs = () => {
                                     It was a resounding success, uniting soldiers and civilians on the roads of Nairobi.
                                 </p>
                                 <p className="ab-body">
-                                    The 2026 edition is scheduled for{' '}
-                                    <strong style={{ color: 'var(--ab-text-1)', fontWeight: 700 }}>05 July 2026</strong>{' '}
-                                    at the <strong style={{ color: 'var(--ab-text-1)', fontWeight: 700 }}>Ulinzi Sports Complex (USCL)</strong> in Nairobi, set against Kenya's scenic terrain.
+                                    The {edition.year ?? 'next'} edition is scheduled for{' '}
+                                    <strong style={{ color: 'var(--ab-text-1)', fontWeight: 700 }}>{edition.rideDay ?? 'a date to be announced'}</strong>{' '}
+                                    {edition.venue && <>at the <strong style={{ color: 'var(--ab-text-1)', fontWeight: 700 }}>{edition.venue}</strong>{' '}</>}in Nairobi, set against Kenya's scenic terrain.
                                 </p>
                             </div>
                             <div className="ab-event-meta">
                                 <div>
-                                    <div className="ab-meta-value">05</div>
-                                    <div className="ab-meta-label">July 2026</div>
+                                    <div className="ab-meta-value">{rideDayNum ? rideDayNum.padStart(2, '0') : 'TBA'}</div>
+                                    <div className="ab-meta-label">{rideMonthYear.join(' ') || 'Date to be announced'}</div>
                                 </div>
                                 <div className="ab-meta-divider" />
                                 <div>
@@ -177,7 +186,7 @@ const AboutUs = () => {
                             </h2>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                                 <p className="ab-body">
-                                    RWTW 2026 aims to set a new benchmark for military-organized sporting events in East Africa. By combining high-stakes professional racing with family-oriented activities, the event provides sponsors with a unique audience while reinforcing Kenya's position as a regional hub for sports diplomacy.
+                                    {name} aims to set a new benchmark for military-organized sporting events in East Africa. By combining high-stakes professional racing with family-oriented activities, the event provides sponsors with a unique audience while reinforcing Kenya's position as a regional hub for sports diplomacy.
                                 </p>
                                 <p className="ab-body">
                                     Four main circuits — Blitz (120km), Recon (60km), Corporate Challenge (30km), and Family Fun Ride (5km) — with 12 races across ages, genders, teams, and classifications.
@@ -225,12 +234,12 @@ const AboutUs = () => {
                             Ready to <span className="ab-accent">Ride?</span>
                         </h2>
                         <p className="ab-cta-body">
-                            Join hundreds of riders on July 5th, 2026 at the <strong style={{ color: '#fff', fontWeight: 700 }}>Ulinzi Sports Complex</strong>.
+                            Join hundreds of riders{edition.rideDay ? ` on ${edition.rideDay}` : ''}{edition.venue && <> at the <strong style={{ color: '#fff', fontWeight: 700 }}>{edition.venue}</strong></>}.
                             Whether you're a pro cyclist or bringing the family, there's a circuit for you.
                         </p>
                         <div className="ab-cta-btns">
-                            <Link to="/register/step/1" className="shimmer-btn shimmer-btn--primary">
-                                Register for RWTW 2026 →
+                            <Link to={cta.to} className="shimmer-btn shimmer-btn--primary">
+                                {cta.label} →
                             </Link>
                             <Link to="/circuits" className="shimmer-btn shimmer-btn--ghost">
                                 Explore Circuits

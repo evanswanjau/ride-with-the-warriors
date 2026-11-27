@@ -15,7 +15,7 @@ const wasDismissed = (year: number) => {
 function useFeedbackPrompt(pathname: string) {
     const { event, registration } = useCurrentEvent();
     const [dismissed, setDismissed] = useState<number | null>(null);
-    const year = event && registration === 'finished' && event.feedbackOpen !== false ? event.year : null;
+    const year = event && registration === 'finished' && event.feedbackOpen ? event.year : null;
     const dismiss = useCallback(() => {
         if (year === null) return;
         try { localStorage.setItem(dismissKey(year), '1'); } catch { /* private mode: hidden until reload */ }
@@ -92,7 +92,6 @@ const Layout = ({ children, registrationType, isFullWidth = false, maxWidth = 'm
                     --border-2: rgba(0,0,0,0.16);
                 }
             `}</style>
-            {/* <TopBar /> */}
             <Navbar />
             <main className={`flex flex-1 flex-col ${isFullWidth ? '' : 'pt-[80px] md:pt-[90px] lg:pt-[104px]'}`}>
                 <div className={`w-full ${isFullWidth ? '' : `${maxWidth} mx-auto px-4 pb-12`}`}>

@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { AiOutlineTeam, AiOutlineTrophy } from 'react-icons/ai';
 import Countdown from '../components/common/Countdown';
 import RecapPhotos from '../components/common/RecapPhotos';
-import { EDITION, PAST_EDITION, phaseAt } from '../config/edition';
+import { ARCHIVE, PAST_EDITION, THEME } from '../config/edition';
 import { primaryCta } from '../config/cta';
 import { useCurrentEvent } from '../hooks/useCurrentEvent';
+import { useEdition } from '../hooks/useEdition';
+import TestimonialsSection from './home/Testimonials';
 import { HERO_HIGHLIGHT, HOME_COLLAGE, highlightImgProps } from '../data/highlights';
 import kdfLogo from '../assets/logos/web/kdf.webp';
 import logo from '../assets/logos/web/logo.webp';
@@ -20,78 +22,11 @@ import fdsaLogo from '../assets/logos/fdsa-logo.png';
 import '../styles/home.css';
 
 
-/* ─── Testimonials Data ──────────────────────────────────────────────────── */
-const testimonials = [
-    { text: 'Crossing that finish line knowing every kilometre raised money for the widows — nothing else compares to that feeling.', name: 'James Mwangi', role: 'Veteran Cyclist', circuit: '120KM Blitz', initials: 'JM' },
-    { text: 'The organisation was flawless. Seeing active-duty soldiers and civilians riding together was genuinely moving.', name: 'Sarah Kamau', role: 'Competitive Cyclist, Nairobi', circuit: '60KM Recon', initials: 'SK' },
-    { text: 'We entered as a corporate team of eight and finished as brothers. Back with double the team for 2026.', name: 'David Ochieng', role: 'Team Lead, Safaricom', circuit: '30KM Corporate', initials: 'DO' },
-    { text: 'My daughter kept saying it was the best day of her life. We have already registered for the next edition.', name: 'Amina Hassan', role: 'Parent & Recreational Rider', circuit: '5KM Family Fun', initials: 'AH' },
-    { text: 'As a Paratrooper, this event sits close to the heart. The camaraderie on that course is something you only understand by being there.', name: 'Peter Njoroge', role: 'KDF Airborne Paratrooper', circuit: '120KM Blitz', initials: 'PN' },
-    { text: 'Won a stunning mountain bike in the raffle. More importantly, I learned about the incredible work done for military families.', name: 'Grace Wambui', role: 'Raffle Winner, 2025', circuit: 'Grand Raffle', initials: 'GW' },
-    { text: 'The 60KM route was punishing in the best way. Proper race-quality design — I have done many sportives and this held its own.', name: 'Brian Otieno', role: 'Amateur Racer', circuit: '60KM Recon', initials: 'BO' },
-    { text: 'Never thought I would ride alongside soldiers. By kilometre 20 we were just riders, all chasing the same goal.', name: 'Linet Chebet', role: 'First-Time Participant', circuit: '30KM Corporate', initials: 'LC' },
-];
-
-/* ─── Testimonial Card ───────────────────────────────────────────────────── */
-interface Testimonial {
-    text: string;
-    name: string;
-    role: string;
-    circuit: string;
-    initials: string;
-}
-
-const TestimonialCard = ({ t }: { t: Testimonial }) => (
-    <div className="t-card">
-        <div className="t-stars">★★★★★</div>
-        <p className="t-text">"{t.text}"</p>
-        <div className="t-footer">
-            <div className="t-avatar">{t.initials}</div>
-            <div className="t-author">
-                <div className="t-name">{t.name}</div>
-                <div className="t-meta">{t.role}</div>
-            </div>
-            <div className="t-badge">{t.circuit}</div>
-        </div>
-    </div>
-);
-
-/* ─── Testimonials Section ───────────────────────────────────────────────── */
-const TestimonialsSection = () => {
-    const row1 = testimonials;
-    const row2 = [...testimonials].reverse();
-    return (
-        <section className="t-section">
-            <div className="t-header">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                    <div style={{ height: 1, width: 48, background: 'var(--color-primary)', flexShrink: 0 }} />
-                    <span className="section-label">Voices From Past Editions</span>
-                </div>
-                <h2 className="display-heading t-heading">
-                    Riders Don't <span style={{ color: 'var(--color-primary-light)' }}>Forget.</span>
-                </h2>
-            </div>
-            {/* Row 1 — scroll left */}
-            <div className="t-mask">
-                <div className="t-track t-track-left">
-                    {[...row1, ...row1].map((t, i) => <TestimonialCard key={`a${i}`} t={t} />)}
-                </div>
-            </div>
-            {/* Row 2 — scroll right */}
-            <div className="t-mask" style={{ marginTop: 14 }}>
-                <div className="t-track t-track-right">
-                    {[...row2, ...row2].map((t, i) => <TestimonialCard key={`b${i}`} t={t} />)}
-                </div>
-            </div>
-        </section>
-    );
-};
-
 /* ─── Main Component ─────────────────────────────────────────────────────── */
 const HomePage = () => {
     const heroRef = useRef<HTMLImageElement>(null);
     const cta = primaryCta(useCurrentEvent());
-    const phase = phaseAt();
+    const edition = useEdition();
 
     useEffect(() => {
         let ticking = false;
@@ -116,11 +51,13 @@ const HomePage = () => {
 
     const keyDates = [
         { title: 'Pre-register now', detail: 'Be first to know' },
-        { title: `Registration opens ${EDITION.registrationOpensLabel}`, detail: '00:00 EAT' },
-        { title: `Closes ${EDITION.registrationClosesLabel} or at ${EDITION.riderCap.toLocaleString('en-US')} riders`, detail: 'Whichever comes first' },
-        { title: `Race day ${EDITION.raceDayLabel.replace('Sunday ', '')}`, detail: EDITION.venue },
+        { title: edition.opensLabel ? `Registration opens ${edition.opensLabel}` : 'Registration opens soon', detail: '00:00 EAT' },
+        edition.riderCap
+            ? { title: `Closes ${edition.closesLabel ?? 'before race day'} or at ${edition.riderCap.toLocaleString('en-US')} riders`, detail: 'Whichever comes first' }
+            : { title: `Closes ${edition.closesLabel ?? 'before race day'}`, detail: 'Or when every place is taken' },
+        { title: edition.rideDayShort ? `Race day ${edition.rideDayShort}` : 'Race day', detail: edition.venue ?? '' },
     ];
-    const activeStep = { 'pre-registration': 0, 'registration-open': 2, 'registration-closed': 3, 'post-race': 3 }[phase];
+    const activeStep = { upcoming: 0, open: 2, closed: 3, finished: 3 }[edition.registration];
 
     const circuits = [
         { number: '120', name: 'Blitz Circuit', type: 'Competitive', distance: '120 KM', description: 'The ultimate endurance test for elite cyclists pushing their absolute limits.' },
@@ -153,7 +90,7 @@ const HomePage = () => {
                         <div className="max-w-7xl mx-auto px-6 lg:px-12">
                             <div className="flex items-center gap-3 mb-8">
                                 <div className="h-px w-12 bg-[var(--color-primary)]" />
-                                <span className="section-label" style={{ color: '#4caf50' }}>{`${EDITION.ordinal} Edition — KDF Airborne Fraternity`}</span>
+                                <span className="section-label" style={{ color: '#4caf50' }}>{`${edition.ordinal ? `${edition.ordinal} Edition — ` : ''}KDF Airborne Fraternity`}</span>
                             </div>
                             <h1 className="display-heading text-[clamp(3.2rem,10vw,8rem)] text-white mb-2">
                                 Ride for the<br />
@@ -162,22 +99,22 @@ const HomePage = () => {
                             <div className="flex flex-col md:flex-row md:items-end gap-10 mt-8">
                                 <div className="flex flex-col gap-8">
                                     <p className="text-white/60 text-lg max-w-xl leading-relaxed font-light">
-                                        {EDITION.theme}
+                                        {THEME.theme}
                                     </p>
                                     <Countdown className="text-white" />
                                 </div>
                                 <div className="flex flex-wrap gap-4 md:ml-auto md:pb-1">
                                     <Link to={cta.to} className="shimmer-btn shimmer-btn--primary">{cta.label}</Link>
-                                    <Link to="/2026" className="shimmer-btn shimmer-btn--ghost" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.5)' }}>See 2026 highlights</Link>
+                                    <Link to={ARCHIVE.recap} className="shimmer-btn shimmer-btn--ghost" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.5)' }}>See {PAST_EDITION.year} highlights</Link>
                                 </div>
                             </div>
                             <div className="mt-12 flex items-center gap-4">
                                 <div className="flex items-center gap-2 text-white/40 text-sm font-semibold tracking-widest uppercase">
                                     <span className="inline-block w-2 h-2 bg-[var(--color-primary-light)]" />
-                                    {EDITION.raceDayLabel}
+                                    {edition.rideDay}
                                 </div>
                                 <div className="h-px flex-1 max-w-[200px] bg-white/10" />
-                                <div className="text-white/40 text-sm font-semibold tracking-widest uppercase">{EDITION.venue}</div>
+                                <div className="text-white/40 text-sm font-semibold tracking-widest uppercase">{edition.venue}</div>
                             </div>
                         </div>
                     </div>
@@ -187,10 +124,11 @@ const HomePage = () => {
                 <div className="ticker-wrap py-3">
                     <div className="ticker-track">
                         {Array(2).fill([
-                            'RIDE WITH THE WARRIORS', EDITION.raceDayLabel.toUpperCase(), 'KDF AIRBORNE FRATERNITY',
-                            `REGISTRATION OPENS ${EDITION.registrationOpensLabel.toUpperCase()}`, 'HONOUR THE FALLEN', EDITION.venue.toUpperCase(),
-                            'SUPPORTING THE WIDOWS', EDITION.shortName, '4 CIRCUITS',
-                        ]).flat().map((item, i) => (
+                            'RIDE WITH THE WARRIORS', edition.rideDay?.toUpperCase(), 'KDF AIRBORNE FRATERNITY',
+                            edition.registration === 'upcoming' && edition.opensLabel ? `REGISTRATION OPENS ${edition.opensLabel.toUpperCase()}` : null,
+                            'HONOUR THE FALLEN', edition.venue?.toUpperCase(),
+                            'SUPPORTING THE WIDOWS', edition.shortName, '4 CIRCUITS',
+                        ].filter(Boolean)).flat().map((item, i) => (
                             <span key={i} className="px-8 text-xs font-bold tracking-[0.25em] text-white/80 whitespace-nowrap">
                                 {item} <span className="text-white/30 mx-2">◆</span>
                             </span>
@@ -252,7 +190,7 @@ const HomePage = () => {
                             </h2>
                             <p className="text-lg leading-relaxed mb-10" style={{ color: 'var(--text-2)' }}>
                                 Ride With The Warriors is a fusion of elite cycling challenge and military tradition.
-                                The {EDITION.year} edition rides for the Warrior Within, raising awareness of soldiers' mental health
+                                The {edition.year ?? 'new'} edition rides for the Warrior Within, raising awareness of soldiers' mental health
                                 while uniting civilians and soldiers in a shared test of endurance — and making
                                 a real difference for the families left behind.
                             </p>
@@ -323,12 +261,12 @@ const HomePage = () => {
 
 
 
-                {/* ── 2026 Recap ───────────────────────────────────────── */}
+                {/* ── Archive recap ───────────────────────────────────────── */}
                 <section className="py-24 px-6 lg:px-12" style={{ background: 'var(--page-bg)', transition: 'background 0.3s' }} data-testid="home-recap">
                     <div className="max-w-7xl mx-auto">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="h-px w-12 bg-[var(--color-primary)]" />
-                            <span className="section-label">{PAST_EDITION.year} Recap</span>
+                            <span className="section-label">{ARCHIVE.label}</span>
                         </div>
                         <h2 className="display-heading text-[clamp(3rem,6vw,5rem)] mb-12" style={{ color: 'var(--text-1)' }}>
                             See What You <span style={{ color: 'var(--color-primary-light)' }}>Missed.</span>
@@ -360,8 +298,8 @@ const HomePage = () => {
                         <RecapPhotos count={4} />
 
                         <div className="mt-10 flex flex-wrap gap-4">
-                            <Link to="/2026" className="shimmer-btn shimmer-btn--primary">Highlights</Link>
-                            <Link to="/gallery?year=2026" className="shimmer-btn shimmer-btn--ghost">Photos</Link>
+                            <Link to={ARCHIVE.recap} className="shimmer-btn shimmer-btn--primary">Highlights</Link>
+                            <Link to={ARCHIVE.photos} className="shimmer-btn shimmer-btn--ghost">Photos</Link>
                             <Link to="/results" className="shimmer-btn shimmer-btn--ghost">Results</Link>
                         </div>
                     </div>
@@ -374,7 +312,7 @@ const HomePage = () => {
                 <section className="py-28 px-6 lg:px-12 cta-band relative overflow-hidden" style={{ background: 'var(--page-bg)', transition: 'background 0.3s' }}>
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
                         <span className="display-heading text-[20vw] whitespace-nowrap select-none" style={{ color: 'var(--text-1)', opacity: 0.02 }}>
-                            RIDE {EDITION.year}
+                            RIDE {edition.year}
                         </span>
                     </div>
                     <div className="max-w-7xl mx-auto relative z-10">
@@ -388,8 +326,11 @@ const HomePage = () => {
                                     Ready To<br /><span style={{ color: 'var(--color-primary-light)' }}>Ride?</span>
                                 </h2>
                                 <p className="mt-6 text-lg max-w-md leading-relaxed" style={{ color: 'var(--text-3)' }}>
-                                    Registration opens {EDITION.registrationOpensLabel}. Pre-register and
-                                    we'll tell you first.
+                                    {edition.registration === 'open'
+                                        ? `Registration is open${edition.closesLabel ? ` until ${edition.closesLabel}` : ''}.`
+                                        : edition.registration === 'upcoming'
+                                            ? `Registration opens ${edition.opensLabel ?? 'soon'}. Pre-register and we'll tell you first.`
+                                            : "Pre-register and we'll tell you first when registration opens."}
                                 </p>
                             </div>
                             <div className="flex flex-col sm:flex-row sm:items-center gap-6">
@@ -415,7 +356,7 @@ const HomePage = () => {
                             </div>
                             <h3 className="display-heading text-3xl mb-3" style={{ color: 'var(--text-1)' }}>Flying Doctors Society of Africa</h3>
                             <p className="text-sm leading-relaxed max-w-lg" style={{ color: 'var(--text-2)' }}>
-                                As an {EDITION.shortName} participant, we strongly recommend enrolling in Flying Doctors' Emergency Medical Evacuation membership — ensuring access to air rescue and emergency medical services throughout the event and beyond.
+                                As an {edition.shortName ?? 'RWTW'} participant, we strongly recommend enrolling in Flying Doctors' Emergency Medical Evacuation membership — ensuring access to air rescue and emergency medical services throughout the event and beyond.
                             </p>
                         </div>
                         <div className="flex-none">

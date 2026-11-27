@@ -40,7 +40,7 @@ export function stateCopy(what: GatedFlow, state: Exclude<LifecycleState, 'open'
             heading: ['Thank You For', 'Riding With Us'],
             lines: [`${name} is over.`, `Share your experience and sign up to be notified when registration opens${next}.`],
             actions: [
-                ...(event?.feedbackOpen === false ? [] : [{ to: '/feedback', label: 'Share Feedback' }]),
+                ...(event?.feedbackOpen ? [{ to: '/feedback', label: 'Share Feedback' }] : []),
                 { to: '/register/notify', label: `Notify Me${next}` },
             ],
         };

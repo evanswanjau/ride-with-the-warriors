@@ -1,27 +1,27 @@
+/**
+ * Copy about the ride that the event row does not hold. Years, dates, place, opening
+ * times and the rider cap come from the server (useEdition); nothing here names a year
+ * except the archive of the last finished ride, which is about that year on purpose.
+ */
 import { ordinal } from '../utils/eventDates';
 
 /** The first ride was in 2025; the edition number counts from it. */
 const FIRST_EDITION_YEAR = 2025;
 
-/** 2027 -> "3rd". */
+/** "1st" for the first ride, one more each year after. */
 export const editionOrdinal = (year: number): string => ordinal(year - FIRST_EDITION_YEAR + 1);
 
-export const EDITION = {
-    year: 2027,
-    ordinal: '3rd',
-    shortName: 'RWTW 27',
-    raceDay: '2027-05-09T06:00:00+03:00',
-    raceDayLabel: 'Sunday 9 May 2027',
-    venue: "Ulinzi Sports Complex, Lang'ata",
+/** "RWTW" and the last two digits of the year. */
+export const shortName = (year: number): string => `RWTW ${String(year).slice(-2)}`;
+
+/** Riders start at this time (Nairobi) on ride day; the countdown counts to it. */
+export const RIDE_START_TIME = '06:00';
+
+export const THEME = {
     theme: "Riding for the Warrior Within: Supporting Soldiers' Mental Health",
-    tagline: 'Ride for the Warrior Within.',
-    registrationOpens: '2027-02-10T00:00:00+03:00',
-    registrationOpensLabel: '10 February 2027',
-    registrationCloses: '2027-04-09T23:59:00+03:00',
-    registrationClosesLabel: '9 April 2027',
-    riderCap: 2000,
 } as const;
 
+/** The archive: the last finished ride, as shown on its recap page, results, raffle winners and its gallery. */
 export const PAST_EDITION = {
     year: 2026,
     ordinal: '2nd',
@@ -33,25 +33,9 @@ export const PAST_EDITION = {
     carPrize: 'Nissan Sylphy',
 } as const;
 
-export type Phase = 'pre-registration' | 'registration-open' | 'registration-closed' | 'post-race';
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-/** Which part of the year we are in. Used only for wording and countdown targets; the server decides what is really open. */
-export function phaseAt(now: Date = new Date()): Phase {
-    const t = now.getTime();
-    if (t >= new Date(EDITION.raceDay).getTime() + DAY_MS) return 'post-race';
-    if (t >= new Date(EDITION.registrationCloses).getTime()) return 'registration-closed';
-    if (t >= new Date(EDITION.registrationOpens).getTime()) return 'registration-open';
-    return 'pre-registration';
-}
-
-/** What the countdown counts to: registration opening before 10 Feb, then race day. */
-export function countdownTarget(now: Date = new Date()): { label: string; at: Date } | null {
-    const t = now.getTime();
-    const opens = new Date(EDITION.registrationOpens);
-    const race = new Date(EDITION.raceDay);
-    if (t < opens.getTime()) return { label: 'Registration opens in', at: opens };
-    if (t < race.getTime()) return { label: 'Race day in', at: race };
-    return null;
-}
+/** Paths of the archive pages. */
+export const ARCHIVE = {
+    recap: `/${PAST_EDITION.year}`,
+    photos: `/gallery?year=${PAST_EDITION.year}`,
+    label: `${PAST_EDITION.year} Recap`,
+} as const;

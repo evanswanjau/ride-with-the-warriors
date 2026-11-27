@@ -1,5 +1,9 @@
-/** 2027 teaser: menu, 2026 recap, countdown. Runs with every feature switch on (.env.stack), so it only tests flag-independent things. */
+/** 2027 teaser: menu, 2026 recap, countdown, with the 2027 event set up as in January (nothing open yet). */
 import { test, expect } from './fixtures';
+import { ensureTeaser2027Event } from './helpers';
+
+// Year, dates and place on these pages come from the current event.
+test.beforeAll(async ({ request }) => { await ensureTeaser2027Event(request); });
 
 const RECAP = [
     { name: 'Highlights', path: '/2026' },

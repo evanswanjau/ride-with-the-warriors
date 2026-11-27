@@ -82,6 +82,27 @@ export async function ensure2027Event(request: APIRequestContext) {
     expect([201, 409], await res.text()).toContain(res.status());
 }
 
+/**
+ * The 2027 event as the January teaser shows it: ride day, place and the registration window
+ * from the plan, nothing open yet. Public pages take their year, dates and place from it.
+ */
+export async function ensureTeaser2027Event(request: APIRequestContext, api = API) {
+    const login = await request.post(`${api}/admin/auth/login`, { data: { email: 'admin@ridewithwarriors.com', password: 'Password@123' } });
+    expect(login.ok()).toBe(true);
+    const headers = bearer((await login.json()).token);
+    const created = await request.post(`${api}/admin/events`, { headers, data: { year: 2027, name: 'Ride With The Warriors 2027', date: '2027-05-09' } });
+    expect([201, 409], await created.text()).toContain(created.status());
+    const res = await request.patch(`${api}/admin/events/2027`, {
+        headers,
+        data: {
+            date: '2027-05-09', location: 'Ulinzi Sports Complex, Langata',
+            registrationOpensAt: '2027-02-10T00:00:00+03:00', registrationClosesAt: '2027-04-09T23:59:00+03:00',
+            raffleOpensAt: '2027-02-10T00:00:00+03:00', raffleClosesAt: '2027-05-09T00:00:00+03:00',
+        },
+    });
+    expect(res.ok(), await res.text()).toBe(true);
+}
+
 export interface RiderDetails {
     firstName: string; lastName: string; email: string; phoneNumber: string; idNumber: string;
     dob: string; gender: 'male' | 'female'; tshirtSize: string;

@@ -8,7 +8,8 @@
  */
 import type { APIRequestContext } from '@playwright/test';
 import { test, expect } from './fixtures';
-import { login } from './helpers';
+import type { Page } from '@playwright/test';
+import { codeFrom, ensureTeaser2027Event, waitForMessage } from './helpers';
 
 const API = process.env.E2E_STATE_API_URL ?? process.env.E2E_API_URL ?? 'http://localhost:4100/api/v1';
 const YEAR = 2027;
@@ -32,7 +33,7 @@ async function adminToken(request: APIRequestContext): Promise<string> {
     return (await res.json()).token;
 }
 
-async function setState(request: APIRequestContext, state: State) {
+async function setState(request: APIRequestContext, state: State, feedbackOpen = false) {
     const token = await adminToken(request);
     const headers = { Authorization: `Bearer ${token}` };
     const created = await request.post(`${API}/admin/events`, { headers, data: { year: YEAR, name: `Ride With The Warriors ${YEAR}`, date: '2027-05-09' } });
@@ -44,9 +45,25 @@ async function setState(request: APIRequestContext, state: State) {
             date: day(w.ride), location: 'Ulinzi Sports Complex',
             registrationOpensAt: at(w.opens), registrationClosesAt: at(w.closes),
             raffleOpensAt: at(w.opens), raffleClosesAt: at(w.closes),
+            feedbackOpensAt: feedbackOpen ? at(-1) : null, feedbackClosesAt: null,
         },
     });
     expect(res.ok(), await res.text()).toBe(true);
+}
+
+/** Creates an account through the login page and signs in with the emailed code. */
+async function signUp(page: Page, email: string) {
+    const since = new Date(Date.now() - 1000);
+    await page.goto('/login');
+    await page.getByLabel('Email or phone number').fill(email);
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByRole('textbox', { name: 'First name' }).fill('State');
+    await page.getByRole('textbox', { name: 'Last name' }).fill('Tester');
+    await page.getByRole('button', { name: 'Send code' }).click();
+    await expect(page.getByRole('heading', { name: 'Enter your code' })).toBeVisible();
+    const { text } = await waitForMessage(email, since);
+    await page.getByLabel('6-digit code').fill(codeFrom(text));
+    await page.getByRole('button', { name: /verify|log in|continue/i }).first().click();
 }
 
 test.describe.configure({ mode: 'serial' });
@@ -59,7 +76,7 @@ test.beforeAll(async ({ request }) => {
 
 test.afterAll(async ({ request }) => {
     // Leave the event as the teaser starts: nothing open yet.
-    await setState(request, 'upcoming');
+    await ensureTeaser2027Event(request, API);
 });
 
 const menuLink = (page: import('@playwright/test').Page, name: RegExp) => page.locator('.nav-mobile-ctas').getByRole('link', { name });
@@ -92,10 +109,13 @@ test('open: Register and Buy Raffle appear, and the forms load for a logged-in r
     await page.goto('/register');
     await expect(page).toHaveURL(/\/login\?next=/);
 
-    await login(page, 'rider@test.local', 'rider@test.local');
+    // A new rider each run, so the login-code limit is never shared with other specs.
+    await signUp(page, `states-${Date.now()}@test.local`);
     await expect(page).not.toHaveURL(/\/login/);
     await page.goto('/register');
     await expect(page).toHaveURL(/\/register\/step\/1$/);
+    await page.goto('/register?from=entry-1');
+    await expect(page).toHaveURL(/\/register\/step\/1\?from=entry-1$/);
     await expect(page.getByText('CHOOSE YOUR CIRCUIT').first()).toBeVisible();
 
     await page.goto('/military/register/step/1');
@@ -123,11 +143,18 @@ test('closed: "see you on" race day, and no Register or raffle button', async ({
 });
 
 test('finished: feedback and "Notify me for next year"; raffle links to the winners', async ({ page, request }) => {
-    await setState(request, 'finished');
+    await setState(request, 'finished', true);
     await page.goto('/register');
     await expect(page.getByTestId('registration-finished')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Share Feedback' })).toBeVisible();
     await expect(page.getByRole('link', { name: `Notify Me for ${YEAR + 1}` })).toBeVisible();
+
+    // Feedback switched off in the admin: only "Notify me" is left.
+    await setState(request, 'finished', false);
+    await page.reload();
+    await expect(page.getByTestId('registration-finished')).toBeVisible();
+    await expect(page.getByRole('link', { name: `Notify Me for ${YEAR + 1}` })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Share Feedback' })).toHaveCount(0);
 
     await page.goto('/raffle/step/2');
     await expect(page.getByTestId('raffle-finished')).toBeVisible();

@@ -9,8 +9,10 @@ import {
 } from 'react-icons/ai';
 import Confetti from 'react-confetti';
 import { publicApi } from '../publicApi';
+import { useEdition } from '../hooks/useEdition';
 
 const RaffleSuccessPage = () => {
+    const { year } = useEdition();
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -235,7 +237,7 @@ const RaffleSuccessPage = () => {
                     </h1>
                     <p className="sx-subtitle">
                         Raffle entry confirmed. Your ticket for{' '}
-                        <strong>Ride With The Warriors 2026</strong> is secured.
+                        <strong>Ride With The Warriors{year ? ` ${year}` : ''}</strong> is secured.
                         Good luck!
                     </p>
 
