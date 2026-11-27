@@ -1,8 +1,9 @@
 import hosted from '../../assets/gallery-hosted.json';
 import { cldImgProps } from '../../utils/cloudinary';
+import { PAST_EDITION } from '../../config/edition';
 
 /**
- * Thumbnails from the 2026 gallery snapshot.
+ * Thumbnails from the archive gallery snapshot (the last finished ride).
  * TODO(COD-147): swap for approved picks
  */
 const RecapPhotos = ({ count }: { count: number }) => (
@@ -15,7 +16,7 @@ const RecapPhotos = ({ count }: { count: number }) => (
                 key={p.publicId}
                 {...cldImgProps({ publicId: p.publicId, width: p.width, height: p.height }, 480)}
                 sizes="(min-width: 1024px) 25vw, 50vw"
-                alt="Ride With The Warriors 2026 race day"
+                alt={`Ride With The Warriors ${PAST_EDITION.year} race day`}
                 loading="lazy"
                 decoding="async"
                 className="w-full aspect-[4/3] object-cover"

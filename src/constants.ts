@@ -1,6 +1,18 @@
 import type { Circuit } from './types';
+import { getCurrentEvent } from './hooks/useCurrentEvent';
+import { rideDayLabel } from './utils/eventDates';
 
-export const CIRCUITS: Circuit[] = [
+type CircuitDetails = Omit<Circuit, 'date' | 'location'>;
+
+/** Ride day and place are the current event's, read when shown, so no year or venue is written here. */
+function withEventDetails(circuit: CircuitDetails): Circuit {
+    return Object.defineProperties({ ...circuit } as Circuit, {
+        date: { enumerable: true, get: () => rideDayLabel(getCurrentEvent().event?.date ?? null, false) ?? 'To be announced' },
+        location: { enumerable: true, get: () => getCurrentEvent().event?.location ?? 'To be announced' },
+    });
+}
+
+const DETAILS: CircuitDetails[] = [
     {
         id: 'blitz',
         title: 'BLITZ CIRCUIT',
@@ -9,9 +21,7 @@ export const CIRCUITS: Circuit[] = [
         icon: 'landscape',
         distance: '120 KM',
         price: 2000,
-        date: 'July 5th, 2026',
         time: '07:00 AM',
-        location: 'Ulinzi Sports Complex, Langata',
         isCompetitive: true
     },
     {
@@ -22,9 +32,7 @@ export const CIRCUITS: Circuit[] = [
         icon: 'bolt',
         distance: '60 KM',
         price: 2000,
-        date: 'July 5th, 2026',
         time: '07:30 AM',
-        location: 'Ulinzi Sports Complex, Langata',
         isCompetitive: true
     },
     {
@@ -35,9 +43,7 @@ export const CIRCUITS: Circuit[] = [
         icon: 'groups',
         distance: '30 KM',
         price: 9000,
-        date: 'July 5th, 2026',
-        time: '08:30 AM',
-        location: 'Ulinzi Sports Complex, Langata'
+        time: '08:30 AM'
     },
     {
         id: 'family',
@@ -47,8 +53,8 @@ export const CIRCUITS: Circuit[] = [
         icon: 'family_restroom',
         distance: '5 KM',
         price: 1000,
-        date: 'July 5th, 2026',
-        time: '10:00 AM',
-        location: 'Ulinzi Sports Complex, Langata'
+        time: '10:00 AM'
     },
 ];
+
+export const CIRCUITS: Circuit[] = DETAILS.map(withEventDetails);

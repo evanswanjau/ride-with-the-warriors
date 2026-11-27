@@ -2,13 +2,21 @@ import { useState } from 'react';
 import { getErrorMessage } from '../utils/registration';
 import { Link } from 'react-router-dom';
 import { publicApi } from '../publicApi';
-import { EDITION } from '../config/edition';
+import { notifyYear } from '../config/cta';
+import { shortName } from '../config/edition';
+import { useCurrentEvent } from '../hooks/useCurrentEvent';
+import { useEdition } from '../hooks/useEdition';
 
 const NotifyPage = () => {
     const [firstName, setFirstName] = useState('');
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState<'idle' | 'submitting' | 'done' | 'error'>('idle');
     const [errorMsg, setErrorMsg] = useState('');
+    // The ride this sign-up is for: the current one until its registration closes, then the next.
+    const year = notifyYear(useCurrentEvent());
+    const edition = useEdition();
+    const opensLabel = year === edition.year && edition.registration === 'upcoming' ? edition.opensLabel : null;
+    const forYear = year ? ` for ${year}` : '';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -64,7 +72,7 @@ const NotifyPage = () => {
                         letterSpacing: '0.28em', textTransform: 'uppercase',
                         color: 'var(--color-primary-light, #4caf50)',
                     }}>
-                        Ride With The Warriors {EDITION.year}
+                        Ride With The Warriors{year ? ` ${year}` : ''}
                     </span>
                     <div style={{ height: '1px', width: '32px', background: 'var(--color-primary-light, #4caf50)', flexShrink: 0 }} />
                 </div>
@@ -77,7 +85,7 @@ const NotifyPage = () => {
                     letterSpacing: '0.04em', lineHeight: 1.15,
                     marginBottom: '1rem',
                 }}>
-                    Pre-register for {EDITION.shortName}
+                    Pre-register{year ? ` for ${shortName(year)}` : ''}
                 </h1>
 
                 <p style={{
@@ -85,7 +93,7 @@ const NotifyPage = () => {
                     fontSize: '0.95rem', lineHeight: 1.75,
                     marginBottom: '2.5rem',
                 }}>
-                    Leave your details and we'll let you know when registration opens for {EDITION.year}.
+                    Leave your details and we'll let you know when registration opens{forYear}.
                 </p>
 
                 {status === 'done' ? (
@@ -106,7 +114,7 @@ const NotifyPage = () => {
                                 You're on the list!
                             </p>
                             <p style={{ color: 'var(--p-text-2, rgba(255,255,255,0.58))', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                                We'll notify you when registration opens on {EDITION.registrationOpensLabel}.
+                                {opensLabel ? `We'll notify you when registration opens on ${opensLabel}.` : "We'll notify you as soon as registration opens."}
                             </p>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
@@ -160,7 +168,7 @@ const NotifyPage = () => {
                                     opacity: status === 'submitting' ? 0.6 : 1,
                                 }}
                             >
-                                {status === 'submitting' ? 'Saving...' : `Notify Me for ${EDITION.year}`}
+                                {status === 'submitting' ? 'Saving...' : `Notify Me${forYear}`}
                             </button>
                             </div>
                       </div>

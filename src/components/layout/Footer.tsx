@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logos/web/logo-sm.webp';
 import { primaryCta, raffleCta } from '../../config/cta';
-import { editionOrdinal } from '../../config/edition';
+import { ARCHIVE, editionOrdinal } from '../../config/edition';
 import { isOn } from '../../config/features';
 import '../../styles/footer.css';
 import { useCurrentEvent } from '../../hooks/useCurrentEvent';
@@ -27,10 +27,10 @@ const Footer = () => {
             ],
         },
         {
-            label: '2026 Recap',
+            label: ARCHIVE.label,
             links: [
-                { name: 'Highlights', path: '/2026' },
-                { name: 'Photos', path: '/gallery?year=2026' },
+                { name: 'Highlights', path: ARCHIVE.recap },
+                { name: 'Photos', path: ARCHIVE.photos },
                 { name: 'Race Results', path: '/results' },
                 { name: 'Raffle Winners', path: '/raffle-winners' },
             ],

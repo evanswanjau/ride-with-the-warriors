@@ -10,6 +10,10 @@ export interface EventCircuit {
     distanceKm: number;
     startTime: string;
     isCompetitive: boolean;
+    entryTypes: ('INDIVIDUAL' | 'TEAM' | 'FAMILY')[];
+    teamMinMembers: number | null;
+    teamMaxMembers: number | null;
+    teamRequiresFemale: boolean;
     sortOrder: number;
 }
 
@@ -29,12 +33,11 @@ export interface PublicEvent {
     bikeHirePrice: number;
     bikeStock: number | null;
     bikesLeft: number | null;
-    // Added by the server's Phase 2 (PR #31); older servers leave them out.
-    registrationState?: LifecycleState;
-    raffleState?: LifecycleState;
-    riderCap?: number | null;
-    feedbackOpen?: boolean;
-    circuits?: EventCircuit[];
+    registrationState: LifecycleState;
+    raffleState: LifecycleState;
+    riderCap: number | null;
+    feedbackOpen: boolean;
+    circuits: EventCircuit[];
 }
 
 export interface Enquiry {

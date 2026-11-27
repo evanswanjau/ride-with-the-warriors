@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { THEME } from '../config/edition';
+import { useEdition } from '../hooks/useEdition';
 import '../styles/faqs.css';
 import { Link } from 'react-router-dom';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
@@ -21,6 +23,9 @@ const FAQItem = ({ question, answer, isOpen, onToggle }: FAQItemProps) => (
 
 /* ─── FAQs Page ──────────────────────────────────────────────────────────── */
 const Faqs = () => {
+    const edition = useEdition();
+    const ride = edition.year ? `the ${edition.year} event` : 'the event';
+    const when = `${edition.rideDay ? ` on ${edition.rideDay}` : ''}${edition.venue ? ` at the ${edition.venue}` : ''}`;
     const [openKey, setOpenKey] = useState<string | null>(null);
     const handleToggle = (key: string) => setOpenKey(prev => prev === key ? null : key);
 
@@ -29,9 +34,9 @@ const Faqs = () => {
             title: 'Event Overview',
             label: 'General',
             questions: [
-                { question: 'What is Ride With The Warriors?', answer: 'Ride With The Warriors (RWTW) is a premier multi-national cycling event hosted by the Kenya Defence Forces (KDF) Airborne Fraternity. It combines competitive racing with inclusivity, bringing together professional soldiers, corporate teams, families, civilians, and international participants. The 2026 edition builds on the inaugural 2025 event, serving as a platform for military diplomacy, health and wellness, and community engagement.' },
-                { question: 'What is the date and location of the 2026 event?', answer: 'The event takes place on 05 July 2026 at the Ulinzi Sports Complex (USCL) in Nairobi, Kenya. All routes start and finish at USCL, with scenic and challenging terrain across all circuits.' },
-                { question: 'What is the theme of RWTW 2026?', answer: 'The theme is "Ride with Honour — Supporting the Widows." The event raises awareness and funds for military widows while promoting physical fitness, regional cooperation, and shared experiences between the military and civilian communities.' },
+                { question: 'What is Ride With The Warriors?', answer: 'Ride With The Warriors (RWTW) is a premier multi-national cycling event hosted by the Kenya Defence Forces (KDF) Airborne Fraternity. It combines competitive racing with inclusivity, bringing together professional soldiers, corporate teams, families, civilians, and international participants. Each edition builds on the inaugural 2025 event, serving as a platform for military diplomacy, health and wellness, and community engagement.' },
+                { question: `What is the date and location of ${ride}?`, answer: `The event takes place${when || ' on a date to be announced'} in Nairobi, Kenya. All routes start and finish at the venue, with scenic and challenging terrain across all circuits.` },
+                { question: `What is the theme of ${edition.shortName ?? 'RWTW'}?`, answer: `The theme is "${THEME.theme}." The event raises awareness and funds for military widows while promoting physical fitness, regional cooperation, and shared experiences between the military and civilian communities.` },
                 { question: 'What are the core pillars of the event?', answer: 'The event is anchored on three pillars: Military Diplomacy (enhancing partnerships through healthy competition); Health and Wellness (advocating cycling as a sustainable lifestyle supporting combat readiness); and Community & Corporate Engagement (bridging the military and public through an inclusive national sporting event).' },
                 { question: 'Who can participate?', answer: 'The event is open to KDF military personnel (free entry), civilians, corporate teams, families including children, elite cyclists, juniors, veterans, experienced riders, and international/EAC airborne delegations — promoting broad inclusivity across all ages, genders, and backgrounds.' },
             ],
@@ -70,7 +75,7 @@ const Faqs = () => {
                 { question: 'How much does a raffle ticket cost?', answer: 'Each raffle ticket is priced at KES 1,000. There is no limit on how many tickets a single person can purchase — the more tickets you buy, the better your chances of winning. All proceeds go directly to the KDF Airborne Fraternity\'s CSR projects supporting military widows.' },
                 { question: 'What prizes can I win in the raffle?', answer: 'The Grand Raffle features multiple prize tiers with incredible rewards including a brand-new saloon car as the star prize, high-end bicycles, flat-screen TVs, refrigerators, and a wide range of other sponsored prizes. Full prize details will be announced closer to the event date.' },
                 { question: 'How do I purchase raffle tickets?', answer: 'Raffle tickets can be purchased online through the official registration portal at airbornefraternity.org or in person at the event on the day. Online purchase is strongly recommended to secure your tickets in advance.' },
-                { question: 'When is the raffle draw held?', answer: 'The raffle draw takes place on 05 July 2026 during the official awards and closing ceremony at the Ulinzi Sports Complex. The star prize — a brand-new saloon car — is drawn last by ballot in front of all attendees. Winners must be present or have a nominated representative.' },
+                { question: 'When is the raffle draw held?', answer: `The raffle draw takes place${when} during the official awards and closing ceremony. The star prize — a brand-new saloon car — is drawn last by ballot in front of all attendees. Winners must be present or have a nominated representative.` },
                 { question: 'Where do the raffle proceeds go?', answer: 'All raffle proceeds are managed transparently by the event sponsors and directed to pre-approved KDF Airborne Fraternity CSR projects. Funds go directly to welfare support for military widows and their families — making every ticket purchase an act of genuine impact.' },
             ],
         },
@@ -105,7 +110,7 @@ const Faqs = () => {
                             Frequently Asked <span style={{ color: 'var(--color-primary-light)' }}>Questions.</span>
                         </h1>
                         <p className="page-subtitle--center">
-                            Everything you need to know about the 2026 Ride With The Warriors event.
+                            Everything you need to know about {edition.year ? `the ${edition.year} ` : ''}Ride With The Warriors.
                             Can't find what you're looking for? Reach out to our team.
                         </p>
                     </div>

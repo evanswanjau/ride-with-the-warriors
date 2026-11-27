@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type { LifecycleState, PublicEvent } from '../publicApi';
 import { stateCopy } from '../pages/eventStateCopy';
-import { dayLabel, ordinal, rideDayLabel } from '../utils/eventDates';
+import { countdownTarget, dayLabel, ordinal, rideDayLabel } from '../utils/eventDates';
 import { notifyYear, primaryCta, raffleCta } from './cta';
-import { editionOrdinal } from './edition';
+import { editionOrdinal, shortName } from './edition';
 
-const event = { year: 2027, date: '2027-05-09', location: 'Ulinzi Sports Complex', registrationOpensAt: '2027-02-09T21:00:00Z' } as PublicEvent;
+const event = { year: 2027, date: '2027-05-09', location: 'Ulinzi Sports Complex', registrationOpensAt: '2027-02-09T21:00:00Z', feedbackOpen: true } as PublicEvent;
 const current = (registration: LifecycleState, raffle: LifecycleState = 'closed', e: PublicEvent | null = event) => ({ event: e, registration, raffle });
 
 describe('menu buttons follow the state', () => {
@@ -57,6 +57,20 @@ describe('dates and editions', () => {
     it('counts editions from the first ride', () => {
         expect(editionOrdinal(2027)).toBe('3rd');
         expect(editionOrdinal(2026)).toBe('2nd');
+        expect(shortName(2027)).toBe('RWTW 27');
         expect([1, 2, 3, 4, 11, 12, 13, 21, 22, 111].map(ordinal)).toEqual(['1st', '2nd', '3rd', '4th', '11th', '12th', '13th', '21st', '22nd', '111th']);
+    });
+});
+
+describe('countdown', () => {
+    const opensAt = new Date('2027-02-10T00:00:00+03:00');
+    const rideStartsAt = new Date('2027-05-09T06:00:00+03:00');
+    it('counts to registration opening, then to the start on ride day', () => {
+        expect(countdownTarget(new Date('2027-01-01T00:00:00+03:00'), { opensAt, rideStartsAt })).toEqual({ label: 'Registration opens in', at: opensAt });
+        expect(countdownTarget(new Date('2027-03-01T00:00:00+03:00'), { opensAt, rideStartsAt })).toEqual({ label: 'Race day in', at: rideStartsAt });
+    });
+    it('shows nothing after the start or before the dates are known', () => {
+        expect(countdownTarget(new Date('2027-05-09T07:00:00+03:00'), { opensAt, rideStartsAt })).toBeNull();
+        expect(countdownTarget(new Date('2027-01-01T00:00:00+03:00'), { opensAt: null, rideStartsAt: null })).toBeNull();
     });
 });

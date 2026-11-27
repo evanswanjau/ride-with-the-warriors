@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { publicApi } from '../publicApi';
-import { EDITION } from '../config/edition';
+import { useCurrentEvent } from '../hooks/useCurrentEvent';
+import NotifyNextToggle from './feedback/NotifyNextToggle';
 
 type Role = 'CYCLIST' | 'ATTENDEE' | 'SPONSOR' | 'ORGANISER';
 
@@ -18,7 +19,7 @@ const RATING_LABELS = ['', 'Poor', 'Fair', 'Good', 'Great', 'Outstanding'];
 const FeedbackPage = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [notifyFor2027, setNotifyFor2027] = useState(false);
+    const [notifyNext, setNotifyNext] = useState(false);
     const [email, setEmail] = useState('');
     const [role, setRole] = useState<Role | null>(null);
     const [rating, setRating] = useState(0);
@@ -28,6 +29,12 @@ const FeedbackPage = () => {
     const [status, setStatus] = useState<'idle' | 'submitting' | 'done' | 'error'>('idle');
     const [errorMsg, setErrorMsg] = useState('');
     const [notifyRegistered, setNotifyRegistered] = useState(false);
+    // Feedback is about the last ride that took place: the current one once it is over, else the one before.
+    const { event, registration } = useCurrentEvent();
+    const pastYear = event ? (registration === 'finished' ? event.year : event.year - 1) : null;
+    const nextYear = pastYear === null ? null : pastYear + 1;
+    const rideName = pastYear ? `Ride With The Warriors ${pastYear}` : 'Ride With The Warriors';
+    const forNext = nextYear ? ` for ${nextYear}` : '';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,8 +48,8 @@ const FeedbackPage = () => {
             setStatus('error');
             return;
         }
-        if (notifyFor2027 && !email.trim()) {
-            setErrorMsg(`Please enter your email to be notified for ${EDITION.year}.`);
+        if (notifyNext && !email.trim()) {
+            setErrorMsg(`Please enter your email to be notified${forNext}.`);
             setStatus('error');
             return;
         }
@@ -56,7 +63,7 @@ const FeedbackPage = () => {
                 lastName: lastName.trim() || undefined,
                 highlights: highlights.trim() || undefined,
                 improvements: improvements.trim() || undefined,
-                notifyEmail: notifyFor2027 ? email.trim() : undefined,
+                notifyEmail: notifyNext ? email.trim() : undefined,
             });
             setNotifyRegistered(Boolean(data.notifyRegistered));
             setStatus('done');
@@ -115,7 +122,7 @@ const FeedbackPage = () => {
                         letterSpacing: '0.28em', textTransform: 'uppercase',
                         color: 'var(--color-primary-light, #4caf50)',
                     }}>
-                        Ride With The Warriors 2026
+                        {rideName}
                     </span>
                     <div style={{ height: '1px', width: '32px', background: 'var(--color-primary-light, #4caf50)', flexShrink: 0 }} />
                 </div>
@@ -136,8 +143,8 @@ const FeedbackPage = () => {
                     fontSize: '0.95rem', lineHeight: 1.75,
                     marginBottom: '1rem',
                 }}>
-                    Thank you for being part of Ride With The Warriors 2026. Whether you rode, cheered,
-                    sponsored or organised — your honest feedback shapes a better ride in {EDITION.year}.
+                    Thank you for being part of {rideName}. Whether you rode, cheered,
+                    sponsored or organised — your honest feedback shapes a better ride{nextYear ? ` in ${nextYear}` : ''}.
                     It takes less than a minute, and every answer is read.
                 </p>
                 <p style={{
@@ -167,16 +174,16 @@ const FeedbackPage = () => {
                             </p>
                             <p style={{ color: 'var(--p-text-2, rgba(255,255,255,0.58))', fontSize: '0.9rem', lineHeight: 1.6 }}>
                                 Your feedback has been received. It goes straight to the team planning
-                                Ride With The Warriors {EDITION.year} — riding with honour, and getting better every year.
+                                Ride With The Warriors{nextYear ? ` ${nextYear}` : ''} — riding with honour, and getting better every year.
                                 {notifyRegistered && (
-                                    <> We'll also email you when registration opens for {EDITION.year}.</>
+                                    <> We'll also email you when registration opens{forNext}.</>
                                 )}
                             </p>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
                             {!notifyRegistered && (
                                 <Link to="/register/notify" className="shimmer-btn shimmer-btn--primary">
-                                    Notify Me for {EDITION.year}
+                                    Notify Me{forNext}
                                 </Link>
                             )}
                             <Link to="/" className="shimmer-btn shimmer-btn--ghost">
@@ -318,7 +325,7 @@ const FeedbackPage = () => {
 
                         {/* Improvements */}
                         <div>
-                            <label style={labelStyle}>What should we improve for {EDITION.year}?</label>
+                            <label style={labelStyle}>What should we improve{forNext}?</label>
                             <textarea
                                 value={improvements}
                                 onChange={e => setImprovements(e.target.value)}
@@ -328,84 +335,15 @@ const FeedbackPage = () => {
                             />
                         </div>
 
-                        {/* Notify for 2027 */}
-                        <div style={{
-                            padding: '16px',
-                            border: '1px solid var(--p-input-bd, rgba(255,255,255,0.09))',
-                            background: notifyFor2027 ? 'rgba(45,106,45,0.08)' : 'var(--p-input-bg, #0e0e0e)',
-                            transition: 'background 0.15s ease, border-color 0.15s ease',
-                        }}>
-                            <label style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                gap: '16px',
-                                cursor: 'pointer',
-                                marginBottom: notifyFor2027 ? '14px' : 0,
-                            }}>
-                                <span style={{
-                                    fontFamily: "'Barlow Condensed', sans-serif",
-                                    fontSize: '0.85rem', fontWeight: 700,
-                                    letterSpacing: '0.1em', textTransform: 'uppercase',
-                                    color: 'var(--p-text-1, #fff)',
-                                }}>
-                                    Notify Me for {EDITION.year}
-                                </span>
-                                <button
-                                    type="button"
-                                    role="switch"
-                                    aria-checked={notifyFor2027}
-                                    onClick={() => setNotifyFor2027(v => !v)}
-                                    style={{
-                                        position: 'relative',
-                                        width: '44px',
-                                        height: '24px',
-                                        flexShrink: 0,
-                                        border: '1px solid',
-                                        borderColor: notifyFor2027
-                                            ? 'var(--color-primary-light, #4caf50)'
-                                            : 'var(--p-input-bd, rgba(255,255,255,0.09))',
-                                        background: notifyFor2027
-                                            ? 'var(--color-primary, #2d6a2d)'
-                                            : 'var(--p-input-bg, #0e0e0e)',
-                                        cursor: 'pointer',
-                                        transition: 'background 0.15s ease, border-color 0.15s ease',
-                                        padding: 0,
-                                    }}
-                                >
-                                    <span style={{
-                                        position: 'absolute',
-                                        top: '2px',
-                                        left: notifyFor2027 ? '22px' : '2px',
-                                        width: '18px',
-                                        height: '18px',
-                                        background: '#fff',
-                                        transition: 'left 0.15s ease',
-                                    }} />
-                                </button>
-                            </label>
-                            {notifyFor2027 && (
-                                <div>
-                                    <label style={labelStyle}>Email Address <span style={{ color: 'var(--color-accent, #f59e0b)' }}>*</span></label>
-                                    <input
-                                        type="email"
-                                        placeholder="e.g. james@example.com"
-                                        value={email}
-                                        onChange={e => setEmail(e.target.value)}
-                                        required={notifyFor2027}
-                                        style={inputStyle}
-                                    />
-                                    <p style={{
-                                        margin: '8px 0 0',
-                                        fontSize: '0.78rem',
-                                        lineHeight: 1.5,
-                                        color: 'var(--p-text-2, rgba(255,255,255,0.58))',
-                                    }}>
-                                        We'll let you know when registration opens for the {EDITION.year} edition.
-                                    </p>
-                                </div>
-                            )}
-                        </div>
+                        <NotifyNextToggle
+                            on={notifyNext}
+                            onToggle={() => setNotifyNext(v => !v)}
+                            email={email}
+                            onEmail={setEmail}
+                            nextYear={nextYear}
+                            labelStyle={labelStyle}
+                            inputStyle={inputStyle}
+                        />
 
                         {status === 'error' && (
                             <p style={{ color: '#f87171', fontSize: '0.85rem', margin: 0 }}>

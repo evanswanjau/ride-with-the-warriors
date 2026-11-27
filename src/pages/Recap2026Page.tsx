@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import Countdown from '../components/common/Countdown';
 import RecapPhotos from '../components/common/RecapPhotos';
-import { EDITION, PAST_EDITION } from '../config/edition';
+import { ARCHIVE, PAST_EDITION } from '../config/edition';
 import { primaryCta } from '../config/cta';
 import { useCurrentEvent } from '../hooks/useCurrentEvent';
+import { useEdition } from '../hooks/useEdition';
 import '../styles/home.css';
 
 const CIRCUITS = [
@@ -22,6 +23,7 @@ const Label = ({ children }: { children: string }) => (
 
 const Recap2026Page = () => {
     const cta = primaryCta(useCurrentEvent());
+    const edition = useEdition();
     const stats = [
         { value: PAST_EDITION.riders, label: 'Riders' },
         { value: PAST_EDITION.participants, label: 'Participants' },
@@ -64,7 +66,7 @@ const Recap2026Page = () => {
                     <div className="display-heading text-[clamp(4rem,10vw,7rem)] text-amber-500" data-testid="car-ticket">{PAST_EDITION.carTicket}</div>
                     <div className="text-xl font-semibold" data-testid="car-winner">{PAST_EDITION.carWinner}</div>
                     <p className="max-w-xl" style={{ color: 'var(--text-2)' }}>
-                        Your ticket could be next: the {EDITION.year} raffle opens with registration.
+                        Your ticket could be next: the {edition.year ?? 'next'} raffle opens with registration.
                     </p>
                     <Link to="/raffle-winners" className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-light)' }}>
                         All raffle winners →
@@ -78,7 +80,7 @@ const Recap2026Page = () => {
                     <Label>Photos</Label>
                     <RecapPhotos count={8} />
                     <div className="mt-8">
-                        <Link to="/gallery?year=2026" className="shimmer-btn shimmer-btn--primary">See all {PAST_EDITION.year} photos</Link>
+                        <Link to={ARCHIVE.photos} className="shimmer-btn shimmer-btn--primary">See all {PAST_EDITION.year} photos</Link>
                     </div>
                 </div>
             </section>
@@ -102,15 +104,15 @@ const Recap2026Page = () => {
                 </div>
             </section>
 
-            {/* 6. Coming back in 2027 */}
+            {/* 6. Coming back next year */}
             <section className="py-20 px-6 lg:px-12" style={{ background: 'var(--raised-bg)' }}>
                 <div className="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center gap-10">
                     <div className="flex-1">
-                        <Label>{`Coming back in ${EDITION.year}?`}</Label>
+                        <Label>{edition.year ? `Coming back in ${edition.year}?` : 'Coming back?'}</Label>
                         <h2 className="display-heading text-[clamp(2.5rem,6vw,4.5rem)]" style={{ color: 'var(--text-1)' }}>
-                            {EDITION.raceDayLabel}
+                            {edition.rideDay ?? 'Date to be announced'}
                         </h2>
-                        <p className="mt-3 text-lg" style={{ color: 'var(--text-2)' }}>{EDITION.venue}</p>
+                        <p className="mt-3 text-lg" style={{ color: 'var(--text-2)' }}>{edition.venue}</p>
                         <div className="mt-8 flex flex-wrap items-center gap-6">
                             <Link to={cta.to} className="shimmer-btn shimmer-btn--primary">{cta.label}</Link>
                             <Link to="/feedback" className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--color-primary-light)' }}>
