@@ -5,6 +5,7 @@ import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import RequireAuth from './components/auth/RequireAuth';
 import { FeatureRoute } from './components/common/FeatureRoute';
+import EventGate from './components/common/EventGate';
 
 import ScrollToTop from './utils/ScrollToTop';
 import PageTitle from './utils/PageTitle';
@@ -19,7 +20,8 @@ const Gallery = lazy(() => import('./pages/Gallery'));
 const Faqs = lazy(() => import('./pages/Faqs'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
-const RegistrationClosedPage = lazy(() => import('./pages/RegistrationClosedPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const RafflePage = lazy(() => import('./pages/RafflePage'));
 const NotifyPage = lazy(() => import('./pages/NotifyPage'));
 const FeedbackPage = lazy(() => import('./pages/FeedbackPage'));
 const PaymentPage = lazy(() => import('./pages/PaymentPageRoute'));
@@ -35,7 +37,6 @@ const RiderScreen = lazy(() => import('./portal/screens/RiderScreen'));
 const TicketsScreen = lazy(() => import('./portal/screens/TicketsScreen'));
 const ProfileScreen = lazy(() => import('./portal/screens/ProfileScreen'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
-const RaffleClosedPage = lazy(() => import('./pages/RaffleClosedPage'));
 const RaffleSuccessPage = lazy(() => import('./pages/RaffleSuccessPage'));
 const RafflePaymentPageRoute = lazy(() => import('./pages/RafflePaymentPageRoute'));
 const DonatePage = lazy(() => import('./pages/DonatePage'));
@@ -44,6 +45,29 @@ const RaffleWinnersPage = lazy(() => import('./pages/RaffleWinnersPage'));
 const Recap2026Page = lazy(() => import('./pages/Recap2026Page'));
 
 const RouteFallback = () => <div className="min-h-screen" role="status" aria-label="Loading" />;
+
+// The API needs a logged-in rider for both flows.
+const RegistrationFlow = () => (
+  <EventGate what="registration">
+    <RequireAuth>
+      <Routes>
+        <Route path="step/:stepId" element={<RegisterPage />} />
+        <Route path="*" element={<Navigate to="step/1" replace />} />
+      </Routes>
+    </RequireAuth>
+  </EventGate>
+);
+
+const RaffleFlow = () => (
+  <EventGate what="raffle">
+    <RequireAuth>
+      <Routes>
+        <Route path=":stepId" element={<RafflePage />} />
+        <Route path="*" element={<Navigate to="1" replace />} />
+      </Routes>
+    </RequireAuth>
+  </EventGate>
+);
 
 const MilitaryRedirect = () => {
   const { setIsMilitary } = useRegistration();
@@ -90,12 +114,10 @@ const App = () => {
           <Route path="*" element={<Navigate to="/account" replace />} />
         </Route>
 
-        {/* Registration Flow — closed; redirect all register paths to closed page.
-            When it reopens, wrap the flow in <RequireAuth> (the API requires login). */}
-        <Route path="/register/closed" element={<RegistrationClosedPage />} />
+        {/* Registration: the form while the server says it is open, otherwise upcoming / closed / finished */}
         <Route path="/register/notify" element={<NotifyPage />} />
-        <Route path="/register/*" element={<RegistrationClosedPage />} />
-        <Route path="/military/register/*" element={<RegistrationClosedPage />} />
+        <Route path="/register/*" element={<RegistrationFlow />} />
+        <Route path="/military/register/*" element={<RegistrationFlow />} />
 
         {/* Payment & Success */}
         <Route path="/payment/:regId" element={<FeatureRoute feature="account"><RequireAuth><PaymentPage /></RequireAuth></FeatureRoute>} />
@@ -105,9 +127,8 @@ const App = () => {
         <Route path="/search" element={<Navigate to="/account" replace />} />
         <Route path="/profile/:id" element={<Navigate to="/account" replace />} />
 
-        {/* Raffle Flow — closed; profiles and payments for existing tickets remain reachable */}
-        <Route path="/raffle/closed" element={<RaffleClosedPage />} />
-        <Route path="/raffle/step/*" element={<RaffleClosedPage />} />
+        {/* Raffle: the ticket form while the server says it is open; payments for existing tickets stay reachable */}
+        <Route path="/raffle/step/*" element={<RaffleFlow />} />
         <Route path="/raffle/payment/:id" element={<FeatureRoute feature="account"><RequireAuth><RafflePaymentPageRoute /></RequireAuth></FeatureRoute>} />
         <Route path="/raffle/success/:id" element={<FeatureRoute feature="account"><RequireAuth><RaffleSuccessPage /></RequireAuth></FeatureRoute>} />
         <Route path="/raffle/profile/*" element={<Navigate to="/account" replace />} />

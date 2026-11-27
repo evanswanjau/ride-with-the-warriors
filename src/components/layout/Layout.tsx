@@ -1,8 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import FeedbackPromptModal, { FEEDBACK_PROMPT_STORAGE_KEY } from '../common/FeedbackPromptModal';
+import FeedbackPromptModal from '../common/FeedbackPromptModal';
+import { useCurrentEvent } from '../../hooks/useCurrentEvent';
+
+// One dismissal per year: the prompt for one ride does not silence the next.
+const dismissKey = (year: number) => `rwtw-feedback-prompt-dismissed-${year}`;
+const wasDismissed = (year: number) => {
+    try { return localStorage.getItem(dismissKey(year)) === '1'; } catch { return false; }
+};
+
+/** The year whose feedback prompt to show: only once the ride is over and feedback is open. */
+function useFeedbackPrompt(pathname: string) {
+    const { event, registration } = useCurrentEvent();
+    const [dismissed, setDismissed] = useState<number | null>(null);
+    const year = event && registration === 'finished' && event.feedbackOpen !== false ? event.year : null;
+    const dismiss = useCallback(() => {
+        if (year === null) return;
+        try { localStorage.setItem(dismissKey(year), '1'); } catch { /* private mode: hidden until reload */ }
+        setDismissed(year);
+    }, [year]);
+    const show = year !== null && dismissed !== year && !wasDismissed(year) && pathname !== '/feedback' && !pathname.startsWith('/admin');
+    return { year: show ? year : null, dismiss };
+}
 
 const useTheme = () => {
     const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -32,18 +53,7 @@ interface LayoutProps {
 const Layout = ({ children, registrationType, isFullWidth = false, maxWidth = 'max-w-6xl' }: LayoutProps) => {
     const theme = useTheme();
     const location = useLocation();
-    const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
-
-    useEffect(() => {
-        const dismissed = localStorage.getItem(FEEDBACK_PROMPT_STORAGE_KEY);
-        const isFeedbackPage = location.pathname === '/feedback';
-        const isAdmin = location.pathname.startsWith('/admin');
-        if (!dismissed && !isFeedbackPage && !isAdmin) {
-            setShowFeedbackPrompt(true);
-        } else {
-            setShowFeedbackPrompt(false);
-        }
-    }, [location.pathname]);
+    const feedbackPrompt = useFeedbackPrompt(location.pathname);
 
     return (
         <div
@@ -90,8 +100,8 @@ const Layout = ({ children, registrationType, isFullWidth = false, maxWidth = 'm
                 </div>
             </main>
             <Footer />
-            {showFeedbackPrompt && (
-                <FeedbackPromptModal onClose={() => setShowFeedbackPrompt(false)} />
+            {feedbackPrompt.year !== null && (
+                <FeedbackPromptModal year={feedbackPrompt.year} onDismiss={feedbackPrompt.dismiss} />
             )}
         </div>
     );

@@ -1,30 +1,24 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { EDITION } from '../../config/edition';
-
-export const FEEDBACK_PROMPT_STORAGE_KEY = 'rwtw-feedback-prompt-dismissed';
 
 interface Props {
-    onClose: () => void;
+    /** The ride that has just finished. */
+    year: number;
+    /** Called once, however the prompt is closed; the caller remembers it. */
+    onDismiss: () => void;
 }
 
-const FeedbackPromptModal = ({ onClose }: Props) => {
+const FeedbackPromptModal = ({ year, onDismiss }: Props) => {
     const navigate = useNavigate();
 
-    const handleDismiss = () => {
-        localStorage.setItem(FEEDBACK_PROMPT_STORAGE_KEY, '1');
-        onClose();
-    };
-
     const handleGoToFeedback = () => {
-        localStorage.setItem(FEEDBACK_PROMPT_STORAGE_KEY, '1');
-        onClose();
+        onDismiss();
         navigate('/feedback');
     };
 
     useEffect(() => {
         const handleKey = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') handleDismiss();
+            if (e.key === 'Escape') onDismiss();
         };
         document.addEventListener('keydown', handleKey);
         document.body.style.overflow = 'hidden';
@@ -32,7 +26,7 @@ const FeedbackPromptModal = ({ onClose }: Props) => {
             document.removeEventListener('keydown', handleKey);
             document.body.style.overflow = '';
         };
-    }, []);
+    }, [onDismiss]);
 
     return (
         <div
@@ -43,7 +37,7 @@ const FeedbackPromptModal = ({ onClose }: Props) => {
                 background: 'rgba(0,0,0,0.78)',
                 backdropFilter: 'blur(6px)',
             }}
-            onClick={handleDismiss}
+            onClick={onDismiss}
         >
             <div
                 style={{
@@ -64,7 +58,7 @@ const FeedbackPromptModal = ({ onClose }: Props) => {
                 `}</style>
 
                 <button
-                    onClick={handleDismiss}
+                    onClick={onDismiss}
                     aria-label="Close"
                     style={{
                         position: 'absolute', top: '1rem', right: '1rem',
@@ -106,8 +100,8 @@ const FeedbackPromptModal = ({ onClose }: Props) => {
                     color: 'var(--p-text-2, rgba(255,255,255,0.58))',
                     lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '2rem',
                 }}>
-                    Thank you for being part of Ride With The Warriors 2026. Whether you rode,
-                    cheered, sponsored or organised — your honest feedback shapes a better ride in {EDITION.year}.
+                    Thank you for being part of Ride With The Warriors {year}. Whether you rode,
+                    cheered, sponsored or organised — your honest feedback shapes a better ride in {year + 1}.
                     It takes less than a minute.
                 </p>
 
@@ -120,7 +114,7 @@ const FeedbackPromptModal = ({ onClose }: Props) => {
                         Share Feedback
                     </button>
                     <button
-                        onClick={handleDismiss}
+                        onClick={onDismiss}
                         className="shimmer-btn shimmer-btn--ghost"
                         style={{ width: '100%', justifyContent: 'center', border: '1px solid var(--p-border-2)', cursor: 'pointer' }}
                     >

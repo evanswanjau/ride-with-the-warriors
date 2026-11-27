@@ -1,3 +1,11 @@
+import { ordinal } from '../utils/eventDates';
+
+/** The first ride was in 2025; the edition number counts from it. */
+const FIRST_EDITION_YEAR = 2025;
+
+/** 2027 -> "3rd". */
+export const editionOrdinal = (year: number): string => ordinal(year - FIRST_EDITION_YEAR + 1);
+
 export const EDITION = {
     year: 2027,
     ordinal: '3rd',

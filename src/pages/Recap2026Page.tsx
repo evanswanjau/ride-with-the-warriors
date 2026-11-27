@@ -3,6 +3,7 @@ import Countdown from '../components/common/Countdown';
 import RecapPhotos from '../components/common/RecapPhotos';
 import { EDITION, PAST_EDITION } from '../config/edition';
 import { primaryCta } from '../config/cta';
+import { useCurrentEvent } from '../hooks/useCurrentEvent';
 import '../styles/home.css';
 
 const CIRCUITS = [
@@ -20,7 +21,7 @@ const Label = ({ children }: { children: string }) => (
 );
 
 const Recap2026Page = () => {
-    const cta = primaryCta();
+    const cta = primaryCta(useCurrentEvent());
     const stats = [
         { value: PAST_EDITION.riders, label: 'Riders' },
         { value: PAST_EDITION.participants, label: 'Participants' },
