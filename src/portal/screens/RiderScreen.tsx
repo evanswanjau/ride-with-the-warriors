@@ -4,6 +4,8 @@ import { LuLock } from 'react-icons/lu';
 import { useAuth } from '../../context/AuthContext';
 import { usePortalData } from '../PortalData';
 import { ridersOf } from './RidersScreen';
+import { entryPath } from '../EntryCard';
+import { isPastYear } from '../event';
 import type { Rider } from '../types';
 import { circuitName, dobInput, fmtDob, fmtKes, fullName, initials, isPaid } from '../format';
 import { Callout, ScreenHeader, Sheet, StatusChip, errorMessage } from '../ui';
@@ -146,7 +148,9 @@ const RiderScreen = () => {
     }
 
     const { rider, entry } = found;
-    const editable = entry.status !== 'CANCELLED';
+    // A past year's entry keeps the details it was made with.
+    const past = isPastYear(entry.eventYear);
+    const editable = entry.status !== 'CANCELLED' && !past;
     const edit = (f: Field) => (editable ? () => setEditing(f) : undefined);
 
     return (
@@ -184,10 +188,12 @@ const RiderScreen = () => {
                         The ID number and name can't be changed here because they're tied to the entry and event insurance.
                         If either is wrong, <Link to="/contact" className="rp-inline-link">contact the organisers</Link> with a photo of the ID.
                     </Callout>
-                    {!editable && <p className="rp-muted rp-small">This entry is cancelled, so its details can't be changed.</p>}
+                    {past ? (
+                        <p className="rp-muted rp-small">These are the details from the RWTW {entry.eventYear} entry, kept as they were. They can't be changed.</p>
+                    ) : !editable && <p className="rp-muted rp-small">This entry is cancelled, so its details can't be changed.</p>}
                 </section>
 
-                <Link to={`/account/entries/${encodeURIComponent(entry.groupId)}`} className="rp-btn rp-btn--ghost rp-btn--block">View entry</Link>
+                <Link to={entryPath(entry)} className="rp-btn rp-btn--ghost rp-btn--block">View entry</Link>
             </div>
             {editing && (
                 <EditSheet

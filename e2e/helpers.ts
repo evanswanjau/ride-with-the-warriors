@@ -1,7 +1,8 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type APIRequestContext, type Page } from '@playwright/test';
 
 const MAILPIT = 'http://localhost:8025/api/v1';
 const MOCK_DTB = 'http://localhost:4110';
+const API = process.env.E2E_API_URL ?? 'http://localhost:4100/api/v1';
 
 type MailSummary = { ID: string; To: { Address: string }[]; Subject: string; Created: string };
 
@@ -57,4 +58,55 @@ export async function dtbNext(mode: 'success' | 'fail' | 'timeout' | 'duplicate'
         body: JSON.stringify({ mode, once: true, delayMs: 500 }),
     });
     expect(res.ok).toBe(true);
+}
+
+const bearer = (token: string) => ({ Authorization: `Bearer ${token}` });
+
+/** The logged-in rider's session token, for API calls made on their behalf. */
+export async function sessionToken(page: Page): Promise<string> {
+    const token = await page.evaluate(() => localStorage.getItem('rwtwSession'));
+    expect(token, 'logged in').toBeTruthy();
+    return token!;
+}
+
+/**
+ * Admin creates the 2027 event (prices copied from 2026), so new entries are for 2027.
+ * The seed only has 2026, which the account pages show as read-only history.
+ * Safe to call more than once.
+ */
+export async function ensure2027Event(request: APIRequestContext) {
+    const login = await request.post(`${API}/admin/auth/login`, { data: { email: 'admin@ridewithwarriors.com', password: 'Password@123' } });
+    expect(login.ok()).toBe(true);
+    const { token } = await login.json();
+    const res = await request.post(`${API}/admin/events`, { headers: bearer(token), data: { year: 2027, name: 'Ride With The Warriors 2027', date: '2027-05-09' } });
+    expect([201, 409], await res.text()).toContain(res.status());
+}
+
+export interface RiderDetails {
+    firstName: string; lastName: string; email: string; phoneNumber: string; idNumber: string;
+    dob: string; gender: 'male' | 'female'; tshirtSize: string;
+}
+
+/**
+ * An unpaid individual 2027 entry, made through the API the registration screens call.
+ * Stands in for those screens (Phase 4) where a test only needs the entry to exist.
+ */
+export async function register2027(request: APIRequestContext, token: string, circuitId: string, rider: RiderDetails) {
+    await ensure2027Event(request);
+    const res = await request.post(`${API}/registrations`, {
+        headers: bearer(token),
+        data: { type: 'individual', circuitId, payload: { riderDetails: { ...rider, emergencyContactName: 'Next of Kin', emergencyPhone: '0711000001' } } },
+    });
+    expect(res.ok(), await res.text()).toBe(true);
+}
+
+/** Edits one of the account's saved riders (My riders), found by name. */
+export async function editSavedRider(request: APIRequestContext, token: string, name: { firstName: string; lastName: string }, changes: Record<string, string>) {
+    const list = await request.get(`${API}/me/rider-profiles`, { headers: bearer(token) });
+    expect(list.ok()).toBe(true);
+    const { riders } = (await list.json()) as { riders: { id: string; firstName: string; lastName: string }[] };
+    const rider = riders.find(r => r.firstName === name.firstName && r.lastName === name.lastName);
+    expect(rider, `${name.firstName} has a saved rider`).toBeTruthy();
+    const res = await request.patch(`${API}/me/rider-profiles/${rider!.id}`, { headers: bearer(token), data: changes });
+    expect(res.ok(), await res.text()).toBe(true);
 }

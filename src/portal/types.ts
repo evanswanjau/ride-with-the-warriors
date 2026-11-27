@@ -27,6 +27,7 @@ export interface Rider {
 
 export interface Entry {
     groupId: string;
+    eventYear: number;
     role: 'owner' | 'participant';
     type: 'individual' | 'team' | 'family';
     circuitId: string;

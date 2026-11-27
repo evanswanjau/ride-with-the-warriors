@@ -9,6 +9,9 @@ export const NEXT_EVENT: { year: number; name: string; date: string | null; venu
     venue: null,
 };
 
+/** Entries for any year before the next event are history: shown as they were, never changed. */
+export const isPastYear = (year: number) => year < NEXT_EVENT.year;
+
 export function countdown(targetIso: string, now = Date.now()) {
     const ms = Math.max(0, new Date(targetIso).getTime() - now);
     const days = Math.floor(ms / 86_400_000);

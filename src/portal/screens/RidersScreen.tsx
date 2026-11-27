@@ -37,7 +37,7 @@ const RidersScreen = () => {
                 <ul className="rp-grid rp-grid--tight">
                     {riders.map(({ rider, entry }) => (
                         <li key={rider.id}>
-                            <Link to={`/account/riders/${encodeURIComponent(rider.id)}`} className="rp-rider">
+                            <Link to={`/account/riders/${encodeURIComponent(rider.id)}?year=${entry.eventYear}`} className="rp-rider">
                                 <span className="rp-av rp-av--lg" aria-hidden>{initials(rider)}</span>
                                 <span className="rp-rider-main">
                                     <span className="rp-rider-name">{fullName(rider)}</span>
