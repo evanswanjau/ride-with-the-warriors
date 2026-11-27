@@ -5,7 +5,7 @@
  * account because the server allows 3 codes per address per window.
  */
 import { test, expect } from './fixtures';
-import { login, waitForMessage, codeFrom } from './helpers';
+import { login, waitForMessage, codeFrom, register2027, sessionToken } from './helpers';
 
 const nav = (page: import('@playwright/test').Page) => page.getByRole('navigation', { name: 'Account' });
 
@@ -25,10 +25,17 @@ test('entry detail shows a bib card with a check-in QR for every rider', async (
     expect((await download).suggestedFilename()).toMatch(/^rwtw-2026-.*\.pdf$/);
 });
 
-test('rider details: ID is locked, date of birth needs confirming before it saves', async ({ page }) => {
+test('rider details: ID is locked, date of birth needs confirming before it saves', async ({ page, request }) => {
     await login(page, 'captain@test.local', 'captain@test.local');
-    await nav(page).getByRole('link', { name: 'Riders' }).click();
-    await page.getByRole('link', { name: /Felix Njoroge/ }).click();
+    await expect(page.getByRole('heading', { name: 'Hi, Brian' })).toBeVisible();
+    // 2026 riders are read-only history, so Brian enters 2027 to have a rider to edit.
+    await register2027(request, await sessionToken(page), 'recon', {
+        firstName: 'Brian', lastName: 'Otieno', email: 'captain@test.local', phoneNumber: '0700000002',
+        idNumber: '30000002', dob: '1988-01-20', gender: 'male', tshirtSize: 'L',
+    });
+    await page.goto('/account/riders');
+    await page.getByRole('link', { name: /Brian Otieno/ }).click();
+    await expect(page.getByText(/^RWTW 2027 · Recon/)).toBeVisible();
 
     await expect(page.getByText('ID or passport number')).toBeVisible();
     await expect(page.getByText('Locked')).toBeVisible();

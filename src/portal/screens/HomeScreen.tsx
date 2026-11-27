@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { LuPlus, LuTicket, LuHeart, LuTrophy } from 'react-icons/lu';
 import { useAuth } from '../../context/AuthContext';
 import { usePortalData } from '../PortalData';
-import { EntryCard } from '../EntryCard';
+import { EntryCard, hasNextYear } from '../EntryCard';
 import { InstallCard } from '../InstallCard';
 import { Callout, ScreenHeader } from '../ui';
 import { NEXT_EVENT, countdown } from '../event';
@@ -68,7 +68,7 @@ const HomeScreen = () => {
                                 <Link to="/register" className="rp-btn rp-btn--primary">Register for a ride</Link>
                             </div>
                         )}
-                        {entries.map(e => <EntryCard key={e.groupId} entry={e} />)}
+                        {entries.map(e => <EntryCard key={e.groupId} entry={e} registeredNext={hasNextYear(history?.years)} />)}
                     </section>
 
                     <div className="rp-stack">

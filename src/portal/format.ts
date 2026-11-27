@@ -19,6 +19,12 @@ export function fmtDob(s: string | null | undefined): string {
 
 export const dobInput = (s: string | null | undefined) => (s ? s.slice(0, 10) : '');
 
+/** ?year=2026 as a number; null when absent or not a plausible year. */
+export function yearFromParam(v: string | null): number | null {
+    const n = Number(v);
+    return Number.isInteger(n) && n >= 2000 && n <= 2100 ? n : null;
+}
+
 export const circuitName = (c: string) => c.charAt(0).toUpperCase() + c.slice(1);
 
 export const fullName = (r: Pick<Rider, 'firstName' | 'lastName'>) => `${r.firstName} ${r.lastName}`.trim();

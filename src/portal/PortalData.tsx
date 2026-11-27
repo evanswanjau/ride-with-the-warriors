@@ -1,11 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { yearFromParam } from './format';
 import type { History } from './types';
 
 /**
  * Loads GET /me/history for the selected year and shares it with every portal screen.
  * The last good copy is kept in localStorage so bibs and QR codes still open on race
- * day with no signal.
+ * day with no signal. A ?year= in the address picks the first year loaded, so a link
+ * to a 2026 entry still opens it after a reload.
  */
 
 interface PortalDataState {
@@ -53,8 +56,11 @@ export function clearPortalCache() {
 
 export function PortalDataProvider({ children }: { children: ReactNode }) {
     const { account, apiFetch } = useAuth();
+    const [params] = useSearchParams();
+    // Only the first load follows the address; after that the year buttons decide.
+    const [firstYear] = useState(() => yearFromParam(params.get('year')));
     // Show this device's saved copy straight away; the server copy replaces it.
-    const [history, setHistory] = useState<History | null>(() => (account ? readCache(cacheKey(account.id, 'latest')) : null));
+    const [history, setHistory] = useState<History | null>(() => (account ? readCache(cacheKey(account.id, firstYear ?? 'latest')) : null));
     const [year, setYearState] = useState<number | null>(() => history?.year ?? null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -92,8 +98,8 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
     }, [account, apiFetch]);
 
     useEffect(() => {
-        void load(null);
-    }, [load]);
+        void load(firstYear);
+    }, [load, firstYear]);
 
     const setYear = useCallback((y: number) => {
         setLoading(true);

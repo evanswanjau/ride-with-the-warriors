@@ -1,21 +1,25 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { QRCodeCanvas } from 'qrcode.react';
-import { LuBike, LuCreditCard, LuDownload, LuLock } from 'react-icons/lu';
+import { LuBike, LuCreditCard, LuDownload, LuLock, LuPlus } from 'react-icons/lu';
 import { useAuth } from '../../context/AuthContext';
 import { usePortalData } from '../PortalData';
 import type { Entry, Rider } from '../types';
 import { checkInPayload, circuitName, entrySubtitle, entryTitle, fmtDate, fmtKes, fullName, isPaid } from '../format';
+import { downloadConfirmation } from '../confirmation';
+import { hasNextYear, registerAgainPath } from '../EntryCard';
+import { NEXT_EVENT, isPastYear } from '../event';
 import { Callout, ScreenHeader, StatusChip, errorMessage } from '../ui';
 
-function BibCard({ entry, rider, year }: { entry: Entry; rider: Rider; year: number }) {
+function BibCard({ entry, rider }: { entry: Entry; rider: Rider }) {
+    const year = entry.eventYear;
     const ready = isPaid(entry.status) && !!rider.bibNumber;
     if (!ready) {
         return (
             <div className="rp-bib rp-bib--pending">
                 <div>
                     <p className="rp-bib-event">{circuitName(entry.circuitId)}{rider.category ? ` · ${rider.category}` : ''}</p>
-                    <p className="rp-bib-pending">{entry.status === 'CANCELLED' ? 'Entry cancelled' : 'Bib assigned after payment'}</p>
+                    <p className="rp-bib-pending">{entry.status === 'CANCELLED' ? 'Entry cancelled' : isPastYear(year) ? 'No bib was assigned' : 'Bib assigned after payment'}</p>
                     <p className="rp-bib-name">{fullName(rider)}</p>
                 </div>
                 <span className="rp-bib-lock" aria-hidden><LuLock size={22} /></span>
@@ -23,12 +27,12 @@ function BibCard({ entry, rider, year }: { entry: Entry; rider: Rider; year: num
         );
     }
     return (
-        <div className="rp-bib" data-bib={rider.bibNumber!} data-rider={fullName(rider)} data-category={rider.category ?? ''}>
+        <div className="rp-bib" data-rider-id={rider.id}>
             <div className="rp-bib-text">
                 <p className="rp-bib-event">RWTW {year} · {circuitName(entry.circuitId)}</p>
                 <p className="rp-bib-no" aria-label={`Bib number ${rider.bibNumber}`}>{rider.bibNumber}</p>
                 <p className="rp-bib-name">{fullName(rider)}{rider.isCaptain ? ' (captain)' : ''}</p>
-                <p className="rp-bib-meta">{rider.category ?? ''}{rider.category ? ' · ' : ''}Show this at check-in</p>
+                <p className="rp-bib-meta">{[rider.category, isPastYear(year) ? null : 'Show this at check-in'].filter(Boolean).join(' · ')}</p>
             </div>
             <QRCodeCanvas
                 value={checkInPayload(year, rider)}
@@ -91,7 +95,9 @@ function BikeRow({ entry, rider, onChange }: { entry: Entry; rider: Rider; onCha
     const { apiFetch } = useAuth();
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
-    const owner = entry.role === 'owner';
+    // Bikes can only be booked or paid for the coming ride.
+    const past = isPastYear(entry.eventYear);
+    const owner = entry.role === 'owner' && !past;
     const bike = rider.bikeHire;
 
     const hire = async () => {
@@ -108,6 +114,7 @@ function BikeRow({ entry, rider, onChange }: { entry: Entry; rider: Rider; onCha
 
     let status: React.ReactNode;
     if (bike?.status === 'PAID') status = <StatusChip status="PAID" />;
+    else if (bike && past) status = <StatusChip status={bike.status} />;
     else if (bike && entry.status === 'UNPAID') status = <span className="rp-small rp-muted">Paid with the entry</span>;
     else if (bike) status = <StatusChip status="PENDING" />;
     else if (owner && entry.status !== 'CANCELLED') {
@@ -123,7 +130,7 @@ function BikeRow({ entry, rider, onChange }: { entry: Entry; rider: Rider; onCha
             <div className="rp-row-main">
                 <p className="rp-row-title">{fullName(rider)}</p>
                 <p className="rp-row-sub">
-                    {bike?.status === 'PAID' ? 'Bike hired · collect it at the start village' : bike ? `Bike booked · ${fmtKes(bike.amount)}` : 'Own bike'}
+                    {bike?.status === 'PAID' ? (past ? `Bike hired · ${fmtKes(bike.amount)}` : 'Bike hired · collect it at the start village') : bike ? `Bike booked · ${fmtKes(bike.amount)}` : 'Own bike'}
                 </p>
             </div>
             {status}
@@ -133,46 +140,6 @@ function BikeRow({ entry, rider, onChange }: { entry: Entry; rider: Rider; onCha
             {error && <p className="rp-error rp-row-full" role="alert">{error}</p>}
         </li>
     );
-}
-
-async function downloadConfirmation(entry: Entry, year: number) {
-    const { jsPDF } = await import('jspdf');
-    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-    const green: [number, number, number] = [45, 106, 45];
-    doc.setFillColor(...green);
-    doc.rect(0, 0, 210, 28, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(18);
-    doc.text(`RIDE WITH THE WARRIORS ${year}`, 14, 17);
-    doc.setTextColor(20, 20, 20);
-    doc.setFontSize(14);
-    doc.text('Entry confirmation', 14, 42);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    doc.text(`${entryTitle(entry)} · ${entrySubtitle(entry)}`, 14, 50);
-    doc.text(`Status: ${isPaid(entry.status) ? 'Paid' : entry.status}${entry.totalAmount != null ? ` · ${fmtKes(entry.totalAmount)}` : ''} · Registered ${fmtDate(entry.createdAt)}`, 14, 57);
-
-    let y = 70;
-    const cards = Array.from(document.querySelectorAll<HTMLElement>('.rp-bib[data-bib]'));
-    for (const card of cards) {
-        if (y > 250) { doc.addPage(); y = 20; }
-        const canvas = card.querySelector('canvas');
-        if (canvas) doc.addImage(canvas.toDataURL('image/png'), 'PNG', 14, y, 36, 36);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(24);
-        doc.text(card.dataset.bib ?? '', 56, y + 12);
-        doc.setFontSize(12);
-        doc.text(card.dataset.rider ?? '', 56, y + 21);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(card.dataset.category ?? '', 56, y + 28);
-        y += 44;
-    }
-    doc.setFontSize(9);
-    doc.setTextColor(90, 90, 90);
-    doc.text('Show the QR code at check-in with the ID or birth certificate the entry was made with.', 14, Math.min(y + 6, 285));
-    doc.save(`rwtw-${year}-${entry.groupId.slice(0, 8)}.pdf`);
 }
 
 const EntryScreen = () => {
@@ -196,9 +163,9 @@ const EntryScreen = () => {
         );
     }
 
-    const unpaid = entry.status === 'UNPAID';
+    const past = isPastYear(entry.eventYear);
+    const payable = entry.status === 'UNPAID' && !past;
     const owner = entry.role === 'owner';
-    const hasBibs = isPaid(entry.status) && entry.riders.some(r => r.bibNumber);
 
     return (
         <>
@@ -209,10 +176,16 @@ const EntryScreen = () => {
                     <StatusChip status={entry.status} />
                 </div>
 
+                {past && (
+                    <Callout kind="info">
+                        RWTW {entry.eventYear} is over. This entry is kept exactly as it was, so it can't be changed.
+                    </Callout>
+                )}
+
                 <div className="rp-split">
                     <section className="rp-stack" aria-labelledby="rp-bibs">
                         <h2 id="rp-bibs" className="rp-h2">{entry.riders.length > 1 ? 'Bibs' : 'Bib'} &amp; check-in</h2>
-                        {entry.riders.map(r => <BibCard key={r.id} entry={entry} rider={r} year={history.year} />)}
+                        {entry.riders.map(r => <BibCard key={r.id} entry={entry} rider={r} />)}
                     </section>
 
                     <div className="rp-stack">
@@ -226,7 +199,7 @@ const EntryScreen = () => {
                         <section className="rp-stack" aria-labelledby="rp-payment">
                             <h2 id="rp-payment" className="rp-h2">Payment</h2>
                             <div className="rp-card rp-stack">
-                                {unpaid && owner && entry.paymentRegistrationId ? (
+                                {payable && owner && entry.paymentRegistrationId ? (
                                     <>
                                         <Callout kind="warn">
                                             Not paid yet{entry.totalAmount != null ? `: ${fmtKes(entry.totalAmount)}` : ''}. Pay by M-Pesa to keep your places and get your bibs.
@@ -249,10 +222,15 @@ const EntryScreen = () => {
                             </div>
                         </section>
 
-                        {hasBibs && (
-                            <button type="button" className="rp-btn rp-btn--ghost rp-btn--block" onClick={() => downloadConfirmation(entry, history.year)}>
+                        {isPaid(entry.status) && (
+                            <button type="button" className="rp-btn rp-btn--ghost rp-btn--block" onClick={() => downloadConfirmation(entry)}>
                                 <LuDownload size={18} aria-hidden /> Download confirmation (PDF)
                             </button>
+                        )}
+                        {past && !hasNextYear(history.years) && (
+                            <Link to={registerAgainPath(entry)} className="rp-btn rp-btn--primary rp-btn--block">
+                                <LuPlus size={18} aria-hidden /> Register for {NEXT_EVENT.year}
+                            </Link>
                         )}
                     </div>
                 </div>
