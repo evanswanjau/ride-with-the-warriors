@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { adminApi } from './api/adminApi';
-import { errorMessage } from './api/http';
-import type { AdminFeedbackEntry as FeedbackEntry } from '../../adminTypes';
+import { adminApi } from '../api/adminApi';
+import { errorMessage } from '../api/http';
+import { formatDate } from '../ui/format';
+import type { AdminFeedbackEntry as FeedbackEntry } from '../../../adminTypes';
 import {
     AiOutlineSearch,
     AiOutlineReload,
@@ -21,16 +22,12 @@ const ROLE_LABELS: Record<string, string> = {
 
 const PAGE_SIZE = 12;
 
-const formatDate = (d: string) => {
-    try { return new Date(d).toLocaleString(); } catch { return 'N/A'; }
-};
-
 const displayName = (entry: FeedbackEntry) => {
     const name = [entry.firstName, entry.lastName].filter(Boolean).join(' ').trim();
     return name || 'Anonymous';
 };
 
-const AdminFeedback = () => {
+const FeedbackPage = () => {
     const [entries, setEntries] = useState<FeedbackEntry[]>([]);
     const [averageRating, setAverageRating] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -275,4 +272,4 @@ const AdminFeedback = () => {
     );
 };
 
-export default AdminFeedback;
+export default FeedbackPage;
