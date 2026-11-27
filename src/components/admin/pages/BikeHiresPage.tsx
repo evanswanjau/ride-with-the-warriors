@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { adminApi } from './api/adminApi';
-import { errorMessage } from './api/http';
-import type { AdminBikeHire as BikeHire } from '../../adminTypes';
+import { adminApi } from '../api/adminApi';
+import { errorMessage } from '../api/http';
+import type { AdminBikeHire as BikeHire } from '../../../adminTypes';
 import {
     AiOutlineSearch,
     AiOutlineReload,
@@ -10,7 +10,7 @@ import {
     AiOutlineRight,
 } from 'react-icons/ai';
 
-const AdminBikeHires = () => {
+const BikeHiresPage = () => {
     const [hires, setHires] = useState<BikeHire[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -193,4 +193,4 @@ const AdminBikeHires = () => {
     );
 };
 
-export default AdminBikeHires;
+export default BikeHiresPage;

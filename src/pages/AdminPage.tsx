@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLogin from '../components/admin/AdminLogin';
-import AdminDashboard from '../components/admin/AdminDashboard';
+import AdminRoutes from '../components/admin/AdminRoutes';
 import { adminApi } from '../components/admin/api/adminApi';
 import { SIGNED_OUT_EVENT, clearSession, readSession, saveSession, type AdminSession } from '../components/admin/api/session';
 import type { AdminUser } from '../types';
@@ -35,7 +35,7 @@ const AdminPage = () => {
 
     if (!session) return <AdminLogin onLogin={handleLogin} onBack={() => navigate('/')} />;
 
-    return <AdminDashboard admin={session.admin} token={session.token} onLogout={handleLogout} />;
+    return <AdminRoutes admin={session.admin} onLogout={handleLogout} />;
 };
 
 export default AdminPage;

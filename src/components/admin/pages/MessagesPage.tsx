@@ -1,83 +1,15 @@
-import React, { useState, useRef } from 'react';
-import { AiOutlineExclamationCircle, AiOutlineReload, AiOutlineUpload, AiOutlineDownload } from 'react-icons/ai';
-import { adminApi } from './api/adminApi';
-import { errorMessage } from './api/http';
-import type { BulkSendPayload, CommsPreview, CsvRecipient, SmsBalance } from '../../adminTypes';
+import { useEffect, useRef, useState } from 'react';
+import { AiOutlineReload, AiOutlineUpload, AiOutlineDownload } from 'react-icons/ai';
+import { adminApi } from '../api/adminApi';
+import { errorMessage } from '../api/http';
+import type { BulkSendPayload, CommsPreview, CsvRecipient, SmsBalance } from '../../../adminTypes';
+import { CSV_TEMPLATE, parseCsvRecipients } from './csvRecipients';
+import MessagesPreview from './MessagesPreview';
+import SmsTopUpModal from './SmsTopUpModal';
+import { ErrorBanner, SuccessBanner } from '../ui/Feedback';
+import { saveFile } from '../api/download';
 
-const CSV_TEMPLATE = `firstName,email
-James,james@example.com
-Sarah,sarah@example.com`;
-
-function parseCsvRecipients(text: string): { recipients: CsvRecipient[]; errors: string[] } {
-    const lines = text.trim().split(/\r?\n/).filter(line => line.trim());
-    const errors: string[] = [];
-    if (lines.length < 2) {
-        return { recipients: [], errors: ['CSV must include a header row and at least one data row.'] };
-    }
-
-    const splitRow = (row: string) => {
-        const cells: string[] = [];
-        let current = '';
-        let inQuotes = false;
-        for (let i = 0; i < row.length; i++) {
-            const ch = row[i];
-            if (ch === '"') {
-                inQuotes = !inQuotes;
-                continue;
-            }
-            if (ch === ',' && !inQuotes) {
-                cells.push(current.trim());
-                current = '';
-                continue;
-            }
-            current += ch;
-        }
-        cells.push(current.trim());
-        return cells;
-    };
-
-    const headers = splitRow(lines[0]).map(h => h.toLowerCase().replace(/^\ufeff/, ''));
-    const firstNameIdx = headers.findIndex(h => ['firstname', 'first name', 'first_name', 'name'].includes(h));
-    const lastNameIdx = headers.findIndex(h => ['lastname', 'last name', 'last_name', 'surname'].includes(h));
-    const emailIdx = headers.findIndex(h => ['email', 'email address', 'email_address'].includes(h));
-    const phoneIdx = headers.findIndex(h => ['phone', 'phone number', 'phonenumber', 'mobile'].includes(h));
-
-    if (emailIdx === -1) {
-        return { recipients: [], errors: ['CSV must include an "email" column.'] };
-    }
-    if (firstNameIdx === -1) {
-        return { recipients: [], errors: ['CSV must include a "firstName" column.'] };
-    }
-
-    const recipients: CsvRecipient[] = [];
-    for (let i = 1; i < lines.length; i++) {
-        const cols = splitRow(lines[i]);
-        const email = (cols[emailIdx] || '').trim().toLowerCase();
-        const firstName = (cols[firstNameIdx] || '').trim();
-        const lastName = lastNameIdx >= 0 ? (cols[lastNameIdx] || '').trim() : '';
-        const phone = phoneIdx >= 0 ? (cols[phoneIdx] || '').trim() : '';
-
-        if (!email) {
-            errors.push(`Row ${i + 1}: missing email — skipped.`);
-            continue;
-        }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            errors.push(`Row ${i + 1}: invalid email "${email}" — skipped.`);
-            continue;
-        }
-
-        recipients.push({
-            firstName: firstName || 'Friend',
-            lastName: lastName || undefined,
-            email,
-            phone: phone || undefined,
-        });
-    }
-
-    return { recipients, errors };
-}
-
-export const AdminCommunications: React.FC = () => {
+export default function MessagesPage() {
     const [mode, setMode] = useState<'sms' | 'email' | 'both'>('email');
     const [targetEntity, setTargetEntity] = useState<'cyclist' | 'raffle' | 'donor' | 'custom' | 'csv'>('cyclist');
     const [targetStatus, setTargetStatus] = useState<'all' | 'paid' | 'unpaid'>('all');
@@ -112,7 +44,7 @@ export const AdminCommunications: React.FC = () => {
         }
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         fetchBalance();
     }, []);
 
@@ -129,13 +61,7 @@ export const AdminCommunications: React.FC = () => {
     };
 
     const downloadCsvTemplate = () => {
-        const blob = new Blob([CSV_TEMPLATE], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'communications-recipients-template.csv';
-        a.click();
-        URL.revokeObjectURL(url);
+        saveFile(new Blob([CSV_TEMPLATE], { type: 'text/csv;charset=utf-8;' }), 'communications-recipients-template.csv');
     };
 
     const handleSend = async () => {
@@ -248,55 +174,10 @@ export const AdminCommunications: React.FC = () => {
                 )}
             </div>
 
-            {/* Top Up Modal */}
-            {showRenewInfo && (
-                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                    <div className="ad-panel" style={{ maxWidth: '450px', width: '100%', border: 'none', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
-                        <div className="ad-panel-head">
-                            <div className="ad-panel-title">Top Up SMS Credits</div>
-                        </div>
-                        <div className="ad-panel-body">
-                             <div style={{ marginBottom: '25px', padding: '20px', background: 'rgba(245,158,11,0.03)', border: '1px solid rgba(245,158,11,0.1)', borderRadius: '4px', borderLeft: '4px solid var(--ad-accent)' }}>
-                                <div style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--ad-accent)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <AiOutlineExclamationCircle size={20} /> M-Pesa Payment Instructions
-                                </div>
-                                <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '0.9rem', color: 'var(--ad-t2)', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                                    <li>Select <strong>Pay Bill</strong> on M-Pesa</li>
-                                    <li>Business Number: <strong>4093753</strong></li>
-                                    <li>Account: <strong>Airborne</strong></li>
-                                    <li>Amount: <strong>Enter any amount</strong></li>
-                                </ol>
-                                <div style={{ fontSize: '0.75rem', color: 'var(--ad-t3)', marginTop: '25px', fontStyle: 'italic', lineHeight: '1.5' }}>
-                                    Your SMS credits will be updated automatically in your TextSMS account after payment.
-                                </div>
-                            </div>
+            {showRenewInfo && <SmsTopUpModal onClose={() => setShowRenewInfo(false)} />}
 
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', borderTop: '1px solid var(--ad-border)', paddingTop: '20px' }}>
-                                <button className="ad-hbtn" onClick={() => setShowRenewInfo(false)} style={{ border: '1px solid var(--ad-border)', background: 'transparent' }}>
-                                    Close
-                                </button>
-                                <button className="ad-hbtn ad-hbtn-primary" onClick={() => window.location.reload()}>
-                                    Complete & Refresh
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {errorMsg && (
-                <div className="ad-error" style={{ marginBottom: '20px' }}>
-                    <AiOutlineExclamationCircle />
-                    <span>{errorMsg}</span>
-                    <button style={{ marginLeft: 'auto', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', textDecoration: 'underline' }} onClick={() => setErrorMsg(null)}>Close</button>
-                </div>
-            )}
-            {successMsg && (
-                <div style={{ padding: '14px 18px', background: 'rgba(76,175,80,0.08)', border: '1px solid rgba(76,175,80,0.3)', borderLeft: '3px solid var(--ad-pl)', color: 'var(--ad-pl)', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem', marginBottom: '20px' }}>
-                    <span>{successMsg}</span>
-                    <button style={{ marginLeft: 'auto', fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', textDecoration: 'underline' }} onClick={() => setSuccessMsg(null)}>Close</button>
-                </div>
-            )}
+            {errorMsg && <div style={{ marginBottom: '20px' }}><ErrorBanner message={errorMsg} actionLabel="Close" onAction={() => setErrorMsg(null)} /></div>}
+            {successMsg && <SuccessBanner message={successMsg} onClose={() => setSuccessMsg(null)} />}
 
             {/* Split layout: 2fr for composer, 1fr for preview inside standard grid container or flex */}
             <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.8fr) minmax(0, 1.2fr)', gap: '20px', alignItems: 'flex-start' }}>
@@ -484,81 +365,8 @@ export const AdminCommunications: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="ad-panel" style={{ position: 'sticky', top: '80px' }}>
-                    <div className="ad-panel-head">
-                        <div className="ad-panel-title">Preview & Stats</div>
-                    </div>
-                    <div className="ad-panel-body">
-                        {!preview && !loading && (
-                            <div style={{ color: 'var(--ad-t3)', textAlign: 'center', padding: '40px 0', fontSize: '0.85rem' }}>
-                                Enter your message and click "Generate Preview" to see how it looks and who will receive it.
-                            </div>
-                        )}
-                        {loading && (
-                            <div style={{ color: 'var(--ad-t3)', textAlign: 'center', padding: '40px 0', fontSize: '0.85rem' }}>
-                                Loading preview...
-                            </div>
-                        )}
-                        {preview && (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '10px' }}>
-                                    <div style={{ background: 'var(--ad-bg)', padding: '12px', borderRadius: '4px', border: '1px solid var(--ad-border)' }}>
-                                        <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ad-t3)', marginBottom: '5px', fontWeight: 'bold' }}>Targeted Uses</div>
-                                        <div style={{ fontSize: '1.4rem', fontFamily: "'Bebas Neue', sans-serif", color: 'var(--ad-t1)' }}>{preview.recipientsCount}</div>
-                                    </div>
-                                    <div style={{ background: 'var(--ad-bg)', padding: '12px', borderRadius: '4px', border: '1px solid var(--ad-border)' }}>
-                                        <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ad-t3)', marginBottom: '5px', fontWeight: 'bold' }}>Test Run</div>
-                                        <div style={{ fontSize: '0.8rem', color: testMode ? 'var(--ad-accent)' : 'var(--ad-pl)', fontWeight: 'bold', paddingTop: '4px' }}>
-                                            {testMode ? 'SIMULATED' : 'EXECUTED'}
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                {preview.sampleRecipients && preview.sampleRecipients.length > 0 && (
-                                    <div>
-                                        <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ad-t2)', marginBottom: '10px', fontWeight: 'bold' }}>
-                                            Sample Generated Messages
-                                        </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '400px', overflowY: 'auto', paddingRight: '5px' }} className="ad-feed">
-                                            {preview.sampleRecipients.map((r, idx: number) => (
-                                                <div key={idx} style={{ padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--ad-border)', borderRadius: '4px' }}>
-                                                    <div style={{ fontWeight: 600, color: 'var(--ad-pl)', fontSize: '0.85rem', marginBottom: '2px' }}>{r.name || 'Unknown User'}</div>
-                                                    <div style={{ color: 'var(--ad-t3)', fontSize: '0.75rem', fontFamily: "'JetBrains Mono', monospace", marginBottom: '8px' }}>{r.contact || 'No Info'}</div>
-                                                    <div style={{ color: 'var(--ad-t1)', fontSize: '0.85rem', lineHeight: '1.5', whiteSpace: 'pre-wrap', background: 'var(--ad-bg)', padding: '8px', borderRadius: '4px', borderLeft: '2px solid var(--ad-border2)' }}>
-                                                        {r.compiledMessage}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {(preview.smsStats || preview.emailStats) && (
-                                    <div style={{ borderTop: '1px solid var(--ad-border)', paddingTop: '15px' }}>
-                                        <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ad-t2)', marginBottom: '10px', fontWeight: 'bold' }}>
-                                            Delivery Results
-                                        </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                            {preview.smsStats && (
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', background: 'var(--ad-bg)', padding: '10px', borderRadius: '4px', border: '1px solid var(--ad-border)' }}>
-                                                    <span style={{ color: 'var(--ad-t2)' }}>SMS SUCCESS</span>
-                                                    <span style={{ color: 'var(--ad-pl)', fontWeight: 'bold' }}>{preview.smsStats.success}</span>
-                                                </div>
-                                            )}
-                                            {preview.emailStats && (
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', background: 'var(--ad-bg)', padding: '10px', borderRadius: '4px', border: '1px solid var(--ad-border)' }}>
-                                                    <span style={{ color: 'var(--ad-t2)' }}>EMAIL SUCCESS</span>
-                                                    <span style={{ color: 'var(--ad-pl)', fontWeight: 'bold' }}>{preview.emailStats.success}</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </div>
+                <MessagesPreview preview={preview} loading={loading} testMode={testMode} />
             </div>
         </>
     );
-};
+}
