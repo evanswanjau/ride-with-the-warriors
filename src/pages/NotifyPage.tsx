@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { getErrorMessage } from '../utils/registration';
 import { Link } from 'react-router-dom';
-import { API_BASE_URL } from '../config';
+import { publicApi } from '../publicApi';
 import { EDITION } from '../config/edition';
 
 const NotifyPage = () => {
@@ -16,18 +16,7 @@ const NotifyPage = () => {
         setStatus('submitting');
         setErrorMsg('');
         try {
-            const res = await fetch(`${API_BASE_URL}/notify`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: email.trim(),
-                    firstName: firstName.trim() || undefined,
-                }),
-            });
-            if (!res.ok) {
-                const data = await res.json().catch(() => ({}));
-                throw new Error(data?.error || 'Something went wrong');
-            }
+            await publicApi.notify({ email: email.trim(), firstName: firstName.trim() || undefined });
             setStatus('done');
         } catch (err) {
             setErrorMsg(getErrorMessage(err, 'Something went wrong. Please try again.'));

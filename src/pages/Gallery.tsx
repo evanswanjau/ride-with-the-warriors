@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import '../styles/gallery.css';
-import { API_BASE_URL } from '../config';
+import { publicApi, type HostedPhoto } from '../publicApi';
 // Snapshot of the Cloudinary-hosted albums, so the gallery works even when the
 // API has no gallery endpoint. The API list (when available) replaces it.
 import hostedManifest from '../assets/gallery-hosted.json';
 
 /* ─── Data ────────────────────────────────────────────────────────────────── */
-interface HostedPhoto { eventYear: number; album: string; publicId: string; caption: string | null; }
-
 interface GalleryImage {
     url: string; thumb: string; thumbSrcSet: string; title: string;
     year: number; album: string; albumSlug: string;
@@ -122,10 +120,9 @@ const Gallery = () => {
     // provides one; otherwise keep the bundled snapshot.
     useEffect(() => {
         let cancelled = false;
-        fetch(`${API_BASE_URL}/gallery`)
-            .then(r => (r.ok ? r.json() : null))
-            .then((data: { cloudName: string | null; photos: HostedPhoto[] } | null) => {
-                if (cancelled || !data?.cloudName || !data.photos?.length) return;
+        publicApi.gallery()
+            .then(data => {
+                if (cancelled || !data.cloudName || !data.photos?.length) return;
                 setHostedImages(toGalleryImages(data.cloudName, data.photos));
             })
             .catch(() => { /* no gallery API: keep the bundled snapshot */ });

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../config';
+import { publicApi } from '../publicApi';
 
 const STORAGE_KEY = 'rwtw_ref';
 
@@ -27,11 +27,7 @@ const ReferralCapture = () => {
         navigate('/raffle/closed', { replace: true });
 
         // Fire click tracking (fire-and-forget)
-        fetch(`${API_BASE_URL}/referrals/click`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code }),
-        }).catch(() => {
+        publicApi.referrals.click(code).catch(() => {
             // Silently fail — don't block the user
         });
     }, [searchParams, setSearchParams, navigate]);

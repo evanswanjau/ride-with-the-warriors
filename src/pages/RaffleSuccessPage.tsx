@@ -8,8 +8,7 @@ import {
     AiOutlineTrophy
 } from 'react-icons/ai';
 import Confetti from 'react-confetti';
-import { API_BASE_URL } from '../config';
-import { authHeaders } from '../auth/session';
+import { publicApi } from '../publicApi';
 
 const RaffleSuccessPage = () => {
     const { id } = useParams();
@@ -24,9 +23,8 @@ const RaffleSuccessPage = () => {
     useEffect(() => {
         let cancelled = false;
         Promise.all(idsKey.split(',').filter(Boolean).map(tid =>
-            fetch(`${API_BASE_URL}/raffle/${tid}`, { headers: authHeaders() })
-                .then(r => (r.ok ? r.json() : null))
-                .then(d => d?.ticket?.ticketNumber as string | undefined)
+            publicApi.raffle.ticket(tid)
+                .then(d => d.ticket?.ticketNumber ?? undefined)
                 .catch(() => undefined),
         )).then(list => { if (!cancelled) setNumbers(list.filter((n): n is string => !!n)); });
         return () => { cancelled = true; };

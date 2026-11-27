@@ -3,8 +3,7 @@ import { getErrorMessage } from '../utils/registration';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import { AiOutlineHeart, AiOutlineWarning, AiOutlineCheckCircle } from 'react-icons/ai';
-import { API_BASE_URL } from '../config';
-import { authHeaders } from '../auth/session';
+import { publicApi } from '../publicApi';
 import '../styles/home.css';
 
 function formatKenyanPhone(raw: string): string {
@@ -102,19 +101,15 @@ const DonatePage = () => {
                 return;
             }
             try {
-                const res = await fetch(`${API_BASE_URL}/donations/${id}`, { headers: { 'X-Donation-Token': token, ...authHeaders() } });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.donation?.status === 'PAID') {
-                        setPaymentStatus('success');
-                        return;
-                    }
-                    if (data.donation?.status === 'FAILED') {
-                        setPaymentStatus('error');
-                        const reason = data.donation?.failureReason || 'Payment was not completed. Please try again.';
-                        setError(reason);
-                        return;
-                    }
+                const { donation } = await publicApi.donations.status(id, token);
+                if (donation?.status === 'PAID') {
+                    setPaymentStatus('success');
+                    return;
+                }
+                if (donation?.status === 'FAILED') {
+                    setPaymentStatus('error');
+                    setError(donation.failureReason || 'Payment was not completed. Please try again.');
+                    return;
                 }
             } catch (err) { console.error('Polling error:', err); }
             attempts++;
@@ -152,25 +147,12 @@ const DonatePage = () => {
 
         try {
             // 1. Create Donation Record
-            const res = await fetch(`${API_BASE_URL}/donations`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', ...authHeaders() },
-                body: JSON.stringify({ amount: finalAmount, name, email, phone: formattedPhone }),
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error?.message || 'Failed to initialize donation');
-
+            const data = await publicApi.donations.create({ amount: finalAmount, name, email, phone: formattedPhone });
             const id = data.donationId;
             setDonationId(id);
 
             // 2. Trigger STK Push
-            const pushRes = await fetch(`${API_BASE_URL}/donations/pay/stk-push`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', ...authHeaders() },
-                body: JSON.stringify({ donationId: id, donationToken: data.donationToken, phoneNumber: formattedPhone }),
-            });
-            const pushData = await pushRes.json();
-            if (!pushRes.ok) throw new Error(pushData.error?.message || 'Failed to trigger M-Pesa prompt');
+            await publicApi.donations.pay({ donationId: id, donationToken: data.donationToken, phoneNumber: formattedPhone });
 
             setPaymentStatus('pending');
             startPolling(id, data.donationToken);
