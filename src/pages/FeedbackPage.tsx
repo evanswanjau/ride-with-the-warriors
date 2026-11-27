@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
-import { API_BASE_URL } from '../config';
+import { publicApi } from '../publicApi';
 import { EDITION } from '../config/edition';
 
 type Role = 'CYCLIST' | 'ATTENDEE' | 'SPONSOR' | 'ORGANISER';
@@ -49,25 +49,16 @@ const FeedbackPage = () => {
         setStatus('submitting');
         setErrorMsg('');
         try {
-            const res = await fetch(`${API_BASE_URL}/feedback`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    role,
-                    rating,
-                    firstName: firstName.trim() || undefined,
-                    lastName: lastName.trim() || undefined,
-                    highlights: highlights.trim() || undefined,
-                    improvements: improvements.trim() || undefined,
-                    notifyEmail: notifyFor2027 ? email.trim() : undefined,
-                }),
+            const data = await publicApi.feedback({
+                role,
+                rating,
+                firstName: firstName.trim() || undefined,
+                lastName: lastName.trim() || undefined,
+                highlights: highlights.trim() || undefined,
+                improvements: improvements.trim() || undefined,
+                notifyEmail: notifyFor2027 ? email.trim() : undefined,
             });
-            if (!res.ok) {
-                const data = await res.json().catch(() => ({}));
-                throw new Error(data?.error || 'Something went wrong');
-            }
-            const data = await res.json().catch(() => ({}));
-            setNotifyRegistered(Boolean(data?.notifyRegistered));
+            setNotifyRegistered(Boolean(data.notifyRegistered));
             setStatus('done');
         } catch (err) {
             setErrorMsg(err instanceof Error ? err.message : 'Something went wrong. Please try again.');

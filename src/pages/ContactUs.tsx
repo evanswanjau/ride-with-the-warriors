@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/contact-us.css';
+import { publicApi } from '../publicApi';
 import {
     AiOutlineMail,
     AiOutlinePhone,
@@ -24,18 +25,7 @@ const ContactUs = () => {
         setErrorMessage('');
 
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1';
-            const res = await fetch(`${API_URL}/enquiry`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || 'Failed to send message');
-            }
+            await publicApi.enquiry(formData);
 
             setStatus('success');
             setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
