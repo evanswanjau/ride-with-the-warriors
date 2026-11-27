@@ -6,6 +6,7 @@ import PageHeader from '../ui/PageHeader';
 import RangeToggle from '../ui/RangeToggle';
 import { axisTick, legendStyle, rangeAxis, sliceRange, tooltipStyle, type ChartRange } from '../ui/chartRange';
 import { ErrorBanner } from '../ui/Feedback';
+import { ALL_YEARS_NOTE } from '../ui/format';
 
 const RAFFLE_TARGET = 300;
 const rowLabel = { fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ad-t3)' } as const;
@@ -21,6 +22,7 @@ export default function AnalyticsPage() {
         <>
             {error && <ErrorBanner message={error} onAction={reload} />}
             <PageHeader eyebrow="Deep Dive" title="Analytics" />
+            <div className="ad-kpi-note" style={{ marginTop: -16 }}>{ALL_YEARS_NOTE}</div>
 
             <div className="ad-panel">
                 <div className="ad-panel-head">

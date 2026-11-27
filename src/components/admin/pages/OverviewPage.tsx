@@ -8,13 +8,13 @@ import PageHeader from '../ui/PageHeader';
 import RangeToggle from '../ui/RangeToggle';
 import { axisTick, rangeAxis, sliceRange, tooltipStyle, type ChartRange } from '../ui/chartRange';
 import { ErrorBanner } from '../ui/Feedback';
-import { formatDate } from '../ui/format';
+import { ALL_YEARS_NOTE, formatDate } from '../ui/format';
 
 const labelStyle = { fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ad-t3)' } as const;
 
 export default function OverviewPage() {
     const navigate = useNavigate();
-    const { dark } = useAdminShell();
+    const { dark, year } = useAdminShell();
     const { data: d, error, reload, totals: t } = useDashboard();
     const [range, setRange] = useState<ChartRange>('30d');
     const tt = tooltipStyle(dark);
@@ -25,6 +25,7 @@ export default function OverviewPage() {
         <>
             {error && <ErrorBanner message={error} onAction={reload} />}
             <PageHeader eyebrow="Command View" title="Overview" />
+            <div className="ad-kpi-note" style={{ marginTop: -16 }}>{ALL_YEARS_NOTE}</div>
 
             <div className="ad-kpi-grid">
                 <div className="ad-kpi">
@@ -194,7 +195,7 @@ export default function OverviewPage() {
                             <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ad-red)', marginBottom: 4 }}>Stale Unpaid</div>
                             <div className="ad-stale-num">{t.staleUnpaid}</div>
                             <div className="ad-stale-desc">Entries stuck in UNPAID for over 48 hours. Consider automated follow-up email.</div>
-                            <button className="ad-stale-btn" onClick={() => navigate('/admin/registrations?status=UNPAID')}>Review Now &rarr;</button>
+                            <button className="ad-stale-btn" onClick={() => navigate(`/admin/registrations?status=UNPAID${year ? `&year=${year}` : ''}`)}>Review Now &rarr;</button>
                         </div>
                         <div className="ad-insight">
                             <strong>Raffle draw</strong> is scheduled for 05 Jul 2026. <strong>{t.rafflePaid} tickets sold</strong> — target is 300.

@@ -10,18 +10,20 @@ import KpiGrid from '../ui/KpiGrid';
 import PageHeader from '../ui/PageHeader';
 import Pagination from '../ui/Pagination';
 import { StatusPill } from '../ui/StatusPill';
-import { formatDate, kes, rowNumber } from '../ui/format';
+import { ALL_YEARS_NOTE, formatDate, kes, rowNumber } from '../ui/format';
+import { useAdminShell } from '../useAdminShell';
 
 const LIMIT = 20;
 const COLUMNS = ['#', 'Donor', 'Contact Info', 'Amount', 'Status', 'M-Pesa Code', 'Date', 'Actions'];
 
 export default function DonationsPage() {
+    const { year } = useAdminShell();
     const [filter, setFilter] = useState({ status: '', search: '' });
     const [page, setPage] = useState(1);
     const [actionError, setActionError] = useState<string | null>(null);
     const search = useDebounced(filter.search);
 
-    const query = { page, limit: LIMIT, status: filter.status, search };
+    const query = { year, page, limit: LIMIT, status: filter.status, search };
     const list = useLoad(() => adminApi.donations.list(query), JSON.stringify(query), 'Failed to load donations');
     const stats = useLoad(() => adminApi.donations.stats(), 'stats', 'Failed to load donations');
     const donations = list.data?.donations ?? [];
@@ -49,7 +51,7 @@ export default function DonationsPage() {
             <PageHeader eyebrow="Contributions" title="Donations" />
 
             {s && (
-                <KpiGrid items={[
+                <KpiGrid note={ALL_YEARS_NOTE} items={[
                     { label: 'Total Count', val: s.totalCount },
                     { label: 'Paid Count', val: s.paidCount, cls: 'green' },
                     { label: 'Unpaid Count', val: s.unpaidCount ?? 0, cls: 'amber' },

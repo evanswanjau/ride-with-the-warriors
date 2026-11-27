@@ -15,6 +15,7 @@ import { FilterBar, FilterGroup, SearchFilter, SelectFilter } from '../ui/Filter
 import PageHeader from '../ui/PageHeader';
 import Pagination from '../ui/Pagination';
 import { bibsFileName, generateBibsPdf } from './generateBibs';
+import { useAdminShell } from '../useAdminShell';
 
 const LIMIT = 10;
 type SortBy = 'id' | 'name' | 'category';
@@ -38,16 +39,17 @@ function bibCards(regs: AdminRegistration[], categories: PricingCategory[], sort
 }
 
 export default function BibsPage() {
+    const { year } = useAdminShell();
     const [filter, setFilter] = useState({ search: '', circuitId: '', category: '', status: '', dateFrom: '' });
     const [sortBy, setSortBy] = useState<SortBy>('id');
     const [page, setPage] = useState(1);
     const [progress, setProgress] = useState<BibJobProgress | null>(null);
     const [generating, setGenerating] = useState(false);
     const search = useDebounced(filter.search);
-    const { categories } = usePricingCategories();
+    const { categories } = usePricingCategories(year);
 
     const filters = { circuitId: filter.circuitId, category: filter.category, status: filter.status, dateFrom: filter.dateFrom };
-    const query = { ...filters, search, page, limit: LIMIT };
+    const query = { ...filters, year, search, page, limit: LIMIT };
     const list = useLoad(() => adminApi.registrations.list(query), JSON.stringify(query), 'Failed to load registrations');
     const regs = list.data?.registrations ?? [];
 

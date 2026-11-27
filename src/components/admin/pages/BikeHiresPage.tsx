@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useLoad } from '../hooks/useLoad';
 import { adminApi } from '../api/adminApi';
 import { errorMessage } from '../api/http';
 import type { AdminBikeHire as BikeHire } from '../../../adminTypes';
+import { useAdminShell } from '../useAdminShell';
 import {
     AiOutlineSearch,
     AiOutlineReload,
@@ -11,37 +13,31 @@ import {
 } from 'react-icons/ai';
 
 const BikeHiresPage = () => {
-    const [hires, setHires] = useState<BikeHire[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { year } = useAdminShell();
+    const list = useLoad(() => adminApi.bikeHires.list(year), String(year), 'Failed to fetch bike hires');
+    // Status changes made here, shown until the next reload.
+    const [changed, setChanged] = useState<Record<string, BikeHire['status']>>({});
+    const [actionError, setActionError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('ALL');
     const [hiresPage, setHiresPage] = useState(1);
     const HIRES_LIMIT = 10;
+    const hires = (list.data ?? []).map(h => (changed[h.id] ? { ...h, status: changed[h.id] } : h));
+    const loading = list.loading;
+    const error = actionError ?? list.error;
 
-    const fetchHires = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            setHires(await adminApi.bikeHires.list(undefined));
-        } catch (error) {
-            setError(errorMessage(error, 'Failed to fetch bike hires'));
-            setHires([]);
-        } finally {
-            setLoading(false);
-        }
+    const fetchHires = () => {
+        setActionError(null);
+        setChanged({});
+        list.reload();
     };
-
-    useEffect(() => {
-        fetchHires();
-    }, []);
 
     const updateStatus = async (id: string, status: BikeHire['status']) => {
         try {
             await adminApi.bikeHires.setStatus(id, status);
-            setHires(hires.map(h => h.id === id ? { ...h, status } : h));
+            setChanged(c => ({ ...c, [id]: status }));
         } catch (error) {
-            setError(errorMessage(error, 'Failed to update bike hire'));
+            setActionError(errorMessage(error, 'Failed to update bike hire'));
         }
     };
 
@@ -54,7 +50,6 @@ const BikeHiresPage = () => {
         return matchesSearch && matchesStatus;
     });
 
-    useEffect(() => { setHiresPage(1); }, [searchTerm, statusFilter]);
 
     return (
         <>
@@ -95,7 +90,7 @@ const BikeHiresPage = () => {
                                 placeholder="Search by name or registration ID..." 
                                 className="ad-input"
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onChange={(e) => { setSearchTerm(e.target.value); setHiresPage(1); }}
                             />
                         </div>
                     </div>
@@ -104,7 +99,7 @@ const BikeHiresPage = () => {
                         <select 
                             className="ad-select"
                             value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
+                            onChange={(e) => { setStatusFilter(e.target.value); setHiresPage(1); }}
                         >
                             <option value="ALL">All Statuses</option>
                             <option value="PENDING">PENDING</option>

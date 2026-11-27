@@ -14,7 +14,8 @@ import KpiGrid from '../ui/KpiGrid';
 import PageHeader from '../ui/PageHeader';
 import Pagination from '../ui/Pagination';
 import { StatusSelect } from '../ui/StatusPill';
-import { cap, formatDate, kes, rowNumber } from '../ui/format';
+import { ALL_YEARS_NOTE, cap, formatDate, kes, rowNumber } from '../ui/format';
+import { useAdminShell } from '../useAdminShell';
 import { raffleTicketFields } from './registrationFields';
 import { useRaffleTicketPdf } from './useRaffleTicketPdf';
 
@@ -22,15 +23,16 @@ const LIMIT = 12;
 const COLUMNS = ['#', 'Ticket No.', 'Name', 'Email', 'Phone', 'Referral', 'Status', 'Created', 'Actions'];
 
 export default function RafflePage() {
+    const { year } = useAdminShell();
     const [filter, setFilter] = useState({ status: '', search: '', referralCode: '' });
     const [page, setPage] = useState(1);
     const [selected, setSelected] = useState<AdminRaffleTicket | null>(null);
     const [actionError, setActionError] = useState<string | null>(null);
     const search = useDebounced(filter.search);
     const dashboard = useDashboard();
-    const pdf = useRaffleTicketPdf();
+    const pdf = useRaffleTicketPdf(year);
 
-    const query = { page, limit: LIMIT, status: filter.status, search, referralCode: filter.referralCode };
+    const query = { year, page, limit: LIMIT, status: filter.status, search, referralCode: filter.referralCode };
     const list = useLoad(() => adminApi.raffle.list(query), JSON.stringify(query), 'Failed to load raffle');
     const tickets = list.data?.tickets ?? [];
     const pagination = list.data?.pagination;
@@ -50,7 +52,7 @@ export default function RafflePage() {
 
     const handleExport = async () => {
         try {
-            saveFile(await adminApi.exports.raffle(undefined), 'raffle-all.csv');
+            saveFile(await adminApi.exports.raffle(year), `raffle-${year ?? 'all'}.csv`);
         } catch (e) {
             setActionError(errorMessage(e, 'Export failed'));
         }
@@ -74,7 +76,7 @@ export default function RafflePage() {
                 }
             />
 
-            <KpiGrid spacing={24} items={[
+            <KpiGrid spacing={24} note={ALL_YEARS_NOTE} items={[
                 { label: 'Total Tickets', val: t.raffleTotal },
                 { label: 'Paid Tickets', val: t.rafflePaid, cls: 'green' },
                 { label: 'Unpaid Tickets', val: t.raffleUnpaid, cls: 'amber' },

@@ -14,6 +14,9 @@ export const kes = (n: number | null | undefined): string => `KES ${(n ?? 0).toL
 /** Row number on a paged list, counting from 1. */
 export const rowNumber = (page: number, limit: number, index: number): number => (page - 1) * limit + index + 1;
 
+/** Shown under totals the server cannot yet split by year. */
+export const ALL_YEARS_NOTE = 'Totals cover every year';
+
 /** Colour for registration and raffle statuses. */
 export function statusColor(status: string): string {
     if (status === 'PAID' || status === 'CONFIRMED') return 'var(--ad-pl)';
