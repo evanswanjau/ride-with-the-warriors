@@ -8,7 +8,7 @@
 import type { AdminUser, PricingCategory } from '../../../types';
 import type {
     AdminBikeHire, AdminDonation, AdminEvent, AdminFeedbackEntry, AdminPayment, AdminRaffleTicket, AdminReferral,
-    AdminRegistration, BulkSendPayload, CommsPreview, DashboardData, Pagination, ReferralsStats, SmsBalance, SummaryStats,
+    AdminRegistration, BulkSendPayload, EventChanges, EventWindow, CommsPreview, DashboardData, Pagination, ReferralsStats, SmsBalance, SummaryStats,
 } from '../../../adminTypes';
 import { requestBlob, requestJson, send, type Query } from './http';
 
@@ -31,6 +31,11 @@ export const adminApi = {
     events: {
         current: () => requestJson<{ event: AdminEvent }>('/events/current', { auth: false }),
         list: () => requestJson<{ events: AdminEvent[] }>('/admin/events'),
+        /** Starts a year; circuits and prices are copied from the newest earlier year. */
+        create: (year: number) => requestJson<{ event: AdminEvent; copiedPricingFrom: number | null }>('/admin/events', { method: 'POST', body: { year } }),
+        update: (year: number, changes: EventChanges) => requestJson<{ event: AdminEvent }>(`/admin/events/${year}`, { method: 'PATCH', body: changes }),
+        setWindow: (year: number, what: EventWindow, action: 'open' | 'close') =>
+            requestJson<{ event: AdminEvent }>(`/admin/events/${year}/${what}/${action}`, { method: 'POST' }),
     },
 
     dashboard: () => requestJson<DashboardData>('/admin/dashboard'),
