@@ -8,7 +8,7 @@
 import type { AdminUser, PricingCategory } from '../../../types';
 import type {
     AdminAccount, AdminBikeHire, AdminDonation, AdminInviteRow, AdminEvent, AdminFeedbackEntry, AdminPayment, AdminRaffleTicket, AdminReferral,
-    AdminRegistration, BulkSendPayload, RegistrationHistory, RiderDetailsEdit, EventChanges, EventWindow, CommsPreview, DashboardData, Pagination, ReferralsStats, SmsBalance, SummaryStats,
+    AdminRegistration, BulkSendPayload, CheckInItem, CheckInMarks, CheckInRider, RegistrationHistory, RiderDetailsEdit, EventChanges, EventWindow, CommsPreview, DashboardData, Pagination, ReferralsStats, SmsBalance, SummaryStats,
 } from '../../../adminTypes';
 import { requestBlob, requestJson, send, type Query } from './http';
 import type { AdminRole } from '../roles';
@@ -119,6 +119,12 @@ export const adminApi = {
         /** Server-sent events: `data: {"type":"progress"|"done"|"error", ...}` lines. */
         progress: (jobId: string) => send(`/admin/bibs/generate/progress/${encodeURIComponent(jobId)}`),
         download: (jobId: string) => requestBlob(`/admin/bibs/generate/download/${encodeURIComponent(jobId)}`),
+    },
+
+    checkIn: {
+        search: (q: string, year: Year) => requestJson<{ year: number; riders: CheckInRider[] }>('/admin/checkin', { query: { q, year } }),
+        mark: (registrationId: string, item: CheckInItem, given: boolean) =>
+            requestJson<{ checkIn: CheckInMarks }>(`/admin/checkin/${encodeURIComponent(registrationId)}`, { method: 'POST', body: { item, given } }),
     },
 
     /** Server-built CSV files; every year when `year` is undefined. */

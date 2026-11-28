@@ -302,3 +302,30 @@ export interface RegistrationHistory {
     notes: { id: string; note: string; amountKes: number | null; adminEmail: string; createdAt: string; registrationId: string | null }[];
     audit: { id: string; createdAt: string; adminEmail: string; action: string; entityId: string | null }[];
 }
+
+export type CheckInItem = 'bib' | 'tshirt' | 'bike';
+
+export interface CheckInMarks {
+    bibGivenAt: string | null;
+    bibGivenBy: string | null;
+    tshirtGivenAt: string | null;
+    tshirtGivenBy: string | null;
+    bikeGivenAt: string | null;
+    bikeGivenBy: string | null;
+}
+
+/** GET /admin/checkin */
+export interface CheckInRider {
+    id: string;
+    bibNumber: string | null;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string | null;
+    circuitId: string;
+    category: string | null;
+    teamName: string | null;
+    tshirtSize: string | null;
+    status: string;
+    bikeHire: { status: string; bikeType: string } | null;
+    checkIn: CheckInMarks | null;
+}

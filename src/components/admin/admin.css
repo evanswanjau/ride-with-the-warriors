@@ -340,3 +340,14 @@
     animation: ad-spin 0.8s linear infinite;
 }
 @keyframes ad-spin { to { transform: rotate(360deg); } }
+
+/* Phones (race-day check-in): menu becomes a scrolling row above the page. */
+@media (max-width: 760px) {
+    .ad-header { padding: 0 12px; }
+    .ad-header-title { display: none; }
+    .ad-body { flex-direction: column; overflow: visible; }
+    .ad-sidebar { width: auto; flex-direction: row; overflow-x: auto; padding: 8px; gap: 4px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .ad-nav-btn { width: auto; white-space: nowrap; padding: 8px 10px; }
+    .ad-nav-btn.active::before { top: auto; left: 0; right: 0; width: auto; height: 2px; }
+    .ad-main { padding: 16px; overflow: visible; }
+}
