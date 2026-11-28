@@ -1,7 +1,8 @@
 import type { IconType } from 'react-icons';
+import type { AdminRole } from './roles';
 import {
     AiOutlineBarChart, AiOutlineCalendar, AiOutlineComment, AiOutlineDashboard, AiOutlineDollar, AiOutlineHeart, AiOutlineHistory,
-    AiOutlineLink, AiOutlineMessage, AiOutlineStar, AiOutlineTable, AiOutlineTeam,
+    AiOutlineLink, AiOutlineMessage, AiOutlineSafety, AiOutlineStar, AiOutlineTable, AiOutlineTeam,
 } from 'react-icons/ai';
 
 export interface NavItem {
@@ -9,6 +10,8 @@ export interface NavItem {
     path: string;
     label: string;
     icon: IconType;
+    /** Hidden from admins below this role (the server refuses them anyway). */
+    minRole?: AdminRole;
 }
 
 /** Sidebar order. Paths are the old ?view names, so saved links still work. */
@@ -26,4 +29,5 @@ export const NAV_ITEMS: NavItem[] = [
     { path: 'referrals', label: 'Referrals', icon: AiOutlineLink },
     { path: 'pricing', label: 'Pricing', icon: AiOutlineTable },
     { path: 'events', label: 'Events', icon: AiOutlineCalendar },
+    { path: 'admins', label: 'Admins', icon: AiOutlineSafety, minRole: 'super_admin' },
 ];

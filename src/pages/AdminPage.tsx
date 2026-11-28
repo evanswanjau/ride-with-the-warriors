@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import AcceptInvite from '../components/admin/AcceptInvite';
 import AdminLogin from '../components/admin/AdminLogin';
 import AdminRoutes from '../components/admin/AdminRoutes';
 import { adminApi } from '../components/admin/api/adminApi';
@@ -8,6 +9,8 @@ import type { AdminUser } from '../types';
 
 const AdminPage = () => {
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const inviteToken = pathname.match(/^\/admin\/invite\/([^/]+)$/)?.[1];
     const [session, setSession] = useState<AdminSession | null>(() => readSession());
 
     const handleLogin = (token: string, admin: AdminUser) => {
@@ -32,6 +35,11 @@ const AdminPage = () => {
             window.removeEventListener(SIGNED_OUT_EVENT, onSignedOut);
         };
     }, [session]);
+
+    // An emailed invite link: the new admin sets a password, then lands on the Overview signed in.
+    if (inviteToken) {
+        return <AcceptInvite token={inviteToken} onBack={() => navigate('/')} onAccepted={(token, admin) => { handleLogin(token, admin); navigate('/admin', { replace: true }); }} />;
+    }
 
     if (!session) return <AdminLogin onLogin={handleLogin} onBack={() => navigate('/')} />;
 

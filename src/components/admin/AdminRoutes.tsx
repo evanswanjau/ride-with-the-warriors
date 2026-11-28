@@ -17,6 +17,7 @@ const MessagesPage = lazy(() => import('./pages/MessagesPage'));
 const ReferralsPage = lazy(() => import('./pages/ReferralsPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
 const EventsPage = lazy(() => import('./pages/EventsPage'));
+const AdminsPage = lazy(() => import('./pages/AdminsPage'));
 
 /** The pages under /admin. Paths match the sidebar (nav.ts); an unknown path shows the Overview. */
 export default function AdminRoutes({ admin, onLogout }: { admin: AdminUser | null; onLogout: () => void }) {
@@ -36,6 +37,7 @@ export default function AdminRoutes({ admin, onLogout }: { admin: AdminUser | nu
                 <Route path="referrals" element={<ReferralsPage />} />
                 <Route path="pricing" element={<PricingPage />} />
                 <Route path="events" element={<EventsPage />} />
+                <Route path="admins" element={<AdminsPage />} />
                 <Route path="*" element={<OverviewPage />} />
             </Route>
         </Routes>

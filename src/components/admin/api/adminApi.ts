@@ -7,10 +7,11 @@
  */
 import type { AdminUser, PricingCategory } from '../../../types';
 import type {
-    AdminBikeHire, AdminDonation, AdminEvent, AdminFeedbackEntry, AdminPayment, AdminRaffleTicket, AdminReferral,
+    AdminAccount, AdminBikeHire, AdminDonation, AdminInviteRow, AdminEvent, AdminFeedbackEntry, AdminPayment, AdminRaffleTicket, AdminReferral,
     AdminRegistration, BulkSendPayload, EventChanges, EventWindow, CommsPreview, DashboardData, Pagination, ReferralsStats, SmsBalance, SummaryStats,
 } from '../../../adminTypes';
 import { requestBlob, requestJson, send, type Query } from './http';
+import type { AdminRole } from '../roles';
 
 type Year = number | undefined;
 
@@ -26,6 +27,10 @@ export const adminApi = {
         login: (email: string, password: string) =>
             requestJson<{ token: string; admin: AdminUser }>('/admin/auth/login', { method: 'POST', body: { email, password }, auth: false }),
         logout: () => requestJson<{ ok: boolean }>('/admin/auth/logout', { method: 'POST' }),
+        invite: (token: string) =>
+            requestJson<{ invite: { email: string; name: string; role: string; expiresAt: string } }>(`/admin/auth/invite/${encodeURIComponent(token)}`, { auth: false }),
+        acceptInvite: (token: string, password: string) =>
+            requestJson<{ token: string; admin: AdminUser }>(`/admin/auth/invite/${encodeURIComponent(token)}`, { method: 'POST', body: { password }, auth: false }),
     },
 
     events: {
@@ -36,6 +41,15 @@ export const adminApi = {
         update: (year: number, changes: EventChanges) => requestJson<{ event: AdminEvent }>(`/admin/events/${year}`, { method: 'PATCH', body: changes }),
         setWindow: (year: number, what: EventWindow, action: 'open' | 'close') =>
             requestJson<{ event: AdminEvent }>(`/admin/events/${year}/${what}/${action}`, { method: 'POST' }),
+    },
+
+    admins: {
+        list: () => requestJson<{ admins: AdminAccount[]; invites: AdminInviteRow[] }>('/admin/admins'),
+        invite: (input: { email: string; name: string; role: AdminRole }) =>
+            requestJson<{ invite: AdminInviteRow }>('/admin/admins/invites', { method: 'POST', body: input }),
+        revokeInvite: (id: string) => requestJson<{ ok: boolean }>(`/admin/admins/invites/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+        update: (id: string, change: { role?: AdminRole; disabled?: boolean }) =>
+            requestJson<{ admin: AdminAccount }>(`/admin/admins/${encodeURIComponent(id)}`, { method: 'PATCH', body: change }),
     },
 
     dashboard: () => requestJson<DashboardData>('/admin/dashboard'),
