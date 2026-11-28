@@ -8,7 +8,7 @@
 import type { AdminUser, PricingCategory } from '../../../types';
 import type {
     AdminAccount, AdminBikeHire, AdminDonation, AdminInviteRow, AdminEvent, AdminFeedbackEntry, AdminPayment, AdminRaffleTicket, AdminReferral,
-    AdminRegistration, BulkSendPayload, EventChanges, EventWindow, CommsPreview, DashboardData, Pagination, ReferralsStats, SmsBalance, SummaryStats,
+    AdminRegistration, BulkSendPayload, RegistrationHistory, RiderDetailsEdit, EventChanges, EventWindow, CommsPreview, DashboardData, Pagination, ReferralsStats, SmsBalance, SummaryStats,
 } from '../../../adminTypes';
 import { requestBlob, requestJson, send, type Query } from './http';
 import type { AdminRole } from '../roles';
@@ -63,7 +63,16 @@ export const adminApi = {
         stats: () => requestJson<SummaryStats>('/admin/registrations/stats/summary'),
         setStatus: (id: string, status: string) =>
             requestJson<{ registration: AdminRegistration }>(`/admin/registrations/${encodeURIComponent(id)}`, { method: 'PATCH', body: { status } }),
-        remove: (id: string) => requestJson<{ ok: boolean }>(`/admin/registrations/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+        /** Cancels the rider's whole entry; rows, bibs and payments are kept. */
+        cancel: (id: string, reason: string) =>
+            requestJson<{ ok: boolean; cancelled: number }>(`/admin/registrations/${encodeURIComponent(id)}/cancel`, { method: 'POST', body: { reason } }),
+        editDetails: (id: string, edit: RiderDetailsEdit & { reason: string }) =>
+            requestJson<{ registration: AdminRegistration; changed: string[] }>(`/admin/registrations/${encodeURIComponent(id)}/details`, { method: 'PATCH', body: edit }),
+        move: (id: string, toRegistrationId: string, reason: string) =>
+            requestJson<{ registration: AdminRegistration }>(`/admin/registrations/${encodeURIComponent(id)}/move`, { method: 'POST', body: { toRegistrationId, reason } }),
+        addRefundNote: (id: string, note: string, amountKes: number | null) =>
+            requestJson<{ note: RegistrationHistory['notes'][number] }>(`/admin/registrations/${encodeURIComponent(id)}/refund-notes`, { method: 'POST', body: { note, amountKes } }),
+        history: (id: string) => requestJson<RegistrationHistory>(`/admin/registrations/${encodeURIComponent(id)}/history`),
     },
 
     payments: {
