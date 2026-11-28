@@ -1,7 +1,7 @@
 import type { IconType } from 'react-icons';
 import type { AdminRole } from './roles';
 import {
-    AiOutlineBarChart, AiOutlineCalendar, AiOutlineComment, AiOutlineDashboard, AiOutlineDollar, AiOutlineHeart, AiOutlineHistory,
+    AiOutlineBarChart, AiOutlineCalendar, AiOutlineCheckSquare, AiOutlineComment, AiOutlineDashboard, AiOutlineDollar, AiOutlineHeart, AiOutlineHistory,
     AiOutlineLink, AiOutlineMessage, AiOutlineSafety, AiOutlineStar, AiOutlineTable, AiOutlineTeam,
 } from 'react-icons/ai';
 
@@ -25,6 +25,7 @@ export const NAV_ITEMS: NavItem[] = [
     { path: 'feedback', label: 'Feedback', icon: AiOutlineComment },
     { path: 'bibs', label: 'Bibs', icon: AiOutlineStar },
     { path: 'bike-hires', label: 'Bike Hires', icon: AiOutlineStar },
+    { path: 'checkin', label: 'Check-in', icon: AiOutlineCheckSquare },
     { path: 'communications', label: 'Communications', icon: AiOutlineMessage },
     { path: 'referrals', label: 'Referrals', icon: AiOutlineLink },
     { path: 'pricing', label: 'Pricing', icon: AiOutlineTable },

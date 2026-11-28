@@ -1,0 +1,17 @@
+/* Race-day check-in: big touch targets, one column on a phone. */
+.ci-page { display: flex; flex-direction: column; gap: 16px; max-width: 720px; width: 100%; }
+.ci-search { width: 100%; min-width: 0; font-size: 18px; padding: 14px 16px; }
+.ci-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.ci-card { background: var(--ad-surface); border: 1px solid var(--ad-border); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.ci-head { display: flex; align-items: center; gap: 14px; }
+.ci-bib { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; line-height: 1; color: var(--ad-pl); min-width: 64px; }
+.ci-name { font-weight: 700; font-size: 1rem; color: var(--ad-t1); }
+.ci-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.ci-item {
+    min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    border: 1px solid var(--ad-border2); background: var(--ad-raised); color: var(--ad-t1); cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.ci-item small { font-family: 'Barlow', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0; text-transform: none; color: inherit; opacity: 0.85; }
+.ci-item.done { background: var(--ad-primary); border-color: var(--ad-primary); color: #fff; }
+.ci-item:disabled { opacity: 0.5; cursor: not-allowed; }
