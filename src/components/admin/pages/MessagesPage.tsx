@@ -5,11 +5,13 @@ import { errorMessage } from '../api/http';
 import type { BulkSendPayload, CommsPreview, CsvRecipient, SmsBalance } from '../../../adminTypes';
 import { CSV_TEMPLATE, parseCsvRecipients } from './csvRecipients';
 import MessagesPreview from './MessagesPreview';
+import { useAdminShell } from '../useAdminShell';
 import SmsTopUpModal from './SmsTopUpModal';
 import { ErrorBanner, SuccessBanner } from '../ui/Feedback';
 import { saveFile } from '../api/download';
 
 export default function MessagesPage() {
+    const { year } = useAdminShell();
     const [mode, setMode] = useState<'sms' | 'email' | 'both'>('email');
     const [targetEntity, setTargetEntity] = useState<'cyclist' | 'raffle' | 'donor' | 'custom' | 'csv'>('cyclist');
     const [targetStatus, setTargetStatus] = useState<'all' | 'paid' | 'unpaid'>('all');
@@ -115,7 +117,8 @@ export default function MessagesPage() {
                 csvRecipients: targetEntity === 'csv' ? csvRecipients : undefined,
                 message,
                 subject,
-                testMode
+                testMode,
+                year,
             };
             const data = await adminApi.messages.bulkSend(payload);
 
@@ -199,7 +202,7 @@ export default function MessagesPage() {
                             </div>
 
                             <div className="ad-filter-group" style={{ flex: 1 }}>
-                                <label className="ad-filter-label">Target Group</label>
+                                <label className="ad-filter-label">Target Group{year ? ` (${year})` : ''}</label>
                                 <select className="ad-select" value={targetEntity} onChange={(e) => {
                                     const value = e.target.value as typeof targetEntity;
                                     setTargetEntity(value);

@@ -8,14 +8,14 @@ import PageHeader from '../ui/PageHeader';
 import RangeToggle from '../ui/RangeToggle';
 import { axisTick, rangeAxis, sliceRange, tooltipStyle, type ChartRange } from '../ui/chartRange';
 import { ErrorBanner } from '../ui/Feedback';
-import { ALL_YEARS_NOTE, formatDate } from '../ui/format';
+import { formatDate } from '../ui/format';
 
 const labelStyle = { fontFamily: "'Barlow Condensed', sans-serif", fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ad-t3)' } as const;
 
 export default function OverviewPage() {
     const navigate = useNavigate();
     const { dark, year } = useAdminShell();
-    const { data: d, error, reload, totals: t } = useDashboard();
+    const { data: d, error, reload, totals: t } = useDashboard(year);
     const [range, setRange] = useState<ChartRange>('30d');
     const tt = tooltipStyle(dark);
     const funnel = d?.financials?.conversionFunnel ?? [];
@@ -25,7 +25,6 @@ export default function OverviewPage() {
         <>
             {error && <ErrorBanner message={error} onAction={reload} />}
             <PageHeader eyebrow="Command View" title="Overview" />
-            <div className="ad-kpi-note" style={{ marginTop: -16 }}>{ALL_YEARS_NOTE}</div>
 
             <div className="ad-kpi-grid">
                 <div className="ad-kpi">

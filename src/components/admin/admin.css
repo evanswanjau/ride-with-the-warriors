@@ -100,7 +100,6 @@
 .ad-kpi-trend { font-size: 0.72rem; color: var(--ad-t3); font-weight: 600; display: flex; align-items: center; gap: 4px; }
 .ad-kpi-trend.up { color: var(--ad-pl); }
 .ad-kpi-trend.down { color: var(--ad-red); }
-.ad-kpi-note { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ad-t3); margin-top: 6px; }
 
 /* Panels */
 .ad-panel {

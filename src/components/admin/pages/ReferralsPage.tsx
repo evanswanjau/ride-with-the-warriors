@@ -12,17 +12,19 @@ import KpiGrid from '../ui/KpiGrid';
 import PageHeader from '../ui/PageHeader';
 import { rowNumber } from '../ui/format';
 import ReferralModal from './ReferralModal';
+import { useAdminShell } from '../useAdminShell';
 
 const LIMIT = 20;
 const COLUMNS = ['#', 'Code', 'Influencer', 'Email', 'Phone', 'Clicks', 'Direct', 'Paid', 'Status', 'Actions'];
 
 export default function ReferralsPage() {
+    const { year } = useAdminShell();
     const [filter, setFilter] = useState({ status: '', search: '' });
     const [creating, setCreating] = useState(false);
     const [actionError, setActionError] = useState<string | null>(null);
     const search = useDebounced(filter.search);
 
-    const query = { page: 1, limit: LIMIT, status: filter.status, search };
+    const query = { year, page: 1, limit: LIMIT, status: filter.status, search };
     const list = useLoad(() => adminApi.referrals.list(query), JSON.stringify(query), 'Failed to load referrals');
     const referrals = list.data?.referrals ?? [];
     const stats = list.data?.stats;
@@ -39,7 +41,7 @@ export default function ReferralsPage() {
 
     const handleExport = async () => {
         try {
-            saveFile(await adminApi.referrals.exportCsv(), `referrals_${new Date().toISOString().split('T')[0]}.csv`);
+            saveFile(await adminApi.referrals.exportCsv(year), `referrals_${year ?? 'all'}_${new Date().toISOString().split('T')[0]}.csv`);
         } catch (e) {
             setActionError(errorMessage(e, 'Export failed'));
         }

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { adminApi } from '../api/adminApi';
-import { errorMessage } from '../api/http';
+import { useLoad } from '../hooks/useLoad';
 import { formatDate } from '../ui/format';
+import { useAdminShell } from '../useAdminShell';
 import type { AdminFeedbackEntry as FeedbackEntry } from '../../../adminTypes';
 import {
     AiOutlineSearch,
@@ -28,31 +29,15 @@ const displayName = (entry: FeedbackEntry) => {
 };
 
 const FeedbackPage = () => {
-    const [entries, setEntries] = useState<FeedbackEntry[]>([]);
-    const [averageRating, setAverageRating] = useState(0);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { year } = useAdminShell();
+    const feedback = useLoad(() => adminApi.feedback(year), String(year ?? ''), 'Failed to load feedback');
+    const entries: FeedbackEntry[] = feedback.data?.entries ?? [];
+    const averageRating = feedback.data?.averageRating ?? 0;
+    const { loading, error, reload: fetchFeedback } = feedback;
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState('');
     const [page, setPage] = useState(1);
     const [selected, setSelected] = useState<FeedbackEntry | null>(null);
-
-    const fetchFeedback = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const data = await adminApi.feedback();
-            setEntries(data.entries || []);
-            setAverageRating(data.averageRating ?? 0);
-        } catch (err) {
-            setError(errorMessage(err, 'Failed to load feedback'));
-            setEntries([]);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => { fetchFeedback(); }, []);
 
     const filtered = entries.filter(e => {
         const q = searchTerm.toLowerCase();
@@ -66,7 +51,6 @@ const FeedbackPage = () => {
         return matchesSearch && matchesRole;
     });
 
-    useEffect(() => { setPage(1); }, [searchTerm, roleFilter]);
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const pageEntries = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -120,14 +104,14 @@ const FeedbackPage = () => {
                                 className="ad-input"
                                 type="text"
                                 value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
+                                onChange={e => { setSearchTerm(e.target.value); setPage(1); }}
                                 placeholder="Name, role, highlights or improvements…"
                             />
                         </div>
                     </div>
                     <div className="ad-filter-group" style={{ marginLeft: 'auto' }}>
                         <label className="ad-filter-label">Role</label>
-                        <select className="ad-select" value={roleFilter} onChange={e => setRoleFilter(e.target.value)}>
+                        <select className="ad-select" value={roleFilter} onChange={e => { setRoleFilter(e.target.value); setPage(1); }}>
                             <option value="">All roles</option>
                             {Object.entries(ROLE_LABELS).map(([value, label]) => (
                                 <option key={value} value={value}>{label}</option>

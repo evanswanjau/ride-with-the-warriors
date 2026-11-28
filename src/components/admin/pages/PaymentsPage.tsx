@@ -13,7 +13,8 @@ import KpiGrid from '../ui/KpiGrid';
 import PageHeader from '../ui/PageHeader';
 import Pagination from '../ui/Pagination';
 import { StatusPill } from '../ui/StatusPill';
-import { ALL_YEARS_NOTE, formatDate, kes } from '../ui/format';
+import { formatDate, kes } from '../ui/format';
+import { useAdminShell } from '../useAdminShell';
 
 const LIMIT = 20;
 const EXPORT_LIMIT = 10_000;
@@ -36,15 +37,16 @@ function matchesType(p: AdminPayment, type: string): boolean {
 }
 
 export default function PaymentsPage() {
+    const { year } = useAdminShell();
     const [filter, setFilter] = useState({ status: '', search: '', dateFrom: '', dateTo: '' });
     const [type, setType] = useState('');
     const [page, setPage] = useState(1);
     const [actionError, setActionError] = useState<string | null>(null);
     const search = useDebounced(filter.search);
 
-    const query = { status: filter.status, search, dateFrom: filter.dateFrom, dateTo: filter.dateTo };
+    const query = { year, status: filter.status, search, dateFrom: filter.dateFrom, dateTo: filter.dateTo };
     const list = useLoad(() => adminApi.payments.list({ ...query, page, limit: LIMIT }), JSON.stringify({ ...query, page }), 'Failed to load payments');
-    const stats = useLoad(() => adminApi.payments.stats(), 'stats', 'Failed to load payments');
+    const stats = useLoad(() => adminApi.payments.stats(year), `stats|${year ?? ''}`, 'Failed to load payments');
     const payments = list.data?.payments ?? [];
     const shown = payments.filter(p => matchesType(p, type));
     const pagination = list.data?.pagination;
@@ -58,7 +60,7 @@ export default function PaymentsPage() {
             saveFile(toCsv(
                 ['TransactionCode', 'Phone', 'Amount', 'Status', 'Timestamp', 'RegistrationId', 'CreatedAt'],
                 all.map(p => [p.mpesaReceiptNumber, p.phone, p.amount, p.status, p.transactionDate || new Date(p.createdAt).toISOString(), p.registrationId, new Date(p.createdAt).toLocaleString()]),
-            ), 'Payments.csv');
+            ), `Payments-${year ?? 'all'}.csv`);
         } catch (e) {
             setActionError(errorMessage(e, 'Export failed'));
         }
@@ -75,7 +77,7 @@ export default function PaymentsPage() {
                 actions={<button className="ad-btn ad-btn-primary" onClick={handleExport}><AiOutlineTable /> Export CSV</button>}
             />
             {s && (
-                <KpiGrid note={`${ALL_YEARS_NOTE}; so does this list`} items={[
+                <KpiGrid items={[
                     { label: 'Total', val: s.total },
                     { label: 'Paid', val: s.paid, cls: 'green' },
                     { label: 'Failed', val: s.failed, cls: 'red' },
