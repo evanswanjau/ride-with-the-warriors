@@ -25,6 +25,10 @@ test('logging in by phone sends the code by SMS', async ({ page }) => {
 
 test('team captain sees the whole team; a member sees only their own entry', async ({ page, context }) => {
     await login(page, 'captain@test.local', 'captain@test.local');
+    await expect(page.getByRole('heading', { name: 'Hi, Brian' })).toBeVisible();
+    // The home page shows the newest year, and portal.spec registers the captain for 2027 first:
+    // the 2026 team is on the 2026 entries list.
+    await page.goto('/account/entries?year=2026');
     const team = page.getByRole('article', { name: 'Rift Riders' });
     await expect(team).toBeVisible();
     await expect(team.getByText(/Felix/)).toBeVisible();
@@ -32,6 +36,8 @@ test('team captain sees the whole team; a member sees only their own entry', asy
     await context.clearCookies();
     await page.evaluate(() => localStorage.clear());
     await login(page, 'member@test.local', 'member@test.local');
+    await expect(page.getByRole('heading', { level: 1, name: /^Hi, / })).toBeVisible();
+    await page.goto('/account/entries?year=2026');
     await expect(page.getByText(/registered by someone else/)).toBeVisible();
     await expect(page.getByText(/Felix/)).toHaveCount(0);
 });

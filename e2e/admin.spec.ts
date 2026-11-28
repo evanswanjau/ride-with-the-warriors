@@ -2,8 +2,12 @@
 import type { Page } from '@playwright/test';
 import { test, expect } from './fixtures';
 
-async function logIn(page: Page) {
-    await page.goto('/admin');
+const API = process.env.E2E_API_URL ?? 'http://localhost:4100/api/v1';
+
+// The seed's data is 2026. Other specs may already have started 2027 (then the current event),
+// so most tests ask for 2026 in the address.
+async function logIn(page: Page, path = '/admin?year=2026') {
+    await page.goto(path);
     await page.getByPlaceholder('Enter email address').fill('admin@ridewithwarriors.com');
     await page.getByPlaceholder('••••••••').fill('Password@123');
     await page.locator('button[type="submit"]').click();
@@ -76,10 +80,13 @@ test('Messages test mode previews without sending', async ({ page }) => {
     await expect(page.getByText('SIMULATED')).toBeVisible();
 });
 
-test('the year switcher keeps the year in the address and lists follow it', async ({ page }) => {
-    await logIn(page);
+test('the year switcher keeps the year in the address and lists follow it', async ({ page, request }) => {
+    const current = (await (await request.get(`${API}/events/current`)).json()).event.year;
+    await logIn(page, '/admin');
     const select = page.getByLabel('Event year');
-    await expect(select).toHaveValue('2026'); // the current event in the seed
+    await expect(select).toHaveValue(String(current)); // without ?year: the current event
+    await select.selectOption('2026');
+    await expect(page).toHaveURL(/\/admin\?year=2026$/);
 
     const listed = page.waitForRequest(r => r.url().includes('/admin/registrations?') && r.url().includes('year=2026'));
     await nav(page, 'Registrations');
@@ -87,12 +94,12 @@ test('the year switcher keeps the year in the address and lists follow it', asyn
     await listed;
     await expect(page.locator('.ad-tr').first()).toBeVisible({ timeout: 20_000 });
 
-    // Another year from a link: nothing registered for it yet; the year stays when moving between pages.
-    await page.goto('/admin/registrations?year=2027');
-    await expect(select).toHaveValue('2027');
+    // A year with no event or entries, from a link: the year stays when moving between pages.
+    await page.goto('/admin/registrations?year=2030');
+    await expect(select).toHaveValue('2030');
     await expect(page.getByText('No registrations found.')).toBeVisible({ timeout: 20_000 });
     await nav(page, 'Raffle');
-    await expect(page).toHaveURL(/\/admin\/raffle\?year=2027$/);
+    await expect(page).toHaveURL(/\/admin\/raffle\?year=2030$/);
     await expect(page.getByText('No raffle tickets found matching filters.')).toBeVisible({ timeout: 20_000 });
 
     // Choosing a year in the header reloads the page for it.

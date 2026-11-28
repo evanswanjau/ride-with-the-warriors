@@ -1,6 +1,6 @@
 import type { IconType } from 'react-icons';
 import {
-    AiOutlineBarChart, AiOutlineComment, AiOutlineDashboard, AiOutlineDollar, AiOutlineHeart, AiOutlineHistory,
+    AiOutlineBarChart, AiOutlineCalendar, AiOutlineComment, AiOutlineDashboard, AiOutlineDollar, AiOutlineHeart, AiOutlineHistory,
     AiOutlineLink, AiOutlineMessage, AiOutlineStar, AiOutlineTable, AiOutlineTeam,
 } from 'react-icons/ai';
 
@@ -25,4 +25,5 @@ export const NAV_ITEMS: NavItem[] = [
     { path: 'communications', label: 'Communications', icon: AiOutlineMessage },
     { path: 'referrals', label: 'Referrals', icon: AiOutlineLink },
     { path: 'pricing', label: 'Pricing', icon: AiOutlineTable },
+    { path: 'events', label: 'Events', icon: AiOutlineCalendar },
 ];

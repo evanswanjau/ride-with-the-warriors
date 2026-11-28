@@ -217,11 +217,49 @@ export interface SmsBalance {
     [key: string]: unknown;
 }
 
+export type LifecycleState = 'upcoming' | 'open' | 'closed' | 'finished';
+
 /** GET /events/current and each row of GET /admin/events. */
 export interface AdminEvent {
     year: number;
     name: string;
     current?: boolean;
+    date?: string | null;
+    location?: string | null;
+    registrationState?: LifecycleState;
+    registrationOpensAt?: string | null;
+    registrationClosesAt?: string | null;
+    raffleState?: LifecycleState;
+    raffleOpensAt?: string | null;
+    raffleClosesAt?: string | null;
+    feedbackOpen?: boolean;
+    feedbackOpensAt?: string | null;
+    feedbackClosesAt?: string | null;
+    rafflePrice?: number;
+    bikeHirePrice?: number;
+    bikeStock?: number | null;
+    riderCap?: number | null;
+    pricingCategories?: number;
 }
 
+/** Fields PATCH /admin/events/:year accepts. */
+export interface EventChanges {
+    name?: string;
+    date?: string | null;
+    location?: string | null;
+    registrationOpensAt?: string | null;
+    registrationClosesAt?: string | null;
+    raffleOpensAt?: string | null;
+    raffleClosesAt?: string | null;
+    feedbackOpensAt?: string | null;
+    feedbackClosesAt?: string | null;
+    rafflePrice?: number;
+    bikeHirePrice?: number;
+    bikeStock?: number | null;
+    riderCap?: number | null;
+}
+
+export type EventWindow = 'registration' | 'raffle' | 'feedback';
+
 export interface BibJobProgress { pct: number; processed: number; total: number }
+
