@@ -14,7 +14,7 @@ import KpiGrid from '../ui/KpiGrid';
 import PageHeader from '../ui/PageHeader';
 import Pagination from '../ui/Pagination';
 import { StatusSelect } from '../ui/StatusPill';
-import { ALL_YEARS_NOTE, cap, formatDate, kes, rowNumber } from '../ui/format';
+import { cap, formatDate, kes, rowNumber } from '../ui/format';
 import { useAdminShell } from '../useAdminShell';
 import { raffleTicketFields } from './registrationFields';
 import { useRaffleTicketPdf } from './useRaffleTicketPdf';
@@ -29,7 +29,7 @@ export default function RafflePage() {
     const [selected, setSelected] = useState<AdminRaffleTicket | null>(null);
     const [actionError, setActionError] = useState<string | null>(null);
     const search = useDebounced(filter.search);
-    const dashboard = useDashboard();
+    const dashboard = useDashboard(year);
     const pdf = useRaffleTicketPdf(year);
 
     const query = { year, page, limit: LIMIT, status: filter.status, search, referralCode: filter.referralCode };
@@ -76,7 +76,7 @@ export default function RafflePage() {
                 }
             />
 
-            <KpiGrid spacing={24} note={ALL_YEARS_NOTE} items={[
+            <KpiGrid spacing={24} items={[
                 { label: 'Total Tickets', val: t.raffleTotal },
                 { label: 'Paid Tickets', val: t.rafflePaid, cls: 'green' },
                 { label: 'Unpaid Tickets', val: t.raffleUnpaid, cls: 'amber' },

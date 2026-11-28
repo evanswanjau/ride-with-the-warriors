@@ -1,9 +1,9 @@
 import { adminApi } from '../api/adminApi';
 import { useLoad } from './useLoad';
 
-/** GET /admin/dashboard plus the headline numbers the Overview, Analytics and Raffle pages show. */
-export function useDashboard() {
-    const loaded = useLoad(() => adminApi.dashboard(), 'dashboard', 'Failed to load dashboard');
+/** GET /admin/dashboard?year= plus the headline numbers the Overview, Analytics and Raffle pages show. */
+export function useDashboard(year: number | undefined) {
+    const loaded = useLoad(() => adminApi.dashboard(year), `dashboard|${year ?? ''}`, 'Failed to load dashboard');
     const s = loaded.data?.summary;
     const totalPaid = s?.registrations?.paid ?? 0;
     const totalRegs = s?.registrations?.total ?? 1;

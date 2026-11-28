@@ -200,6 +200,8 @@ export interface BulkSendPayload {
     message: string;
     subject: string;
     testMode: boolean;
+    /** Riders, ticket buyers or donors of this event only; every year when absent. */
+    year?: number;
 }
 
 export interface CommsStats { success?: number; failed?: number; [key: string]: unknown }

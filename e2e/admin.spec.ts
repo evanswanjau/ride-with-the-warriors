@@ -111,3 +111,15 @@ test('the year switcher keeps the year in the address and lists follow it', asyn
     await page.getByRole('button', { name: /Export CSV/ }).click();
     expect((await csv).status()).toBe(200);
 });
+
+test('totals, payments, referrals and feedback ask the server for the chosen year', async ({ page }) => {
+    const asked = (path: string) => page.waitForRequest(r => r.url().includes(path) && r.url().includes('year=2026'));
+    const dashboard = asked('/admin/dashboard');
+    await logIn(page);
+    await dashboard;
+    for (const [label, path] of [['Payments', '/admin/payments/stats/summary'], ['Referrals', '/admin/referrals'], ['Feedback', '/admin/feedback'], ['Donations', '/admin/donations/stats/summary']] as const) {
+        const request = asked(path);
+        await nav(page, label);
+        await request;
+    }
+});

@@ -15,7 +15,7 @@ import KpiGrid from '../ui/KpiGrid';
 import PageHeader from '../ui/PageHeader';
 import Pagination from '../ui/Pagination';
 import { StatusSelect } from '../ui/StatusPill';
-import { ALL_YEARS_NOTE, cap, formatDate, kes, statusColor } from '../ui/format';
+import { cap, formatDate, kes, statusColor } from '../ui/format';
 import { useAdminShell } from '../useAdminShell';
 import { registrationFields } from './registrationFields';
 import RegistrationActions from './RegistrationActions';
@@ -39,7 +39,7 @@ export default function RegistrationsPage() {
 
     const query = { year, page, limit: LIMIT, circuitId: filter.circuitId, status: filter.status, isMilitary: filter.isMilitary, search };
     const list = useLoad(() => adminApi.registrations.list(query), JSON.stringify(query), 'Failed to load registrations');
-    const stats = useLoad(() => adminApi.registrations.stats(), 'stats', 'Failed to load registrations');
+    const stats = useLoad(() => adminApi.registrations.stats(year), `stats|${year ?? ''}`, 'Failed to load registrations');
     const rows = list.data?.registrations ?? [];
     const pagination = list.data?.pagination;
 
@@ -83,7 +83,7 @@ export default function RegistrationsPage() {
             />
 
             {s && (
-                <KpiGrid note={ALL_YEARS_NOTE} items={[
+                <KpiGrid items={[
                     { label: 'Total', val: s.total },
                     { label: 'Paid', val: s.paid, cls: 'green' },
                     { label: 'Unpaid', val: s.unpaid, cls: 'amber' },

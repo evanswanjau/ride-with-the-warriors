@@ -2,8 +2,8 @@
  * Every admin API call, typed. Pages call these; none of them builds a URL or
  * touches the token itself (see http.ts).
  *
- * `year` is passed only to endpoints the server filters by year. The others
- * still cover every year (listed in docs/STATUS.md, Phase 6).
+ * Every list, total and export takes the event year chosen in the header
+ * (`undefined` means every year).
  */
 import type { AdminUser, PricingCategory } from '../../../types';
 import type {
@@ -52,7 +52,7 @@ export const adminApi = {
             requestJson<{ admin: AdminAccount }>(`/admin/admins/${encodeURIComponent(id)}`, { method: 'PATCH', body: change }),
     },
 
-    dashboard: () => requestJson<DashboardData>('/admin/dashboard'),
+    dashboard: (year: Year) => requestJson<DashboardData>('/admin/dashboard', { query: { year } }),
 
     pricingCategories: (year: Year) =>
         requestJson<{ categories: PricingCategory[] }>('/registrations/config/categories', { auth: false, query: { year } }),
@@ -60,7 +60,7 @@ export const adminApi = {
     registrations: {
         list: (query: Query) =>
             requestJson<{ registrations: AdminRegistration[]; pagination: Pagination }>('/admin/registrations', { query }),
-        stats: () => requestJson<SummaryStats>('/admin/registrations/stats/summary'),
+        stats: (year: Year) => requestJson<SummaryStats>('/admin/registrations/stats/summary', { query: { year } }),
         setStatus: (id: string, status: string) =>
             requestJson<{ registration: AdminRegistration }>(`/admin/registrations/${encodeURIComponent(id)}`, { method: 'PATCH', body: { status } }),
         /** Cancels the rider's whole entry; rows, bibs and payments are kept. */
@@ -77,7 +77,7 @@ export const adminApi = {
 
     payments: {
         list: (query: Query) => requestJson<{ payments: AdminPayment[]; pagination: Pagination }>('/admin/payments', { query }),
-        stats: () => requestJson<SummaryStats>('/admin/payments/stats/summary'),
+        stats: (year: Year) => requestJson<SummaryStats>('/admin/payments/stats/summary', { query: { year } }),
     },
 
     raffle: {
@@ -89,7 +89,7 @@ export const adminApi = {
 
     donations: {
         list: (query: Query) => requestJson<{ donations: AdminDonation[]; pagination: Pagination }>('/admin/donations', { query }),
-        stats: () => requestJson<SummaryStats>('/admin/donations/stats/summary'),
+        stats: (year: Year) => requestJson<SummaryStats>('/admin/donations/stats/summary', { query: { year } }),
         remove: (id: string) => requestJson<{ success: boolean }>(`/admin/donations/${encodeURIComponent(id)}`, { method: 'DELETE' }),
     },
 
@@ -98,7 +98,7 @@ export const adminApi = {
             requestJson<{ referrals: AdminReferral[]; pagination: Pagination; stats: ReferralsStats }>('/admin/referrals', { query }),
         create: (referral: NewReferral) => requestJson<{ referral: AdminReferral }>('/admin/referrals', { method: 'POST', body: referral }),
         deactivate: (id: string) => requestJson<{ ok: boolean }>(`/admin/referrals/${encodeURIComponent(id)}`, { method: 'DELETE' }),
-        exportCsv: () => requestBlob('/admin/referrals/export'),
+        exportCsv: (year: Year) => requestBlob('/admin/referrals/export', { query: { year } }),
     },
 
     bikeHires: {
@@ -107,7 +107,7 @@ export const adminApi = {
             requestJson<AdminBikeHire>(`/admin/bike-hires/${encodeURIComponent(id)}/status`, { method: 'POST', body: { status } }),
     },
 
-    feedback: () => requestJson<{ total: number; averageRating: number; entries: AdminFeedbackEntry[] }>('/admin/feedback'),
+    feedback: (year: Year) => requestJson<{ total: number; averageRating: number; entries: AdminFeedbackEntry[] }>('/admin/feedback', { query: { year } }),
 
     messages: {
         smsBalance: () => requestJson<SmsBalance>('/admin/email/sms-balance'),

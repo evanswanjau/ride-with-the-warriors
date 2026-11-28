@@ -59,7 +59,7 @@ export default function BibsPage() {
         setGenerating(true);
         setProgress({ pct: 0, processed: 0, total: 0 });
         try {
-            saveFile(await generateBibsPdf({ ...filters, search: filter.search }, setProgress), bibsFileName(filter.status, filter.category));
+            saveFile(await generateBibsPdf({ ...filters, year, search: filter.search }, setProgress), bibsFileName(filter.status, filter.category));
         } catch (e) {
             alert(errorMessage(e, e instanceof Error ? e.message : 'Failed to generate PDF from server'));
         } finally {

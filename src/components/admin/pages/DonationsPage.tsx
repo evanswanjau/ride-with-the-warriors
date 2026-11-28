@@ -10,7 +10,7 @@ import KpiGrid from '../ui/KpiGrid';
 import PageHeader from '../ui/PageHeader';
 import Pagination from '../ui/Pagination';
 import { StatusPill } from '../ui/StatusPill';
-import { ALL_YEARS_NOTE, formatDate, kes, rowNumber } from '../ui/format';
+import { formatDate, kes, rowNumber } from '../ui/format';
 import { useAdminShell } from '../useAdminShell';
 
 const LIMIT = 20;
@@ -25,7 +25,7 @@ export default function DonationsPage() {
 
     const query = { year, page, limit: LIMIT, status: filter.status, search };
     const list = useLoad(() => adminApi.donations.list(query), JSON.stringify(query), 'Failed to load donations');
-    const stats = useLoad(() => adminApi.donations.stats(), 'stats', 'Failed to load donations');
+    const stats = useLoad(() => adminApi.donations.stats(year), `stats|${year ?? ''}`, 'Failed to load donations');
     const donations = list.data?.donations ?? [];
     const pagination = list.data?.pagination;
     const s = stats.data?.summary;
@@ -51,7 +51,7 @@ export default function DonationsPage() {
             <PageHeader eyebrow="Contributions" title="Donations" />
 
             {s && (
-                <KpiGrid note={ALL_YEARS_NOTE} items={[
+                <KpiGrid items={[
                     { label: 'Total Count', val: s.totalCount },
                     { label: 'Paid Count', val: s.paidCount, cls: 'green' },
                     { label: 'Unpaid Count', val: s.unpaidCount ?? 0, cls: 'amber' },
