@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 
 export interface DrawerField {
@@ -6,7 +7,8 @@ export interface DrawerField {
     mono?: boolean;
 }
 
-export default function DetailDrawer({ title, fields, onClose }: { title: string; fields: DrawerField[]; onClose: () => void }) {
+/** `children`: actions shown under the fields. */
+export default function DetailDrawer({ title, fields, onClose, children }: { title: string; fields: DrawerField[]; onClose: () => void; children?: ReactNode }) {
     return (
         <>
             <div className="ad-drawer-overlay" onClick={onClose} />
@@ -23,6 +25,7 @@ export default function DetailDrawer({ title, fields, onClose }: { title: string
                         </div>
                     ))}
                 </div>
+                {children && <div className="ad-drawer-actions">{children}</div>}
             </aside>
         </>
     );

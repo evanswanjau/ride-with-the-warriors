@@ -283,3 +283,22 @@ export interface AdminInviteRow {
     expiresAt: string;
     createdAt: string;
 }
+
+/** PATCH /admin/registrations/:id/details (without the reason). */
+export interface RiderDetailsEdit {
+    firstName?: string;
+    lastName?: string;
+    email?: string | null;
+    phoneNumber?: string | null;
+    dob?: string | null;
+    tshirtSize?: string | null;
+    emergencyContactName?: string | null;
+    emergencyPhone?: string | null;
+}
+
+/** GET /admin/registrations/:id/history */
+export interface RegistrationHistory {
+    entryId: string | null;
+    notes: { id: string; note: string; amountKes: number | null; adminEmail: string; createdAt: string; registrationId: string | null }[];
+    audit: { id: string; createdAt: string; adminEmail: string; action: string; entityId: string | null }[];
+}

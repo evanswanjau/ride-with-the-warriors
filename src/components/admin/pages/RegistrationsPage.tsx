@@ -18,6 +18,8 @@ import { StatusSelect } from '../ui/StatusPill';
 import { ALL_YEARS_NOTE, cap, formatDate, kes, statusColor } from '../ui/format';
 import { useAdminShell } from '../useAdminShell';
 import { registrationFields } from './registrationFields';
+import RegistrationActions from './RegistrationActions';
+import { hasRole } from '../roles';
 
 const LIMIT = 10;
 const STATUSES = ['UNPAID', 'PAID', 'CONFIRMED', 'COMPLEMENTARY', 'CANCELLED'] as const;
@@ -26,7 +28,8 @@ const subLine = { fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '
 
 export default function RegistrationsPage() {
     const [params] = useSearchParams();
-    const { year } = useAdminShell();
+    const { admin, year } = useAdminShell();
+    const canChange = hasRole(admin, 'admin');
     // The Overview's "Review now" opens this page with ?status=UNPAID.
     const [filter, setFilter] = useState({ search: '', circuitId: '', status: params.get('status') ?? '', isMilitary: '' });
     const [page, setPage] = useState(1);
@@ -52,8 +55,9 @@ export default function RegistrationsPage() {
         }
     };
 
-    const handleDelete = (id: string) => {
-        if (confirm('Delete this registration?')) act(() => adminApi.registrations.remove(id), 'Failed to delete registration');
+    const handleCancel = (id: string) => {
+        const reason = window.prompt('Cancel this whole entry? Bibs and payments are kept. Reason (kept in the audit log):');
+        if (reason?.trim()) act(() => adminApi.registrations.cancel(id, reason.trim()), 'Failed to cancel the entry');
     };
 
     const handleExport = async () => {
@@ -64,6 +68,8 @@ export default function RegistrationsPage() {
         }
     };
 
+    // The open drawer shows the row as last loaded, so an edit shows at once.
+    const shown = selected ? rows.find(r => r.id === selected.id) ?? selected : null;
     const error = actionError ?? list.error ?? stats.error;
     const s = stats.data?.summary;
 
@@ -124,7 +130,7 @@ export default function RegistrationsPage() {
                                                 <td className="ad-td" style={{ textAlign: 'right' }}>
                                                     <div className="ad-row-actions">
                                                         <button className="ad-row-btn" title="View" onClick={() => setSelected(reg)}><AiOutlineEye /></button>
-                                                        <button className="ad-row-btn red" title="Delete" onClick={() => handleDelete(reg.id)}><AiOutlineDelete /></button>
+                                                        {canChange && reg.status !== 'CANCELLED' && <button className="ad-row-btn red" title="Cancel entry" onClick={() => handleCancel(reg.id)}><AiOutlineDelete /></button>}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -136,7 +142,11 @@ export default function RegistrationsPage() {
                 </div>
             </div>
 
-            {selected && <DetailDrawer title="Registration Detail" fields={registrationFields(selected)} onClose={() => setSelected(null)} />}
+            {shown && (
+                <DetailDrawer title="Registration Detail" fields={registrationFields(shown)} onClose={() => setSelected(null)}>
+                    {canChange && <RegistrationActions key={shown.id} reg={shown} onChanged={() => { list.reload(); stats.reload(); }} />}
+                </DetailDrawer>
+            )}
         </>
     );
 }
