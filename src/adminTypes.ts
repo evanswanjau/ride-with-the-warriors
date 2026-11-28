@@ -263,3 +263,23 @@ export type EventWindow = 'registration' | 'raffle' | 'feedback';
 
 export interface BibJobProgress { pct: number; processed: number; total: number }
 
+
+/** GET /admin/admins */
+export interface AdminAccount {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    createdAt: string;
+    lastLogin: string | null;
+    disabledAt: string | null;
+}
+
+export interface AdminInviteRow {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    expiresAt: string;
+    createdAt: string;
+}

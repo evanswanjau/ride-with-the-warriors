@@ -5,6 +5,7 @@ import type { AdminUser } from '../../types';
 import logo from '../../assets/logos/logo.png';
 import { useAdminYear } from './hooks/useAdminYear';
 import { NAV_ITEMS } from './nav';
+import { hasRole } from './roles';
 import { LoadingOverlay } from './ui/Feedback';
 import type { AdminShell } from './useAdminShell';
 import './admin.css';
@@ -48,7 +49,7 @@ export default function AdminLayout({ admin, onLogout }: AdminLayoutProps) {
 
             <div className="ad-body">
                 <aside className="ad-sidebar">
-                    {NAV_ITEMS.map(({ path, label, icon: Icon }) => (
+                    {NAV_ITEMS.filter(item => !item.minRole || hasRole(admin, item.minRole)).map(({ path, label, icon: Icon }) => (
                         <NavLink
                             key={label}
                             to={`/admin${path ? `/${path}` : ''}${yearSearch}`}
